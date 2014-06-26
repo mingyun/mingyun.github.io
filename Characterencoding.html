@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<title>字符编码那些事</title>
+<style>
+
+	/*******************************************************************
+
+	This chunk is to fix Bootstrap so that the Markdown output looks good
+
+	*******************************************************************/
+
+	body {
+	  padding-top: 60px;
+	  padding-bottom: 40px;
+	  font-size: 15px;
+	  line-height: 150%;
+	}
+
+	xmp, textarea {
+	  display: none;
+	}
+
+	h1,h2,h3,h4 {
+	  margin: 15px 0;
+	}
+
+	pre {
+	  margin: 20px 0;
+	}
+
+	img {
+	  margin: 10px 0;
+	}
+
+	.navbar {
+	  z-index: 1;
+	}
+
+	.table {
+	  width: auto;
+	}
+
+	/*******************************************************************
+
+	This chunk is for Google's Code Prettify:
+	http://google-code-prettify.googlecode.com
+
+	*******************************************************************/
+
+
+	/* Pretty printing styles. Used with prettify.js. */
+
+	/* SPAN elements with the classes below are added by prettyprint. */
+	.pln { color: #000 }  /* plain text */
+
+	@media screen {
+	  .str { color: #080 }  /* string content */
+	  .kwd { color: #008 }  /* a keyword */
+	  .com { color: #800 }  /* a comment */
+	  .typ { color: #606 }  /* a type name */
+	  .lit { color: #066 }  /* a literal value */
+	  /* punctuation, lisp open bracket, lisp close bracket */
+	  .pun, .opn, .clo { color: #660 }
+	  .tag { color: #008 }  /* a markup tag name */
+	  .atn { color: #606 }  /* a markup attribute name */
+	  .atv { color: #080 }  /* a markup attribute value */
+	  .dec, .var { color: #606 }  /* a declaration; a variable name */
+	  .fun { color: red }  /* a function name */
+	}
+
+	/* Use higher contrast and text-weight for printable form. */
+	@media print, projection {
+	  .str { color: #060 }
+	  .kwd { color: #006; font-weight: bold }
+	  .com { color: #600; font-style: italic }
+	  .typ { color: #404; font-weight: bold }
+	  .lit { color: #044 }
+	  .pun, .opn, .clo { color: #440 }
+	  .tag { color: #006; font-weight: bold }
+	  .atn { color: #404 }
+	  .atv { color: #060 }
+	}
+
+	/* Put a border around prettyprinted code snippets. */
+	pre.prettyprint { padding: 2px; border: 1px solid #888 }
+
+	/* Specify class=linenums on a pre to get line numbering */
+	ol.linenums { margin-top: 0; margin-bottom: 0 } /* IE indents via margin-left */
+	li.L0,
+	li.L1,
+	li.L2,
+	li.L3,
+	li.L5,
+	li.L6,
+	li.L7,
+	li.L8 { list-style-type: none }
+	/* Alternate shading for lines */
+	li.L1,
+	li.L3,
+	li.L5,
+	li.L7,
+	li.L9 { background: #eee }
+</style>
+<xmp theme="united" style="display:none;">
+
+###乱码原因
+> 在windows自带的notepad（记事本）程序中输入“联通”两个字，保存后再次打开，会发现“联通”不见了，代之以“��ͨ”的乱码 ？文件保存的时候是按照ANSI编码（其实就是GB2312）保存，打开的时候程序按照UTF-8方式对内容解释，于是就出现了乱码。避免乱码的方式很简单，在“文件”菜单中选择“打开”命令，选择保存的文件，然后选择“ANSI”编码，此时就能看到“联通”两个字了。
+
+
+###ASCII
+> 计算机只能处理数字，如果要处理文本，就必须先把文本转换为数字才能处理.最早只有127个字母被编码到计算机里，也就是大小写英文字母、数字和一些符号，这个编码表被称为ASCII编码，比如大写字母A的编码是65，小写字母z的编码是122
+> ASCII 码使用7位二进制数来表示128个字符，也就是用一个字节来表示，最前的一位默认为 0。linux命令查看man ascii
+
+![Alt text](http://segmentfault.com/img/bVcdqg)
+> 如果把最后一位也用起来的话，也就是8位二进制，那么就可以表示256个字符了，于是扩展 ASCII 码诞生，保留原始的7位的基础上，使用了最前的一位。
+![Alt text](http://segmentfault.com/img/bVcdqm)
+###中文编码 GB2312 GBK GB18030
+> 国内的GB2312使用两个字节，也就是16位二进制，最多就可以存下65536个字符了,各国有各国的标准，就会不可避免地出现冲突，结果就是，在多语言混合的文本中，显示出来会有乱码。
+###ANSI
+windows的记事本保存选项里面有这么一个叫做ANSI的选项。实际上ANSI会随着操作系统的区域和语言设置而变化！简体中文版为gbk
+###天下归一Unicode
+> Unicode是一个字符集而不是一个编码方式，Unicode中每个字符对应一个code point(中译为码点) 。code point是一个0×00000到0x10FFFF之间的正整数。因此Unicode的字符都被记为U+XXXX，XXXX就是code point的16进制表示
+> Unicode虽然能容纳上百万数量的字符，但是它只是一个巨大的字符集，仅仅规定了每个符号的二进制代码，却没有制定细化的存储规则.
+
+> Unicode 是一个「字符集」，而 UTF-8 是一种「编码方式」，其他的编码方式还有UTF-16、UTF-32
+###从Unicode到UTF-8的编码方式如下：
+> Unicode编码(16进制)	UTF-8 字节流(二进制)  
+> 000000 – 00007F	0xxxxxxx  
+> 000080 – 0007FF	110xxxxx 10xxxxxx  
+> 000800 – 00FFFF	1110xxxx 10xxxxxx 10xxxxxx  
+> 010000 – 10FFFF	11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  
+> “汉”字的Unicode对应的数字是27721,编码是0x6C49。0x6C49在0×0800-0xFFFF之间，使用3字节模板：1110xxxx 10xxxxxx 10xxxxxx。将0x6C49写成二进制是：0110 1100 0100 1001， 用这个比特流依次代替模板中的x，得到：11100110 10110001 10001001，即UTF-8的编码为E6 B1 89。
+###大端和小端  
+> 字节表示正整数是有高位低位顺序之分的，于是我们就有了大端小端的事情，window记事本里面有两个选项unicode big endian和unicode，实际上这里unicode指的就是UTF-16编码。
+###BOM（byte-order mark）
+> Unicode编码中表示字节排列顺序的那个文件头，叫做BOM（byte-order mark），FFFE和FEFF就是不同的BOM   
+> UTF编码	Byte Order Mark  
+> UTF-8	EF BB BF  
+> UTF-16LE	FF FE  
+> UTF-16BE	FE FF  
+> UTF-32LE	FF FE 00 00  
+> UTF-32BE	00 00 FE FF  
+
+![Alt text](http://segmentfault.com/img/bVcdqu)
+> UTF-8文件的BOM是“EF BB BF”，但是UTF-8的字节顺序是不变的，因此这个文件头实际上不起作用。有一些编程语言是ISO-8859-1编码，所以如果用UTF-8针对这些语言编程序，就必须去掉BOM，即保存成“UTF-8—无BOM”的格式才可以，PHP语言就是这样。
+> 在UTF-8文件中放置BOM主要是微软的习惯，BOM其实是为UTF-16和UTF-32准备的，微软在UTF-8使用BOM是因为这样可以把UTF-8和ASCII等编码明确区分开
+###编码对照
+> 汉字	Unicode(ucs-2)10进制表示	Utf-8	Utf-16	Utf32	区位码	GB2312/GBK/GB18030  
+> 中	20013	E4 B8 AD	4E2D	00004E2D	5448	D6D0  
+> 文	25991	E6 96 87	6587	00006587	4636	CEC4  
+###php与编码  
+//php判断文件编码 
+
+```php
+define ('UTF32_BIG_ENDIAN_BOM'   , chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF));
+define ('UTF32_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00));
+define ('UTF16_BIG_ENDIAN_BOM'   , chr(0xFE) . chr(0xFF));
+define ('UTF16_LITTLE_ENDIAN_BOM', chr(0xFF) . chr(0xFE));
+define ('UTF8_BOM'               , chr(0xEF) . chr(0xBB) . chr(0xBF));
+$_req = trim($_GET['url']);
+header("Content-Type: text/plain;charset=utf-8");
+if( 'UTF-16LE' === detect_utf_encoding( $_req)){
+    echo iconv('UTF-16', 'UTF-8', file_get_contents( $_req));
+}else {
+    echo file_get_contents( $_req);
+}
+
+function detect_utf_encoding($filename) {
+
+    $text = file_get_contents($filename);
+    $first2 = substr($text, 0, 2);
+    $first3 = substr($text, 0, 3);
+    $first4 = substr($text, 0, 3);
+
+    if ($first3 == UTF8_BOM)
+        return 'UTF-8';
+    elseif ($first4 == UTF32_BIG_ENDIAN_BOM)
+        return 'UTF-32BE';
+    elseif ($first4 == UTF32_LITTLE_ENDIAN_BOM)
+        return 'UTF-32LE';
+    elseif ($first2 == UTF16_BIG_ENDIAN_BOM)
+        return 'UTF-16BE';
+    elseif ($first2 == UTF16_LITTLE_ENDIAN_BOM)
+        return 'UTF-16LE';
+}
+ 
+//字符分割  
+$str = "Hello Friend统计" ;
+print_r(explode(' ',$str));
+$arr1 = str_split ( $str );// 中文乱码
+$arr2 = str_split ( $str , 3 );按3个字节分割
+
+print_r($arr1);
+print_r($arr2);
+Array
+(
+    [0] => Hello
+    [1] => Friend统计
+)
+Array
+(
+    [0] => H
+    [1] => e
+    [2] => l
+    [3] => l
+    [4] => o
+    [5] =>  
+    [6] => F
+    [7] => r
+    [8] => i
+    [9] => e
+    [10] => n
+    [11] => d
+    [12] => �
+    [13] => �
+    [14] => �
+    [15] => �
+    [16] => �
+    [17] => �
+)
+Array
+(
+    [0] => Hel
+    [1] => lo 
+    [2] => Fri
+    [3] => end
+    [4] => 统
+    [5] => 计
+)
+function str_split_unicode($str, $l = 0) {
+if ($l > 0) {
+$ret = array();
+$len = mb_strlen($str, "UTF-8");
+for ($i = 0; $i < $len; $i += $l) {
+$ret[] = mb_substr($str, $i, $l, "UTF-8");
+}
+return $ret;
+}
+return preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY);
+}
+$s = '无符号整数'; 
+
+print_r(str_split_unicode($s));
+print_r(str_split_unicode($s, 3));
+
+
+Array
+(
+    [0] => 无
+    [1] => 符
+    [2] => 号
+    [3] => 整
+    [4] => 数
+)
+Array
+(
+    [0] => 无符号
+    [1] => 整数
+)
+
+//php json_encode 
+class myClass {
+	public $item1 = 1;
+	public $item2 = '中文';
+
+	function to_json() {
+		//url编码,避免json_encode将中文转为unicode
+		$this->item2 = urlencode($this->item2);
+		$str_json = json_encode($this);
+		//url解码,转完json后将各属性返回,确保对象属性不变
+		return urldecode($str_json);
+	}
+}
+
+$c = new myClass();
+echo json_encode($c);//{"item1":1,"item2":"\u4e2d\u6587"} 
+
+echo $c->to_json();//{"item1":1,"item2":"中文"}
+//php5.4以上可
+echo json_encode("中文", JSON_UNESCAPED_UNICODE);    //Output: "中文"
+//php 转换实体
+$s = '&#36716;&#25442;&#23454;&#20307;'
+$s = mb_convert_encoding($s, 'UTF-8', 'HTML-ENTITIES');// or html_entity_decode
+// 前三个都是Unicode原始值，最后一个是UTF-8
+编码1：&#27979;&#35797;
+
+编码2：\u6d4b\u8bd5
+
+编码3：&#x6D4B;&#x8BD5;
+
+编码4：%e6%b5%8b%e8%af%95
+
+```
+###php BOM 
+> PHP不认识文件中的BOM头并会将其作为HTTP Response的正文送出。这甚至在无缓冲的情况下，会导致header()等必须在Response开始前执行的函数直接失效
+```php
+function remove_utf8_bom($text) { 
+	$bom = pack('H*','EFBBBF'); 
+	$text = preg_replace("/^$bom/", '', $text);
+	return $text;
+} 
+//eg :
+$header = array(
+    "User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36"
+);
+$curl = curl_init('http://www.btc38.com/trade/getTradeList.php?coinname=XRP');
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+$res = curl_exec($curl);
+curl_close($curl);
+$res = substr($res, 3);
+$data=json_decode($res,true);
+var_dump($data);
+```
+###php urldecode
+
+```php
+
+$request= "abc%2527 or 1=%2527";//模拟注入
+$request= urldecode("abc%2527 or 1=%2527");
+echo "<a href='?name={$request}'>click me</a>";
+echo $_GET['name'];//单引号被 urlencode 两次以后是 %2527，字符串%2527提交到后台，php首先进行一次自动解码，%25编码后是%，因此我们收到的字符串是%27，而如果这时我们调用了urldecode的话，会再次进行解码，%27变为'
+
+```
+###中文网址编码   
+> 如果是中文的gbk(GB2312)编码，那么它的形式应该是这样的，即一个汉字对应两组%xx，即%xx%xx，比如http://www.baidu.com/baidu?tn=baidu&word=%D6%D0%B9%FA 这个网页地址是百度的，百度是使用GB2312编码的，这个网址中我们可以看到的特殊代码是“%D6%D0%B9%FA”，其中前面的“%D6%D0”就对应中文汉字“中”字，后面的“%B9%FA”就对应中国汉字“国”字。   
+> 如果是中文的UTF-8编码，那么它的形式应该是这样的，即一个汉字对应三组%xx，即%xx%xx%xx，比如http://s.weibo.com/weibo/%E6%96%B0%E6%B5%AA  使用的是UTF-8编码，这个网址中的”=%E6%96%B0%E6%B5%AA″对应着中文汉字“新浪”，即“%E6%96%B0”对应汉字“新”，“E6%B5%AA”对应中文汉字“浪”。    
+> rawurlencode 遵守是94年国际标准备忘录RFC 1738，对空格的转义是’%20′；而urlencode的编码实现的是传统做法，和POST表单数据一样会把空格转义成”+”号。实际的开发中为了避免URL格式不统一，还是推荐大家使用rawurlencode()来进行URL的编码转换  
+###javascript与编码
+> JavaScript中的String内部表示方式始终是UTF16，而它的length也是始终按UTF16 code point去计算，简而言之，length始终返回字符数量，而非字节大小！    
+
+```javascript
+console.log('javascript'.length);// 10
+console.log('中文'.length);// 2
+console.log('中文'.replace(/[\u4e00-\u9fa5]/g,'aa').length)//把中文当2个字符
+//以下代码用于将正常的字符转变为html实体
+
+var encodeHtmlEntity = function(str) {
+  var buf = [];
+  for (var i=str.length-1;i>=0;i--) {
+    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+  }
+  return buf.join('');
+};
+var str = '高级程序设计';
+console.log(encodeHtmlEntity(str));//&#39640;&#32423;&#31243;&#24207;&#35774;&#35745;
+
+//html实体转换
+var decodeHtmlEntity = function(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};
+
+var str = 'JavaScript&#39640;&#32423;&#31243;&#24207;&#35774;&#35745;';
+console.log(decodeHtmlEntity(str));//JavaScript高级程序设计
+
+
+//单字符转换
+function convert2Unicode(char) {
+  return "\\u" + char.charCodeAt(0).toString(16);
+}
+function convert2Unicode2(s){
+  s = escape(s)
+  return s.replace(/%u/g,'\\u');
+}
+//多字符转换
+function toUnicode(theString) {
+  var unicodeString = '';
+  for (var i = 0; i < theString.length; i++) {
+    var theUnicode = theString.charCodeAt(i).toString(16).toUpperCase();
+    while (theUnicode.length < 4) {
+      theUnicode = '0' + theUnicode;
+    }
+    theUnicode = '\\u' + theUnicode;
+    unicodeString += theUnicode;
+  }
+  return unicodeString;
+}
+
+toUnicode('字符编码那些事')//"\u5B57\u7B26\u7F16\u7801\u90A3\u4E9B\u4E8B"
+unescape("\u5B57\u7B26\u7F16\u7801\u90A3\u4E9B\u4E8B");//字符编码那些事
+
+//十进制转其他进制
+var x=110;
+x;
+x..toString(8);
+x..toString(32);
+x..toString(16);
+
+//其他转十进制
+var x='110';
+parseInt(x,2);
+parseInt(x,8);
+parseInt(x,16);
+//php  base_convert($binary,2,16)
+```
+
+```
+> 无论网页的原始编码是什么，一旦被Javascript编码，就都变为unicode字符。也就是说，Javascipt函数的输入和输出，默认都是Unicode字符  
+
+###奇怪字符 new Array(20).join('\u0310')  
+f́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́́
+###python与编码
+> python当中默认的编码格式是Unicode，然后如果你想要将一种字符转换成另一种字符是不能直接转换的，而是先应该使用decode函数将特殊编码转换成Unicode，然后将Unicode再转换成另一种字符，比如将GBK转换成utf8 str.decode('gbk').encode('utf-8')  
+```python
+ u'中文'.encode('utf-8')  
+'\xe4\xb8\xad\xe6\x96\x87'  
+  print '\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8') #中文  
+```
+###解决乱码
+> 需要告诉浏览器自己的文件采用了什么字符编码，下面列出一些常见的方法：
+```php
+header('content-type:text/html;charset=utf-8;');
+```
+```html
+<meta charset="gb2312"> //html5
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"> //html4 xhtml
+<script src="http://ossweb-img.qq.com/images/js/foot.js" charset="gb2312"></script>
+<link href="http://gameweb-img.qq.com/css/common.css" rel="stylesheet" charset="gb2312" >
+```
+
+![Alt text](http://djt.qq.com/upload/public/common/2013/09/images/02142304314.jpg?nothumb=false)
+###感谢
+[维基百科](http://zh.wikipedia.org/zh-cn/UTF-8#UTF-8.E7.9A.84.E7.B7.A8.E7.A2.BC.E6.96.B9.E5.BC.8F)  
+[字符编码的前世今生](http://djt.qq.com/article/view/658?ADTAG=email.InnerAD.weekly.20130902&bsh_bid=281085951)   
+[汉字unicode编码表](http://www.chi2ko.com/tool/CJK.htm)  
+[字符编码笔记](http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html)  
+http://www.w3.org/TR/REC-xml/#sec-physical-struct  
+[中文编码杂谈](http://blog.sae.sina.com.cn/archives/2279)  
+[奇怪字符](http://www.fileformat.info/info/unicode/category/Mn/list.htm)  
+[UTF-8, UTF-16, UTF-32 & BOM](http://www.unicode.org/faq/utf_bom.html)  
+
+[字符编码那些事](http://levi.cg.am/archives/1533)
+</xmp>
+<a href="http://vdisk.weibo.com/s/dEOYMQaMA7tHM">下载编码转换工具</a>
+<script src="markdown.js"></script>
