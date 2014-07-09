@@ -1,0 +1,20 @@
+<div class="report" id="play-product" style="cursor: pointer"  data-flv="http://player.youku.com/player.php/sid/XNzM4MDk5OTk2/v.swf"></div>
+<script src="http://s.segmentfault.com/js/jquery.js?14.6.24.2"></script>
+<script type="text/javascript">
+//播放视频
+$('#play-product').click(function(){
+      var flvUrl = $(this).attr('data-flv');
+      var Close = 'closePlayer';
+      var box = 'playerBox';
+
+      var objclose = "#"+Close;
+      var objBox = "#"+box;
+
+      $("body").append("<div id= "+box+"><div class='closeTitle'><a href='javascript:;' id= "+Close+">点击关闭</a></div><object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' width='100%' height='100%' id='index' align='middle'><param name='movie' value='/club/images/flvPlayer.swf'><param name='quality' value='high'><param name='bgcolor' value='#000'><param name='play' value='true'><param name='loop' value='true'><param name='wmode' value='transparent'><param name='scale' value='showall'><param name='menu' value='true'><param name='devicefont' value='false'><param name='salign' value=''><param name='flashvars'  value='flvURL="+flvUrl+"'><param name='allowScriptAccess' value='sameDomain'><param name='allowFullScreen' value='true'><!--[if !IE]>--><object type='application/x-shockwave-flash' data='/club/images/flvPlayer.swf' width='100%' height='100%' align='middle'><param name='movie' value='/club/images/flvPlayer.swf'><param name='quality' value='high'><param name='bgcolor' value='#000'><param name='play' value='true'><param name='loop' value='true'><param name='wmode' value='transparent'><param name='scale' value='showall'><param name='menu' value='true'><param name='devicefont' value='false'><param name='salign' value=''><param name='allowFullScreen' value='true'><param name='flashvars' value='flvURL="+flvUrl+"'><param name='allowScriptAccess' value='sameDomain'><!--<![endif]--><a href='http://www.adobe.com/go/getflash'><img src='http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='取得 Adobe Flash 播放程式'></a><!--[if !IE]>--></object><!--<![endif]--></object></div>");
+
+        $(objclose).click(function(){
+          $(objBox).remove();
+        });
+        return false;
+    });
+</script>
