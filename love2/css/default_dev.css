@@ -1,0 +1,155 @@
+body {
+	margin: 0;
+	padding: 0;
+    background:tranparent;
+	font-size: 12px;
+}
+.heart{
+    color:rgb(246,105,147)
+}
+#mainDiv{
+	position:absolute;
+	width: 100%;
+	height: 100%;
+    overflow:hidden;
+    padding:0;
+    margin:0;
+}
+
+#loveHeart {
+	float: left;
+	width:670px;
+	height:625px;
+}
+
+#garden {
+	width: 100%;
+	height: 100%;
+}
+
+#elapseClock {
+	text-align: right;
+	font-size: 18px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#words {
+	 font-size:14px;
+    font-weight:bold;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+    font-family:"angelina";
+	width: 500px;
+	font-size: 24px;
+	color:#FF6B6B;
+}
+
+#messages{
+	display: none;
+}
+
+#elapseClock .digit{
+	font-family: "digit";
+	font-size: 36px;
+    color:#000;
+    text-shadow:1px 1px 1px #4B5E3F;
+}
+
+#loveu{
+	padding: 5px;
+	font-size: 22px;
+	margin-top: 10px;
+	margin-right: 120px;
+	text-align: right;
+	display: none;
+}
+
+#loveu .signature{
+	margin-top: 10px;
+	font-size: 20px;
+	font-style: italic;
+}
+
+#clickSound{
+	display:none;
+}
+
+#code {
+	float: left;
+	width: 440px;
+	height: 400px;
+	color: #333;
+	font-family: "Consolas", "Monaco", "Bitstream Vera Sans Mono", "Courier New", "sans-serif";
+	font-size: 12px;
+}
+
+#code .string{
+	color: #2a36ff;
+}
+
+#code .keyword{
+	color: #7f0055;
+	font-weight:bold;
+}
+
+#code .placeholder{
+	margin-left:15px;
+}
+#code .spacelong{
+	margin-left:150px;
+}
+#code .spacemed{
+	margin-left:150px;
+}
+#code .space{
+	margin-left:7px;
+}
+.left{
+	text-align:left;
+}
+.right{
+	text-align:right;
+}
+.center{
+	text-align:center;
+}
+#ClCache{display:none;}
+#code .comments{
+	display:block;
+	color: #000;
+    text-shadow:1px 1px 1px #4B5E3F;
+    font-size:16px;
+    font-weight:bold;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+    font-family:"cnword";
+}
+
+.loveupersec
+{
+	text-align:center;
+	padding:15px 0px;
+	line-height:50px;
+}
+#copyright{
+	position:absolute;
+    bottom:0px;
+	margin-top: 10px;
+	text-align: center;
+	width:100%;
+	color:#000;
+}
+
+#errorMsg{
+	width: 100%;
+	text-align: center;
+	font-size: 24px;
+	position: absolute;
+	top: 100px;
+	left:0px;
+}
+
+#copyright a{
+	color:#000;
+}
