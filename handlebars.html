@@ -1,0 +1,129 @@
+<!-- 创建一个展示数据的容器section //-->
+
+<section id="tutorial">
+  
+</section>
+
+<!-- 导入jQuery类库 //-->
+
+<script type='text/javascript' src="http://libs.baidu.com/jquery/1.7.1/jquery.min.js">
+</script>
+<script type="text/javascript" src="http://www.gbtags.com/gb/networks/uploads/44b0c6e7-0395-4825-bff4-5914e6153ee0/js/jquery.jribbble.min.js"></script>
+
+<!-- 导入handlebars 相关JS //-->
+<script type='text/javascript' src="http://www.gbtags.com/gb/networks/uploads/87c22f7e-b475-4837-b781-eb74ae423041/js/handlebars-v1.3.0.js"></script>
+
+<!-- 定义handlebars的模板  //-->
+<script type="text/x-handlebars-template" id="tutorial-template">
+  <h1>{{title}}</h1>
+  <p>{{author}}</p>
+  <div>{{intro}}</div>
+  <div>{{{type}}}</div>
+    {{! 注意：修改双大括号为三大括号关闭HTML转义 － 此处为模板代码注释 }}
+  {{{generateContent this}}}
+   {{#listTutorials tutorials}}
+    {{title}} － 课程时长：{{duration}}分钟
+  {{/listTutorials}}
+
+   {{! 以下使用handlebars内建的辅助方法each来循环获取课程目录 }}
+  {{#each tutorials}}
+    {{! 注意在each块表达式中当前的层次是list属性对应这层 }}
+
+    <p>
+      {{title}} - 课时：{{duration}}分钟 | 讲师：{{../info.author}}
+       
+    </p>
+    {{/each}}
+{{! 使用each来循环课程信息对象属性 }}
+{{#each author}}
+<li>{{@key}}：{{this}}</li>
+    {{/each}}
+     {{#with author}}
+ 作者：{{lastname}} {{firstname}}
+ {{/with}}
+  {{#if author}}
+ 作者：{{author.lastname}} {{author.firstname}}
+ {{! if也可以配合else使用，如下 }}
+ {{else}}
+ 作者：无
+ {{/if}}
+ {{log 'hello , gbtags.com'}} 
+  {{! 使用each来循环获取课程列表数组 }}
+  <ul>
+  {{#each tutoriallist}}
+    <li>
+    {{! 这里使用@index可以获取数组的索引index }}
+    编号 {{@index}} ： {{title}} - {{duration}}分钟
+    </li>
+  {{/each}}
+  </ul>
+
+
+</script>
+
+<script>
+Handlebars.registerHelper('generateContent', function(jsondata) {
+  
+  //以下组装页面需要展示的HTML内容
+        var content = 
+           '<h1>' + jsondata.title + '</h1>'
+           + '<p>' + jsondata.author + '</p>'
+           +  '<div>' + jsondata.intro + '</div>';
+           
+        return content;
+}
+
+Handlebars.registerHelper('listTutorials',function(items, options) {
+
+  var out = "<ul>";
+  
+  for(var i=0;i<items.length;i++){
+    out += "<li>" + options.fn(items[i]) + "</li>"; //注意这个options有个属性fn，可以用来直接调用模板
+  }
+  
+  return out + "</ul>";
+});
+$(function(){
+		var jsondata = {
+						  'title':'handlebars使用入门', 
+						  'author': 'gbtags.com',
+						  'intro': '基础JS模板引擎handlebars的初学者指南',
+						  'type': '<span class="au"hot>双大括号会自动转义HTML代码，而三括号则不转义HTML</span>',
+						   //下面定义一个新的数组属性tutorials
+                          'tutorials':[
+                            {'title': '第一节：handlebar基础','duration':'5'},
+                            {'title': '第二节：handlebar 表达式','duration':'3'},
+                            {'title': '第三节：handlebar 辅助方法','duration':'1'},
+                            {'title': '第四节：handlebar 内建辅助方法','duration':'6'}
+                          ],
+          'author': {
+              'firstname': 'terry',
+              'lastname': 'li'
+            },
+           tutoriallist: [
+             {title:'Handlebars介绍',duration: 5},
+             {title:'Handlebars基础',duration: 3},
+             {title:'Handlebars内建块表达式',duration: 2},
+             {title:'Handlebars实际案例',duration: 8}
+           ]
+						};
+         // 获取模板中定义的HTML结构
+         var source = $("#tutorial-template").html();
+         
+         // 编译HTML生成对应的JS模板
+         var template = Handlebars.compile(source);
+         
+         // 使用JS模板处理需要显示的JSON数据, 生成对应的HTML内容
+         var html = template(jsondata);
+         
+         // 添加生成的HTML内容到对应页面元素中
+         $('#tutorial').html(html);
+});
+
+ /*
+  *总结：
+  *可以看到使用handlebars来生成对应页面内容，只需要定义一个HTML模板
+  *通过handlebar来获取HTML模板并且编译成JS模板，最后处理数据成为页面内容
+  *模板维护更新非常简单，并且代码清楚易于阅读，非常适合开发复杂逻辑的页面
+  */
+</script>

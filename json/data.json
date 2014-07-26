@@ -1,0 +1,25 @@
+{
+    "page": "2",
+    "shots": [
+        {
+            "title": "Badge",
+            "image_teaser_url": "https://d13yacurqjgara.cloudfront.net/users/13307/screenshots/1656084/badge_teaser.jpg"
+        },
+        {
+            "title": "Portraits",
+            "image_teaser_url": "https://d13yacurqjgara.cloudfront.net/users/18241/screenshots/1655690/portraits_animation_hd_teaser.gif"
+        },
+        {
+            "title": "2014",
+            "image_teaser_url": "https://d13yacurqjgara.cloudfront.net/users/31664/screenshots/1655770/section-7---independance-3-ram_teaser.gif"
+        },
+        {
+            "title": "Experimenting",
+            "image_teaser_url": "https://d13yacurqjgara.cloudfront.net/users/78594/screenshots/1656433/js_teaser.png"
+        },
+        {
+            "title": "cstm js",
+            "image_teaser_url": "https://d13yacurqjgara.cloudfront.net/users/77275/screenshots/1656276/drib-ekpe_teaser.jpg"
+        }
+    ]
+}

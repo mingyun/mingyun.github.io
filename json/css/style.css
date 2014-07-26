@@ -1,0 +1,205 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,  figure, figcaption, footer, header, hgroup,  menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; outline: none; }
+html { height: 101%; }
+body { background: url("../images/noise-f1.gif") repeat scroll -70% 0 #f7dde7; font-size: 12px; line-height: 1; font-family: Arial, Tahoma, sans-serif; }
+article, aside, details, figcaption, figure,  footer, header, hgroup, menu, nav, section { display: block; }
+
+ol, ul { list-style: none; }
+
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+img { border: 0; max-width: 100%; }
+
+a { color: #6d93d5; text-decoration: none; font-weight: bold; }
+a:hover { text-decoration: underline; }
+
+article{
+	width: 181px;
+	margin: 0 15px 10px 0;
+	padding: 10px;
+	background: #EEE;
+	border: 1px solid #f7dde7;
+	border-radius:5px;
+}
+
+section{
+	padding: 0px;
+	margin-right: -15px;
+}
+
+h2{
+	font-size:12px;
+	font-weight: bold;
+	overflow:hidden;
+	white-space:nowrap;
+	line-height: 20px;
+}
+
+/** core body **/
+#w { 
+	-webkit-box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 3px #f4f4f4, 0 0 5px rgba(0, 0, 0, .1);
+	   -moz-box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 3px #f4f4f4, 0 0 5px rgba(0, 0, 0, .1);
+	        box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 3px #f4f4f4, 0 0 5px rgba(0, 0, 0, .1);	
+	border-radius:5px; display: block; box-sizing: border-box; -moz-box-sizing: border-box; max-width: 1105px; margin: 0 auto; padding: 9px 15px; background: #fff; margin-top: 20px; margin-bottom: 20px;}
+
+#w h1 { border-radius:5px; display: inline-block; font-family: "Big Caslon", "Book Antiqua", "Palatino Linotype", Georgia, serif; font-size: 14px; line-height: 1.4em; margin-bottom: 25px; margin-right: 12px; margin-top: 10px; color: #fff; background: #d85588; padding: 10px 9px; border-left: 5px solid #b44771; }
+
+#w nav { display: inline-block; margin-bottom: 15px; }
+
+#w #container { display: block; }
+
+.details{
+	margin: 5px 0 10px;
+}
+
+.author{	
+	margin: 10px 0 5px;
+	text-align: right;
+	white-space:nowrap;
+	overflow:hidden;
+	white-space:nowrap;
+	line-height: 20px;
+}
+
+#morewrapper{
+	text-align:center;
+	padding:30px;
+	position: relative;
+}
+
+#morewrapper span {
+    margin: -22px 5px 0 0;
+    position: absolute;
+    top: 50%;
+	background: url('../images/dribbble.png') no-repeat 50% 50%;
+	width: 46px;
+	height: 45px;
+}
+
+#morewrapper a{
+	font-size:14px;
+	font-family: 'microsoft yahei', Arial, sans-serif;
+	color: #D85588;
+	font-weight: 600;
+	text-shadow: 0 1px 1px #D85588;
+	border: 1px solid #DDDDDD;
+	background: #f1f1f1; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#ffffff,endColorStr=#fafafa); /* for IE */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#ffffff,endColorStr=#fafafa)"; /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#fafafa)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #ffffff,  #fafafa); /* for firefox 3.6+ */
+	margin: 0;
+	padding: 10px 10px 10px 45px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	text-decoration: none;
+	cursor:pointer;
+	left: 10px;
+}
+
+#morewrapper a:hover{
+	background: #D85588;
+	filter: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#313639333,endColorStr=#313639333); /* for IE */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#313639333,endColorStr=#313639333)"; /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#313639333), to(#313639333)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #313639333,  #313639333); /* for firefox 3.6+ */
+	color: #fff;
+	border: 1px solid #EEEEEE;
+	text-decoration: none
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.morebutton{
+	width: 200px;
+	margin: 0 auto;
+	position: relative;
+}
+
+footer{
+	line-height: 20px;
+	padding: 5px;
+}
+
+/** clearfix **/
+.clearfix:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
+.clearfix { display: inline-block; }
+ 
+html[xmlns] .clearfix { display: block; }
+* html .clearfix { height: 1%; }
+
+
+/**** Isotope Filtering ****/
+
+.isotope-item {
+  z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+  pointer-events: none;
+  z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+
+.isotope,
+.isotope .isotope-item {
+  -webkit-transition-duration: 0.8s;
+     -moz-transition-duration: 0.8s;
+      -ms-transition-duration: 0.8s;
+       -o-transition-duration: 0.8s;
+          transition-duration: 0.8s;
+}
+
+.isotope {
+  -webkit-transition-property: height, width;
+     -moz-transition-property: height, width;
+      -ms-transition-property: height, width;
+       -o-transition-property: height, width;
+          transition-property: height, width;
+}
+
+.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+      -ms-transition-property:     -ms-transform, opacity;
+       -o-transition-property:      -o-transform, opacity;
+          transition-property:         transform, opacity;
+}
+
+/**** disabling Isotope CSS3 transitions ****/
+
+.isotope.no-transition,
+.isotope.no-transition .isotope-item,
+.isotope .isotope-item.no-transition {
+  -webkit-transition-duration: 0s;
+     -moz-transition-duration: 0s;
+      -ms-transition-duration: 0s;
+       -o-transition-duration: 0s;
+          transition-duration: 0s;
+}
+
+#backtotop {
+    bottom: 12px;
+    height: 50px;
+    position: fixed;
+    right: -60px;
+    transition: all 1s ease 0s;
+    width: 50px;
+    z-index: 9999;
+}
+#backtotop.showme {
+    right: 12px;
+    transform: scale(1) rotate(-360deg) translate(0px);
+}
+#backtotop .bttbg {
+    background: url("../images/top_button.png") no-repeat scroll 0 0 transparent;
+    height: 50px;
+    width: 50px;
+}
+#backtotop .bttbg:hover {
+    background-position: left bottom;
+}
