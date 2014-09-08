@@ -1,0 +1,1 @@
+mysql connect error php_network_getaddresses: getaddrinfo failed: 不知道这样的主机。 
