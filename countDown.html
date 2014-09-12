@@ -1,0 +1,66 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jquery倒计时插件可自定义多个倒计时间展示</title>
+<meta name="description" content="jquery倒计时插件设置多个自定义倒计时时间，任意设置天、小时、分钟、秒倒计时间功能。jQuery下载。" />
+<script type="text/javascript" src="http://s.segmentfault.com/js/jquery.js?14.6.24.1"></script>
+<script type="text/javascript">
+$(function(){
+	countDown("2014/8/10 23:59:59","#demo01 .day","#demo01 .hour","#demo01 .minute","#demo01 .second");
+	countDown("2014/8/10 22:59:59",null,"#demo02 .hour","#demo02 .minute","#demo02 .second");
+});
+
+function countDown(time,day_elem,hour_elem,minute_elem,second_elem){
+	//if(typeof end_time == "string")
+	var end_time = new Date(time).getTime(),//月份是实际月份-1
+	//current_time = new Date().getTime(),
+	sys_second = (end_time-new Date().getTime())/1000;
+	var timer = setInterval(function(){
+		if (sys_second > 0) {
+			sys_second -= 1;
+			var day = Math.floor((sys_second / 3600) / 24);
+			var hour = Math.floor((sys_second / 3600) % 24);
+			var minute = Math.floor((sys_second / 60) % 60);
+			var second = Math.floor(sys_second % 60);
+			day_elem && $(day_elem).text(day);//计算天
+			$(hour_elem).text(hour<10?"0"+hour:hour);//计算小时
+			$(minute_elem).text(minute<10?"0"+minute:minute);//计算分
+			$(second_elem).text(second<10?"0"+second:second);// 计算秒
+		} else { 
+			clearInterval(timer);
+		}
+	}, 1000);
+}
+</script>
+</head>
+
+<body>
+
+<style type="text/css">
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{font:12px/180% Arial, Helvetica, sans-serif,"宋体";}
+/* colockbox */
+.colockbox{width:283px;height:76px;margin:20px auto;background:url(images/colockbg.png) no-repeat;}
+.colockbox span{float:left;display:block;width:58px;height:48px;line-height:48px;font-size:26px;text-align:center;color:#ffffff;margin:0 17px 0 0;}
+.colockbox span.second{margin:0;}
+#demo02{width:208px;background-position:-75px 0;}
+</style>
+
+<div class="colockbox" id="demo01">
+	<span class="day">-</span>
+	<span class="hour">-</span>
+	<span class="minute">-</span>
+	<span class="second">-</span>
+</div>
+
+<div class="colockbox" id="demo02">
+	<span class="hour">-</span>
+	<span class="minute">-</span>
+	<span class="second">-</span>
+</div>
+
+</body>
+</html>
