@@ -1,0 +1,49 @@
+
+
+<input id="trynotification" type="button" value="Send notification" />
+
+<script>
+document.getElementById("trynotification").onclick = function(){
+notify(Math.random());
+};
+ 
+function notify(tab) {
+if (!window.webkitNotifications) {
+return false;
+}
+ 
+var permission = window.webkitNotifications.checkPermission();
+if(permission!=0){
+window.webkitNotifications.requestPermission();
+var requestTime = new Date();
+var waitTime = 5000;
+var checkPerMiniSec = 100;
+setTimeout(function(){
+		permission = window.webkitNotifications.checkPermission();
+		if(permission==0){
+		createNotification(tab);
+		}else if(new Date()-requestTime<waitTime){
+		setTimeout(arguments.callee,checkPerMiniSec);
+		}
+		},checkPerMiniSec);
+}else if(permission==0){
+createNotification(tab);
+}
+}
+ 
+function createNotification(tab){
+var showSec = 10000;
+var icon = "http://tech.baidu.com/resource/img/logo_news_137_46.png";
+var title = "[" + new Date().toLocaleTimeString() + "] close after " + (showSec/1000) + " seconds";
+var body =  "hello world, i am webkitNotifications informations";
+ 
+var popup = window.webkitNotifications.createNotification(icon, title, body);
+popup.tag = tab;
+popup.ondisplay = function(event) {
+setTimeout(function() {
+event.currentTarget.cancel();
+}, showSec);
+}
+popup.show();
+}
+</script>
