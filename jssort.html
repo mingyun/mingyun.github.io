@@ -1,0 +1,79 @@
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+
+
+<script src = "http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+<link rel=stylesheet type=text/css href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+<div id="div1">
+  <p> Paragraph 1 </p>
+  <p> Paragraph 2 </p>
+  <p> Paragraph 3 </p>
+  <p> Paragraph 4 </p>
+  <p> Paragraph 5 </p>
+  </div>
+
+<div id="div2">
+  <p> Paragraph 11 </p>
+  <p> Paragraph 12 </p>
+  <p> Paragraph 13 </p>
+  <p> Paragraph 14 </p>
+  <p> Paragraph 15 </p>
+</div>
+<div id="div3">
+  <p> Paragraph a </p>
+  <p> Paragraph b </p>
+  <p> Paragraph c </p>
+  <p> Paragraph 14 </p>
+  <p> Paragraph 15 </p>
+</div>
+
+<hr />
+
+<div id="div4">
+  <p> cat </p>
+  <p> dog </p>
+  <p> pig </p>
+  <p> ant </p>
+  <p > chicken </p>
+</div>
+
+<hr />
+<span id="result"></span>
+<span id="result2"></span>
+<script type="text/javascript">
+ 
+
+
+$("#div4").sortable ({
+  revert : 2000,//表示你移到了一个大致的地方，会在2秒内缓慢移动到精确的位置；
+  
+  
+  sort : function (event, ui)
+  {//这里可以写任何‘移动过程中’你自己想要的函数；
+      selected_item=$(this).find('p').filter('.ui-sortable-helper').text();
+      //selected_item是一个全局变量，当#div1内的某一个元素被你选中后，会自动添加上 ui-sortable-helper 类，所以你可以把你移动的元素选出来，然后移动结束后，这个类会自动被去除；
+    $("span#result").html (selected_item+"被选中了！ <br />");
+  },
+  stop : function (event, ui)
+  { //这里可以写任何‘移动结束’时触发的函数；
+    $("span#result2").html (selected_item+"缓慢地去到了新的位置<br />");
+  }
+  
+});
+ 
+
+$("#div1").sortable ({
+  revert : 1000,
+  connectWith : "#div2,#div3",//div1的元素可以放入div2和div3中；
+  
+});
+$("#div2").sortable ({
+  revert : 1000,
+  connectWith : "#div1"//div2的元素可以放入div1中；
+});
+$("#div3").sortable ({
+  revert : 1000,//div3只能接受别人放进来的元素，不能将自己的元素放入别人那里；
+  //connectWith : "#div1"
+});
+
+
+</script>
