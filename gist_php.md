@@ -498,7 +498,7 @@ $arr = array_map(function($key) use($myarr) {
 ]
 ```
 ###浮点数
-``php
+```php
 $a = 2.01;
 var_dump(sprintf('%.20F', $a * 100));//string(24) "200.99999999999997157829"
 var_dump( intval( $a * 100) );//int(200)
