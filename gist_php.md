@@ -777,3 +777,158 @@ $a->test(1,2,3);
 
 call_user_func(['A','test'],1,2,3);
 ```
+###搜索联想词
+```php
+https://laravist.com/article/36
+class Suggest {
+    
+    const PREFIX = 'word:';
+    const WORDS_PREFIX = 'word_scores';
+    const RESULT_PREFIX = 'word_result';
+    protected $redis = null;
+    
+    public function __construct($redis)
+    {
+        $this->redis = $redis;
+    }
+    
+    public function add($word)
+    {
+        $len = mb_strlen($word, 'UTF-8');
+        for ( $i = 1; $i <= $len; $i ++ ) {
+            $sub = mb_substr($word, 0, $i, 'UTF-8');
+            $this->redis->zAdd(self::PREFIX . $sub, 0, $word);
+        }
+    }
+    
+    public function incScore($word, $score = 1)
+    {
+        return $this->redis->zIncrBy(self::WORDS_PREFIX, $score, $word);
+    }
+    
+    public function search($keyword, $stop = 5)
+    {
+        $this->redis->zInter(self::RESULT_PREFIX, array(self::PREFIX . $keyword, self::WORDS_PREFIX), array(1, 1));
+        
+        return $this->redis->zRevRange(self::RESULT_PREFIX, 0, $stop, true);
+    }
+} 
+echo '<pre>';
+// $redis = new redis();
+// $redis->connect("127.0.0.1",6379);
+$suggest = new  Suggest($redis);
+$suggest->add('javascript');
+$suggest->incScore('javascript');
+print_r($suggest->search('s'));
+// https://segmentfault.com/a/1190000004973921#articleHeader0
+```
+###redis频道订阅
+```php
+function f($redis, $chan, $msg) {  //频道订阅
+    switch($chan) {
+        case 'chan-1':
+            echo $msg;
+            break;
+
+        case 'chan-2':
+            echo $msg;
+            break;
+
+        case 'chan-2':
+            echo $msg;
+            break;
+    }
+}
+
+ $redis->subscribe(array('chan-1', 'chan-2', 'chan-3'), 'f'); // subscribe to 3 chans
+
+$redis->publish('chan-1', 'hello, world!'); // send message. 
+```
+###redis分页
+```php
+//limit不能用字符串 https://segmentfault.com/a/1190000004973921#articleHeader0
+ print_r($redis->zrangebyscore('online',1,'+infinity',['withscores' => TRUE,'limit'=>[0,2]]));
+print_r($redis->zrangebyscore('online',1,'+infinity',['withscores' => TRUE,'limit'=>[0,'2']]));
+```
+###批量操作pipeline
+```php
+//只是把多个redis指令一起发出去，redis并没有保证这些指定的执行是原子的
+$replies = $redis->pipeline(function($pipe) {  
+    $pipe->ping();
+    $pipe->incrby('counter', 10); //增量操作  
+    $pipe->incrby('counter', 30);  
+    $pipe->exists('counter');  
+    $pipe->get('counter');  
+    $pipe->sMembers('skey1');  
+});
+print_r($replies);
+$ret = $redis->multi()
+    ->set('key1111', 'val1')
+    ->get('key1111')
+    ->set('key2222', 'val2')
+    ->get('key2222')
+    ->exec();
+
+
+```
+###redis zcount
+```php
+$redis->zAdd('zkey', 0, 'val0');
+ $redis->zAdd('zkey', 2, 'val2');
+ $redis->zAdd('zkey', 10, 'val10');
+ $redis->zCount('zkey', 0, 3); 
+
+ $redis->zAdd('zkey', 2.5, 'val2');
+ echo $redis->zScore('zkey', 'val2'); /* 2.5 */
+//zcount 统计一个索引区间的元素个数  
+ echo $redis->zcount('zkey',3,5);//2  
+echo $redis->zcount('zkey','(3',5); //'(3'表示索引值在3-5之间但不含3,同理也可以使用'(5'表示上限为5但不含5  
+echo $redis->zRank('tkey', 'A');// 返回集合tkey中元素A的索引值 
+$redis->zSize('tkey');  //返回存储在key对应的有序集合中的元素的个数
+                      
+```
+###curl cookie模拟登陆访问
+```php
+function request($method, $url, $fields = array())
+	{
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_COOKIE, '_za=9940ad75-d123-421d-bba5-4e247da577a0;q_cl=e67');
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.130 Safari/537.36');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		if ($method === 'POST')
+		{
+			curl_setopt($ch, CURLOPT_POST, true );
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+		}
+		$result = curl_exec($ch);
+		return $result;
+	}
+```
+###删除当前目录文件
+`array_map('unlink', glob('*'));`
+###获取当前目录所有php文件
+```php
+$files=glob('./*.php');
+$files = array_map('realpath', $files);
+print_r($files);
+```
+###查看当前页面是否有重复id
+```php
+var tmpId = [];
+var result = [];
+$('*[id]').each(function() {
+    if ($.inArray($(this).attr('id'), tmpId) == -1) {
+        tmpId.push($(this).attr('id'));
+    } else {
+        result.push($(this).attr('id')); 
+    }
+}) 
+if (result.length > 0) {
+    console.log('重复的ID为:' + result.join(' || '));
+} else {
+    console.log('没有重复的ID');
+}
+```
