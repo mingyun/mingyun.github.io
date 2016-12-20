@@ -1043,3 +1043,78 @@ function formatChat($content, &$user_arr, &$topic_arr)
         return true;//#话题#
     }
 ```
+###json格式化输出
+```php
+ $array = ['Joel', 23, true, ['red', 'blue']];
+ echo json_encode($array, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT);
+ {
+    "0": "Joel",
+    "1": 23,
+    "2": true,
+    "3": {
+        "0": "red",
+        "1": "blue"
+    }
+}
+ $array = ['23452', 23452];
+
+echo json_encode($array);
+["23452",23452]
+
+echo json_encode($array, JSON_NUMERIC_CHECK);
+ [23452,23452]
+$array = ["Singin' in Bahrain", "Charlie Wilson's War"];
+echo json_encode($array, JSON_HEX_APOS);
+ ["Singin\u0027 in Bahrain","Charlie Wilson\u0027s War"]
+$array = ['filename' => 'example.txt', 'path' => '/full/path/to/file/'];
+
+echo json_encode($array);
+ {"filename":"example.txt","path":"\/full\/path\/to\/file"}
+
+echo json_encode($array, JSON_UNESCAPED_SLASHES);
+ {"filename":"example.txt","path":"/full/path/to/file"}
+$array = [5.0, 5.5];
+echo json_encode($array);
+ [5,5.5]
+
+echo json_encode($array, JSON_PRESERVE_ZERO_FRACTION);
+ [5.0,5.5]
+
+$jsonString = json_encode("{'Bad JSON':\xB1\x31}");
+
+if (json_last_error() != JSON_ERROR_NONE) {
+    printf("JSON Error: %s", json_last_error_msg());
+}
+
+```
+###use && and || instead of and and or
+```php
+
+$e = false || true;// true.
+
+$e = false or true;// false.
+
+#It's because $e = false || true is evaluated as $e = (false || true) and
+
+#$e = false or true is evaluated as ($e = false) or true
+
+```
+###json unicode转换
+```php
+if (!function_exists('codepoint_encode')) {
+    function codepoint_encode($str) {
+        return substr(json_encode($str), 1, -1);
+    }
+}
+
+if (!function_exists('codepoint_decode')) {
+    function codepoint_decode($str) {
+        return json_decode(sprintf('"%s"', $str));
+    }
+}
+http://stackoverflow.com/documentation/php/4472/unicode-support-in-php#t=201609060941458015713
+echo "\nUse JSON encoding / decoding\n";
+var_dump(codepoint_encode("我好"));
+var_dump(codepoint_decode('\u6211\u597d'));
+var_dump('\u6211\u597d');
+```
