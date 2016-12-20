@@ -932,3 +932,114 @@ if (result.length > 0) {
     console.log('没有重复的ID');
 }
 ```
+###补全时间格式
+`print  vsprintf ( "%04d-%02d-%02d" ,  explode ( '-' ,  '1988-8-1' ));  // 1988-08-01`
+###5位数字ABCDE*4=EDCBA,这5个数字不重复
+```php
+for($i=12345; $i<25000; $i++){
+if( $i*4==strrev($i) && count(array_unique(str_split($i)))==strlen($i) )
+echo $i;
+}
+
+
+for($i=10000;$i<25000;$i++){
+if(count(array_unique(str_split($i)))==count(str_split($i)) && $i*4==strrev($i)){
+echo $i;
+}
+}
+
+$num = range(12345,24999);
+foreach ($num as $val){
+
+$sum = strrev($val);
+if($val*4 == $sum){
+echo $val;
+break;
+}
+}
+
+$nums=ceil(98765/4);
+for($i = 12345;$i<$nums;$i++){
+    if($i*4 == strrev($i)){
+       echo $i.'<br />';
+     }
+}
+```
+###字符串截取
+```php
+function words_limit( $str, $num, $append_str='' ){
+$words = preg_split( '/[\s]+/', $str, -1, PREG_SPLIT_OFFSET_CAPTURE );
+ if( isset($words[$num][1]) ){
+   $str = substr( $str, 0, $words[$num][1] ).$append_str;
+ }
+unset( $words, $num );
+return trim( $str );
+}
+ 
+echo words_limit('阿里巴巴今晚纽交所IPO全程直播', 10,'...'); 
+```
+###对象转数组
+```php
+function object_to_array($obj)
+{$arr =array();
+    $arr = is_object($obj) ? get_object_vars($obj) : $obj;
+    foreach ($arr as $key => $val)
+    {
+        $val = (is_array($val) || is_object($val)) ? object_to_array($val) : $val;
+        $arr[$key] = $val;
+    }
+    return $arr;
+}
+$obj = new stdclass;
+print_r(object_to_array($obj));
+```
+###根据键判断取数组差集
+```php
+function compr($a, $b) {
+    $aVal = is_array($a) ? $a['last_name'] : $a;
+    $bVal = is_array($b) ? $b['last_name'] : $b;
+    return strcasecmp($aVal, $bVal);
+}
+$aEmployees = array(
+    array('last_name'  => 'Smith',
+            'first_name' => 'Joe',
+            'phone'      => '555-1000'),
+    array('last_name'  => 'Doe',
+            'first_name' => 'John',
+            'phone'      => '555-2000'),
+    array('last_name'  => 'Flagg',
+            'first_name' => 'Randall',
+            'phone'      => '666-1000')
+    );
+
+$aNames = array('Doe', 'Smith', 'Johnson');
+    
+$result = array_udiff($aEmployees, $aNames, "compr");
+
+print_r($result);
+[
+    2 => [
+        "last_name"  => "Flagg",
+        "first_name" => "Randall",
+        "phone"      => "666-1000"
+    ]
+]
+```
+###获取图片尺寸
+`list( $width ,  $height ,  $type ,  $attr ) =  getimagesize ( "base.jpg" );`
+###当前日期前15天
+`implode(',', range(date("d")-15,date("d")));`//5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+###匹配@和#
+```php
+$user_arr = array();
+ $topic_arr = array();
+formatChat('uyu@phpjs#python#', $user_arr, $topic_arr);
+print_r($user_arr);
+print_r($topic_arr);
+function formatChat($content, &$user_arr, &$topic_arr)
+    {
+        preg_match_all("/\@[\x{4000e00}-\x{9fa5}'a-z'A-Z'0-9'_'-]+/u", $content, $user_arr);//@某人
+        preg_match_all("/\#([^\#|.]+)\#/", $content, $topic_arr);
+        return true;//#话题#
+    }
+```
