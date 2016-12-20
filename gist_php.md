@@ -436,3 +436,344 @@ function calc($m,$n,$x){
 }
 echo calc('11111111111111111111111111111111110','10','add');//11111111111111111111111111111111120
 ```
+###将邮箱前缀隐藏
+```php
+$str = '将邮箱前缀隐藏 test001@qq.com  test002@qq.com am test009@aa.com 最后一个邮箱 defse@ff.com';
+$replace = "*";
+echo preg_replace_callback('/([a-zA-Z0-9]*)@([a-zA-Z0-9]*\.com)/',
+    function($matches) use ($replace){
+        return str_repeat($replace,strlen($matches[1]))."@".$matches[2];
+},$str);//将邮箱前缀隐藏 *******@qq.com  *******@qq.com am *******@aa.com 最后一个邮箱 *****@ff.com
+```
+###n个月后
+```php
+echo date('Y-m-d H:i:s',strtotime('- 1 month', strtotime('2016-05-31 23:59:59')));//2016-05-01 23:59:59
+function n_month($n, $now = null)
+{
+    if ($now === null) {
+        $now = time();
+    }
+    return date('Y-m-d H:i:s',strtotime("$n month", strtotime(date('Y-m-01 00:00:01', $now))));
+}
+```
+###二维数组组合
+```php
+$myarr=[
+    [
+        "a1",
+        "b1",
+        "c1"
+    ],
+    [
+        "a2",
+        "b2",
+        "c2"
+    ],
+    [
+        "a3",
+        "b3",
+        "c3"
+    ]
+];
+$arr = array_map(function($key) use($myarr) { 
+    return array_column($myarr, $key);
+}, array_keys($myarr[0]));
+  print_r($arr);
+  [
+    [
+        "a1",
+        "a2",
+        "a3"
+    ],
+    [
+        "b1",
+        "b2",
+        "b3"
+    ],
+    [
+        "c1",
+        "c2",
+        "c3"
+    ]
+]
+```
+###浮点数
+``php
+$a = 2.01;
+var_dump(sprintf('%.20F', $a * 100));//string(24) "200.99999999999997157829"
+var_dump( intval( $a * 100) );//int(200)
+// float => int  之前先使用round
+
+var_dump( intval( round($a * 100) ) );//int(201)
+```
+###获取拼音
+```php
+use \Overtrue\Pinyin\Pinyin;
+//https://github.com/overtrue/pinyin
+echo Pinyin::trans('带着希望去旅行，比到达终点更美好');
+// dài zhe xī wàng qù lǔ xíng bǐ dào dá zhōng diǎn gèng měi hǎo
+
+//获取首字母
+echo Pinyin::letter('带着希望去旅行，比到达终点更美好');
+// D Z X W Q L X B D D Z D G M H192.168.120.18
+```
+###获取地区层级
+```php
+$area = array(
+
+    array('id'=>1,'name'=>'河南','parent'=>0),
+
+    array('id'=>2,'name'=>'西湖区','parent'=>7),
+
+    array('id'=>3,'name'=>'商水','parent'=>5),
+
+    array('id'=>4,'name'=>'余杭区','parent'=>7),
+
+    array('id'=>5,'name'=>'周口','parent'=>1),
+
+    array('id'=>6,'name'=>'下城区','parent'=>7),
+
+    array('id'=>7,'name'=>'杭州','parent'=>0),
+
+    array('id'=>8,'name'=>'蒋村小区','parent'=>2)
+
+    );
+    function _tree($data,$id=0,$lev=0){
+//  static属于静态变量。此函数调用几次，这个变量只初始化一次。http://secwhy.com/m/?post=242
+  	static $arr = array();
+  	foreach ($data as $value) {
+  		 if ($value['parent'] == $id) {
+  		 	$value['lev'] = $lev;
+  		 	$arr[] = $value;  
+  		 	_tree($data,$value['id'],$lev+1);
+  		 }
+  	}
+  	return $arr;
+  }
+  
+print_r(_tree($area,0));
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => 河南
+            [parent] => 0
+            [lev] => 0
+        )
+
+    [1] => Array
+        (
+            [id] => 5
+            [name] => 周口
+            [parent] => 1
+            [lev] => 1
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [name] => 商水
+            [parent] => 5
+            [lev] => 2
+        )
+
+    [3] => Array
+        (
+            [id] => 7
+            [name] => 杭州
+            [parent] => 0
+            [lev] => 0
+        )
+
+    [4] => Array
+        (
+            [id] => 2
+            [name] => 西湖区
+            [parent] => 7
+            [lev] => 1
+        )
+
+    [5] => Array
+        (
+            [id] => 8
+            [name] => 蒋村小区
+            [parent] => 2
+            [lev] => 2
+        )
+
+    [6] => Array
+        (
+            [id] => 4
+            [name] => 余杭区
+            [parent] => 7
+            [lev] => 1
+        )
+
+    [7] => Array
+        (
+            [id] => 6
+            [name] => 下城区
+            [parent] => 7
+            [lev] => 1
+        )
+
+)
+```
+###querystring转换json
+```php
+ var a='account.type=1&account.id=&account.dependFlag=0&account.card.companyId=1&account.name=%E4%B8%AD%E9%93%B6VISA%E5%8D%A1&account.hidden=&account.card.cardNo=&account.moneyTypeId=0&account.card.billDay=1&account.card.repayType=0&account.card.repayDay=20&account.card.alert=2&account.comment=%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D';
+var root={};
+a.split('&').sort().map(function(s){
+    var p=root;
+    s.match(/(.+?)(?:\.|=)/g).map(function(ss){
+        var t=ss.slice(0,-1);
+        p[t]=p[t]||((ss.slice(-1)==='=')?decodeURIComponent(s.match(/=(.*)$/)[1]):{});
+        p=p[t];
+    });
+});
+
+console.log(root);//{"account":{"card":{"alert":"2","billDay":"1","cardNo":"","companyId":"1","repayDay":"20","repayType":"0"},"comment":"===========","dependFlag":"0","hidden":"","id":"","moneyTypeId":"0","name":"中银VISA卡","type":"1"}}
+```
+###倒计时
+```php
+ var xhr = new XMLHttpRequest();
+ // http://www.barretlee.com/blog/2013/04/13/cb-readyState_3_interactive/ XMLHttpRequest响应头部的Date来做倒计时
+ xhr.open('get', 'testServer.txt', true); //这里的testServer.txt，其实我没有创建，完全可以不需要这个文件，我们只是要时间罢了
+ xhr.onreadystatechange = function(){
+     if(xhr.readyState == 3){ //状态3响应
+      var header = xhr.getAllResponseHeaders(); //获得所有的头信息
+      console.log(header);//会弹出一堆信息
+      console.log(xhr.getResponseHeader('Date')); //弹出时间，那么可以利用获得的时间做倒计时程序了。
+     }
+ }
+ xhr.send(null);
+```
+###下载文件
+```php
+function downloadFile(fileName, content){
+    var aLink = document.createElement("a"),
+        evt = document.createEvent("HTMLEvents");
+
+    evt.initEvent("click");
+    aLink.download = fileName;
+    aLink.href = content;
+
+    aLink.dispatchEvent(evt);
+}
+```
+###数组中文排序
+```php
+ $array = array(
+        array("新浪", 'x'),
+        array("百度", 'b'),
+        array("腾讯", 't')
+    );
+    //转换编码构造
+     foreach ($array as $key => $item) {
+         $sort_array[] = iconv("UTF-8", "GB2312", $item[0]);
+     }
+     array_multisort($sort_array, SORT_STRING, $array);
+     print_r($array);
+     Array
+(
+    [0] => Array
+        (
+            [0] => 百度
+            [1] => b
+        )
+
+    [1] => Array
+        (
+            [0] => 腾讯
+            [1] => t
+        )
+
+    [2] => Array
+        (
+            [0] => 新浪
+            [1] => x
+        )
+
+)
+```
+###php模板
+```php
+echo strtr("{greeting}! My name is {author.name}.", array(
+    '{greeting}' => 'Hi',
+    '{author.name}' => 'hsfzxjy',
+));//Hi! My name is hsfzxjy.
+###根据time组合
+```php
+$a = [
+	['time'=>'2015-11-01','draw'=>900],
+	['time'=>'2015-11-02','draw'=>1900],
+	['time'=>'2015-11-05','draw'=>9000],
+	
+];
+$b = [
+	['time'=>'2015-11-01','data'=>900],
+	['time'=>'2015-11-03','data'=>800],
+	['time'=>'2015-11-05','data'=>100],
+	
+];
+// http://segmentfault.com/q/1010000004309677 http://www.tantengvip.com/2015/11/php-stdclass/
+function setKeyByTime($arr) {
+    $res = array();
+    foreach($arr as $item) {
+        $res[$item['time']] = $item;
+    }
+    return $res;
+}
+$c = array_merge_recursive( setKeyByTime($a), setKeyByTime($b) );
+[
+    "2015-11-01" => [
+        "time" => [
+            "2015-11-01",
+            "2015-11-01"
+        ],
+        "draw" => 900,
+        "data" => 900
+    ],
+    "2015-11-02" => [
+        "time" => "2015-11-02",
+        "draw" => 1900
+    ],
+    "2015-11-05" => [
+        "time" => [
+            "2015-11-05",
+            "2015-11-05"
+        ],
+        "draw" => 9000,
+        "data" => 100
+    ],
+    "2015-11-03" => [
+        "time" => "2015-11-03",
+        "data" => 800
+    ]
+]
+```
+###call_user_func
+```php
+class A
+{
+    public function __Construct($a,$b,$c)
+    {
+        echo 'Construct'.$a.$b.$c;
+    }
+ 
+    public function test($a,$b,$c)
+    {
+        echo ' test'.$a.$b.$c;
+    }
+}
+ $class = new \ReflectionClass('A'); 
+$methods = $class->getMethods(); 
+print_r($methods);
+// 获取每个 method 的注释
+$class->getDocComment();
+$a = new A(1,2,3);
+$a->test(1,2,3);
+
+call_user_func(['A','test'],1,2,3);
+```
