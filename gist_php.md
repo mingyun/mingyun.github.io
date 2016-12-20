@@ -306,3 +306,133 @@ function check_array($array, $key, $value)
 }
 check_array([['id'=>1]],'id',1)#true
 ```
+###中文正则表达式
+```php
+preg_match('/\p{Han}+/u', '中文正则表达式test',$match);
+var_dump($match);//["中文正则表达式上"]
+```
+###多维数组相同key的value值累加
+```php
+function array_value_sum()
+{
+    $res = array();
+    foreach (func_get_args() as $arr) {
+        foreach ($arr as $k => $v){
+            if (!isset($res[$k])){
+                $res[$k] = $v;
+            }else{
+                $res[$k] += $v;
+            }
+        }
+    }
+    return $res;
+}
+$arr1 = array(311=>1, 312=>2, 314=>2);
+$arr2 = array(311=>2, 312=>2, 313=>5, 314=>9);
+$arr3 = array(314=>10);
+$newArr = array_value_sum($arr1, $arr2, $arr3);
+[
+    311 => 3,
+    312 => 4,
+    314 => 21,
+    313 => 5
+]
+````
+###数组分割合并
+```php
+$arr = Array (
+    'question_id' => Array ( 4, 4, 4, 4, 4),
+    'result_branch' => Array (126, 130, 134 ,1232 ,128134),
+    'text' => Array (3213,'qweq', 'wdas', 'd ','cxzc' )
+);
+
+$idNum = count($arr['question_id']);
+$branchNum = count($arr['result_branch']);
+$textNum = count($arr['text']);
+$countMax = max([$idNum, $branchNum, $textNum]);
+$result = array();
+for($i=0; $i < $countMax ; $i++){
+    $temp = array(
+        'question_id' => isset($arr['question_id'][$i]) ? $arr['question_id'][$i] : '',
+        'result_branch' =>  isset($arr['result_branch'][$i]) ? $arr['result_branch'][$i] : '',
+        'text' =>  isset($arr['text'][$i]) ? $arr['text'][$i] : ''
+    );
+    $result[] = $temp;
+}
+ 
+print_r($result);
+[
+    [
+        "question_id"   => 4,
+        "result_branch" => 126,
+        "text"          => 3213
+    ],
+    [
+        "question_id"   => 4,
+        "result_branch" => 130,
+        "text"          => "qweq"
+    ],
+    [
+        "question_id"   => 4,
+        "result_branch" => 134,
+        "text"          => "wdas"
+    ],
+    [
+        "question_id"   => 4,
+        "result_branch" => 1232,
+        "text"          => "d "
+    ],
+    [
+        "question_id"   => 4,
+        "result_branch" => 128134,
+        "text"          => "cxzc"
+    ]
+]
+```
+###大数处理
+```php
+function calc($m,$n,$x){
+        $errors=array(
+                '被除数不能为零',
+                '负数没有平方根'
+        );
+        switch($x){
+                case 'add':
+                        $t=bcadd($m,$n);
+                        break;
+                case 'sub':
+                        $t=bcsub($m,$n);
+                        break;
+                case 'mul':
+                        $t=bcmul($m,$n);
+                        break;
+                case 'div':
+                        if($n!=0){
+                                $t=bcdiv($m,$n);
+                        }else{
+                                return $errors[0];
+                        }
+                        break;
+                case 'pow':
+                        $t=bcpow($m,$n);
+                        break;
+                case 'mod':
+                        if($n!=0){
+                                $t=bcmod($m,$n);
+                        }else{
+                                return $errors[0];
+                        }
+                        break;
+                case 'sqrt':
+                        if($m>=0){
+                                $t=bcsqrt($m);
+                        }else{
+                                return $errors[1];
+                        }
+                        break;
+        }
+        $t=preg_replace("/\..*0+$/",'',$t);
+        return $t;
+}
+echo calc('11111111111111111111111111111111110','10','add');//11111111111111111111111111111111120
+```
