@@ -740,4 +740,147 @@ echo $d->format( 'Y-m-d H:i:s' ), "\n";
 echo date( "Y-m-d", strtotime( "2009-01-31 +1 month" ) ); // PHP:  2009-03-03
 echo date( "Y-m-d", strtotime( "2009-01-31 +2 month" ) ); // PHP:  2009-03-31
 ```
-###
+###二维数组按key去重
+```php
+
+function assoc_unique(&$arr, $key,$k2) 
+{ 
+$rAr=array(); 
+for($i=0;$i<count($arr);$i++) 
+{ 
+	$k = $arr[$i][$key].$arr[$i][$k2];
+if(!isset($rAr[$k])) 
+{ 
+$rAr[$k]=$arr[$i];
+} 
+} print_r($rAr);
+$arr=array_values($rAr); 
+} 
+assoc_unique($arr,'name','date'); 
+
+function array_multunique($arr,$by = array()) {
+	$temp = array();
+	foreach($arr as $key => $val) {
+		foreach($by as $v) {
+			$temp[$key] .= isset($val[$v]) ? $val[$v] : '';
+		}
+	}
+	return array_intersect_key($arr,array_unique($temp));
+}
+$aa = array (  
+    array ('id' => 123, 'name' => '张三' ),   
+    array ('id' => 123, 'name' => '李四' ),   
+    array ('id' => 124, 'name' => '王五' ),   
+    array ('id' => 125, 'name' => '赵六' ),   
+    array ('id' => 126, 'name' => '赵六' )   
+);  
+
+$bb = array_multunique ($aa, array('id')); 
+print_r($bb);
+Array
+(
+    [0] => Array
+        (
+            [id] => 123
+            [name] => 张三
+        )
+
+    [2] => Array
+        (
+            [id] => 124
+            [name] => 王五
+        )
+
+    [3] => Array
+        (
+            [id] => 125
+            [name] => 赵六
+        )
+
+    [4] => Array
+        (
+            [id] => 126
+            [name] => 赵六
+        )
+
+)
+```
+###删除键值对
+```php
+function array_remove_key_val(&$a,$b,$c){
+	foreach ($a as $key=>$value){
+		if ( isset($value[$b]) && ($value[$b]==$c) ){
+			unset($a[$key]);
+		}
+	}
+}
+$a=array(
+	array('id'=>1,'num'=>10,'type'=>'news'),
+	array('id'=>2,'num'=>100,'type'=>'pic')
+);
+array_remove_key_val($a,"id","1");
+```
+###二维数组按照指定字段的值分组
+```php
+function array_group_by(& $arr, $keyField)
+{
+    $ret = array();
+    foreach ($arr as $row) {
+        $key = $row[$keyField];
+        $ret[$key][] = $row;
+    }
+    return $ret;
+}
+```
+###多维数组转一维数组
+```php
+function rebuild_array($arr){  //rebuild a array
+	static $tmp=array();
+
+	for($i=0; $i<count($arr); $i++){
+		if(is_array($arr[$i])){
+			rebuild_array($arr[$i]);
+		}else{
+			$tmp[]=$arr[$i];
+		}
+	}
+
+	return $tmp;
+}
+$arr=array('123.html','456.html',array('dw.html','fl.html',array('ps.html','fw.html')),'ab.html');
+```
+###编码转换
+```php
+function array_iconv($data, $input = 'gbk', $output = 'utf-8') {
+	if (!is_array($data)) {
+		return iconv($input, $output, $data);
+	} else {
+		foreach ($data as $key=>$val) {
+			if(is_array($val)) {
+				$data[$key] = array_iconv($val, $input, $output);
+			} else {
+				$data[$key] = iconv($input, $output, $val);
+			}
+		}
+		return $data;
+	}
+}
+```
+###过滤用户昵称里面的emoji特殊字符
+
+```php
+
+function jsonName($str) {
+    if($str){
+        $tmpStr = json_encode($str);
+        $tmpStr2 = preg_replace("#(\\\ud[0-9a-f]{3})#ie","",$tmpStr);
+        $return = json_decode($tmpStr2);
+        if(!$return){
+            return jsonName($return);
+        }
+    }else{
+        $return = '微信用户-'.time();
+    }    
+    return $return;
+ }
+```
