@@ -458,5 +458,197 @@ function displayCategory($cid) {
 echo displayLists(0, 3);
 
 echo displayCategory(8);//电脑>笔记本>游戏本
+$pdo = new PDO("mysql:host=localhost;dbname=test", "root", null);
+function getCategories(PDO $pdo, $pid = 0)
+{
+    $sql = 'SELECT * FROM `category` WHERE pid=:pid';
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':pid', $pid, PDO::PARAM_INT);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($data as &$row) {
+        $row['children'] = getCategories($pdo, $row['id']);
+    }
+    return $data;
+}
+
+$a = getCategories($pdo);
+print_r($a);
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => 电脑
+            [pid] => 0
+            [children] => Array
+                (
+                    [0] => Array
+                        (
+                            [id] => 3
+                            [name] => 笔记本
+                            [pid] => 1
+                            [children] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [id] => 7
+                                            [name] => 超级本
+                                            [pid] => 3
+                                            [children] => Array
+                                                (
+                                                )
+
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [id] => 8
+                                            [name] => 游戏本
+                                            [pid] => 3
+                                            [children] => Array
+                                                (
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [id] => 4
+                            [name] => 台式机
+                            [pid] => 1
+                            [children] => Array
+                                (
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [name] => 手机
+            [pid] => 0
+            [children] => Array
+                (
+                    [0] => Array
+                        (
+                            [id] => 5
+                            [name] => 智能机
+                            [pid] => 2
+                            [children] => Array
+                                (
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [id] => 6
+                            [name] => 功能机
+                            [pid] => 2
+                            [children] => Array
+                                (
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+```
+###获取子级的最高父级
+```php
+$arr = [
+    // id => pid
+    1 => 0,
+    5 => 1,
+    13 => 5
+];
+
+$id = 13;
+while($arr[$id]) {
+    $id = $arr[$id];
+}
+echo $id; // 1
+```
+###输出中文
+```php
+import json
+print json.dumps("你需要打印的字符串或字典或元组或数组",encoding='utf-8',ensure_ascii=False)#你需要打印的字符串或字典或元组或数组
+```
+###curl 封装
+```php
+function curl($url, $params = false, $ispost = 0, $https = 0)
+    {
+        $httpInfo = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($https) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // 对认证证书来源的检查
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE); // 从证书中检查SSL加密算法是否存在
+        }
+        if ($ispost) {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($ch, CURLOPT_URL, $url);
+        } else {
+            if ($params) {
+                if (is_array($params)) {
+                    $params = http_build_query($params);
+                }
+                curl_setopt($ch, CURLOPT_URL, $url . '?' . $params);
+            } else {
+                curl_setopt($ch, CURLOPT_URL, $url);
+            }
+        }
+
+        $response = curl_exec($ch);
+
+        if ($response === FALSE) {
+            //echo "cURL Error: " . curl_error($ch);
+            return false;
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $httpInfo = array_merge($httpInfo, curl_getinfo($ch));
+        curl_close($ch);
+        return $response;
+    }
+```
+###下载文件
+```php
+$ch = curl_init(); 
+
+    $fp=fopen('./sf.jpg', 'w');
+
+    curl_setopt($ch, CURLOPT_URL, "https://sf-sponsor.b0.upaiyun.com/38382e90b89d6b3b35e78e80a24f2ffc.png"); 
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60); 
+    curl_setopt($ch, CURLOPT_FILE, $fp); 
+
+    $output = curl_exec($ch); 
+    $info = curl_getinfo($ch);
+
+    fclose($fp);
+
+    $size = filesize("./sf.jpg");
+    if ($size != $info['size_download']) {
+        echo "下载的数据不完整，请重新下载";
+    } else {
+        echo "下载数据完整";
+    }
+    curl_close($ch); 
 ```
 ###
