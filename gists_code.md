@@ -10,6 +10,7 @@
    +--------+----------+-----------+
    |   2    |    c     |    40     |
    +--------+----------+-----------+
+   
     +--------+------+-----+-----+
    | hostid |   A  |  B  |  C  |
    +--------+------+-----+-----+
@@ -331,6 +332,131 @@ print_r(getRand([4,7,2,8,1]));//1
         return $result;
     }
 ```
+###md5sum md5
+```php
+//http://superuser.com/questions/1043672/the-md5-hash-value-is-different-from-bash-and-php
+echo "hello" | md5sum //b1946ac92492d2347c6235b4d2611184
+echo "hello" > file && md5sum file
+md5('hello')//5D41402ABC4B2A76B9719D911017C592
+echo -n "hello" | md5sum //5D41402ABC4B2A76B9719D911017C592
+$ echo "str_example" | hd
+00000000  73 74 72 5f 65 78 61 6d  70 6c 65 0a              |str_example.|
+$ echo -n "str_example" | hd
+00000000  73 74 72 5f 65 78 61 6d  70 6c 65                 |str_example|
+```
+###数组合并
+```php
+function merge(){
+    $one =  json_decode('{"status":true,"data":[{"a":"a1","b":"b1"},{"c":"c1","d":"d1"}]}',true);
+    $two =  json_decode('{"status":true,"data":[{"e":"e1","f":"f1"},{"g":"g1","h":"h1"}]}',true);
+    return json_encode(array('status'=>true,'data'=>array_map("myfunction",$one['data'],$two['data'])));
+}
+function myfunction($v1,$v2){ return array_merge($v1,$v2); }
+echo merge();//{"status":true,"data":[{"a":"a1","b":"b1","e":"e1","f":"f1"},{"c":"c1","d":"d1","g":"g1","h":"h1"}]}
+$arr = [['time' => '2016-11-28', 'uv'=>1,'sv'=>3],['time' => '2016-11-8', 'uv'=>1,'sv'=>3]];
+        $result = [['time' => '2016-11-28', 'uv'=>10,'sv'=>3]];
+        $result = array_merge($result,$arr);
+        $res = [];
+        foreach ($result as $k => $v) {
+            if (isset($res[$v['time']])) {
+                $res[$v['time']]['uv'] += $v['uv'];
+                $res[$v['time']]['sv'] += $v['sv'];
+            } else {
+                $res[$v['time']] = $v;
+            }
+            
+        }
+		
+print_r()$res;
+[
+    "2016-11-28" => [
+        "time" => "2016-11-28",
+        "uv"   => 11,
+        "sv"   => 6
+    ],
+    "2016-11-8"  => [
+        "time" => "2016-11-8",
+        "uv"   => 1,
+        "sv"   => 3
+    ]
+]
+```
+###无限极分类
+```php
+$cn = mysql_connect('localhost', 'root', null) or die(mysql_error());
+mysql_select_db('test', $cn) or die(mysql_error());
+mysql_query('set names utf8');
+mysql> select *from category;
++----+--------+-----+
+| id | name   | pid |
++----+--------+-----+
+|  1 | 电脑   |   0 |
+|  2 | 手机   |   0 |
+|  3 | 笔记本 |   1 |
+|  4 | 台式机 |   1 |
+|  5 | 智能机 |   2 |
+|  6 | 功能机 |   2 |
+|  7 | 超级本 |   3 |
+|  8 | 游戏本 |   3 |
++----+--------+-----+
+8 rows in set (0.00 sec)
+
+echo '<pre>';
+
+function getLists($pid = 0, &$lists = array(), $deep = 1) {
+  $sql = 'SELECT * FROM category WHERE pid='.$pid;
+  $res = mysql_query($sql);
+  while ( ($row = mysql_fetch_assoc($res)) !== FALSE ) {
+    $row['name'] = str_repeat('&nbsp;&nbsp;&nbsp;', $deep).'|---'.$row['name'];
+    $lists[] = $row;
+    getLists($row['id'], $lists, ++$deep); //进入子类之前深度+1
+    --$deep; //从子类退出之后深度-1
+  }
+  return $lists;
+}
+//https://my.oschina.net/u/1156660/blog/341199
+function displayLists($pid = 0, $selectid = 1) {
+  $result = getLists($pid);
+  $str = '<select>';
+  foreach ( $result as $item ) {
+    $selected = "";
+    if ( $selectid == $item['id'] ) {
+      $selected = 'selected';
+    }
+    $str .= '<option '.$selected.'>'.$item['name'].'</option>';
+  }
+  return $str .= '</select>';
+}
+/**
+ * 从子类开始逐级向上获取其父类
+ * @param number $cid
+ * @param array $category
+ * @return array:
+ */
+function getCategory($cid, &$category = array()) {
+  $sql = 'SELECT * FROM category WHERE id='.$cid.' LIMIT 1';
+  $result = mysql_query($sql);
+  $row = mysql_fetch_assoc($result);
+  if ( $row ) {
+    $category[] = $row;
+    getCategory($row['pid'], $category);
+  }
+  krsort($category); //逆序,达到从父类到子类的效果
+  return $category;
+}
+
+function displayCategory($cid) {
+  $result = getCategory($cid);
+  print_r($result);
+  $str = "";
+  foreach ( $result as $item ) {
+    $str .= '<a href="'.$item['id'].'">'.$item['name'].'</a>>';
+  }
+  return substr($str, 0, strlen($str) - 1);
+}
+
+echo displayLists(0, 3);
+
+echo displayCategory(8);//电脑>笔记本>游戏本
+```
 ###
-
-
