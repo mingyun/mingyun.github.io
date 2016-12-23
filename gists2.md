@@ -233,4 +233,136 @@ class b extends a {
 }
 }
 echo (new b)->test();//Warning: Declaration of b::test() should be compatible with a::test($str) in /data/413421607 on line 104
+
+php7.1的php.ini里 增加了session.sid_length的配置项，默认32，会导致原有程序每次请求刷新sessionId，保留不住。php7.1之前，php.ini里没有session.sid_length配置项，并且sessionid默认长度40。所以升级到php7.1以后为了兼容性需要把session.sid_length = 40
 ```
+###array_reduce
+```php
+$result = array_reduce(["hello", "world", "PHP", "language"], function($carry, $item){
+        return !$carry ? $item : $carry . "-" . $item ;
+});//result:"hello-world-PHP-language"
+```
+###mysql case when
+```php
+SELECT  st.name,
+        st.percentage, 
+        CASE WHEN st.percentage >= 35 THEN 'Pass' ELSE 'Fail' END AS `Remark` 
+    FROM student AS st ;
+SELECT  st.name,
+        st.percentage, 
+        IF(st.percentage >= 35, 'Pass', 'Fail') AS `Remark` 
+    FROM student AS st ;
+```
+###limit分页，自己在最上面
+```php
+//$lastId为上次分页最大的主键id，$selfJoinId为登录用户的主键id,$limit为分页数
+if(empty($lastId)){
+        $selfInfo = user_joins::where('id', $selfJoinId)->first();
+        if(is_null($selfInfo)){
+                $selfInfo=[];
+        }
+        $res = user_joins::where('id', '!=', $selfJoinId)->take($limit)->get()->toArray();
+        }else{
+                $res = user_joins::where('id', '>', $lastId)->where('id', '!=', $selfJoinId)->take($limit)->get()->toArray();
+        }
+
+        if (!$res && !$selfInfo) {
+                return [];
+        }
+        if($selfInfo){
+                array_unshift($res, $selfInfo);
+        }
+}
+```
+###laravel 批量获取redis
+```php
+$info = Cache::increment("info:{$id}");//统计数据
+$laravelPrefix = config('cache.prefix');//默认为laravel
+if(is_array($Ids)){
+    $keys = array_map(function($id) use ($laravelPrefix){
+        return "$laravelPrefix:info:{$id}";
+    },$Ids);
+}
+
+$countArr = \Redis::mget($keys);//[100,null,]
+$ret = [];
+    foreach ($countArr as $i=>&$v) {
+        if(is_null($v)){
+            $v = table::find($Ids[$i]);
+        }
+        $ret[$Ids[$i]] = $v;//补充为null的key
+    }
+```
+###二进制表示属性
+```php
+//问题 置顶1 提问2 关心4 已答8
+$question['attribute'] = 0;
+if($question['top']){
+$question['attribute']  += 1; // 置顶
+}
+
+if($question['user_id'] == $userId){
+$question['attribute']  += 2; // 提问
+}
+
+if(isset($myCaredHash[$question['id']])){
+$question['attribute']  += 4; // 关心
+}
+
+if(isset($myAnsweredHash[$question['id']])){
+$question['attribute']  += 8; // 已答
+}
+```
+###按指定id顺序排序
+```php
+$infos = User::whereIn('id', $list)
+    ->select('id', 'avatar', 'nick_name')
+    ->orderBy(\DB::raw("find_in_set(id,'".implode(',',$list)."')"))
+    ->get()
+    ->toArray();
+$list = array_column($infos, 'id');
+$userInfos = array_combine($list, $infos);//每个id对应一个数组
+// $userInfos = array_column($infos,null, 'id');
+```
+###pv每7个更新
+```php
+$pv = Redis::incr('view:'.$id);
+$list= table::find($id);
+if ($pv % 7 === 0) {
+    // table::where('id', $id)->increment('pv', 7);
+    table::where('id', $id)->update(['pv' => $pv]);
+} else if ($pv == 1) {
+    // 首次缓存同步数据
+    $pv = $list['pv'] + 1;
+    Redis::set('view'.$id, $pv);
+}
+```
+###设置缓存
+```php
+if (!($lives = Cache::get($cacheKey))) {
+        $lives = table::where(['status' => 1])->select('id', 'user_id')->limit(30)->get()->toArray();
+        Cache::put($cacheKey, $lives, count($lives) >= 10 ? 5 : 1);
+}
+```
+###统计总费用和type为5的费用
+```php
+$money = Orders::where(['status' => 1])->select(
+                \DB::raw('SUM(`fee`) AS `income`, SUM(IF(`type`=5, `fee`, 0)) AS `reward`')
+            )->first();
+```
+###英文算1个字符，中文算2个
+```php
+echo mb_strwidth('abc中文字符统计', 'utf-8');//15
+```
+###新粉丝数
+```php
+$knowIds = [];
+$preKnow = 0;
+
+$followList = $redis->hKeys('user:follows:list:' . $userId);
+$knowIds = array_diff($followList, [$userId]);//过滤自己
+$preKnow = $redis->get('app:preknow:'. $userId);//每次获取粉丝列表更新为count($knowids)
+
+$res = count($knowIds) - $preKnow;
+```
+###
