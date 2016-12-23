@@ -523,21 +523,64 @@ $packs = split_money(100, 10);
 更新user_id为36215 sche_time最大的那条记录的end_time为当前时间
 
 //http://www.cnblogs.com/chy1000/archive/2010/03/02/1676282.html
-mysql> update user_webinars set end_time =now() where user_id = 36215 and sche_t
-ime =(select max(sche_time) from user_webinars where user_id = 36215);
-ERROR 1093 (HY000): You can't specify target table 'user_webinars' for update in
+mysql> update user set end_time =now() where user_id = 36215 and sche_time =(select max(sche_time) from user where user_id = 36215);
+ERROR 1093 (HY000): You can't specify target table 'user' for update in
  FROM clause
-mysql> select max(sche_time) from user_webinars where user_id = 36215;
+mysql> select max(sche_time) from user where user_id = 36215;
 +---------------------+
 | max(sche_time)      |
 +---------------------+
 | 2014-10-16 12:30:00 |
 +---------------------+
 1 row in set, 1 warning (0.10 sec)
-重点在select max(a.sche_time) from (select * from user_webinars b) a ，我 select * from user_webinars b 作为子集
+重点在select max(a.sche_time) from (select * from user b) a ，我 select * from user b 作为子集
 然后再select max(a.sche_time) 子集，这样就不会 select 和 update 都是同一个表。致此问题得到完美解决。
-mysql> update user_webinars set end_time =now() where user_id = 36215 and sche_t
-ime =(select max(a.sche_time) from (select * from user_webinars b) a where a.use
-r_id = 36215);
+mysql> update user set end_time =now() where user_id = 36215 and sche_time =(select max(a.sche_time) from (select * from user b) a where a.user_id = 36215);
 Query OK, 1 row affected (0.40 sec)
 ```
+###MySQL表字段长度的限制
+```php
+//http://www.cnblogs.com/zhoujinyi/p/3178558.html
+CREATE TABLE tb_test (
+    -> recordid varchar(32) NOT NULL,
+    -> areaShow varchar(10000) DEFAULT NULL,
+    -> areaShow1 varchar(10000) DEFAULT NULL,
+    -> areaShow2 varchar(10000) DEFAULT NULL,
+    -> PRIMARY KEY (recordid)
+    -> ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+ERROR 1118 (42000): Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. You have to change some columns to TEXT or BLOBs
+报错
+CREATE TABLE tb_test (
+    -> recordid varchar(32) NOT NULL,
+    -> areaShow varchar(30000) DEFAULT NULL,
+    -> areaShow1 varchar(30000) DEFAULT NULL,
+    -> areaShow2 varchar(30000) DEFAULT NULL,
+    -> PRIMARY KEY (recordid)
+    -> ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+Query OK, 0 rows affected, 3 warnings (0.26 sec)
+可以建立，只是类型被转换了。
+show warnings;
++-------+------+----------------------------------------------------+
+| Level | Code | Message                                            |
++-------+------+----------------------------------------------------+
+| Note  | 1246 | Converting column 'areaShow' from VARCHAR to TEXT  |
+| Note  | 1246 | Converting column 'areaShow1' from VARCHAR to TEXT |
+| Note  | 1246 | Converting column 'areaShow2' from VARCHAR to TEXT |
++-------+------+----------------------------------------------------+
+3 rows in set (0.00 sec)
+（1）单个字段如果大于65535，则转换为TEXT 。
+
+（2）单行最大限制为65535，这里不包括TEXT、BLOB。
+
+按照上面总结的限制，来解释出现的现象：
+
+第一个情况是：
+单个字段长度：varchar(10000) ，字节数：10000*3(utf8)+（1 or 2) = 30000 ，小于65535，可以建立。
+单行记录长度：varchar(10000)*3，字节数：30000*3(utf8)+（1 or 2) = 90000，大于65535，不能建立，所以报错：
+
+ERROR 1118 (42000): Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. You have to change some columns to TEXT or BLOBs
+第二个情况是：
+单个字段长度：varchar(30000) ，字节数：30000*3+（1 or 2) = 90000 ， 大于65535，需要转换成TEXT，才可以建立。所以报warnings。
+单行记录长度：varchar(30000)*3，因为每个字段都被转换成了TEXT，而TEXT没有限制，所以可以建立表。
+```
+###
