@@ -292,6 +292,27 @@ $ret = [];
         }
         $ret[$Ids[$i]] = $v;//补充为null的key
     }
+    
+    public static function mget($ids)
+    {
+        if(empty($ids)){
+            return [];
+        }
+        
+        $keys = array_map(function($id) {
+            return $id . ':info';
+        }, $ids);
+
+        $caches = Redis::mget($keys);
+
+        $result = array_combine($ids, $caches);
+
+        if ($needIds = array_keys($result, null, true)) {
+            $result = self::sync($needIds) + $result;
+        }
+
+        return $result;
+    }
 ```
 ###二进制表示属性
 ```php
@@ -365,4 +386,51 @@ $preKnow = $redis->get('app:preknow:'. $userId);//每次获取粉丝列表更新
 
 $res = count($knowIds) - $preKnow;
 ```
-###
+###获取网页所有url
+`$x('//a').map(function(i){return i.href;})`
+###数组排序
+```php
+var arr = ["bananas", "cranberries", "apples"];
+arr.sort(function(a, b) {
+    return a.localeCompare(b);
+});
+["apples", "bananas", "cranberries"]
+```
+###重复字符串
+`new Array(2 + 1).join('abc');  // Returns "abcabcabc"`
+###数组去重
+```php
+function onlyUnique(value, index, self) { 
+  return self.indexOf(value) === index;
+}
+var array = ['a', 1, 'a', 2, '1', 1];
+var uniqueArray = array.filter(onlyUnique); // returns ['a', 1, 2, '1']
+var uniqueArray = [... new Set(array)];
+```
+###先偶数后奇数排序
+```php
+[10, 21, 4, 15, 7, 99, 0, 12].sort(function(a, b) {
+    return (a & 1) - (b & 1) || a - b;
+});
+//[0, 4, 10, 12, 7, 15, 21, 99] 
+```
+###数组最小值
+```php
+var arr = [4, 2, 1, -10, 9]
+
+arr.reduce(function(a, b) {
+  return a < b ? a : b
+}, Infinity);//-10
+```
+###dom each
+```php
+var domList = document.querySelectorAll('#myDropdown option');
+
+domList.forEach(function () { 
+
+}); // Error! forEach is not defined.
+
+Array.prototype.forEach.call(domList, function () { 
+
+}); // Wow! this works
+```
