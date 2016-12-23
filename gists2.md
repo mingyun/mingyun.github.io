@@ -434,3 +434,110 @@ Array.prototype.forEach.call(domList, function () {
 
 }); // Wow! this works
 ```
+###数组统计
+```php
+$fees = [[
+            "user_id" => "1",
+            "fee" => "100"
+          ],
+           [
+            "user_id" => "2",
+            "fee" => "88"
+          ],
+           [
+            "user_id" => "3",
+            "fee" => "8888"
+          ]];
+
+      $spans =[
+            '1000以下' => [0, 1000],
+            '1000-1万' => [1000, 10000],
+            '1万-10万' => [10000, 100000],
+            '10万-20万' => [100000, 200000],
+            '20万-50万' => [200000, 500000],
+            '50万-100万' => [500000, 1000000],
+            '100万以上' => [1000000, '~']
+        ];
+        $figureData = [];
+        foreach ($spans as $name => $spanItem){
+            $figureData[$name] = 0;
+        }
+        foreach ($fees as $row){
+            foreach ($spans as $name => $span) {
+                $leftBound = $span[0];
+                $rightBound = $span[1];
+                if($row['fee'] > $leftBound && ($row['fee']<= $rightBound || $rightBound == '~')){
+                    if(isset($figureData[$name])){
+                        $figureData[$name]+=1;
+                    }else{
+                        $figureData[$name] = 0;
+                    }
+                }
+
+            }
+        }
+print_r($figureData);
+Array
+(
+    [1000以下] => 2
+    [1000-1万] => 1
+    [1万-10万] => 0
+    [10万-20万] => 0
+    [20万-50万] => 0
+    [50万-100万] => 0
+    [100万以上] => 0
+)
+```
+###微信红包
+```php
+function split_money($money, $count) {
+  $money *= 100;
+  $list = array(0);
+  for ($i = 1; $i < $count; ++$i) {
+    while(in_array($r = mt_rand(1, $money), $list));
+    $list[] = $r;
+  }
+  sort($list);
+  $list[] = $money;
+  $packs = array();
+  for ($i = 0; $i < $count; ++$i)
+    $packs[] = ($list[$i + 1] - $list[$i]) / 100;
+  return $packs;
+}
+$packs = split_money(100, 10);
+[
+    20.76,
+    12.72,
+    7.57,
+    6.59,
+    1.24,
+    0.31,
+    9.67,
+    28.62,
+    6.92,
+    5.6
+]
+```
+###You can't specify target table 'wms_cabinet_form' for update in FROM clause
+```php
+更新user_id为36215 sche_time最大的那条记录的end_time为当前时间
+
+//http://www.cnblogs.com/chy1000/archive/2010/03/02/1676282.html
+mysql> update user_webinars set end_time =now() where user_id = 36215 and sche_t
+ime =(select max(sche_time) from user_webinars where user_id = 36215);
+ERROR 1093 (HY000): You can't specify target table 'user_webinars' for update in
+ FROM clause
+mysql> select max(sche_time) from user_webinars where user_id = 36215;
++---------------------+
+| max(sche_time)      |
++---------------------+
+| 2014-10-16 12:30:00 |
++---------------------+
+1 row in set, 1 warning (0.10 sec)
+重点在select max(a.sche_time) from (select * from user_webinars b) a ，我 select * from user_webinars b 作为子集
+然后再select max(a.sche_time) 子集，这样就不会 select 和 update 都是同一个表。致此问题得到完美解决。
+mysql> update user_webinars set end_time =now() where user_id = 36215 and sche_t
+ime =(select max(a.sche_time) from (select * from user_webinars b) a where a.use
+r_id = 36215);
+Query OK, 1 row affected (0.40 sec)
+```
