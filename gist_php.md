@@ -116,7 +116,7 @@ exit;
 $arr1 = array(1,2,3);
 $arr2 = array(1,2,4,5,3);
 $arr3 =array_intersect($arr1, $arr2);
-print_r($arr3);
+print_r($arr3);[1,2,3]
 
 if ($arr1 == $arr3) {
 	echo 'exists';
