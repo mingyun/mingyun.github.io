@@ -583,4 +583,53 @@ ERROR 1118 (42000): Row size too large. The maximum row size for the used table 
 单个字段长度：varchar(30000) ，字节数：30000*3+（1 or 2) = 90000 ， 大于65535，需要转换成TEXT，才可以建立。所以报warnings。
 单行记录长度：varchar(30000)*3，因为每个字段都被转换成了TEXT，而TEXT没有限制，所以可以建立表。
 ```
-###
+###[javascript坑](https://zhuanlan.zhihu.com/p/24524394)
+```php
+0.1 + 0.2 = 0.30000000000000004
+Math.round( (.1+.2)*100)/100;
+
+3.tostring;
+3..toString;
+3...toString;
+var a = [0];
+//[0]这个玩意儿在单独使用的时候是被认为是true的，但用作比较的时候它是false…所以正确答案是false
+if ([0]) {
+  console.log(a == true);
+} else {
+  console.log("wut");
+}
+```
+###[网页自动刷新工具browsersync](https://zhuanlan.zhihu.com/p/24462674)
+```php
+npm install browser-sync gulp --save-dev
+var gulp = require('gulp');
+var less = require('gulp-less');
+var plumber = require('gulp-plumber');
+var browserSync = require('browser-sync').create();
+var reload      = browserSync.reload;
+
+var paths = {
+	less: ['./less/*.less']
+};
+gulp.task('less', function () {
+	return gulp.src('./less/style.less')
+	.pipe(plumber())
+	.pipe(less())
+	.pipe(gulp.dest('./css'))
+	.pipe(reload({stream: true}));
+});
+
+// 静态服务器
+gulp.task('watch', function() {
+    browserSync.init({
+        server: {
+            baseDir: "./",
+	    proxy: "localhost"
+        }
+    });
+    gulp.watch(paths.less, ['less']);
+});
+```
+###[适配所有移动端网页](https://zhuanlan.zhihu.com/p/24443208)
+`<meta name="viewport" content="width=device-width,initial-scale=1,
+minimum-scale=1,maximum-scale=1,user-scalable=no" />`
