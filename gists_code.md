@@ -1,5 +1,5 @@
 ###MySQL行转列
-+--------+----------+-----------+
+```php
    | hostid | itemname | itemvalue |
    +--------+----------+-----------+
    |   1    |    A     |    10     |
@@ -18,7 +18,7 @@
    +--------+------+-----+-----+
    |   2    |   9  |  0  |  40 |
    +--------+------+-----+-----+
-```php
+
 //http://stackoverflow.com/questions/1241178/mysql-rows-to-columns
 SELECT 
     hostid, 
@@ -44,7 +44,7 @@ function getthemonth($date)
     $lastday = date('Y-m-d', strtotime("$firstday +1 month -1 day"));
     return array($firstday, $lastday);
  }
- $firstday= date('Y-m-d', mktime(0, 0, 0, date('m'), 1));
+$firstday= date('Y-m-d', mktime(0, 0, 0, date('m'), 1));
 $lastday =date('Y-m-d', mktime(0, 0, 0,date('m')+1,1)-1);
 echo cal_days_in_month(CAL_GREGORIAN,5,2016); //一个月天数,也就是最后一天 第一天 永远是1
 echo date('Y-m-t');//最后一天
@@ -367,7 +367,7 @@ $arr = [['time' => '2016-11-28', 'uv'=>1,'sv'=>3],['time' => '2016-11-8', 'uv'=>
             
         }
 		
-print_r()$res;
+print_r($res);
 [
     "2016-11-28" => [
         "time" => "2016-11-28",
