@@ -883,4 +883,20 @@ function jsonName($str) {
     }    
     return $return;
  }
+```###if 判断 == 顺序
+```php
+if($result == true) { // 正确写法 
+
+} 
+if($result = true) { // 手抖的错误写法，很多时候新手可能会犯这种错误。 
+
+} 
+if(true = $result) { // 这样解析器会直接抛出错误，就算少写了一个=号也不必担心出现永远等于 true 的问题，避免了不必要的寻错成本。 
+
+}
+```###[4字节字符插入mysql被截断](http://qsalg.com/?p=533)
+```php
+//http://stackoverflow.com/questions/8491431/how-to-replace-remove-4-byte-characters-from-a-utf-8-string-in-php
+preg_replace('/[\x{10000}-\x{10FFFF}]/u', "\xEF\xBF\xBD", $value);
+
 ```
