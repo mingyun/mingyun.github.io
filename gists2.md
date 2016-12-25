@@ -582,6 +582,7 @@ ERROR 1118 (42000): Row size too large. The maximum row size for the used table 
 第二个情况是：
 单个字段长度：varchar(30000) ，字节数：30000*3+（1 or 2) = 90000 ， 大于65535，需要转换成TEXT，才可以建立。所以报warnings。
 单行记录长度：varchar(30000)*3，因为每个字段都被转换成了TEXT，而TEXT没有限制，所以可以建立表。
+https://laravel-china.org/topics/3421  虽然有65535这个限制，但是 TEXT 和 BLOBs 这2种类型的字段是不被计算在内的
 ```
 ###[javascript坑](https://zhuanlan.zhihu.com/p/24524394)
 ```php
@@ -633,3 +634,13 @@ gulp.task('watch', function() {
 ###[适配所有移动端网页](https://zhuanlan.zhihu.com/p/24443208)
 `<meta name="viewport" content="width=device-width,initial-scale=1,
 minimum-scale=1,maximum-scale=1,user-scalable=no" />`
+###[自定义laravel log日志目录](https://laravel-china.org/topics/3457)
+```php
+Log::useFiles(string $path, string $level = 'debug')
+$log = new Logger('xxxx');
+$logDir = storage_path('logs/xxxx');
+ if (!is_dir($logDir)) {
+      mkdir($logDir, 0777, true);
+}
+$log->pushHandler(new StreamHandler($logDir . '/' . date('Y-m-d') . '.log', Logger::DEBUG))
+```
