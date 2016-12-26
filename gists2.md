@@ -644,3 +644,50 @@ $logDir = storage_path('logs/xxxx');
 }
 $log->pushHandler(new StreamHandler($logDir . '/' . date('Y-m-d') . '.log', Logger::DEBUG))
 ```
+###
+```php
+mkdir providers/Hashing
+vi Md5ServiceProvider.php
+
+namespace App\Providers\Hashing;
+use Illuminate\Support\ServiceProvider;
+class Md5ServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+    }
+
+    public function register()
+    {
+        $this->app->singleton('hash', function () { return new Md5Hasher(); });
+    }
+}
+vi Md5Hasher.php
+
+namespace App\Providers\Hashing;
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+
+class Md5Hasher implements HasherContract
+{
+    public function make($value, array $options = array())
+    {
+        $md5 = md5($value);
+
+        return $md5;
+    }
+
+    public function check($value, $hashedValue, array $options = array())
+    {
+        return md5($value) === $hashedValue ? true : false;
+    }
+
+    public function needsRehash($hashedValue, array $options = array())
+    {
+        return false;
+    }
+}
+
+vi config/app.php
+
+'App\Providers\Hashing\Md5ServiceProvider', 替代'Illuminate\Hashing\HashServiceProvider',
+```
