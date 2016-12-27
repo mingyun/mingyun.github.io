@@ -718,6 +718,68 @@ postman 使用cookie https://www.getpostman.com/docs/interceptor_cookies
 // delete a from foo a ,  (select min(id) as ms ,prid from foo group by prid having count(*)>1) b  where a.prid=b.prid and a.id>b.ms;
 select * from (select * from qdwyc_car_online order by car_online_time desc  ) as m group by car_num
  DELETE FROM price_monitor  WHERE EXISTS (SELECT 1 FROM price_monitor b WHERE b.domain = price_monitor.domain );
+//http://stackoverflow.com/questions/2630440/how-to-delete-duplicates-on-a-mysql-table
+create table penguins(foo int, bar varchar(15), baz datetime); 
+ insert into penguins values(1, 'skipper', now());
+insert into penguins values(2, 'skipper', now());
+insert into penguins values(3, 'kowalski', now());
+insert into penguins values(4, 'kowalski', now());
+insert into penguins values(5, 'kowalski', now());
+insert into penguins values(6, 'rico', now());
+删除bar，baz相同的，留foo小的数据
+ delete from penguins where foo not in(select *from (select min(foo) from penguins  group by bar,baz) b);
+ mysql> select *from penguins;
++------+----------+---------------------+
+| foo  | bar      | baz                 |
++------+----------+---------------------+
+|    1 | skipper  | 2016-12-27 14:15:34 |
+|    2 | skipper  | 2016-12-27 14:15:34 |
+|    3 | kowalski | 2016-12-27 14:15:34 |
+|    4 | kowalski | 2016-12-27 14:15:35 |
+|    5 | kowalski | 2016-12-27 14:15:35 |
+|    6 | rico     | 2016-12-27 14:15:35 |
++------+----------+---------------------+
+6 rows in set (0.00 sec)
+
+mysql> select *from penguins;
++------+----------+---------------------+
+| foo  | bar      | baz                 |
++------+----------+---------------------+
+|    1 | skipper  | 2016-12-27 14:15:34 |
+|    3 | kowalski | 2016-12-27 14:15:34 |
+|    4 | kowalski | 2016-12-27 14:15:35 |
+|    6 | rico     | 2016-12-27 14:15:35 |
++------+----------+---------------------+
+4 rows in set (0.00 sec)
+CREATE TABLE table_temp AS
+SELECT * FROM table GROUP BY title, SID;
+
+DROP TABLE table;
+RENAME TABLE table_temp TO table;
+ALTER IGNORE TABLE foobar ADD UNIQUE (title, SID)
+http://stackoverflow.com/questions/4685173/delete-all-duplicate-rows-except-for-one-in-mysql
+delete a from penguins a,penguins b where a.foo>b.foo and a.bar=b.bar;
+mysql> select *from penguins;
++------+----------+---------------------+
+| foo  | bar      | baz                 |
++------+----------+---------------------+
+|    1 | skipper  | 2016-12-27 14:22:09 |
+|    3 | kowalski | 2016-12-27 14:22:09 |
+|    6 | rico     | 2016-12-27 14:22:10 |
++------+----------+---------------------+
+3 rows in set (0.00 sec)
+
+delete a from penguins a,penguins b where a.foo>b.foo and a.bar=b.bar and a.baz=b.baz;
+mysql> select *from penguins;
++------+----------+---------------------+
+| foo  | bar      | baz                 |
++------+----------+---------------------+
+|    1 | skipper  | 2016-12-27 14:25:19 |
+|    2 | skipper  | 2016-12-27 14:25:20 |
+|    3 | kowalski | 2016-12-27 14:25:20 |
+|    6 | rico     | 2016-12-27 14:25:21 |
++------+----------+---------------------+
+4 rows in set (0.00 sec)
 ```
 ###laravel 关联
 ```php
