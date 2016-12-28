@@ -775,6 +775,8 @@ a 3 a3:a的第三个值
 b 5 b5b5b5b5b5 
 
 */ 
+更新val大于4的memo为val等于4的记录
+mysql> update tb set memo=(select memo from (select *from tb) a where a.val=4) where val>4;
 按name分组取最小的两个(N个)val 
 select a.* from tb a where exists (select count(*) from tb where name = a.name and val < a.val having Count(*) < 2) order by a.name 
 /* 
