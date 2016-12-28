@@ -644,7 +644,7 @@ $logDir = storage_path('logs/xxxx');
 }
 $log->pushHandler(new StreamHandler($logDir . '/' . date('Y-m-d') . '.log', Logger::DEBUG))
 ```
-###
+###修改laravel默认加密方式为md5
 ```php
 mkdir providers/Hashing
 vi Md5ServiceProvider.php
@@ -690,4 +690,60 @@ class Md5Hasher implements HasherContract
 vi config/app.php
 
 'App\Providers\Hashing\Md5ServiceProvider', 替代'Illuminate\Hashing\HashServiceProvider',
+```
+###无限极分类
+```php
+$array = [
+     1 => [ 'k' => 0 ],
+     2 => [ 'k' => 1 ],
+     3 => [ 'k' => 1 ],
+     4 => [ 'k' => 2 ],
+     5 => [ 'k' => 4 ],
+     6 => [ 'k' => 3 ],
+     7 => [ 'k' => 0 ],
+     8 => [ 'k' => 6 ]
+];
+
+
+$tree  = [];
+$refer = $array;
+
+foreach($array as $key => $val) {
+    if (isset($refer[$val['k']])) {
+        $refer[$val['k']]['children'][$key] = &$refer[$key];
+    } else {
+        $tree[$key] = &$refer[$key];
+    }
+}
+
+print_r($tree);
+ [
+     1 => [
+         "k"        => 0,
+         "children" => [
+             2 => [
+                 "k"        => 1,
+                 "children" => [
+                     4 => Array(2)
+                 ]
+             ],
+             3 => [
+                 "k"        => 1,
+                 "children" => [
+                     6 => Array(2)
+                 ]
+             ]
+         ]
+     ],
+     7 => [
+         "k" => 0
+     ]
+ ]
+```
+###每输入5个字符,自动加入-
+```php
+'input里面可以输入或者粘贴文本aaaBBB2222'.replace(/[^\d|^a-z|^A-Z]/g, '').replace(/(.{5,5})/g, '$1-')
+'1234567890abcd'.replace(/\w(?=(\w{5})+$)/g, "$&-");//"1234-56789-0abcd"
+"1234567890abcDEFg".replace(/([^_\W]{5})/g,"$1-")
+//"12345-67890-abcDE-Fg"
 ```
