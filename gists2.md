@@ -747,3 +747,47 @@ print_r($tree);
 "1234567890abcDEFg".replace(/([^_\W]{5})/g,"$1-")
 //"12345-67890-abcDE-Fg"
 ```
+###按name分组取val最大的值所在行的数据
+```php
+//http://www.jb51.net/article/31590.htm
+create table tb(name varchar(10),val int,memo varchar(20)); 
+insert into tb values('a', 2, 'a2(a的第二个值)') ;
+insert into tb values('a', 1, 'a1--a的第一个值') ;
+insert into tb values('a', 3, 'a3:a的第三个值') ;
+insert into tb values('b', 1, 'b1--b的第一个值') ;
+insert into tb values('b', 3, 'b3:b的第三个值') ;
+insert into tb values('b', 2, 'b2b2b2b2') ;
+insert into tb values('b', 4, 'b4b4') ;
+insert into tb values('b', 5, 'b5b5b5b5b5') ;
+--方法1：select a.* from tb a where val = (select max(val) from tb where name = a.name) order by a.name 
+--方法2： 
+select a.* from tb a where not exists(select 1 from tb where name = a.name and val > a.val) 
+--方法3： 
+select a.* from tb a,(select name,max(val) val from tb group by name) b where a.name = b.name and a.val = b.val order by a.name 
+--方法4： 
+select a.* from tb a inner join (select name , max(val) val from tb group by name) b on a.name = b.name and a.val = b.val order by a.name 
+--方法5 
+select a.* from tb a where 1 > (select count(*) from tb where name = a.name and val > a.val ) order by a.name 
+/* 
+name val memo 
+---------- ----------- -------------------- 
+a 3 a3:a的第三个值 
+b 5 b5b5b5b5b5 
+
+*/ 
+按name分组取最小的两个(N个)val 
+select a.* from tb a where exists (select count(*) from tb where name = a.name and val < a.val having Count(*) < 2) order by a.name 
+/* 
+name val memo 
+---------- ----------- -------------------- 
+a 1 a1--a的第一个值 
+a 2 a2(a的第二个值) 
+b 1 b1--b的第一个值 
+b 2 b2b2b2b2 
+
+*/ 
+取出每个分类中最新的内容
+select * from test group by category_id order by `date`
+正确
+select * from (select * from `test` order by `date` desc) `temp`  group by category_id order by `date` desc
+```
