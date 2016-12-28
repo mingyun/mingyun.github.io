@@ -517,6 +517,57 @@ $packs = split_money(100, 10);
     6.92,
     5.6
 ]
+//https://www.zhihu.com/question/22625187/answer/50556558
+def weixin_divide_hongbao(money, n):
+    divide_table = [random.randint(1, 10000) for x in xrange(0, n)]
+    sum_ = sum(divide_table)
+    return [x*money/sum_ for x in divide_table]
+function red_rand($amount, $num)
+{
+$amount = intval($amount * 100);
+if($num > $amount){
+exit('err');
+}
+
+$reds = array();
+while(--$num){
+$r = rand(1, $amount);
+$r = fix_rand($r, $reds, $amount);
+$reds[] = $r;
+}
+asort($reds);
+$arr = array();
+$last = 0;
+foreach($reds as $v){
+$arr[] = ($v - $last) / 100;
+$last = $v;
+}
+$arr[] = ($amount - $last) / 100;
+return $arr;
+}
+
+
+function fix_rand($r, $reds, $max){
+if(in_array($r, $reds) || $r == $max){
+$r1 = $r;
+while(--$r1){
+if( ! in_array($r1, $reds)){
+return $r1;
+break;
+}
+}
+
+while(true){
+++$r;
+if( ! in_array($r, $reds)){
+return $r;
+break;
+}
+}
+}
+return $r;
+}
+
 ```
 ###You can't specify target table 'wms_cabinet_form' for update in FROM clause
 ```php
