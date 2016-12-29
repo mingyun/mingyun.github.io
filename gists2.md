@@ -844,3 +844,34 @@ select * from test group by category_id order by `date`
 正确
 select * from (select * from `test` order by `date` desc) `temp`  group by category_id order by `date` desc
 ```
+###laravel5.0 空对象无where条件更新全表
+```php
+$ad=Ad::findornew(0);
+dump($ad);
+array:21 [▼
+  "\x00*\x00table" => "ads"
+  "\x00*\x00fillable" => array:12 [▶]
+  "\x00*\x00guarded" => array:1 [▶]
+  "\x00*\x00connection" => null
+  "\x00*\x00primaryKey" => "id"
+  "\x00*\x00perPage" => 15
+  "incrementing" => true
+  "timestamps" => true
+  "\x00*\x00attributes" => array:14 [▶]
+  "\x00*\x00original" => array:14 [▶]
+  "\x00*\x00relations" => []
+  "\x00*\x00hidden" => []
+  "\x00*\x00visible" => []
+  "\x00*\x00appends" => []
+  "\x00*\x00dates" => []
+  "\x00*\x00casts" => []
+  "\x00*\x00touches" => []
+  "\x00*\x00observables" => []
+  "\x00*\x00with" => []
+  "\x00*\x00morphClass" => null
+  "exists" => false
+]
+Ad::findornew(1);//exists为true
+dd(count((array)$ad));22
+$ad->update(['nick_name'=>'空对象会更新表所有数据']);
+```
