@@ -1118,3 +1118,50 @@ var_dump(codepoint_encode("我好"));
 var_dump(codepoint_decode('\u6211\u597d'));
 var_dump('\u6211\u597d');
 ```
+###[gravatar头像](http://cn.gravatar.com/site/implement/images/php/)
+```php
+$email = "someone@somewhere.com";
+$default = "https://sf-sponsor.b0.upaiyun.com/2f8a9f042fcc293226964a7c3f075193.jpg";
+$size = 40;
+echo $grav_url = "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . urlencode( $default ) . "&s=" . $size;
+<img src="<?php echo $grav_url; ?>" alt="" />
+```
+###[python验证码识别](https://www.v2ex.com/t/311454)
+```php
+//http://cloudsightapi.com/api  http://www.itdadao.com/articles/c15a212068p0.html http://www.jianshu.com/p/9e97c9b7dab6 
+pip install PIL
+pip install Pillow
+pip install pytesseract
+#coding:utf-8
+  #Test one page
+  import pytesseract
+  from PIL import Image
+  
+  def processImage():
+      image = Image.open('test.png')
+  
+      #背景色处理，可有可无
+     image = image.point(lambda x: 0 if x < 143 else 255)
+     newFilePath = 'raw-test.png'
+     image.save(newFilePath)
+ 
+     content = pytesseract.image_to_string(Image.open(newFilePath), lang='eng')
+     #中文图片的话，是lang='chi_sim'
+     print(content)
+ 
+ processImage()
+ https://segmentfault.com/q/1010000005686388 去掉黑点，就是一个二值化降噪的过程 
+ from PIL import Image,ImageEnhance,ImageFilter
+im = Image.open("1.jpeg")
+im = im.filter(ImageFilter.MedianFilter())
+enhancer = ImageEnhance.Contrast(im)
+im = enhancer.enhance(2)
+im = im.convert('1')
+im.show()
+https://my.oschina.net/jhao104/blog/647326 
+from PIL import Image
+from pytesser import pytesser
+image = Image.open('7039.jpg')
+print pytesser.image_file_to_string('7039.jpg')
+print pytesser.image_to_string(image)
+```
