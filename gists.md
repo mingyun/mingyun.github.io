@@ -900,3 +900,148 @@ if(true = $result) { // 这样解析器会直接抛出错误，就算少写了�
 preg_replace('/[\x{10000}-\x{10FFFF}]/u', "\xEF\xBF\xBD", $value);
 
 ```
+###[根据经纬度计算距离](http://www.cnblogs.com/siqi/archive/2013/04/23/3037888.html)
+```php
+/**
+     * 根据经纬度计算距离 其中A($lat1,$lng1)、B($lat2,$lng2)
+         * 注意弧度角度的计算
+     * 单位：km
+     */
+    function _getDistance($lat1,$lng1,$lat2,$lng2)
+    {
+        //地球半径
+        $R = 6378.137; //km
+    
+        //将角度转为狐度
+        $radLat1 = deg2rad($lat1);
+        $radLat2 = deg2rad($lat2);
+        $radLng1 = deg2rad($lng1);
+        $radLng2 = deg2rad($lng2);
+    
+        //结果
+        $s = acos(cos($radLat1)*cos($radLat2)*cos($radLng1-$radLng2)+sin($radLat1)*sin($radLat2))*$R;
+    
+        //精度
+        $s = round($s* 10000)/10000;
+        return  round($s);
+    }
+    /**
+ *根据传入的中心点的经纬度和半径，计算出矩形区域
+ * @param float $center_lat
+ * @param float $center_lng
+ * @param int   $radius unit:km
+ */
+function getAroundRectangle($center_lat, $center_lng, $radius)
+{
+    //先来求东西两侧的的范围边界 经度
+    $earth_radius = 6378.137;    //km
+    $dlng = rad2deg(2 * asin(sin($radius / (2 * $earth_radius)) / cos(deg2rad($center_lat)))); //角度
+     
+    //然后求南北两侧的范围边界 维度
+    $dlat = rad2deg($radius/$earth_radius);
+    
+    $data = array(
+        'lat_min' => $center_lat-$dlat,//维度最小
+        'lat_max' => $center_lat+$dlat,//唯独 最大
+        'lng_min' => $center_lng-$dlng,//经度最小
+        'lng_max' => $center_lng+$dlng,//经度最大
+    );
+    return $data;
+}
+```
+###[php技巧](http://www.cnblogs.com/siqi/archive/2012/12/02/2798178.html)
+```php
+/**
+ * 获取最后一次出错信息，无论如何也能获取到
+ * 
+ * error_get_last set_error_handler 都不会受环境配置的影响
+ * 
+ */
+error_reporting(0);
+ini_set("display_errors", "off");
+
+
+set_error_handler(function(){
+
+    print_r(func_get_args());
+
+});
+
+echo $a ;
+print_r(error_get_last());
+// 输出所有的函数
+get_defined_functions();
+
+//获取所定义的常量
+get_defined_constants();
+
+//获取所定义的变量
+get_defined_vars();
+curl获取头信息 （注意包括\r\n）
+$response = curl_exec($ch);
+ $curl_info = curl_getinfo($ch);
+ curl_close($ch);
+ $header_size = $curl_info['header_size'];
+ $header = substr($response, 0, $header_size);
+ $body = substr($response, $header_size); 
+设置头信息（Post请求）
+1、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:text/plain') );
+file_get_contents('php://input', 'r') 获取到
+$_POST                                获取不到
+
+2、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:application/x-www-form-urlencoded') );#默认
+file_get_contents('php://input', 'r') 获取到
+$_POST                                获取到
+
+3、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:multipart/form-data; boundary=----WebKitFormBoundarygAvW9MJkUNVmzDjY') );
+file_get_contents('php://input', 'r') 获取不到
+$_POST                                获取到
+判断一个数组是否是关联数组
+
+function is_assoc($arr) {
+    return array_keys($arr) !== range(0, count($arr) - 1);
+}
+curl 当post超过1024byte时的问题curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+strtr($string, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+// ?: 匹配但不捕获 加在前面
+//? 去贪婪 加在后面
+// \1 反向引用
+// $1 捕获
+$str = 'a a';
+preg_match("/(a)(?:\s+)\\1/", $str, $m); #1
+echo preg_replace("/(a)(\s+)\\1/", "$1", $str); #a
+print_r($m);
+#正则中对\的理解
+
+$str = '<a href=\"db.house.qq\"></a>';
+
+#双引号中可以转义的符合会被执行，输出后不在显示转义符
+echo "/\\\\\"db.house.qq\\\\\"/" . "\n"; // /\\"db.house.qq\\"/ 总结：在双引号的正则中一个\需要写成 \\
+
+#正则本身的转义符号也需要转义
+var_dump(preg_match("/\\\\\"db.house.qq\\\\\"/", $str, $m));
+
+#单引号写法，单引号中的内容不会执行
+var_dump(preg_match('/\\\"db.house.qq\\\"/', $str, $m));
+
+print_r($m);
+```
+###安全base64
+```php
+function urlsafe_b64encode($string)
+{
+  $data = base64_encode($string);
+  $data = str_replace(array('+','/','='),array('-','_','.'),$data);//strtr($data,'+/=','-_.')
+  return $data;
+}
+function urlsafe_b64decode($string)
+{
+  $data = str_replace(array('-','_','.'),array('+','/','='),$string);
+  $mod4 = strlen($data) % 4;
+  if ($mod4) {
+    $data .= substr('====', $mod4);
+  }
+  return base64_decode($data);
+}
+
+```
