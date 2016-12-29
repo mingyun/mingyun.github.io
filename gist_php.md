@@ -1158,10 +1158,68 @@ enhancer = ImageEnhance.Contrast(im)
 im = enhancer.enhance(2)
 im = im.convert('1')
 im.show()
+
+二值化处理 pytesser 调用了 tesseract。在python中调用pytesser模块，pytesser又用tesseract识别图片中的文字
+threshold = 140
+table = []
+for i in range(256):
+    if i < threshold:
+        table.append(0)
+    else:
+        table.append(1)
+out = imgry.point(table, '1')
+out.show()
+
 https://my.oschina.net/jhao104/blog/647326 
 from PIL import Image
-from pytesser import pytesser
+import pytesser
 image = Image.open('7039.jpg')
 print pytesser.image_file_to_string('7039.jpg')
 print pytesser.image_to_string(image)
+```
+###[判断对象为空](http://stackoverflow.com/questions/9412126/how-to-check-that-an-object-is-empty-in-php)
+```php
+if ( $obj == new stdClass() )
+{
+    echo "Object is empty"; // JSON: {}
+}
+else
+{
+    echo "Object has properties";
+}
+$oVal = new stdClass(); 
+$oVal = (object) [];
+$oVal = (object) array();
+if (empty((array) $obj)) {
+    //do stuff
+}
+if ( !array_filter((array)$obj) )
+if ( $obj == new stdClass() ) 
+if(count((array)$obj)){
+   //doStuff
+}
+
+$one = new stdClass();
+$two = (object)array();
+
+var_dump($one == new stdClass()); // TRUE
+var_dump($two == new stdClass()); // TRUE
+var_dump($one == $two); // TRUE
+
+$two->test = TRUE;
+var_dump($two == new stdClass()); // FALSE
+var_dump($one == $two); // FALSE
+
+$two->test = FALSE;
+var_dump($one == $two); // FALSE
+
+$two->test = NULL;
+var_dump($one == $two); // FALSE
+
+$two->test = TRUE;
+$one->test = TRUE;
+var_dump($one == $two); // TRUE
+
+unset($one->test, $two->test);
+var_dump($one == $two); // TRUE
 ```
