@@ -936,3 +936,538 @@ True
 >>> sum([0.1]*10) == 1.0
 False
 ```
+###[排序算法](http://www.cnblogs.com/siqi/archive/2012/09/01/2667145.html)
+```php
+$arr = array(3,2,1);
+//外层每循环一次则找出一个最大值，放到后面，所以里层的循环就可以减少一次
+function bubble_sort(&$arr)
+{
+   $flag = false;
+
+   $nums = count($arr)-1;//外层循环次数$temp = 0;//变量交换位置
+   for($i=0;$i<$nums;$i++)
+    {
+        //每排好一个，以后就可以少循环一回
+        for($j=0;$j<$nums-$i;$j++)
+        {
+            if($arr[$j]>$arr[$j+1])
+            {
+                //交换位置
+                $temp = $arr[$j];
+                $arr[$j] = $arr[$j+1];
+                $arr[$j+1] = $temp;
+
+                $flag = true;//以次来判断是否进入过次层，如果没有进入过，说明本来就是个有序的，无需进行排序了
+
+            }
+        }
+
+        if(!$flag){
+            //已经排好了
+            break;
+        }else{
+            $flag = false;
+        }
+
+    }
+}
+
+bubble_sort($arr);
+
+print_r($arr);
+
+$arr = array(1,2,3);
+/**
+ * 取一个数依次和后面的做比较，记录本次的最小值，然后交换位置
+ * 
+ */
+function select_sort(&$arr)
+{
+    $nums = count($arr)-1;//外层循环次数
+    $temp = 0;//交换变量用的临时变量
+    for($i=0;$i<$nums;$i++)
+    {
+        $minValue = $arr[$i];//假设$i就是最小数
+        $minIndex = $i;     //记录我认为的最小数的下标
+        //每排好一个，以后就可以少循环一回
+        for($j=$i+1;$j<$nums;$j++)
+        {
+            if($minValue>$arr[$j])
+            {
+                $minIndex = $j;
+                $minValue = $arr[$j];
+            }
+        }
+        
+        //交换位置
+        $temp = $arr[$i];
+        $arr[$i] = $arr[$minIndex];
+        $arr[$minIndex] = $temp;
+    }
+}
+
+select_sort($arr);
+$arr = array(3,2,1);
+//把数组的前半部分看做是有序的，后面的不断的往前面插入
+function insert_sort(&$arr)
+{
+    //先默认下标为0 这个数已经是有序
+    for($i=1;$i<count($arr);$i++)
+    {
+        //$insertValue 是准备插入的数
+        $insertValue = $arr[$i];
+        //先准备和$insertIndex比较
+        $inserIndex = $i-1;
+        
+        //如果满足这个条件，说明我们没有找到合适的位置、
+        
+        while($inserIndex>=0 && $insertValue<$arr[$inserIndex])
+        {
+            //同时把数相应往后面移动
+            $arr[$inserIndex+1] = $arr[$inserIndex];
+            $inserIndex--;
+        }
+        
+        //插入（这时就给$insertValue找到适当的位置）
+        $arr[$inserIndex+1] = $insertValue;//之所以+1 是因为 $inserIndex 是插入的前一个数，即每次和他比较的那个数
+    }
+}
+
+insert_sort($arr);
+/**
+ * 随便取一个数，每循环一次则把比他小的放到左边，比他大的放到右边，递归完成
+ * @param array $seq
+
+ * @return array
+ */
+function quicksort($seq) {
+    if (count($seq) > 1) {
+        $k = $seq[0];
+        $x = array();
+        $y = array();
+        $_size = count($seq);      //do not use count($seq) in loop for.
+        for ($i=1; $i<$_size; $i++) {
+            if ($seq[$i] <= $k) {
+                $x[] = $seq[$i];
+            } else {
+                $y[] = $seq[$i];
+            }
+        }
+        $x = quicksort($x);
+        $y = quicksort($y);
+        return array_merge($x, array($k), $y);
+    } else {
+        return $seq;
+    }
+}
+```
+###[curl 同时发送多个请求](http://www.cnblogs.com/siqi/p/4419320.html)
+```php
+// 创建一对cURL资源
+$ch1 = curl_init();
+$ch2 = curl_init();
+
+// 设置URL和相应的选项
+curl_setopt($ch1, CURLOPT_URL, "http://test.cm/a.php/");
+curl_setopt($ch1, CURLOPT_HEADER, 0);
+curl_setopt ( $ch1, CURLOPT_RETURNTRANSFER, 1 );
+
+curl_setopt($ch2, CURLOPT_URL, "http://testd.cm/b.php");
+
+curl_setopt($ch2, CURLOPT_HEADER, 0);
+curl_setopt ( $ch2, CURLOPT_RETURNTRANSFER, 1 );
+
+// 创建批处理cURL句柄
+$mh = curl_multi_init();
+
+// 增加2个句柄
+curl_multi_add_handle($mh,$ch1);
+curl_multi_add_handle($mh,$ch2);
+
+$running=null;
+// 执行批处理句柄
+do {
+    //处理所有的请求，知道全部执行完毕
+    curl_multi_exec($mh,$running);
+} while($running > 0);
+
+//根据句柄获取每个请求对应的返回的内容
+$a = curl_multi_getcontent($ch1);
+ee($a);
+ee(curl_error($ch1)); //单个请求出错，不会影响到其他请求
+
+$b = curl_multi_getcontent($ch2);
+ee($b);
+
+// 关闭全部句柄
+curl_multi_remove_handle($mh, $ch1);
+curl_multi_remove_handle($mh, $ch2);
+curl_multi_close($mh);
+
+// 创建一对cURL资源
+$ch1 = curl_init();
+$ch2 = curl_init();
+
+// 设置URL和相应的选项
+curl_setopt($ch1, CURLOPT_URL, "http://test.cm/a.php/");
+curl_setopt($ch1, CURLOPT_HEADER, 0);
+curl_setopt ( $ch1, CURLOPT_RETURNTRANSFER, 1 );
+
+curl_setopt($ch2, CURLOPT_URL, "http://test.cm/b.php");
+
+curl_setopt($ch2, CURLOPT_HEADER, 0);
+curl_setopt ( $ch2, CURLOPT_RETURNTRANSFER, 1 );
+
+// 创建批处理cURL句柄
+$mh = curl_multi_init();
+
+// 增加2个句柄
+curl_multi_add_handle($mh,$ch1);
+curl_multi_add_handle($mh,$ch2);
+
+$running=null;
+$msgs_in_queue = null;
+// 执行批处理句柄
+do {
+    //处理所有的请求，知道全部执行完毕 , 循环执行
+    $status = curl_multi_exec($mh,$running);
+     $info = curl_multi_info_read($mh, $msgs_in_queue);
+    if (false !== $info)
+     {
+          eee($msgs_in_queue);
+        eee($info); //如果不为空则说明有返回结果
+        eee(curl_multi_getcontent($info['handle']));
+    }
+    
+} while($status === CURLM_CALL_MULTI_PERFORM  || $running > 0);
+
+// 关闭全部句柄
+curl_multi_remove_handle($mh, $ch1);
+curl_multi_remove_handle($mh, $ch2);
+curl_multi_close($mh);
+```
+###二维数组排序
+```php
+function multi_compare($a, $b)
+{
+    $val_arr = array(
+            'gold'=>'asc',
+            'silver'=>'desc'//还可以增加额外的排序条件
+    );
+    foreach($val_arr as $key => $val){
+        if($a[$key] == $b[$key]){
+            continue;
+        }
+        return (($val == 'desc')?-1:1) * (($a[$key] < $b[$key]) ? -1 : 1);
+    }
+    return 0;
+}
+
+$arr = array(
+    array('gold'=>1, 'silver'=>2),
+    array('gold'=>8, 'silver'=>10),
+    array('gold'=>8, 'silver'=>8),
+    array('gold'=>2, 'silver'=>1),
+);
+
+uasort($arr, 'multi_compare');
+```
+###php || &&
+```php
+$a = 3;
+$b = 5;
+
+var_dump(5 || $b = 7);//boolean(true)
+
+if($a = 5 || $b = 7) { //|| 的优先级比赋值预算的要高    
+    var_dump($a); //boolean(true)
+    $a++;
+    $b++;
+}
+echo $a . " " . $b;//1 6
+ if($a = 100 && $b = 200) {
+    var_dump($a,$b);//bool(true) int(200)
+}
+    $int  = 2;
+    $bool = true;
+
+    
+    $a= 1 + 'test'. ($int + $bool);
+    $b= 'test' . ($int + $bool) + 1;
+    var_dump($a, $b);//string(2) "13" int(1)
+//如果 var 不是数组类型或者实现了 Countable 接口的对象，将返回 1，有一个例外，如果 var 是 NULL 则结果是 0。 
+echo  count ("567");//1
+echo count(null);    //0
+echo count(false);  //1
+//注意这种操作引起的错误
+$a = null;
+var_dump($a['abc']);//null 
+echo -10%3; //-1
+```
+###[浮点数](http://www.cnblogs.com/siqi/archive/2012/12/02/2798058.html)
+```php
+/**
+ * 浮点数一般是不能用来比较大小的，但是我们可以用一种变通的的方式
+ * 用var_dump输出浮点是看不出效果的,可以用serialize查看
+ * 1.round  2.浮点转换成字符串
+ * 
+ * 转换成字符串方法：
+ * 通过在其前面加上(string)或用strval()函数来转变成 字符串
+ * 在一个需要字符串的表达式中，字符串会自动转变，比如在使用函数 echo() 或 print() 时， 或在一个变量和一个 字符串 进行比较时，就会发生这种转变
+ * true会转为1 ， 而false则会转为空字符串
+ * 
+ */
+
+$a = 13.2;
+$b = 24;
+$c = $a/$b;
+
+//实际值是这个d:0.54999999999999993338661852249060757458209991455078125;
+echo serialize($c).'<br/>';//
+
+echo  $c.'<br/>';//输出时会显示成0.55 实际的值是比他小的
+
+//所以直接和0.55比较大小是不成立的http://www.cnblogs.com/siqi/archive/2012/12/02/2798058.html
+if($c == 0.55){
+    echo 'nothing';
+}
+
+$c = round($c,2);
+
+//用round处理
+if($c == 0.55){
+    echo 'ok';
+}
+
+//强制转为字符串
+// $c = (string)$c;
+// $c = strval($c);
+
+if("$c" == 0.55){
+    echo 'ok';
+}
+
+```
+###多维数组转一维
+```php
+//静态变量是只存在于函数作用域中的变量，注释：执行后这种变量不会丢失（下次调用这个函数时，变量仍会记着原来的值）
+
+function array_multi2single($array){
+
+    static $result_array=array();
+
+    foreach($array as $value){
+
+        if(is_array($value)){
+
+            array_multi2single($value);
+
+        }
+
+        else
+
+        $result_array[]=$value;
+
+    }
+
+    return $result_array;
+
+}
+
+
+
+$array=array("1"=>array("A","B","C",array("D","E")),"2"=>array("F","G","H","I"));
+
+$array=array_multi2single($array);
+
+ 
+ //采用数组引用来实现，这样比上一种要好哦
+function array_multi2single($array,&$rs = array()){
+    foreach($array as $value){
+        if(is_array($value)){
+            array_multi2single($value, $rs);
+        }
+        else
+        $rs[]=$value;
+    }
+}
+
+$array=array("1"=>array("A","B","C",array("D","E")),"2"=>array("F","G","H","I"));
+array_multi2single($array, $rs);
+
+print_r($rs);
+```
+###[树形数组](http://www.cnblogs.com/siqi/archive/2012/10/11/2719245.html)
+```php
+ /**
+ * 创建父节点树形数组
+ * 参数
+ * $ar 数组，邻接列表方式组织的数据
+ * $id 数组中作为主键的下标或关联键名
+ * $pid 数组中作为父键的下标或关联键名
+ * 返回 多维数组
+ * 
+ * 分析：
+ * 由于传递是引用，故当赋值给他后，当这个值在变时，上面的值也会跟着一块变
+ * 后面的循环不断的给他添加值 第一个元素也会不断的添加值
+ * 最终所有的树行结构都会放到数组的第一个元素中
+ * 而下面的元素依次保存当次级别以下的孩子
+ * 
+ **/
+function find_parent($ar, $id='id', $pid='pid') {
+  foreach($ar as $v) $t[$v[$id]] = $v;
+  foreach ($t as $k => $item){
+    if( $item[$pid] ){
+      if( ! isset($t[$item[$pid]]['parent'][$item[$pid]]) )
+         $t[$item[$id]]['parent'][$item[$pid]] =& $t[$item[$pid]];
+    }
+  }
+  return $t;
+}
+
+
+/**
+ * 创建子节点树形数组
+ * 参数http://www.cnblogs.com/siqi/archive/2012/10/11/2719245.html
+ * $ar 数组，邻接列表方式组织的数据
+ * $id 数组中作为主键的下标或关联键名
+ * $pid 数组中作为父键的下标或关联键名
+ * 返回 多维数组
+ **/
+function find_child($ar, $id='id', $pid='pid') {
+  foreach($ar as $v) $t[$v[$id]] = $v;
+  foreach ($t as $k => $item){
+    if( $item[$pid]) {
+      $t[$item[$pid]]['child'][$item[$id]] = & $t[$k];
+    }
+  }
+  return $t;
+}
+
+    $data = array(
+      array('ID'=>1, 'PARENT'=>0, 'NAME'=>'祖父'),
+      array('ID'=>2, 'PARENT'=>1, 'NAME'=>'父亲'),
+      array('ID'=>3, 'PARENT'=>1, 'NAME'=>'叔伯'),
+      array('ID'=>4, 'PARENT'=>2, 'NAME'=>'自己'),
+      array('ID'=>5, 'PARENT'=>4, 'NAME'=>'儿子'),
+    );
+
+   $p = find_parent($data, 'ID', 'PARENT');
+   Array
+(
+    [1] => Array
+        (
+            [ID] => 1
+            [PARENT] => 0
+            [NAME] => 祖父
+        )
+
+    [2] => Array
+        (
+            [ID] => 2
+            [PARENT] => 1
+            [NAME] => 父亲
+            [parent] => Array
+                (
+                    [1] => Array
+                        (
+                            [ID] => 1
+                            [PARENT] => 0
+                            [NAME] => 祖父
+                        )
+
+                )
+
+        )
+
+    [3] => Array
+        (
+            [ID] => 3
+            [PARENT] => 1
+            [NAME] => 叔伯
+            [parent] => Array
+                (
+                    [1] => Array
+                        (
+                            [ID] => 1
+                            [PARENT] => 0
+                            [NAME] => 祖父
+                        )
+
+                )
+
+        )
+
+    [4] => Array
+        (
+            [ID] => 4
+            [PARENT] => 2
+            [NAME] => 自己
+            [parent] => Array
+                (
+                    [2] => Array
+                        (
+                            [ID] => 2
+                            [PARENT] => 1
+                            [NAME] => 父亲
+                            [parent] => Array
+                                (
+                                    [1] => Array
+                                        (
+                                            [ID] => 1
+                                            [PARENT] => 0
+                                            [NAME] => 祖父
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [5] => Array
+        (
+            [ID] => 5
+            [PARENT] => 4
+            [NAME] => 儿子
+            [parent] => Array
+                (
+                    [4] => Array
+                        (
+                            [ID] => 4
+                            [PARENT] => 2
+                            [NAME] => 自己
+                            [parent] => Array
+                                (
+                                    [2] => Array
+                                        (
+                                            [ID] => 2
+                                            [PARENT] => 1
+                                            [NAME] => 父亲
+                                            [parent] => Array
+                                                (
+                                                    [1] => Array
+                                                        (
+                                                            [ID] => 1
+                                                            [PARENT] => 0
+                                                            [NAME] => 祖父
+                                                        )
+
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+
+   $c = find_child($data, 'ID', 'PARENT');
+```
