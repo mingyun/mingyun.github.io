@@ -1313,3 +1313,233 @@ Mysql都会使用索引(FUid, FCityId)
 
 6，对于merg表，如果有join查询，可以将merge表的join查询替换成多个子表的join查询，最后union结果。（原来搜索脚本就是这样进行优化的）。    
 ```
+###[atob](https://segmentfault.com/q/1010000007953476)
+```php
+decodeURIComponent(escape(window.atob(res.data.content)))
+```
+###[接收二进制流并生成文件](http://blog.csdn.net/fdipzone/article/details/7473949)
+```php
+/** 二进制流生成文件 
+    * $_POST 无法解释二进制流，需要用到 $GLOBALS['HTTP_RAW_POST_DATA'] 或 php://input 
+    * $GLOBALS['HTTP_RAW_POST_DATA'] 和 php://input 都不能用于 enctype=multipart/form-data 
+    * @param    String  $file   要生成的文件路径 
+    * @return   boolean 
+    */  
+    function binary_to_file($file){  
+        $content = $GLOBALS['HTTP_RAW_POST_DATA'];  // 需要php.ini设置  
+        if(empty($content)){  
+            $content = file_get_contents('php://input');    // 不需要php.ini设置，内存压力小  
+        }  
+        $ret = file_put_contents($file, $content, true);  
+        return $ret;  
+    }  
+      
+    // demo  
+    binary_to_file('photo/test.png'); 
+```
+###file_get_contents post
+```php
+$api = 'http://demo.fdipzone.com/server.php';  
+  
+$postdata = array(  
+    'name' => 'fdipzone',  
+    'gender' => 'male'  
+);  
+  
+$opts = array(  
+    'http' => array(  
+        'method' => 'POST',  
+        'header' => 'content-type:application/x-www-form-urlencoded',  
+        'content' => http_build_query($postdata)  
+    )  
+);  
+  
+$context = stream_context_create($opts);  
+  
+$result = file_get_contents($api, false, $context);  
+  
+echo $result; 
+```
+###[fsockopen GET/POST 提交表单及上传文件](http://blog.csdn.net/fdipzone/article/details/11712607)
+```php
+$host = 'demo.fdipzone.com';  
+$port = 80;  
+$errno = '';  
+$errstr = '';  
+$timeout = 30;  
+$url = '/socket/getapi.php';  
+  
+$param = array(  
+    'name' => 'fdipzone',  
+    'gender' => 'man'  
+);  
+  
+$url = $url.'?'.http_build_query($param);  
+  
+// create connect  
+$fp = fsockopen($host, $port, $errno, $errstr, $timeout);  
+  
+if(!$fp){  
+    return false;  
+}  
+  
+// send request  
+$out = "GET ${url} HTTP/1.1\r\n";  
+$out .= "Host: ${host}\r\n";  
+$out .= "Connection:close\r\n\r\n";  
+  
+fputs($fp, $out);  
+  
+// get response  
+$response = '';  
+while($row=fread($fp, 4096)){  
+    $response .= $row;  
+}  
+  
+fclose($fp);  
+  
+$pos = strpos($response, "\r\n\r\n");  
+$response = substr($response, $pos+4);  
+  
+echo $response;  
+
+$host = 'demo.fdipzone.com';  
+$port = 80;  
+$errno = '';  
+$errstr = '';  
+$timeout = 30;  
+$url = '/socket/postapi.php';  
+  
+$param = array(  
+    'name' => 'fdipzone',  
+    'gender' => 'man',  
+    'photo' => file_get_contents('photo.jpg')  
+);  
+  
+$data = http_build_query($param);  
+  
+// create connect  
+$fp = fsockopen($host, $port, $errno, $errstr, $timeout);  
+  
+if(!$fp){  
+    return false;  
+}  
+  
+// send request  
+$out = "POST ${url} HTTP/1.1\r\n";  
+$out .= "Host:${host}\r\n";  
+$out .= "Content-type:application/x-www-form-urlencoded\r\n";  
+$out .= "Content-length:".strlen($data)."\r\n";  
+$out .= "Connection:close\r\n\r\n";  
+$out .= "${data}";  
+  
+fputs($fp, $out);  
+  
+// get response  
+$response = '';  
+while($row=fread($fp, 4096)){  
+    $response .= $row;  
+}  
+  
+fclose($fp);  
+  
+$pos = strpos($response, "\r\n\r\n");  
+$response = substr($response, $pos+4);  
+  
+echo $response;  
+//post处理
+define('UPLOAD_PATH', dirname(__FILE__).'/upload');  
+  
+$name = $_POST['name'];  
+$gender = $_POST['gender'];  
+$photo = $_POST['photo'];  
+  
+$filename = time().'.jpg';  
+file_put_contents(UPLOAD_PATH.'/'.$filename, $photo, true); 
+
+$host = 'demo.fdipzone.com';  
+$port = 80;  
+$errno = '';  
+$errstr = '';  
+$timeout = 30;  
+$url = '/socket/fileapi.php';  
+  
+$form_data = array(  
+    'name' => 'fdipzone',  
+    'gender' => 'man',  
+);  
+  
+$file_data = array(  
+    array(  
+        'name' => 'photo',  
+        'filename' => 'photo.jpg',  
+        'path' =>'photo.jpg'  
+    )  
+);  
+  
+// create connect  
+$fp = fsockopen($host, $port, $errno, $errstr, $timeout);  
+  
+if(!$fp){  
+    return false;  
+}  
+  
+// send request  
+srand((double)microtime()*1000000);  
+$boundary = "---------------------------".substr(md5(rand(0,32000)),0,10);  
+  
+$data = "--$boundary\r\n";  
+  
+// form data  
+foreach($form_data as $key=>$val){  
+    $data .= "Content-Disposition: form-data; name=\"".$key."\"\r\n";  
+    $data .= "Content-type:text/plain\r\n\r\n";  
+    $data .= rawurlencode($val)."\r\n";  
+    $data .= "--$boundary\r\n";  
+}  
+  
+// file data  
+foreach($file_data as $file){  
+    $data .= "Content-Disposition: form-data; name=\"".$file['name']."\"; filename=\"".$file['filename']."\"\r\n";  
+    $data .= "Content-Type: ".mime_content_type($file['path'])."\r\n\r\n";  
+    $data .= implode("",file($file['path']))."\r\n";  
+    $data .= "--$boundary\r\n";  
+}  
+  
+$data .="--\r\n\r\n";  
+  
+$out = "POST ${url} HTTP/1.1\r\n";  
+$out .= "Host:${host}\r\n";  
+$out .= "Content-type:multipart/form-data; boundary=$boundary\r\n"; // multipart/form-data  
+$out .= "Content-length:".strlen($data)."\r\n";  
+$out .= "Connection:close\r\n\r\n";  
+$out .= "${data}";  
+  
+fputs($fp, $out);  
+  
+// get response  
+$response = '';  
+while($row=fread($fp, 4096)){  
+    $response .= $row;  
+}  
+  
+fclose($fp);  
+  
+$pos = strpos($response, "\r\n\r\n");  
+$response = substr($response, $pos+4);  
+  
+echo $response;  
+//上传文件
+define('UPLOAD_PATH', dirname(__FILE__).'/upload');  
+  
+$name = $_POST['name'];  
+$gender = $_POST['gender'];  
+  
+$filename = time().'.jpg';  
+  
+echo 'name='.$name.'<br>';  
+echo 'gender='.$gender.'<br>';  
+if(move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD_PATH.'/'.$filename)){  
+    echo '<img src="upload/'.$filename.'">';  
+}  
+```
