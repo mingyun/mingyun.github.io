@@ -342,3 +342,34 @@ OR改写成IN：OR的效率是n级别，IN的效率是log(n)级别，in的个数
 对于连续数值，使用BETWEEN不用IN：SELECT id FROM t WHERE num BETWEEN 1 AND 5
 列表数据不要拿全表，要使用LIMIT来分页，每页数量也不要太大
 ```
+###[获取最后一次出错信息](http://www.cnblogs.com/siqi/archive/2012/12/02/2798178.html)
+```php
+/**
+ * 获取最后一次出错信息，无论如何也能获取到
+ * http://www.cnblogs.com/siqi/archive/2012/12/02/2798178.html
+ * error_get_last set_error_handler 都不会受环境配置的影响
+ * 
+ */
+error_reporting(0);
+ini_set("display_errors", "off");
+
+#php通过mysql取出的数据库的数据都是字符串类型
+set_error_handler(function(){
+
+    print_r(func_get_args());
+
+});
+
+echo $a ;
+print_r(error_get_last());
+```
+###一次替换一个问号
+```php
+$sql = "?,?,?,?";
+$data = array('a', 'b', 'c', 'd');
+ 
+for($i=0;$i<3;$i++){
+$sql=preg_replace('/\?/',"'".$data[$i]."'",$sql,1);// 一次只替换一个
+}
+echo $sql;//'a','b','c'
+```
