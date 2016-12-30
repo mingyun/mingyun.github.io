@@ -1197,4 +1197,119 @@ wget https://tesseract-ocr.googlecode.com/files/chi_sim.traineddata.gz
 or Github (raw):
 
 wget https://github.com/tesseract-ocr/tessdata/raw/master/chi_sim.traineddata
+命令行识别http://layou.iteye.com/blog/2277405  tesseract.exe  vcode.png tess
+```
+###[MySQL优化](http://www.cnblogs.com/siqi/p/3566771.html)
+```php
+逆范式：1对多的时候应当尽可能的把冗余放在一那边
+
+#查看语句的执行次数
+show status 
+
+show create database;
+
+#设置id自动增长的值
+alter table test auto_increment=2;
+
+#mysql myisam 引擎删除的记录不是释放硬盘空间
+optimize table table_name;
+
+关心以com开头的命令 show status like 'com%'
+
+show (session) status like 'com_select';  //本次会话
+
+show global status like 'com_select';  //从启动到现在
+
+connextions 试图连接数据库的次数   status like 'com_select';
+
+show status like 'uptime';  服务器启动时间
+
+show status like 'slow_queries';  //慢查询次数，默认是十秒
+
+显示慢查询 show variables like 'long_query_time';设置
+
+关于mysql中的 dual 表可以看错是一个虚拟表，只是为符合 select * from table_name 这一查询格式而已
+
+启动慢查询日志：
+mysqld.exe -slow-query-log
+
+数据文件my.ini datadir设置
+
+//设置慢查询时间
+set long_query_time = 1;
+__________________________________________________
+第一步：修改my.ini(mysql配置文件)
+  在my.ini中加上下面两句话
+  log-slow-queries = D:\wamp\mysql_slow_query.log
+  long_query_time=5
+  第一句使用来定义慢查询日志的路径（因为是windows，所以不牵涉权限问题）
+  第二句使用来定义查过多少秒的查询算是慢查询，我这里定义的是5秒
+  第二步：查看关于慢查询的状态
+  执行如下SQL语句来查看mysql慢查询的状态
+  show variables like '%slow%';
+  执行结果会把是否开启慢查询、慢查询的秒数、慢查询日志等信息打印在屏幕上。
+  第三步：执行一次慢查询操作
+  
+  下语句代替：
+  SELECT SLEEP(10);
+  第四步：查看慢查询的数量
+  通过如下sql语句，来查看一共执行过几次慢查询：
+  show global status like '%slow%';
+
+explain:分析会不会用到索引，但不能分析出用多少时间
+
+导入大量数据时：
+alter table table_name     disable keys;
+loading data;
+alter table table_name     enable keys;
+
+查看见表SQL:
+show create table table_name;
+
+对于 myisam数据库，需要定时清理
+
+optimize table 表名
+
+用连接代替子查询
+使用join，mysql不需要在内存中国年创建临时表
+
+如果想要 or 用到索引则，or的条件必须都加索引
+
+
+在精度要求较高的项目中，用定点数来来保存，以保证准确性
+全部用 decimal 更准确
+
+date 函数最多 2038 年  此时的时间戳正好为 int 有符号的最大值
+
+查看索引的使用情况
+show status like 'handler_read';
+
+handler_read_key:  高了好
+handler_read_rnd_next: 低了好
+
+
+字段的类型匹配不一致可能会用不到索引：
+    字符串型字段 = 123  用不到索引
+    字符串型字段 = "123"  可以用索引
+1，在创建一个n列的索引时，实际是创建了MySQL可利用的n个索引。
+多列索引可起几个索引的作用，因为可利用索引中最左边的列集来匹配行。
+ KEY `gb_index_FUid_FCityId_FStatus` (`FUid`,`FCityId`,`FStatus`)
+可利用多个索引:
+FUid
+(FUid, FCityId)
+(FUid,FCityId,FStatus)
+
+2，对字符串建立索引后，查询时一定要加引号，否则不能使用索引。
+
+3，mysql对于索引的顺序是有优化的
+Where FUid = xxx and FCityId = yyy
+和
+Where FCityId = yyy and FUid = xxx
+Mysql都会使用索引(FUid, FCityId)
+
+4，join on的列加索引，效果很好。
+
+5，in查询中，如果值太多，可以考虑换一种实现方式。
+
+6，对于merg表，如果有join查询，可以将merge表的join查询替换成多个子表的join查询，最后union结果。（原来搜索脚本就是这样进行优化的）。    
 ```
