@@ -1189,3 +1189,12 @@ Array
     [size] => 38630744
 )
 ```
+###[python识别中文验证码错误](http://stackoverflow.com/questions/14800730/tesseract-running-error#)
+```php
+//pytesseract.pytesseract.TesseractError: (1, 'Error opening data file chi_sim.traineddata')
+从https://github.com/tesseract-ocr/tessdata 下载中文文件
+wget https://tesseract-ocr.googlecode.com/files/chi_sim.traineddata.gz
+or Github (raw):
+
+wget https://github.com/tesseract-ocr/tessdata/raw/master/chi_sim.traineddata
+```
