@@ -241,3 +241,14 @@ e Pack 1) i586"
  
 %' and '0'='0
 %' or 0=0 union select null,version() #
+           
+ 学习过程是通过SQLi-Labs来进行学习的。          http://blog.spoock.com/2016/07/19/sql-injection-4/
+           https://github.com/Audi-1/sqli-labs
+           
+ select username,password from table where id='input'
+#闭合单引号
+id=1 and '1' = '1 # 
+#注释单引号
+id=1 and 1=1 #  或者 id=1 and 1=1--+
+          
+           
