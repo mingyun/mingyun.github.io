@@ -261,4 +261,305 @@ $vcollect = vcollect([
 $vcollect->where('developer.option.test', 'one')->toArray();
 
 // ['developer' => ['name' => 'Taylor', 'option' => ['test' => 'one'] ] ]
+```###[项目所依赖的组件的require-dev是不会安装到你的项目](https://segmentfault.com/q/1010000007967298)
+```php
+"require-dev": {
+        "phpunit/phpunit": "~4.0",
+    },
+    "require": {
+        "phpunit/phpunit": "5.7.*",
+    },
+```
+###[读取/dev/urandom生成指定长度的随机数](https://segmentfault.com/q/1010000007959046)
+```php
+$pr_bits = '';
+// Unix/Linux platform?
+$fp = @fopen('/dev/urandom','rb');
+if ($fp !== FALSE) {
+    $pr_bits .= @fread($fp, 16);
+    @fclose($fp);
+}
+
+echo $pr_bits;
+```
+###[php数组重组](https://segmentfault.com/q/1010000007943712)
+```php
+
+$array = [
+     1 => [ 'k' => 0 ],
+     2 => [ 'k' => 1 ],
+     3 => [ 'k' => 1 ],
+     4 => [ 'k' => 2 ],
+     5 => [ 'k' => 4 ],
+     6 => [ 'k' => 3 ],
+     7 => [ 'k' => 0 ],
+     8 => [ 'k' => 6 ]
+];
+
+
+$tree  = [];
+$refer = $array;
+
+foreach($array as $key => $val) {
+    if (isset($refer[$val['k']])) {
+        $refer[$val['k']]['children'][$key] = &$refer[$key];
+    } else {
+        $tree[$key] = &$refer[$key];
+    }
+}
+
+print_r($tree);
+[
+    1 => [
+      'k' => 0,
+      'children' => [
+          2 => [
+            'k' => 1,
+            'children' => [
+                4 => [
+                    'k' => 2
+                    'children' => [
+                        5 => ['k' => 4]
+                    ]
+                ]
+            ]
+          ],
+          3 => [
+              'k' => 1,
+              'children' => [
+                  6 => [
+                  'k' => 3,
+                  'children' => [
+                      8 => ['k' => 6]
+                  ]
+              ]
+          ]
+      ]
+    ],
+    7 => [ 'k' => 0 ]
+]
+
+```
+###[实现无限级分类](https://segmentfault.com/q/1010000007933292)
+```php
+$categories = [
+  ['id'=>1,'cat_id'=>1,'cat_name'=>'a','pid'=>0],
+  ['id'=>2,'cat_id'=>2,'cat_name'=>'b','pid'=>1],
+  ['id'=>3,'cat_id'=>3,'cat_name'=>'c','pid'=>1],
+  ['id'=>4,'cat_id'=>4,'cat_name'=>'d','pid'=>2],
+  ['id'=>5,'cat_id'=>5,'cat_name'=>'e','pid'=>3],
+];
+    
+    
+$tree = [];
+
+foreach($categories as $v){
+    $tree[$v['id']] = $v;
+    $tree[$v['id']]['children'] = array();
+}
+
+foreach ($tree as $k=>$v) {
+    if ($v['pid'] > 0) {
+        $tree[$v['pid']]['children'][] = &$tree[$k];
+    }
+}    
+print_r($tree);
+function _data_to_tree(&$items, $topid = 0, $with_id = TRUE)
+{
+    $result = [];
+    foreach($items as $v)
+        if ($topid == $v['parent'])  {
+            $r = $v + ['children' => _data_to_tree($items, $v['id'], $with_id)];
+            if ($with_id)
+                $result[$v['id']] = $r;
+            else
+                $result[] = $r;
+        }
+            
+    return $result;
+}
+//使用PHP的指针特性
+function _data_to_tree($items, $topid = 0, $with_id = TRUE)
+{
+    if ($with_id)
+        foreach ($items as $item)
+            $items[ $item['parent'] ]['children'][ $item['id'] ] = &$items[ $item['id'] ];
+    else
+        foreach ($items as $item)
+                $items[ $item['parent'] ]['children'][] = &$items[ $item['id'] ];
+
+         return isset($items[ $topid ]['children']) ? $items[ $topid ][ 'children' ] : [];
+}
+//注意本算法 不会输出 0 的根节点
+//并且数据必须有KEY，并且需要与id相等，也就是如下格式：
+// 1 => ['id' => 1]
+// 2 => ['id' => 2] 
+$data = [
+  4 => ['id' => 4, 'parent' => 1 , 'text' => 'Parent1'], 
+  1 => ['id' => 1, 'parent' => 0 , 'text' => 'Root'],
+  2 => ['id' => 2, 'parent' => 1 , 'text' => 'Parent2'], 
+  3 => ['id' => 3, 'parent' => 2 , 'text' => 'Sub1'], 
+];
+print_r ( _data_to_tree($data, 0) );
+
+
+```
+###[联合查询如何无缝使用limit翻页](https://segmentfault.com/q/1010000007957291)
+```php
+SELECT id,title,time,flag FROM (
+select id,title,time,'zhuan' flag from zhuan 
+UNION ALL
+select id,title,time,'post' from post) a GROUP BY time DESC LIMIT 0,10;
+
+select id,title,cdn,time FROM (
+(select id,title,111 as cdn,time from set_gif where zhuanid = 0) 
+UNION ALL
+(select id,name as title,222 as cdn,time from set_zhuan) order by time desc) a LIMIT 0,100
+```###[php全局变量](https://segmentfault.com/q/1010000007920887)
+```php
+function global_references($flag)
+{
+    $var1 = &$GLOBALS['var1'];
+    $var2 = &$GLOBALS['var2'];
+    if ($flag) {
+        $var2 = &$var1; //1
+    } else {
+        $var2 = '1'; //2
+    }
+}
+```
+###[数组转换](https://segmentfault.com/q/1010000007913647)
+```php
+<?php
+// +----------------------------------------------------------------------
+// | lmxdawn [ WE CAN DO IT JUST THINK IT ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016 .
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: Byron Sampson <lmxdawn@gmail.com>
+// +----------------------------------------------------------------------
+
+/*
+//设，有数组：
+    $arr = [3, 1, 2, 4, 8, 7, 9, 10, 13, 15];
+//写一个函数，使其输出格式为:
+    $arr = array(
+        0 => '1~4',
+        1 => '7~10',
+        2 => '13',
+        3 => '15'
+    );
+ //*/
+
+class Test {
+
+    private $test_array;//需要操作的数组
+
+    private $ico = '~';//分隔符
+
+    private static $_instance;//
+
+    private function __construct($test_array = array()) {
+        $this->test_array = $test_array;
+    }
+
+    private function __clone() {
+        // TODO: Implement __clone() method.
+    }
+
+    public static function getInstance($test_array = array()){
+        if (is_null(self::$_instance) || !isset(self::$_instance)){
+            self::$_instance = new self($test_array);
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * 数组分组
+     * @return array 返回分好的数组
+     */
+    public function array_group(){
+
+        //首先 升序对数组排序
+        sort($this->test_array);
+        // 去重数组
+        $test_array = array_unique($this->test_array);
+        //定义临时数组
+        $tmp_array = array();
+        $one = $test_array[0];//记录第一次的值
+        $tmp_array_key = -1;//临时数组的下标 （初始值为 -1）不然临时数组的下标会从 1 开始
+        foreach ($test_array as $key => $val){
+            // 取出临时数组的最后一个元素
+            $last_val = end($tmp_array);
+            // 用分隔符把字符串转换为数组
+            $last_array = explode($this->ico,$last_val);
+            //如果最后一个元素为数组 就去最后一个元素的最后一个元素，否则就是取第一个
+            $tmp_last_val = (is_array($last_array)) ? end($last_array) : $last_array[0];
+            //判断是否是连续值
+            if (!empty($tmp_last_val) && ($tmp_last_val + 1) == $val){
+                $val = $one.$this->ico.$val;
+            }else{
+                // 如果不连续，更改第一次记录的值
+                $one = $val;
+                // 临时数组的值加一
+                $tmp_array_key++;
+            }
+            //存入临数组
+            $tmp_array[$tmp_array_key] = $val;
+        }
+
+        return $tmp_array;//返回临时数组
+
+    }
+
+
+    /**
+     * 格式化输出数组
+     * @param      $var
+     * @param bool $echo
+     * @param null $label
+     * @param bool $strict
+     * @return mixed|null|string
+     */
+    public static function dump($var, $echo=true, $label=null, $strict=true) {
+        header("Content-type: text/html; charset=utf-8");
+        $label = ($label === null) ? '' : rtrim($label) . ' ';
+        if (!$strict) {
+            if (ini_get('html_errors')) {
+                $output = print_r($var, true);
+                $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
+            } else {
+                $output = $label . print_r($var, true);
+            }
+        } else {
+            ob_start();
+            var_dump($var);
+            $output = ob_get_clean();
+            if (!extension_loaded('xdebug')) {
+                $output = preg_replace('/\]\=\>\n(\s+)/m', '] => ', $output);
+                $output = '<pre>' . $label . htmlspecialchars($output, ENT_QUOTES) . '</pre>';
+            }
+        }
+        if ($echo) {
+            echo($output);
+            return null;
+        }else
+            return $output;
+    }
+
+}
+
+$test_array = array(3, 1, 2, 4, 8, 7, 9, 10, 13, 15,3,1,2,4,23,56,85,24);
+$test = Test::getInstance($test_array);
+
+// 打印数组
+Test::dump($test->array_group());
+$arr = array(
+        0 => '1~4',
+        1 => '7~10',
+        2 => '13',
+        3 => '15'
+);
 ```
