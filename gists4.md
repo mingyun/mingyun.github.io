@@ -562,4 +562,38 @@ $arr = array(
         2 => '13',
         3 => '15'
 );
+```###[根据一个字段查找另一个字段重复的数据](https://segmentfault.com/q/1010000007931297)
+```php
+delete a from product_code_relate_titletext a,product_code_relate_titletext b where a.id>b.id and a.product_code=b.product_code and a.raw_title=b.raw_title;
+delete from product_code_relate_titletext where id not in (select * from (select min(id) from product_code_relate_titletext group by product_code,raw_title having count(*) > 1) as b);
+```
+###[同一个表查询更新](https://segmentfault.com/q/1010000007945346)
+`update guideline_news set content =(select content from (select * from guideline_news) a where a.id = 16) where id>16;`
+###[mysql in指定查询](https://segmentfault.com/q/1010000007965209)
+```php
+(select * from table_name where column_name = value1 limit 5)
+union all
+(select * from table_name where column_name = value2 limit 5);
+```
+###获取ip
+```php
+curl ifcfg.cn/echo |python -m json.tool
+{
+    "url": "http://ifcfg.cn/echo",
+    "user_agent": "curl/7.30.0",
+    "protocol": "http",
+    "query_string": "",
+    "ip": "223.20.168.245",
+    "headers": {
+        "CONNECTION": "close",
+        "HOST": "ifcfg.cn",
+        "ACCEPT": "*/*",
+        "USER-AGENT": "curl/7.30.0"
+    },
+    "location": "\u4e2d\u56fd \u5317\u4eac",
+    "method": "GET",
+    "path": "/echo",
+    "host": "ifcfg.cn"
+}
+
 ```
