@@ -112,3 +112,113 @@ mysql常用注释
 /*…*/
 在注意过程中，这些注释可能都需要进行urlencode
 ```
+###[0e开头MD5值小结](http://www.219.me/posts/2884.html)
+```php
+<?php
+echo "-------------------------------------------\r\n";
+
+while(1){
+$s=rand();
+$s.="a";
+$s="s".$s;
+if(md5($s)=="0") {
+echo $s;
+echo "\r\n";
+echo md5($s)."\r\n";
+}
+}
+```
+###[无需编译的文档撰写工具](https://github.com/egoist/docute)
+```php
+npm i -g docute-cli
+
+docute init ./docs
+docute
+```
+###[Laravel 中的 model 里面能对某个属性进行过滤操作](https://laravel-china.org/topics/3526)
+
+```php
+public function getImagesAttribute($value)
+{
+    return json_decode($value);
+}
+$data         = Template::latest()->forPage($current_page, $page_size)->get();
+```
+###[引入第三方类](https://laravel-china.org/topics/3525)
+```php
+function model($name)
+{
+       $class = 'App\\'.$name;
+       return new $class;
+}
+```
+###[终端显示 Git 当前所在分支](https://pigjian.com/article/linux-git)
+```php
+编辑.bashrc文件
+function git_branch {
+  branch="`git branch 2>/dev/null | grep "^\*" | sed -e "s/^\*\ //"`"
+  if [ "${branch}" != "" ];then
+      if [ "${branch}" = "(no branch)" ];then
+          branch="(`git rev-parse --short HEAD`...)"
+      fi
+      echo "->$branch"
+  fi
+}
+
+export PS1='\[\e[37;40m\][\[\033[01;36m\]\u\[\e[37;40m\]@\[\e[0m\]\h \[\033[01;36m\]\W\[\033[01;32m\]$(git_branch)\[\033[00m\]\[\e[37;40m\]]\[\e[0m\]\$ '
+source ./.bashrc
+```
+###[开启mysql远程连接](https://pigjian.com/article/centos-mysql)
+```php
+grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option;
+# root是用户名，%代表任意主机，'123456'指定的登录密码（这个和本地的root密码可以设置不同的，互不影响）
+flush privileges; # 重载系统权限
+exit;
+允许3306端口
+
+iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+# 查看规则是否生效
+iptables -L -n # 或者: service iptables status
+
+# 此时生产环境是不安全的，远程管理之后应该关闭端口，删除之前添加的规则
+iptables -D INPUT -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+service iptables save # 或者: /etc/init.d/iptables save
+```
+###[VarDumper高亮提示](https://pigjian.com/article/vardumper)
+```php
+composer require symfony/var-dumper
+require 'vendor/autoload.php';
+
+$var = array(
+  'a simple string'=>'in an array of 5 elements',
+  'a float' => 1.0,
+  'an integer' => 1,
+  'a boolean' => true,
+  'an empty array' => array(),
+);
+
+dump($var);
+
+composer global require symfony/var-dumper;
+配置php.ini auto_prepend_file = ${HOME}/.composer/vendor/autoload.php
+composer global update
+```###斐波那契数列
+```php
+function fib($n)
+{
+$cur = 1;
+$prev = 0;
+for ($i = 0; $i < $n; $i++) {
+yield $prev;
+
+    $temp = $cur;
+    $cur = $prev + $cur;
+    $prev = $temp;
+}
+}
+
+$fibs = fib(9);
+foreach ($fibs as $fib) {
+echo $fib.PHP_EOL;
+}
+```
