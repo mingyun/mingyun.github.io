@@ -222,3 +222,43 @@ foreach ($fibs as $fib) {
 echo $fib.PHP_EOL;
 }
 ```
+###[Eloquent ORM 模型中添加自定义值](https://laravel-china.org/topics/3521)
+```php
+class Post extends Model
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title', 'text'];
+
+    /**
+     * 文章对应多条评论
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+}
+public function getCountCommentsAttribute()
+{
+    return $this->comments()->count();
+}
+protected $appends = ['count_comments'];
+```###[Laravel collect 的 PHP Extension](https://laravel-china.org/topics/3528)
+```php
+git clone https://github.com/VikinDev/v-collect.git
+phpize
+./configure
+make && make install
+$vcollect = vcollect([
+    ['developer' => ['name' => 'Taylor', 'option' => ['test' => 'one'] ] ],
+    ['developer' => ['name' => 'Abigail', 'option' => ['test' => 'two'] ] ]
+]);
+
+$vcollect->where('developer.option.test', 'one')->toArray();
+
+// ['developer' => ['name' => 'Taylor', 'option' => ['test' => 'one'] ] ]
+```
