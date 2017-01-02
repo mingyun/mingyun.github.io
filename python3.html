@@ -1,0 +1,1050 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>10 awesome features of Python that you can't use because you refuse to upgrade to Python 3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      /* Slideshow styles */
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# 10 awesome features of Python that you can't use because you refuse to upgrade to Python 3
+
+.footnote[[There is also a pdf version of these slides](http://asmeurer.github.io/python3-presentation/python3-presentation.pdf)]
+
+---
+
+class: center, middle
+
+# 10 awesome features of Python that you can't use because you refuse to upgrade to Python 3
+
+# or
+
+# Turning it up to 13!
+
+---
+
+# Prelude
+
+- Last month (March) APUG: only three people use Python 3 (including me)
+
+- Lots of new features of Python 3.
+
+- Some have been backported to Python 2.7. (like dictionary/set comprehensions
+or set literals, `__future__.print_function`)
+
+- But there's more than that.
+
+- New features that you *can't* use unless you are in Python 3.
+
+- New syntax. New interpreter behavior. Standard library fixes.
+
+- And it's more than bytes/unicode...
+
+---
+
+layout: true
+
+# Feature 1: Advanced unpacking
+
+---
+
+- You can already do this:
+
+  ```py
+  >>> a, b = range(2)
+  >>> a
+  0
+  >>> b
+  1
+  ```
+
+--
+
+- Now you can do this:
+
+  ```py
+  >>> a, b, *rest = range(10)
+  >>> a
+  0
+  >>> b
+  1
+  >>> rest
+  [2, 3, 4, 5, 6, 7, 8, 9]
+  ```
+
+--
+
+- `*rest` can go anywhere:
+
+  ```py
+  >>> a, *rest, b = range(10)
+  >>> a
+  0
+  >>> b
+  9
+  >>> rest
+  [1, 2, 3, 4, 5, 6, 7, 8]
+  ```
+
+  ```py
+  >>> *rest, b = range(10)
+  >>> rest
+  [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  >>> b
+  9
+  ```
+
+---
+
+## Get the first and last lines of a file
+
+```py
+>>> with open("using_python_to_profit") as f:
+...     first, *_, last = f.readlines()
+>>> first
+'Step 1: Use Python 3\n'
+>>> last
+'Step 10: Profit!\n'
+```
+
+--
+
+## Refactor your functions
+
+```py
+def f(a, b, *args):
+    stuff
+```
+
+```py
+def f(*args):
+    a, b, *args = args
+    stuff
+```
+
+---
+
+layout: true
+
+# Feature 2: Keyword only arguments
+
+---
+
+```py
+def f(a, b, *args, option=True):
+    ...
+```
+
+--
+
+- `option` comes *after* `*args`.
+
+--
+
+- The only way to access it is to explicitly call `f(a, b, option=True)`
+
+--
+
+- You can write just a `*` if you don't want to collect `*args`.
+
+  ```py
+  def f(a, b, *, option=True):
+      ...
+  ```
+
+
+---
+
+- No more, "Oops, I accidentally passed too many arguments to the function, and
+one of them was swallowed by a keyword argument".
+
+  ```py
+  def sum(a, b, biteme=False):
+      if biteme:
+          shutil.rmtree('/')
+      else:
+          return a + b
+  ```
+
+  ```py
+  >>> sum(1, 2)
+  3
+  ```
+
+  ```py
+  >>> sum(1, 2, 3)
+  ```
+
+--
+
+.center[<img src="bomb.jpg" width="500">]
+
+---
+
+- Instead write
+
+  ```py
+  def sum(a, b, *, biteme=False):
+      if biteme:
+          shutil.rmtree('/')
+      else:
+          return a + b
+  ```
+
+  ```py
+  >>> sum(1, 2, 3)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  TypeError: sum() takes 2 positional arguments but 3 were given
+  ```
+
+--
+
+.center[![](borat.jpg)]
+
+---
+
+
+- Or, "I reordered the keyword arguments of a function, but something was
+implicitly passing in arguments expecting the order"
+
+- Example:
+
+  ```py
+   def maxall(iterable, key=None):
+       """
+       A list of all max items from the iterable
+       """
+       key = key or (lambda x: x)
+       m = max(iterable, key=key)
+       return [i for i in iterable if key(i) == key(m)]
+   ```
+
+   ```py
+   >>> maxall(['a', 'ab', 'bc'], len)
+   ['ab', 'bc']
+   ```
+
+---
+
+- The `max` builtin supports `max(a, b, c)`. We should allow that too.
+
+  ```py
+  def maxall(*args, key=None):
+      """
+      A list of all max items from the iterable
+      """
+      if len(args) == 1:
+          iterable = args[0]
+      else:
+          iterable = args
+      key = key or (lambda x: x)
+      m = max(iterable, key=key)
+      return [i for i in iterable if key(i) == key(m)]
+  ```
+
+- We just broke any code that passed in the key as a second argument without
+  using the keyword.
+
+  ```py
+  >>> maxall(['a', 'ab', 'ac'], len)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "<stdin>", line 10, in maxall
+  TypeError: unorderable types: builtin_function_or_method() > list()
+  ```
+
+- (Actually in Python 2 it would just return `['a', 'ab', 'ac']`, see feature 6).
+
+- By the way, `max` shows that this is already possible in Python 2, but only
+  if you write your function in C.
+
+- Obviously, we should have used `maxall(iterable, *, key=None)` to begin
+  with.
+
+---
+
+- You can make your APIs "future change proof".
+
+- Stupid example:
+
+  ```py
+  def extendto(value, shorter, longer):
+      """
+      Extend list `shorter` to the length of list `longer` with `value`
+      """
+      if len(shorter) > len(longer):
+          raise ValueError('The `shorter` list is longer than the `longer` list')
+      a.extend([value]*(len(longer) - len(shorter)))
+  ```
+
+  ```py
+  >>> a = [1, 2]
+  >>> b = [1, 2, 3, 4, 5]
+  >>> extendto(10, a, b)
+  >>> a
+  [1, 2, 10, 10, 10]
+  ```
+
+--
+
+- Hmm, maybe it makes more sense for `longer` to come before `shorter`...
+
+- Too bad, you'll break the code.
+
+---
+
+- In Python 3, you can use
+
+  ```py
+  def extendto(value, *, shorter=None, longer=None):
+      """
+      Extend list `shorter` to the length of list `longer` with `value`
+      """
+      if shorter is None or longer is None:
+          raise TypeError('`shorter` and `longer` must be specified')
+      if len(shorter) > len(longer):
+          raise ValueError('The `shorter` list is longer than the `longer` list')
+      a.extend([value]*(len(longer) - len(shorter)))
+  ```
+
+- Now, `a` and `b` *have* to be passed in as `extendto(10, shorter=a,
+longer=b)`.
+
+--
+
+- Or if you prefer, `extendto(10, longer=b, shorter=a)`.
+
+---
+
+- Add new keyword arguments without breaking API.
+
+- Python 3 did this in the standard library.
+
+--
+
+- For example, functions in `os` have `follow_symlinks` option.
+
+--
+
+- So you can just use `os.stat(file, follow_symlinks=False)` instead of `os.lstat`.
+
+--
+
+- In case that sounds more verbose, it lets you do
+
+  ```py
+  s = os.stat(file, follow_symlinks=some_condition)
+  ```
+
+  instead of
+
+  ```py
+  if some_condition:
+      s = os.stat(file)
+  else:
+      s = os.lstat(file)
+  ```
+
+--
+
+- But `os.stat(file, some_condition)` doesn't work.
+
+- Keeps you from thinking it's a two-argument function.
+
+---
+
+- In Python 2, you have to use `**kwargs` and do the handling yourself.
+
+--
+
+- Lots of ugly `option = kwargs.pop(True)` at the top of your functions.
+
+--
+
+- No longer self documenting.
+
+--
+
+- If you somehow are writing for a Python 3 only codebase, I highly recommend
+ making all your keyword arguments keyword only, especially keyword arguments
+ that represent "options".
+
+---
+
+layout: true
+
+# Feature 3: Chained exceptions
+
+---
+
+- **Situation:** you catch an exception with `except`, do something, and then
+raise a different exception.
+
+  ```py
+  def mycopy(source, dest):
+     try:
+         shutil.copy2(source, dest)
+     except OSError: # We don't have permissions. More on this later
+         raise NotImplementedError("automatic sudo injection")
+  ```
+
+- **Problem:** You lose the original traceback
+
+  ```py
+  >>> mycopy('noway', 'noway2')
+  >>> mycopy(1, 2)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "<stdin>", line 5, in mycopy
+  NotImplementedError: automatic sudo injection
+  ```
+
+--
+
+- What happened with the `OSError`?
+
+---
+
+- Python 3 shows you the whole chain of exceptions:
+
+  ```py
+  mycopy('noway', 'noway2')
+  Traceback (most recent call last):
+    File "<stdin>", line 3, in mycopy
+    File "/Users/aaronmeurer/anaconda3/lib/python3.3/shutil.py", line 243, in copy2
+      copyfile(src, dst, follow_symlinks=follow_symlinks)
+    File "/Users/aaronmeurer/anaconda3/lib/python3.3/shutil.py", line 109, in copyfile
+      with open(src, 'rb') as fsrc:
+  PermissionError: [Errno 13] Permission denied: 'noway'
+
+  During handling of the above exception, another exception occurred:
+
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "<stdin>", line 5, in mycopy
+  NotImplementedError: automatic sudo injection
+  ```
+
+--
+
+- You can also do this manually using `raise from`
+
+  ```py
+  raise exception from e
+  ```
+
+  ```py
+  >>> raise NotImplementedError from OSError
+  OSError
+
+  The above exception was the direct cause of the following exception:
+
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  NotImplementedError
+  ```
+
+---
+
+layout: true
+
+# Feature 4: Fine grained `OSError` subclasses
+
+---
+
+- The code I just showed you is wrong.
+
+- It catches `OSError` and assumes it is a permission error.
+
+- But `OSError` can be a lot of things (file not found, is a directory, is not a
+  directory, broken pipe, ...)
+
+- You really have to do
+
+  ```py
+  import errno
+  def mycopy(source, dest):
+      try:
+          shutil.copy2(source, dest)
+      except OSError as e:
+          if e.errno in [errno.EPERM, errno.EACCES]:
+              raise NotImplementedError("automatic sudo injection")
+          else:
+              raise
+  ```
+
+--
+
+- Wow. That sucks.
+
+--
+
+  .center[<img src="rage.png" width="200">]
+
+---
+
+- Python 3 fixes this by adding a ton of [new exceptions](https://docs.python.org/3.4/library/exceptions.html#os-exceptions).
+
+- You can just do
+
+  ```py
+  def mycopy(source, dest):
+     try:
+         shutil.copy2(source, dest)
+     except PermissionError:
+         raise NotImplementedError("automatic sudo injection")
+  ```
+
+- (Don't worry, `PermissionError` subclasses from `OSError` and still has
+  `.errno`. Old code will still work).
+
+---
+
+layout: true
+
+# Feature 5: Everything is an iterator
+
+---
+
+- This is the hardest one to sell.
+
+- Iterators exist in Python 2 as well.
+
+- But you have to use them. Don't write `range` or `zip` or `dict.values` or
+  ....
+
+---
+
+- If you do...
+
+--
+
+  ```py
+  def naivesum(N):
+      """
+      Naively sum the first N integers
+      """
+      A = 0
+      for i in range(N + 1):
+          A += i
+      return A
+  ```
+--
+
+  ```py
+  In [3]: timeit naivesum(1000000)
+  10 loops, best of 3: 61.4 ms per loop
+  ```
+--
+
+  ```py
+  In [4]: timeit naivesum(10000000)
+  1 loops, best of 3: 622 ms per loop
+  ```
+--
+
+  ```py
+  In [5]: timeit naivesum(100000000)
+  ```
+--
+
+  .center[<img src="startupdisk.png" width="500">]
+
+---
+
+.center[![](badtime.jpg)]
+
+---
+
+- Instead write some variant (`xrange`, `itertools.izip`,
+  `dict.itervalues`, ...).
+
+- Inconsistent API anyone?
+
+---
+
+- In Python 3, `range`, `zip`, `map`, `dict.values`, etc. are all iterators.
+
+- If you want a list, just wrap the result with `list`.
+
+- Explicit is better than implicit.
+
+- Harder to write code that accidentally uses too much memory, because the
+  input was bigger than you expected.
+
+---
+
+layout: true
+
+# Feature 6: No more comparison of everything to everything
+
+---
+
+- In Python 2, you can do
+
+  ```py
+  >>> max(['one', 2]) # One *is* the loneliest number
+  'one'
+  ```
+
+--
+
+- Hurray. I just disproved math!
+
+  .center[![](disprovemath.jpg)]
+
+---
+
+- It's because in Python 2, you can `<` compare anything to anything.
+
+  ```py
+  >>> 'abc' > 123
+  True
+  >>> None > all
+  False
+  ```
+
+--
+
+- In Python 3, you can't do this:
+
+  ```py
+  >>> 'one' > 2
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    TypeError: unorderable types: str() > int()
+  ```
+
+- This avoids subtle bugs, e.g., from not coercing all types from int to str
+  or visa versa.
+
+- Especially when you use `>` implicitly, like with `max` or `sorted`.
+
+- In Python 2:
+
+  ```py
+  >>> sorted(['1', 2, '3'])
+  [2, '1', '3']
+  ```
+
+---
+
+layout: true
+
+# Feature 7: yield from
+
+---
+
+- Pretty great if you use generators
+
+- Instead of writing
+
+  ```py
+  for i in gen():
+      yield i
+  ```
+
+  Just write
+
+  ```py
+  yield from gen()
+  ```
+
+- Easily refactor generators into subgenerators.
+
+---
+
+- Makes it easier to turn everything into a generator. See "Feature 5:
+  Everything is an iterator" above for why you should do this.
+
+- Instead of accumulating a list, just `yield` or `yield from`.
+
+- **Bad**
+
+  ```py
+  def dup(n):
+      A = []
+      for i in range(n):
+          A.extend([i, i])
+      return A
+  ```
+
+  **Good**
+
+  ```py
+  def dup(n):
+      for i in range(n):
+          yield i
+          yield i
+  ```
+
+  **Better**
+
+  ```py
+  def dup(n):
+      for i in range(n):
+          yield from [i, i]
+  ```
+
+---
+
+In case you don't know, generators are awesome because:
+
+- Only one value is computed at a time. Low memory impact (see `range` example
+  above).
+
+- Can break in the middle. Don't have to compute everything just to find out
+  you needed none of it. Compute just what you need. If you often *don't* need
+  it all, you can gain a lot of performance here.
+
+- If you need a list (e.g., for slicing), just call `list()` on the generator.
+
+- Function state is "saved" between yields.
+
+- This leads to interesting possibilities, à la coroutines...
+
+---
+
+layout: true
+
+# Feature 8: asyncio
+
+---
+
+- Uses new coroutine features and saved state of generators to do
+  asynchronous IO.
+
+  ```py
+  # Taken from Guido's slides from “Tulip: Async I/O for Python 3” by Guido
+  # van Rossum, at LinkedIn, Mountain View, Jan 23, 2014
+  @coroutine
+  def fetch(host, port):
+      r,w = yield from open_connection(host,port)
+      w.write(b'GET /HTTP/1.0\r\n\r\n ')
+      while (yield from r.readline()).decode('latin-1').strip():
+          pass
+      body=yield from r.read()
+      return body
+
+  @coroutine
+  def start():
+      data = yield from fetch('python.org', 80)
+      print(data.decode('utf-8'))
+  ```
+
+
+--
+
+
+- Not going to lie to you. I still don't get this.
+
+--
+
+- It's OK, though. Even David Beazley had a hard time with it:
+
+.center[<img src="dabeaz.png" width="500">]
+
+---
+
+layout: true
+
+# Feature 9: Standard library additions
+
+---
+
+## `faulthandler`
+
+- Display (limited) tracebacks, even when Python dies the hard way.
+
+- Won't work with `kill -9`, but does work with, e.g., segfaults.
+
+  ```py
+  import faulthandler
+  faulthandler.enable()
+
+  def killme():
+      # Taken from http://nbviewer.ipython.org/github/ipython/ipython/blob/1.x/examples/notebooks/Part%201%20-%20Running%20Code.ipynb
+      import sys
+      from ctypes import CDLL
+      # This will crash a Linux or Mac system; equivalent calls can be made on
+      # Windows
+      dll = 'dylib' if sys.platform == 'darwin' else 'so.6'
+      libc = CDLL("libc.%s" % dll)
+      libc.time(-1)  # BOOM!!
+
+  killme()
+  ```
+
+  ```bash
+  $python test.py
+  Fatal Python error: Segmentation fault
+
+  Current thread 0x00007fff781b6310:
+    File "test.py", line 11 in killme
+    File "test.py", line 13 in <module>
+  Segmentation fault: 11
+  ```
+
+- Or `kill -6` (`SIGABRT`)
+
+- Can also enable with `python -X faulthandler`
+
+---
+
+## `ipaddress`
+
+- Exactly that. IP addresses.
+
+  ```py
+  >>> ipaddress.ip_address('192.168.0.1')
+  IPv4Address('192.168.0.1')
+  >>> ipaddress.ip_address('2001:db8::')
+  IPv6Address('2001:db8::')
+  ```
+
+- Just another thing you don't want to roll yourself.
+
+---
+
+## `functools.lru_cache`
+
+- A LRU cache decorator for your functions.
+
+- From [docs](https://docs.python.org/3/whatsnew/3.2.html#functools).
+
+  ```py
+  @lru_cache(maxsize=32)
+  def get_pep(num):
+      'Retrieve text of a Python Enhancement Proposal'
+      resource = 'http://www.python.org/dev/peps/pep-%04d/' % num
+      try:
+          with urllib.request.urlopen(resource) as s:
+              return s.read()
+      except urllib.error.HTTPError:
+          return 'Not Found'
+
+  >>> for n in 8, 290, 308, 320, 8, 218, 320, 279, 289, 320, 9991:
+  ...     pep = get_pep(n)
+  ...     print(n, len(pep))
+
+  >>> get_pep.cache_info()
+  CacheInfo(hits=3, misses=8, maxsize=32, currsize=8)
+  ```
+
+---
+
+## `enum`
+
+- Finally, an enumerated type in the standard library.
+
+- Python 3.4 only.
+
+  ```py
+  >>> from enum import Enum
+  >>> class Color(Enum):
+  ...     red = 1
+  ...     green = 2
+  ...     blue = 3
+  ...
+  ```
+
+- Uses some magic that is only possible in Python 3 (due to metaclass
+  changes):
+
+  ```py
+  >>> class Shape(Enum):
+  ...     square = 2
+  ...     square = 3
+  ...
+  Traceback (most recent call last):
+  ...
+  TypeError: Attempted to reuse key: 'square'
+  ```
+
+---
+
+layout: true
+
+# Feature 10: Fun
+
+---
+
+## Unicode variable names
+
+```py
+>>> résumé = "knows Python"
+>>> π = math.pi
+```
+
+--
+
+- Sorry, letter-like characters only.
+
+- `🍺 = "beer"` does not work.
+
+--
+
+## Function annotations
+
+```py
+def f(a: stuff, b: stuff = 2) -> result:
+    ...
+```
+
+- Annotations can be arbitrary Python objects.
+
+- Python doesn't do anything with the annotations other than put them in an
+  `__annotations__` dictionary.
+
+  ```py
+  >>> def f(x: int) -> float:
+  ...     pass
+  ...
+  >>> f.__annotations__
+  {'return': <class 'float'>, 'x': <class 'int'>}
+  ```
+
+- But it leaves open the possibility for library authors to do fun things.
+
+- Example, IPython 2.0 widgets.
+
+- Run IPython notebook (in Python 3) from IPython git checkout and open http://127.0.0.1:8888/notebooks/examples/Interactive%20Widgets/Image%20Processing.ipynb
+
+---
+
+layout: true
+
+# Feature 11: Unicode and bytes
+
+---
+
+- In Python 2, `str` acts like bytes of data.
+
+- There is also `unicode` type to represent Unicode strings.
+
+--
+
+- In Python 3, `str` is a *string*.
+
+- `bytes` are bytes.
+
+- There is no `unicode`. `str` strings are Unicode.
+
+---
+
+layout: true
+
+# Feature 12: Matrix Multiplication
+
+---
+
+In Python 3.5, you are able to replace
+
+  ```py
+  >>> a = np.array([[1, 0], [0, 1]])
+  >>> b = np.array([[4, 1], [2, 2]])
+  >>> np.dot(a, b)
+  array([[4, 1],
+         [2, 2]])
+  ```
+
+  with
+
+  ```py
+  >>> a = np.array([[1, 0], [0, 1]])
+  >>> b = np.array([[4, 1], [2, 2]])
+  >>> a @ b
+  array([[4, 1],
+         [2, 2]])
+  ```
+
+- Any object can override `__matmul__` to use `@`.
+
+---
+
+layout: true
+
+# Feature 13: Pathlib
+
+---
+
+- In Python 2, path handling is verbose
+
+  ```py
+  import os
+
+  directory = "/etc"
+  filepath = os.path.join(directory, "test_file.txt")
+
+  if os.path.exists(filepath):
+      stuff
+  ```
+
+- In Python 3, it is much more simpler
+
+  ```py
+  from pathlib import Path
+
+  directory = Path("/etc")
+  filepath = directory / "test_file.txt"
+
+  if filepath.exists():
+      stuff
+  ```
+---
+
+layout: true
+class: center, middle
+
+---
+
+# Discuss
+
+.center[![](homer.gif)]
+
+---
+
+Slides were made with http://remarkjs.com/
+
+All images have been blatantly stolen from the internet.
+
+Source for slides can be found at https://github.com/asmeurer/python3-presentation.
+
+I am Aaron Meurer ([@asmeurer](https://github.com/asmeurer/)).
+
+I gave this presentation on April 9, 2014 at
+[APUG](http://www.meetup.com/austinpython/). If you are in Austin, TX and you
+enjoy Python, you should come to APUG!
+
+This presentation was updated by Jules David ([@galactics](https://github.com/galactics))
+on march 2016, to include some changes brought by Python 3.5.
+
+</textarea>
+    <script src="https://remarkjs.com/downloads/remark-0.6.3.min.js" type="text/javascript">
+    </script>
+    <!-- Uncomment this if there is no internet -->
+
+    <!-- <script src="remark-0.6.3.min.js" type="text/javascript"> -->
+    <!--   </script> -->
+
+    <script type="text/javascript">
+      var slideshow = remark.create(      {
+        // Navigation options
+        navigation: {
+          // Enable or disable navigating using scroll
+          // Default: true
+          // Alternatives: false
+          scroll: false,
+        }
+      }
+      );
+    </script>
+  </body>
+</html>
