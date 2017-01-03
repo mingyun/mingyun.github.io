@@ -902,9 +902,10 @@ mysql> select * from product;
 ```
 ###JS将unicode码转中文方法
 var str = "\u7434\u5fc3\u5251\u9b44\u4eca\u4f55\u5728\uff0c\u6c38\u591c\u521d\u6657\u51dd\u78a7\u5929\u3002";  
-    document.write(unescape(str.replace(/\\u/g, '%u')));
-    ###[HTML实体编号与非ASCII字符串相互转换类](http://blog.csdn.net/fdipzone/article/details/52464068)
-    ````php
+document.write(unescape(str.replace(/\\u/g, '%u')));
+
+###[HTML实体编号与非ASCII字符串相互转换类](http://blog.csdn.net/fdipzone/article/details/52464068)
+```php
     /**
  *  HTML实体编号与非ASCII字符串相互转换类
  *  Date:   2016-09-07
@@ -973,7 +974,7 @@ echo HtmlEntitie::decode($cstr);
 
 HTML实体编号转为字符串
 <p>更多资讯可关注本人微信号：fdipzone-idea</p><p><img border="0" src="http://img.blog.csdn.net/20141224160911852" width="180" height="180" title="破晓领域"></p><p>您的支持是我最大的动力，谢谢！</p>
-    ```
+```
 ###[版本处理类](http://blog.csdn.net/fdipzone/article/details/46702553)
 ```php
 class Version{ // class start
