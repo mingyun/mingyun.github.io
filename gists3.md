@@ -571,3 +571,93 @@ $ip_long = sprintf('%u',ip2long($ip));
 echo $ip_long.PHP_EOL;  // 3232261476 
 echo long2ip($ip_long); // 192.168.101.100
 ```
+###[查找数组元素提高效率方法](http://blog.csdn.net/fdipzone/article/details/50616030)
+```php
+in_array($str, $arr);
+// 键值互换
+$arr = array_flip($arr);
+isset($arr[$str]);
+```
+###[创建与解析url](http://blog.csdn.net/fdipzone/article/details/50099747)
+```php
+如果 enc_type 是 PHP_QUERY_RFC1738，则编码将会以 » RFC 1738 标准和 application/x-www-form-urlencoded 媒体类型进行编码，空格会被编码成加号（+）。
+
+如果 enc_type 是 PHP_QUERY_RFC3986，将根据 » RFC 3986 编码，空格会被百分号编码（%20）。 
+$data = array('fdipzone','male','programmer','a new programmer');
+echo http_build_query($data, 'info_', '#', PHP_QUERY_RFC3986);//info_0=fdipzone#info_1=male#info_2=programmer#info_3=a%20new%20programmer
+echo http_build_query($data);//name=fdipzone&gender=male&profession=programmer&explain=a+new+programmer
+$url = 'http://fdipzone:123456@www.fdipzone.com:80/test/index.php?id=1#tag';
+print_r(parse_url($url))
+$str = 'name=fdipzone&gender=male&profession=programer&explain=a new programmer';
+parse_str($str);
+echo $name.PHP_EOL;
+parse_str($str, $arr);
+$url = 'http://www.fdipzone.com/test/index.php?name=fdipzone&gender=male&profession=programmer&explain=a new programmer';
+$query = parse_url($url, PHP_URL_QUERY);
+parse_str($query, $data);
+print_r($data);
+Array
+(
+    [name] => fdipzone
+    [gender] => male
+    [profession] => programmer
+    [explain] => a new programmer
+)
+
+```
+###[glob方法遍历指定文件夹下所有php文件](http://blog.csdn.net/fdipzone/article/details/47917491)
+```php
+$path = dirname(__FILE__);
+$result = array();
+traversing($path, $result);
+print_r($result);
+
+function traversing($path, &$result){
+    $curr = glob($path.'/*');
+    if($curr){
+        foreach($curr as $f){
+            if(is_dir($f)){
+                array_push($result, $f);
+                traversing($f, $result);
+            }elseif(strtolower(substr($f, -4))=='.php'){
+                array_push($result, $f);
+            }
+        }
+    }
+}
+```
+###explode
+```php
+$str = '1,2,3,4,5,6,7,8,9';
+$arr = explode(',', $str,0);//[1,2,3,4,5,6,7,8,9]
+$arr = explode(',', $str, -3);
+$ids = null;
+$data = explode(',', $ids);//ids=null，使用explode分割，得出的数组是Array ( [0] => )而不是Array()。
+if($data){
+    print_r($data);
+}else{
+    echo 'null';
+}
+$ids = null;
+$data = explode(',', $ids);
+if(isset($data[0]) && $data[0]){
+    foreach($data as $k=>$v){
+        // do sth
+    }
+}
+```
+###[浮点数比较方法](http://blog.csdn.net/fdipzone/article/details/48106065)
+```php
+$a = 0.1;
+$b = 0.9;
+$c = 1;
+
+var_dump(($a+$b)==$c);//true
+var_dump(($c-$b)==$a);//false
+printf("%.20f", $a+$b); // 1.00000000000000000000
+printf("%.20f", $c-$b); // 0.09999999999999997780
+永远不要相信浮点数已精确到最后一位，也永远不要比较两个浮点数是否相等
+var_dump(($c-$b)==$a);                   // false
+var_dump(round(($c-$b),1)==round($a,1)); // true
+var_dump(bcsub($c, $b, 1)==$a); // true
+```
