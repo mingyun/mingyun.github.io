@@ -661,3 +661,266 @@ var_dump(($c-$b)==$a);                   // false
 var_dump(round(($c-$b),1)==round($a,1)); // true
 var_dump(bcsub($c, $b, 1)==$a); // true
 ```
+###[获取周四开始一周的开始结束日期](http://blog.csdn.net/fdipzone/article/details/51285977)
+```php
+/**
+ * 计算指定日期的一周开始及结束日期
+ * @param  DateTime $date  日期
+ * @param  Int      $start 周几作为一周的开始 1-6为周一~周六，0为周日，默认0
+ * @retrun Array
+ */
+function getWeekRange($date, $start=0){
+
+    // 将日期转时间戳
+    $dt = new DateTime($date);
+    $timestamp = $dt->format('U');
+
+    // 获取日期是周几
+    $day = (new DateTime('@'.$timestamp))->format('w');
+
+    // 计算开始日期
+    if($day>=$start){
+        $startdate_timestamp = mktime(0,0,0,date('m',$timestamp),date('d',$timestamp)-($day-$start),date('Y',$timestamp));
+    }elseif($day<$start){
+        $startdate_timestamp = mktime(0,0,0,date('m',$timestamp),date('d',$timestamp)-7+$start-$day,date('Y',$timestamp));
+    }
+
+    // 结束日期=开始日期+6
+    $enddate_timestamp = mktime(0,0,0,date('m',$startdate_timestamp),date('d',$startdate_timestamp)+6,date('Y',$startdate_timestamp));
+
+    $startdate = (new DateTime('@'.$startdate_timestamp))->format('Y-m-d');
+    $enddate = (new DateTime('@'.$enddate_timestamp))->format('Y-m-d');
+
+    return array($startdate, $enddate);
+}
+$date = '2016-04-27';
+for($start=0; $start<=6; $start++){
+    list($startdate, $enddate) = getWeekRange($date, $start);
+    echo 'date:'.$date.' week start:'.$start.' range:'.$startdate.', '.$enddate.'<br>';
+}
+date:2016-04-27 week start:0 range:2016-04-24, 2016-04-30
+date:2016-04-27 week start:1 range:2016-04-25, 2016-05-01
+date:2016-04-27 week start:2 range:2016-04-26, 2016-05-02
+date:2016-04-27 week start:3 range:2016-04-27, 2016-05-03
+date:2016-04-27 week start:4 range:2016-04-21, 2016-04-27
+date:2016-04-27 week start:5 range:2016-04-22, 2016-04-28
+date:2016-04-27 week start:6 range:2016-04-23, 2016-04-29
+```
+###[str_replace 替换指定次数方法](http://blog.csdn.net/fdipzone/article/details/45854413)
+```php
+$str = 'user_order_list';  
+echo str_replace('_', '/', $str); // user/order/list  
+/** 
+ * 对字符串执行指定次数替换 
+ * @param  Mixed $search   查找目标值 
+ * @param  Mixed $replace  替换值 
+ * @param  Mixed $subject  执行替换的字符串／数组 
+ * @param  Int   $limit    允许替换的次数，默认为-1，不限次数 
+ * @return Mixed 
+ */  
+function str_replace_limit($search, $replace, $subject, $limit=-1){  
+    if(is_array($search)){  
+        foreach($search as $k=>$v){  
+            $search[$k] = '`'. preg_quote($search[$k], '`'). '`';  
+        }  
+    }else{  
+        $search = '`'. preg_quote($search, '`'). '`';  
+    }  
+    return preg_replace($search, $replace, $subject, $limit);  
+}  
+
+$str = 'user_order_list';  
+echo str_replace_limit('_', '/', $str, 1); // user/order_list  
+  
+$arr = array('abbc','bbac','cbba');  
+$result = str_replace_limit('b', 'B', $arr, 1);  
+print_r($result); // Array ( [0] => aBbc [1] => Bbac [2] => cBba )  
+```
+###兼容key没有双引括起来的JSON字符串解析
+```php
+/** 兼容key没有双引括起来的JSON字符串解析 
+* @param  String  $str JSON字符串 
+* @param  boolean $mod true:Array,false:Object 
+* @return Array/Object 
+*/  
+function ext_json_decode($str, $mode=false){  
+    if(preg_match('/\w:/', $str)){  
+        $str = preg_replace('/(\w+):/is', '"$1":', $str);  
+    }  
+    return json_decode($str, $mode);  
+}  
+  
+$str = '{"name":"fdipzone"}';  
+var_dump(ext_json_decode($str, true)); // array(1) { ["name"]=> string(8) "fdipzone" }  
+  
+$str1 = '{name:"fdipzone"}';  
+var_dump(ext_json_decode($str1, true)); // array(1) { ["name"]=> string(8) "fdipzone" } 
+```
+###[打印一个边长为N的实心和空心菱型](http://blog.csdn.net/fdipzone/article/details/43974039)
+```php
+function solidDiamond($n=5, $s='*'){  
+  
+    $str = '';  
+  
+    // 计算总行数  
+    $rows = $n*2-1;  
+  
+    // 循环计算每行的*  
+    for($i=0; $i<$rows; $i++){  
+        if($i<$n){ // 上部  
+            $str .= str_pad('', ($n-$i-1), ' '). str_pad('', $i*2+1, $s)."\r\n";  
+        }else{     // 下部  
+            $str .= str_pad('', ($i-$n+1), ' '). str_pad('', ($rows-$i)*2-1, $s). "\r\n";  
+        }  
+    }  
+  
+    return $str;  
+  
+}  
+  echo solidDiamond(5); 
+   *  
+   ***  
+  *****  
+ *******  
+*********  
+ *******  
+  *****  
+   ***  
+    *  
+```
+###curl Expect:100-continue
+```php
+使用curl POST数据时，如果POST的数据大于1024字节，curl并不会直接就发起POST请求。而是会分两步。
+1.发送一个请求，header中包含一个Expect:100-continue，询问Server是否愿意接受数据。
+2.接受到Server返回的100-continue回应后，才把数据POST到Server。
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); 
+```
+###curl 获取 https 请求方法
+```php
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查  
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);  // 从证书中检查SSL加密算法是否存在
+```
+###获取文件mime类型的方法
+```php
+$mime_type = mime_content_type('1.jpg');  
+echo $mime_type; // image/jpeg  
+$fi = new finfo(FILEINFO_MIME_TYPE);  
+$mime_type = $fi->file('1.jpg');  
+echo $mime_type; // image/jpeg 
+```
+###iconv 中文截断问题的解决方法
+iconv遇到不能识别的内容，会从第一个不能识别的字符开始截断，并生成一个E_NOTICE。因此后边的内容被丢弃了。
+而在输出字符集后加上//IGNORE则只丢弃不能识别的内容，而不会截断和丢弃后面的内容
+$content = iconv('GB2312', 'UTF-8//IGNORE', $content); // $content为采集到的内容  
+###[php 异步调用方法](http://blog.csdn.net/fdipzone/article/details/17735397)
+```php
+$.get("doRequest.php", { name: "fdipzone"} );  
+<img src="doRequest.php?name=fdipzone">  
+
+pclose(popen('php /home/fdipzone/doRequest.php &', 'r'));  
+$ch = curl_init();  
+$curl_opt = array(  
+    CURLOPT_URL, 'http://www.example.com/doRequest.php'  
+    CURLOPT_RETURNTRANSFER,1,  
+    CURLOPT_TIMEOUT,1  
+);  
+curl_setopt_array($ch, $curl_opt);  
+curl_exec($ch);  
+curl_close($ch);
+```
+###php 发送与接收流文件
+```php
+function sendStreamFile($url, $file){  
+  
+    if(file_exists($file)){  
+  
+        $opts = array(  
+            'http' => array(  
+                'method' => 'POST',  
+                'header' => 'content-type:application/x-www-form-urlencoded',  
+                'content' => file_get_contents($file)  
+            )  
+        );  
+  
+        $context = stream_context_create($opts);  
+        $response = file_get_contents($url, false, $context);  
+        $ret = json_decode($response, true);  
+        return $ret['success'];  
+  
+    }else{  
+        return false;  
+    }  
+  
+}  
+  
+$ret = sendStreamFile('http://localhost/fdipzone/receiveStreamFile.php', 'send.txt');  
+var_dump($ret);  
+
+function receiveStreamFile($receiveFile){  
+  
+    $streamData = isset($GLOBALS['HTTP_RAW_POST_DATA'])? $GLOBALS['HTTP_RAW_POST_DATA'] : '';  
+  
+    if(empty($streamData)){  
+        $streamData = file_get_contents('php://input');  
+    }  
+  
+    if($streamData!=''){  
+        $ret = file_put_contents($receiveFile, $streamData, true);  
+    }else{  
+        $ret = false;  
+    }  
+  
+    return $ret;  
+  
+}  
+  
+$receiveFile = 'receive.txt';  
+$ret = receiveStreamFile($receiveFile);  
+echo json_encode(array('success'=>(bool)$ret));
+```
+###nowdoc 
+```php
+$var = '123';  
+$content = <<<FDIPZONE  
+$var time();  
+FDIPZONE;  
+  
+echo $content; // 123 time(); 
+class test{  
+  
+public $a = <<<'FDIPZONE'  
+$var  
+FDIPZONE;  
+  
+}  
+  
+$obj = new test();  
+echo $obj->a; 
+```
+###[2038](http://blog.csdn.net/fdipzone/article/details/39457681)
+```php
+32位系统下显示2038年1月19日03:14:07以后的日期将会溢出。
+>>> date('YmdHis',0x7FFFFFFF)
+=> "20380119111407"
+在32位机器上，可以使用DateTime类来解决这个问题
+$date = '2040-01-01 12:00:00';  
+$dt = new DateTime($date);  
+echo $dt->format('U');           // 2209032000  
+echo $dt->format('Y-m-d H:i:s'); // 2040-01-01 12:00:00
+// datetime 转 unixtime  
+$dt = new DateTime('2040-01-01 12:00:00');  
+echo $dt->format('U'); // 2209032000  
+// unixtime 转 datetime  
+$dt = new DateTime('@2209032000');  
+echo $dt->format('Y-m-d H:i:s'); // 2040-01-01 12:00:00 
+$dt = new DateTime('@1420029030');  
+$tz = timezone_open('Europe/London');  
+$dt->setTimezone($tz);  
+echo $dt->format('Y-m-d H:i:s').'<br>'; // 2014-12-31 12:30:30  
+  
+$dt = new DateTime('@1420029030');  
+$tz = timezone_open('Asia/HONG_KONG');  
+$dt->setTimezone($tz);  
+echo $dt->format('Y-m-d H:i:s'); // 2014-12-31 20:30:30  
+
+```
