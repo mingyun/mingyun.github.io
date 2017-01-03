@@ -902,6 +902,10 @@ echo $obj->a;
 32位系统下显示2038年1月19日03:14:07以后的日期将会溢出。
 >>> date('YmdHis',0x7FFFFFFF)
 => "20380119111407"
+>>> date('YmdHis',0x7FFFFFFF+100)
+=> "19011214044731"
+>>> (new DateTime('@'.(0x7FFFFFFF+100)))->format('YmdHis')
+=> "20380119031547"
 在32位机器上，可以使用DateTime类来解决这个问题
 $date = '2040-01-01 12:00:00';  
 $dt = new DateTime($date);  
