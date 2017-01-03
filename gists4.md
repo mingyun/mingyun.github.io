@@ -656,3 +656,217 @@ github上打开文件， 然后点 raw
 https://raw.githubusercontent.com/mingyun/mingyun.github.io/master/gists4.md
 sudo wget http://github.com/username/yourproject/raw/master/shellfile -O /etc/
 ```
+###[curl 或 file_get_contents 获取需要授权页面的方法](http://blog.csdn.net/fdipzone/article/details/44475801)
+```php
+$url = 'http://localhost/server.php';  
+$param = array('content'=>'fdipzone blog');  
+  
+$auth = sprintf('Authorization: Basic %s', base64_encode('fdipzone:654321')); // 加入这句  
+  
+$opt = array(  
+    'http' => array(  
+        'method' => 'POST',  
+        'header' => "content-type:application/x-www-form-urlencoded\r\n".$auth."\r\n", // 把$auth加入到header  
+        'content' => http_build_query($param)  
+    )  
+);  
+  
+$context = stream_context_create($opt);  
+  
+$ret = file_get_contents($url, false, $context);  
+  
+if($ret){  
+    $data = json_decode($ret, true);  
+    print_r($data);  
+}else{  
+    echo 'POST Fail';  
+}  
+
+$url = 'http://localhost/server.php';  
+$param = array('content'=>'fdipzone blog');  
+  
+$ch = curl_init();  
+curl_setopt($ch, CURLOPT_URL, $url);  
+curl_setopt($ch, CURLOPT_POST, true);  
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($param));  
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+curl_setopt($ch, CURLOPT_USERPWD, 'fdipzone:654321'); // 加入这句  
+$ret = curl_exec($ch);  
+$retinfo = curl_getinfo($ch);  
+curl_close($ch);  
+  
+if($retinfo['http_code']==200){  
+    $data = json_decode($ret, true);  
+    print_r($data);  
+}else{  
+    echo 'POST Fail';  
+}  
+
+if(!isset($_SERVER['PHP_AUTH_USER']))   
+{   
+    header('WWW-Authenticate: Basic realm="localhost"');   
+    header("HTTP/1.0 401 Unauthorized");   
+    exit;   
+}else{   
+    if (($_SERVER['PHP_AUTH_USER']!= "fdipzone" || $_SERVER['PHP_AUTH_PW']!="654321")) {  
+        header('WWW-Authenticate: Basic realm="localhost"');  
+        header("HTTP/1.0 401 Unauthorized");  
+        exit;  
+    }  
+}  
+  
+$content = isset($_POST['content'])? $_POST['content'] : '';  
+header('content-type:application/json');  
+echo json_encode(array('content'=>$content));
+```
+###mysql导出查询结果到csv方法
+```php
+http://blog.csdn.net/fdipzone/article/details/48399831
+mysql -u root
+use test;
+select * from table into outfile '/tmp/table.csv' fields terminated by ',' optionally enclosed by '"' lines terminated by '\r\n';
+```
+###from_unixtime
+```php
+mysql> select from_unixtime(1459338786, '%Y-%m-%d %H:%i:%s');
++------------------------------------------------+
+| from_unixtime(1459338786, '%Y-%m-%d %H:%i:%s') |
++------------------------------------------------+
+| 2016-03-30 19:53:06                            |
++------------------------------------------------+
+1 row in set (0.00 sec)
+按小时统计数量
+mysql> select from_unixtime(addtime,'%Y-%m-%d %H') as date,count(*) from `table` group by from_unixtime(addtime,'%Y-%m-%d %H');
++---------------+----------+
+| date          | count(*) |
++---------------+----------+
+| 2016-03-30 19 |      409 |
+| 2016-03-30 20 |      161 |
++---------------+----------+
+```
+###判斷字段是否存在方法
+```php
+desc `table` `mid`
+desc `table` '%abc%'
+show columns from `table` like 'mid'
+show columns from `table` like '%abc%'
+```
+###优化 insert 性能
+```php
+一条sql语句插入多条数据INSERT INTO `insert_table` (`uid`, `content`, `type`) VALUES ('userid_0', 'content_0', 0), ('userid_1', 'content_1', 1);  
+使用事务
+START TRANSACTION;  
+INSERT INTO `insert_table` (`uid`, `content`, `type`) VALUES ('userid_0', 'content_0', 0);  
+INSERT INTO `insert_table` (`uid`, `content`, `type`) VALUES ('userid_1', 'content_1', 1);  
+...  
+COMMIT; 
+1.sql语句长度有限制，合并sql语句时要注意。长度限制可以通过max_allowed_packet配置项修改，默认为1M。
+2.事务太大会影响执行效率，mysql有innodb_log_buffer_size配置项，超过这个值会使用磁盘数据，影响执行效率
+```
+###[You can't specify target table for update in FROM clause错误的解决方法](http://blog.csdn.net/fdipzone/article/details/52695371)
+```php
+mysql> update message set content='Hello World' where id in(select min(id) from message group by uid);
+ERROR 1093 (HY000): You can't specify target table 'message' for update in FROM clause
+update message set content='Hello World' where id in( select min_id from ( select min(id) as min_id from message group by uid) as a );
+
+```
+###导入大批量数据出现MySQL server has gone away的解决方法
+set global max_allowed_packet=268435456;
+show global variables like 'max_allowed_packet';
+
+使用set global命令修改 max_allowed_packet 的值，重启mysql后会失效，还原为默认值。
+
+如果想重启后不还原，可以打开 my.cnf 文件，添加 max_allowed_packet = 256M 即可
+###[使用inet_aton和inet_ntoa处理ip地址数据](http://blog.csdn.net/fdipzone/article/details/49532127)
+```php
+CREATE TABLE `user` (
+ `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `name` varchar(100) NOT NULL,
+ `ip` int(10) unsigned NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+INSERT INTO `user` (`id`, `name`, `ip`) VALUES
+(2, 'Abby', inet_aton('192.168.1.1')),
+(3, 'Daisy', inet_aton('172.16.11.66')),
+(4, 'Christine', inet_aton('220.117.131.12'));
+mysql> select * from `user`;
++----+-----------+------------+
+| id | name      | ip         |
++----+-----------+------------+
+|  2 | Abby      | 3232235777 |
+|  3 | Daisy     | 2886732610 |
+|  4 | Christine | 3698688780 |
++----+-----------+------------+
+$ip_start = '172.16.11.1';
+$ip_end = '172.16.11.100';
+
+echo 'ip2long(ip_start):'.sprintf('%u',ip2long($ip_start)); // 2886732545
+echo 'ip2long(ip_end):'.sprintf('%u',ip2long($ip_end));     // 2886732644
+mysql> select ip,name,inet_ntoa(ip) as ip from `user` where ip>=2886732545 and ip<=2886732644;
++------------+-------+---------------+
+| ip         | name  | ip            |
++------------+-------+---------------+
+| 2886732610 | Daisy | 172.16.11.66  |
++------------+-------+---------------+
+```
+###查看与修改auto_increment方法
+```php
+mysql> select auto_increment from information_schema.tables where table_schema='test_user' and table_name='user';
++----------------+
+| auto_increment |
++----------------+
+|           1002 |
++----------------+
+1 row in set (0.04 sec)
+alter table tablename auto_increment=10000;
+mysql> select auto_increment from information_schema.tables where table_schema='test_user' and table_name='user';
++----------------+
+| auto_increment |
++----------------+
+|          10000 |
++----------------+
+1 row in set (0.04 sec)
+```
+###[mysql order by rand() 效率优化方法](http://blog.csdn.net/fdipzone/article/details/51541729)
+```php
+select * from user order by rand() limit 1;
+
+$sqlstr = 'select count(*) as recount from user';
+$query = mysql_query($sqlstr) or die(mysql_error());
+$stat = mysql_fetch_assoc($query);
+$total = $stat['recount'];
+
+// 随机偏移
+$offset = mt_rand(0, $total-1);
+
+// 偏移后查询
+$sqlstr = 'select * from user limit '.$offset.',1';
+$query = mysql_query($sqlstr) or die(mysql_error());
+$result = mysql_fetch_assoc($query);
+
+print_r($result);
+select * from user limit 23541,1;
+```
+###[PDO查询mysql避免SQL注入](http://blog.csdn.net/fdipzone/article/details/22330345)
+```php
+$dbh = new PDO("mysql:host=localhost; dbname=mydb", "root", "pass");  
+$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); //禁用prepared statements的仿真效果  
+//当调用 prepare() 时，查询语句已经发送给了数据库服务器，此时只有占位符 ? 发送过去，没有用户提交的数据；当调用到 execute()时，用户提交过来的值才会传送给数据库，它们是分开传送的，两者独立的，SQL攻击者没有一点机会。
+setAttribute()这一行是强制性的，它会告诉 PDO 禁用模拟预处理语句，并使用 real parepared statements 。这可以确保SQL语句和相应的值在传递到mysql服务器之前是不会被PHP解析的（禁止了所有可能的恶意SQL注入攻击）。
+$dbh->exec("set names 'utf8'");   
+$sql="select * from table where username = ? and password = ?";  
+$query = $dbh->prepare($sql);   
+$exeres = $query->execute(array($username, $pass));   
+if ($exeres) {   
+    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {  
+        print_r($row);  
+    }  
+}  
+$dbh = null; 
+不能让占位符 ? 代替一组值，这样只会获取到这组数据的第一个值
+select * from table where userid in ( ? );  
+如果要用in來查找，可以改用find_in_set()实现
+$ids = '1,2,3,4,5,6';  
+select * from table where find_in_set(userid, ?);  
+
+```
