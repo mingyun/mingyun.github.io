@@ -76,7 +76,9 @@ $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 mysql_query('SET NAMES utf8');
 $var = mysql_real_escape_string("\xbf\x27 OR 1=1 /*");
 mysql_query("SELECT * FROM test WHERE name = '$var' LIMIT 1");
-```###[javascript抓取v2ex头像代码](https://www.v2ex.com/t/331524)
+
+```
+###[javascript抓取v2ex头像代码](https://www.v2ex.com/t/331524)
 ```php
 var htmlURL = window.location.href;
 var baselink = htmlURL.match(/.*=/g);
@@ -202,7 +204,8 @@ dump($var);
 composer global require symfony/var-dumper;
 配置php.ini auto_prepend_file = ${HOME}/.composer/vendor/autoload.php
 composer global update
-```###斐波那契数列
+```
+###斐波那契数列
 ```php
 function fib($n)
 {
@@ -247,7 +250,8 @@ public function getCountCommentsAttribute()
     return $this->comments()->count();
 }
 protected $appends = ['count_comments'];
-```###[Laravel collect 的 PHP Extension](https://laravel-china.org/topics/3528)
+```
+###[Laravel collect 的 PHP Extension](https://laravel-china.org/topics/3528)
 ```php
 git clone https://github.com/VikinDev/v-collect.git
 phpize
@@ -261,7 +265,8 @@ $vcollect = vcollect([
 $vcollect->where('developer.option.test', 'one')->toArray();
 
 // ['developer' => ['name' => 'Taylor', 'option' => ['test' => 'one'] ] ]
-```###[项目所依赖的组件的require-dev是不会安装到你的项目](https://segmentfault.com/q/1010000007967298)
+```
+###[项目所依赖的组件的require-dev是不会安装到你的项目](https://segmentfault.com/q/1010000007967298)
 ```php
 "require-dev": {
         "phpunit/phpunit": "~4.0",
@@ -415,7 +420,8 @@ select id,title,cdn,time FROM (
 (select id,title,111 as cdn,time from set_gif where zhuanid = 0) 
 UNION ALL
 (select id,name as title,222 as cdn,time from set_zhuan) order by time desc) a LIMIT 0,100
-```###[php全局变量](https://segmentfault.com/q/1010000007920887)
+```
+###[php全局变量](https://segmentfault.com/q/1010000007920887)
 ```php
 function global_references($flag)
 {
@@ -562,7 +568,8 @@ $arr = array(
         2 => '13',
         3 => '15'
 );
-```###[根据一个字段查找另一个字段重复的数据](https://segmentfault.com/q/1010000007931297)
+```
+###[根据一个字段查找另一个字段重复的数据](https://segmentfault.com/q/1010000007931297)
 ```php
 delete a from product_code_relate_titletext a,product_code_relate_titletext b where a.id>b.id and a.product_code=b.product_code and a.raw_title=b.raw_title;
 delete from product_code_relate_titletext where id not in (select * from (select min(id) from product_code_relate_titletext group by product_code,raw_title having count(*) > 1) as b);
@@ -596,7 +603,8 @@ curl ifcfg.cn/echo |python -m json.tool
     "host": "ifcfg.cn"
 }
 
-```###[附近地点搜索](http://mp.weixin.qq.com/s?__biz=MjM5NDM4MDIwNw==&mid=2448834749&idx=1&sn=48aacf951928cb5241beda4c88453051&chksm=b28a407d85fdc96b2fd0c7e9bbde0c19dc0d8b580cd681d6887ad5f97c2659ef2836fbb83174#rd)
+```
+###[附近地点搜索](http://mp.weixin.qq.com/s?__biz=MjM5NDM4MDIwNw==&mid=2448834749&idx=1&sn=48aacf951928cb5241beda4c88453051&chksm=b28a407d85fdc96b2fd0c7e9bbde0c19dc0d8b580cd681d6887ad5f97c2659ef2836fbb83174#rd)
 ```php
 $longitude = ''; //经度
 
@@ -635,7 +643,8 @@ function getDistance($lat1, $lng1, $lat2, $lng2)
 
     return  round($s);
 }
-```###[ ].concat[1,2,3]
+```
+###[ ].concat[1,2,3]
 ```php
 //https://zhuanlan.zhihu.com/p/24596013
 Array.prototype.concat[3]
