@@ -1070,3 +1070,13 @@ echo $result; // -1
 >>> '3.0.1'>'10.0.1'
 => true
 ```
+###[被@的用户名添加a标签](https://segmentfault.com/q/1010000007971440)
+```php
+
+$text = preg_replace_callback('(@[^\s]+)',function($matches){
+    //这里直接把要替换的结果return出去就可以了
+    return "<a href='javascript:;'>{$matches[0]}</a> ";
+},'是否订购@刘一届 @测试 @zxldev');
+
+print_r($text);//是否订购<a href="javascript:;">@刘一届</a> <a href="javascript:;">@测试</a> <a href="javascript:;">@zxldev</a>
+```
