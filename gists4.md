@@ -870,3 +870,202 @@ $ids = '1,2,3,4,5,6';
 select * from table where find_in_set(userid, ?);  
 
 ```
+###[互换表中两列数据方法](http://blog.csdn.net/fdipzone/article/details/50864196)
+```php
+mysql> select * from product;
++----+--------+----------------+--------+
+| id | name   | original_price | price  |
++----+--------+----------------+--------+
+|  1 | 雪糕   |           5.00 |   3.50 |
+|  2 | 鲜花   |          18.00 |  15.00 |
+|  3 | 甜点   |          25.00 |  12.50 |
+|  4 | 玩具   |          55.00 |  45.00 |
+|  5 | 钱包   |         285.00 | 195.00 |
++----+--------+----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> update product as a, product as b set a.original_price=b.price, a.price=b.original_price where a.id=b.id;
+Query OK, 5 rows affected (0.01 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> select * from product;
++----+--------+----------------+--------+
+| id | name   | original_price | price  |
++----+--------+----------------+--------+
+|  1 | 雪糕   |           3.50 |   5.00 |
+|  2 | 鲜花   |          15.00 |  18.00 |
+|  3 | 甜点   |          12.50 |  25.00 |
+|  4 | 玩具   |          45.00 |  55.00 |
+|  5 | 钱包   |         195.00 | 285.00 |
++----+--------+----------------+--------+
+5 rows in set (0.00 sec)
+```
+###JS将unicode码转中文方法
+var str = "\u7434\u5fc3\u5251\u9b44\u4eca\u4f55\u5728\uff0c\u6c38\u591c\u521d\u6657\u51dd\u78a7\u5929\u3002";  
+    document.write(unescape(str.replace(/\\u/g, '%u')));
+    ###[HTML实体编号与非ASCII字符串相互转换类](http://blog.csdn.net/fdipzone/article/details/52464068)
+    ````php
+    /**
+ *  HTML实体编号与非ASCII字符串相互转换类
+ *  Date:   2016-09-07
+ *  Author: fdipzone
+ *  Ver:    1.0
+ *
+ *  Func:
+ *  public  encode 字符串转为HTML实体编号
+ *  public  decode HTML实体编号转为字符串
+ *  private _convertToHtmlEntities 转换为HTML实体编号处理
+ */
+class HtmlEntitie{ // class start
+
+    public static $_encoding = 'UTF-8';
+
+    /**
+     * 字符串转为HTML实体编号
+     * @param  String $str      字符串
+     * @param  String $encoding 编码
+     * @return String
+     */
+    public static function encode($str, $encoding='UTF-8'){
+        self::$_encoding = $encoding;
+        return preg_replace_callback('|[^\x00-\x7F]+|', array(__CLASS__, '_convertToHtmlEntities'), $str);
+    }
+
+    /**
+     * HTML实体编号转为字符串
+     * @param  String $str      HTML实体编号字符串
+     * @param  String $encoding 编码
+     * @return String
+     */
+    public static function decode($str, $encoding='UTF-8'){
+        return html_entity_decode($str, null, $encoding);
+    }
+
+    /**
+     * 转换为HTML实体编号处理
+     * @param Mixed  $data 待处理的数据
+     * @param String
+     */
+    private static function _convertToHtmlEntities($data){
+        if(is_array($data)){
+            $chars = str_split(iconv(self::$_encoding, 'UCS-2BE', $data[0]), 2);
+            $chars = array_map(array(__CLASS__, __FUNCTION__), $chars);
+            return implode("", $chars);
+        }else{
+            $code = hexdec(sprintf("%02s%02s;", dechex(ord($data {0})), dechex(ord($data {1})) ));
+            return sprintf("&#%s;", $code);
+        }
+    }
+
+} // class end
+$str = '<p>更多资讯可关注本人微信号：fdipzone-idea</p><p><img border="0" src="http://img.blog.csdn.net/20141224160911852" width="180" height="180" title="破晓领域"></p><p>您的支持是我最大的动力，谢谢！</p>';
+
+// 字符串转为HTML实体编号
+$cstr = HtmlEntitie::encode($str);
+echo '字符串转为HTML实体编号'.PHP_EOL;
+echo $cstr.PHP_EOL.PHP_EOL;
+
+// HTML实体编号转为字符串
+echo 'HTML实体编号转为字符串'.PHP_EOL;
+echo HtmlEntitie::decode($cstr);
+字符串转为HTML实体编号
+<p>&#26356;&#22810;&#36164;&#35759;&#21487;&#20851;&#27880;&#26412;&#20154;&#24494;&#20449;&#21495;&#65306;fdipzone-idea</p><p><img border="0" src="http://img.blog.csdn.net/20141224160911852" width="180" height="180" title="&#30772;&#26195;&#39046;&#22495;"></p><p>&#24744;&#30340;&#25903;&#25345;&#26159;&#25105;&#26368;&#22823;&#30340;&#21160;&#21147;&#65292;&#35874;&#35874;&#65281;</p>
+
+HTML实体编号转为字符串
+<p>更多资讯可关注本人微信号：fdipzone-idea</p><p><img border="0" src="http://img.blog.csdn.net/20141224160911852" width="180" height="180" title="破晓领域"></p><p>您的支持是我最大的动力，谢谢！</p>
+    ```
+###[版本处理类](http://blog.csdn.net/fdipzone/article/details/46702553)
+```php
+class Version{ // class start
+
+    /**
+     * 将版本转为数字
+     * @param  String $version 版本
+     * @return Int
+     */
+    public function version_to_integer($version){
+        if($this->check($version)){
+            list($major, $minor, $sub) = explode('.', $version);
+            $integer_version = $major*10000 + $minor*100 + $sub;
+            return intval($integer_version);
+        }else{
+            throw new ErrorException('version Validate Error');
+        }
+    }
+
+    /**
+     * 将数字转为版本
+     * @param  Int     $version_code 版本的数字表示
+     * @return String
+     */
+    public function integer_to_version($version_code){
+        if(is_numeric($version_code) && $version_code>=10000){
+            $version = array();
+            $version[0] = (int)($version_code/10000);
+            $version[1] = (int)($version_code%10000/100);
+            $version[2] = $version_code%100;
+            return implode('.', $version);
+        }else{
+            throw new ErrorException('version code Validate Error');
+        }
+    }
+
+    /**
+     * 检查版本格式是否正确
+     * @param  String  $version 版本
+     * @return Boolean
+     */
+    public function check($version){
+        $ret = preg_match('/^[0-9]{1,3}\.[0-9]{1,2}\.[0-9]{1,2}$/', $version);
+        return $ret? true : false;
+    }
+
+    /**
+     * 比较两个版本的值
+     * @param  String  $version1  版本1
+     * @param  String  $version2  版本2
+     * @return Int                -1:1<2, 0:相等, 1:1>2
+     */
+    public function compare($version1, $version2){
+        if($this->check($version1) && $this->check($version2)){
+            $version1_code = $this->version_to_integer($version1);
+            $version2_code = $this->version_to_integer($version2);
+
+            if($version1_code>$version2_code){
+                return 1;
+            }elseif($version1_code<$version2_code){
+                return -1;
+            }else{
+                return 0;
+            }
+        }else{
+            throw new ErrorException('version1 or version2 Validate Error');
+        }
+    }
+
+} // class end
+$version = '2.7.1';
+
+$obj = new Version();
+
+// 版本转数字
+$version_code = $obj->version_to_integer($version);
+echo $version_code.'<br>';  // 20701
+
+// 数字转版本
+$version = $obj->integer_to_version($version_code);
+echo $version.'<br>'; // 2.7.1
+
+// 检查版本
+$version = '1.1.a';
+var_dump($obj->check($version)); // false
+
+// 比较两个版本
+$version1 = '2.9.9';
+$version2 = '10.0.1';
+
+$result = $obj->compare($version1, $version2);
+echo $result; // -1
+>>> '3.0.1'>'10.0.1'
+=> true
+```
