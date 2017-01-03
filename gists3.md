@@ -384,3 +384,190 @@ echo $sql;//'a','b','c'
        3
    ]
 ```
+###[执行github上文件](https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install)
+`curl -L github.com/oh-my-fish/oh-my-fish/raw/master/bin/install | fish`
+###[判断页面或图片是否经过gzip压缩](http://blog.csdn.net/fdipzone/article/details/53191442)
+```php
+function check_gzip($url){
+    $header = get_headers($url, 1);
+    if(isset($header['Vary']) && $header['Vary']=='Accept-Encoding'){
+        return true;
+    }
+    return false;
+}
+
+header('content-type:image/jpeg');
+ob_start('ob_gzhandler'); // 开启gzip，屏蔽则关闭 利用apache mod_deflate module 开启gzip sudo a2enmod deflate
+echo file_get_contents('test.jpg');
+
+$url = 'http://www.example.com/';
+var_dump(check_gzip($url));
+
+/**
+ * 判断url是否经过gzip压缩
+ * @param String  $url 来源
+ * @param Boolean
+ */
+function check_gzip($url){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, 1);         // 输出header信息
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // 返回的信息不直接输出
+    curl_setopt($ch, CURLOPT_ENCODING, '');      // 不限制编码类型
+    $response = curl_exec($ch);
+    if(!curl_errno($ch)){
+        $info = curl_getinfo($ch);
+        // 获取header
+        $header_size = $info['header_size'];
+        $header_str = substr($response, 0, $header_size);
+        $filter = array("\r\n", "\r");
+        $header_str = str_replace($filter, PHP_EOL, $header_str);
+
+        // 检查content-encoding
+        preg_match('/Content-Encoding: (.*)\s/i', $header_str, $matches);
+        if(isset($matches[1]) && $matches[1]=='gzip'){
+            return true;
+        }
+    }
+    return false;
+}
+
+```
+###[实现0~1随机小数生成](http://blog.csdn.net/fdipzone/article/details/52829930)
+```php
+for($i=0; $i<5; $i++){
+    echo lcg_value().PHP_EOL;
+}
+function randFloat($min=0, $max=1){
+    return $min + mt_rand()/mt_getrandmax() * ($max-$min);
+}
+```
+###[给定数字100，需要随机获取3个组成这个数字的组合](http://blog.csdn.net/fdipzone/article/details/51794055)
+```php
+/**
+ * 获取指定数字的随机数字组合
+ * @param  Int    $var 数字
+ * @param  Int    $num 组合这个数字的数量
+ * @return Array
+ */
+function getNumGroups($var, $num){
+
+    // 数量不正确
+    if($var<$num){
+        return array();
+    }
+
+    $total = 0;
+    $result = array();
+
+    for($i=1; $i<$num; $i++){
+        $tmp = mt_rand(1, $var-($num-$i)-$total);
+        $total += $tmp;
+        $result[] = $tmp;
+    }
+
+    $result[] = $var-$total;
+
+    return $result;
+
+}
+
+// demo
+$result = getNumGroups(100, 3);
+print_r($result);
+Array
+(
+    [0] => 42
+    [1] => 25
+    [2] => 33
+)
+```
+###[获取开始日期与结束日期之间所有日期](http://blog.csdn.net/fdipzone/article/details/51746325)
+```php
+function getDateFromRange($startdate, $enddate){
+
+    $stimestamp = strtotime($startdate);
+    $etimestamp = strtotime($enddate);
+
+    // 计算日期段内有多少天
+    $days = ($etimestamp-$stimestamp)/86400+1;
+
+    // 保存每天日期
+    $date = array();
+
+    for($i=0; $i<$days; $i++){
+        $date[] = date('Y-m-d', $stimestamp+(86400*$i));
+    }
+
+    return $date;
+}
+
+// demo
+$date = getDateFromRange('2016-02-25','2016-03-05');
+print_r($date);
+```
+###[字符串解析为数组](http://blog.csdn.net/fdipzone/article/details/51534910)
+```php
+$str = "中国,广东省,广州市,天河区,'113.329884,23.154799',1,'2016-01-01 12:00:00','1,2,3,4,5,6'";
+$arr = str_getcsv($str, ',', "'");
+print_r($arr);
+Array
+(
+    [0] => 中国
+    [1] => 广东省
+    [2] => 广州市
+    [3] => 天河区
+    [4] => 113.329884,23.154799
+    [5] => 1
+    [6] => 2016-01-01 12:00:00
+    [7] => 1,2,3,4,5,6
+)
+```
+###Access-Control-Allow-Origin实现跨域访问
+```php
+$ret = array(  
+    'name' => isset($_POST['name'])? $_POST['name'] : '',  
+    'gender' => isset($_POST['gender'])? $_POST['gender'] : ''  
+);  
+  
+header('content-type:application:json;charset=utf8');  
+  
+$origin = isset($_SERVER['HTTP_ORIGIN'])? $_SERVER['HTTP_ORIGIN'] : '';  
+  
+$allow_origin = array(  
+    'http://www.client.com',  
+    'http://www.client2.com'  
+);  
+  
+if(in_array($origin, $allow_origin)){  
+    header('Access-Control-Allow-Origin:'.$origin);  
+    header('Access-Control-Allow-Methods:POST');  
+    header('Access-Control-Allow-Headers:x-requested-with,content-type');  
+}  
+  
+echo json_encode($ret);
+```
+###[PDO 查询mysql返回字段整型变为String型解决方法](http://blog.csdn.net/fdipzone/article/details/46702965)
+```php
+$pdo = new PDO($dsn, $user, $pass, $param);
+使用PDO查询mysql数据库时，执行prepare,execute后，返回的字段数据全都变为字符型
+// 在创建连接后，加入
+$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);提取的时候将数值转换为字符串。
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);启用或禁用预处理语句的模拟。
+```
+###数组元素快速去重
+```php
+// 使用键值互换去重
+$arr = array_flip($arr);
+$arr = array_flip($arr);
+ 
+
+$arr = array_values($arr);
+```
+###ip2long 出现负数原因及解决方法
+```php
+$ip = '192.168.101.100';
+$ip_long = sprintf('%u',ip2long($ip));
+echo $ip_long.PHP_EOL;  // 3232261476 
+echo long2ip($ip_long); // 192.168.101.100
+```
