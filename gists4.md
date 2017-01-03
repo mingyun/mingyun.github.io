@@ -641,3 +641,9 @@ function getDistance($lat1, $lng1, $lat2, $lng2)
 Array.prototype.concat[3]
 Array.prototype.concat[3] = [1,2,3];
 ```
+###github文件地址
+```php
+github上打开文件， 然后点 raw
+https://raw.githubusercontent.com/mingyun/mingyun.github.io/master/gists4.md
+sudo wget http://github.com/username/yourproject/raw/master/shellfile -O /etc/
+```
