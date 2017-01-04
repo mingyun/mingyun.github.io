@@ -993,3 +993,46 @@ if(move_uploaded_file($_FILES['photo']['tmp_name'], $filename)){
   
 echo json_encode($response); 
 ```
+###[map 和 forEach ](https://segmentfault.com/q/1010000007977209)
+```php
+map可以做链式操作，forEach不可
+let arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+arr.map(i => i * 32).map(i => i.toString(16)).map(i => i.toUpperCase());
+map和forEach语义上和功能上都是不一样的，一个是将数组映射到一个新的数组，一个是对数组进行遍历
+forEach和for循环更多是个语法糖吧，写的时候可以省一些代码，感觉比较linq
+而且for有很多种用法，比如一般的for+i，for...in...，for...of...
+map 和 forEach 的主要区别：map 有返回值（返回修改后的数组），forEach 没有返回值。
+```
+###[递归](https://segmentfault.com/q/1010000007997849)
+```php
+var arr = ['A','B','C','D',"E","F","G"];
+
+function show(arr,num){
+    debugger
+    var resultNum = 0;
+    var iNow = 1;
+    
+    if(num==1){
+        return arr.length;
+    }
+    
+    function change(arr,iNow){
+        
+        for(var i=0;i<arr.length;i++){
+            
+            var result = arr.concat();
+            result.splice(i,1);
+
+            if( iNow == num ){
+                resultNum += result.length;
+            }else{
+                change(result,iNow+1);
+            }
+        }
+    }
+    change(arr,iNow+1);
+    return resultNum;
+}
+
+console.log(show(arr,5));
+```
