@@ -1080,3 +1080,37 @@ $text = preg_replace_callback('(@[^\s]+)',function($matches){
 
 print_r($text);//是否订购<a href="javascript:;">@刘一届</a> <a href="javascript:;">@测试</a> <a href="javascript:;">@zxldev</a>
 ```
+###[ mysql left join 右表数据不唯一的情况解决方法](http://blog.csdn.net/fdipzone/article/details/45119551)
+```php
+如果B表符合条件的记录数大于1条，就会出现1:n的情况，这样left join后的结果，记录数会多于A表的记录数。
+member 表
+id	username
+1	fdipzone
+2	terry
+ 
+member_login_log 表
+id	uid	logindate
+1	1	2015-01-01
+2	2	2015-01-01
+3	1	2015-01-02
+4	2	2015-01-02
+5	2	2015-01-03
+ 
+查询member用户的资料及最后登入日期
+select a.id, a.username, b.logindate  
+from member as a   
+left join member_login_log as b on a.id = b.uid; 
+id	username	logindate
+1	fdipzone	2015-01-01
+1	fdipzone	2015-01-02
+2	terry	2015-01-01
+2	terry	2015-01-02
+2	terry	2015-01-03
+select a.id, a.username, b.logindate  
+from member as a   
+left join (select uid, max(logindate) as logindate from member_login_log group by uid) as b  
+on a.id = b.uid;
+id	username	logindate
+1	fdipzone	2015-01-02
+2	terry	2015-01-03
+```
