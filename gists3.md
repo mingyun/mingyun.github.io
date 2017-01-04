@@ -1066,6 +1066,21 @@ foreach($arr as $key=>$val){
     }
 }
 print_r($res);
+$new_array = [];  
+
+foreach( $arr as $arr_key => $arr_val)
+{
+    $allStatus = array_column($arr_val);
+    $statusCounts = array_count_values($allStatus);
+    // 最终输出新数组 
+    $new_array[$arr_key] = [
+              'field_name'  => $_val['field_name'],
+              'field_id'    => $_val['field_id'],
+              'status0'     => isset($statusCounts['0']) ? $statusCounts['0'] : 0,
+              'status1'     => isset($statusCounts['1']) ? $statusCounts['1'] : 0,
+              'status2'     => isset($statusCounts['2']) ? $statusCounts['2'] : 0,
+      ];
+}
 Array
 (
     [1] => Array
@@ -1119,4 +1134,15 @@ http://willko.iteye.com/blog/340686
 在程序里随机n个最大id和最小id的中间数，查询的时候用in获得这几个中间数的记录
     select * from table where id in (中间数1, 中间数2,中间数3)  
     SELECT * FROM Member WHERE Country = "HK" limit ?, 1  
+```
+###[查看文件git 历史](http://stackoverflow.com/questions/1786027/how-to-view-file-history-in-git)
+```php
+git diff 14b8..b410
+git diff 14b8..b410 path/to/file/a path/to/file/b
+gitk path/to/file
+pip install git-playback
+git playback [filename]
+git blame filename
+git log -p filename
+git show history_commit_b history_commit_b_file50
 ```
