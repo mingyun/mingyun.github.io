@@ -1036,3 +1036,87 @@ function show(arr,num){
 
 console.log(show(arr,5));
 ```
+###[三维数组合并](https://segmentfault.com/q/1010000008005727)
+```php
+$arr=[
+    1=>[
+            ['field_name'=>'a','filed_id'=>1,'status'=>1],
+            ['field_name'=>'a','filed_id'=>1,'status'=>0],
+            ['field_name'=>'a','filed_id'=>1,'status'=>2],
+    ],
+    2=>[
+            ['field_name'=>'b','filed_id'=>2,'status'=>0],
+            ['field_name'=>'b','filed_id'=>2,'status'=>0],
+            ['field_name'=>'b','filed_id'=>2,'status'=>2],
+    ],
+    
+];
+$res=[];
+foreach($arr as $key=>$val){
+    $res[$key] = ['field_name'=>$val[0]['field_name'],'filed_id'=>$val[0]['filed_id'],'status0'=>0,'status1'=>0,'status2'=>0];
+    foreach($val as $k=>$v){
+        /*if($v['status'] == 0){
+            $res[$key]['status0']+=1;
+        }elseif($v['status'] == 1){
+            $res[$key]['status1']+=1;
+        }elseif($v['status'] == 2){
+            $res[$key]['status2']+=1;
+        }*/
+        $res[$key]["status{$v['status']}"] += 1;
+    }
+}
+print_r($res);
+Array
+(
+    [1] => Array
+        (
+            [field_name] => a
+            [filed_id] => 1
+            [status0] => 1
+            [status1] => 1
+            [status2] => 1
+        )
+
+    [2] => Array
+        (
+            [field_name] => b
+            [filed_id] => 2
+            [status0] => 2
+            [status1] => 0
+            [status2] => 1
+        )
+
+)
+```
+###[mysql insert操作](http://www.cnblogs.com/ggjucheng/archive/2012/11/05/2754938.html)
+```php
+insert into worker set name=’tom’;
+INSERT INTO tbl_name (col1,col2) VALUES(15,col1*2);
+--但不能这样
+INSERT INTO tbl_name (col1,col2) VALUES(col2*2,15);
+insert into tbl_name1(col1,col2) select col3,col4 from tbl_name2;
+--如果每一列都有数据
+insert into tbl_name1 select col3,col4 from tbl_name2;
+如果您指定了ON DUPLICATE KEY UPDATE，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则执行旧行UPDATE。
+--假设a,b为唯一索引,表table没有1,2这样的行是正常插入数据，冲突时，更新c列的值
+INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=3;
+--或者是
+INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=values(c);
+--引用其他列更新冲突的行
+INSERT INTO table (a,b,c) VALUES (1,2,3),(4,5,6) ON DUPLICATE KEY UPDATE c=VALUES(a)+VALUES(b);
+```
+###[mysql随机查询若干条数据 ](http://blog.csdn.net/zxl315/article/details/2435368)
+```php
+SELECT * FROM `table` ORDER BY RAND() LIMIT 5
+SELECT *
+FROM `table` AS t1 JOIN (SELECT ROUND(RAND() * (SELECT MAX(id) FROM `table`)) AS id) AS t2
+WHERE t1.id >= t2.id
+ORDER BY t1.id ASC LIMIT 5;
+SELECT * FROM `table`
+WHERE id >= (SELECT floor(RAND() * (SELECT MAX(id) FROM `table`))) 
+ORDER BY id LIMIT 1;
+http://willko.iteye.com/blog/340686
+在程序里随机n个最大id和最小id的中间数，查询的时候用in获得这几个中间数的记录
+    select * from table where id in (中间数1, 中间数2,中间数3)  
+    SELECT * FROM Member WHERE Country = "HK" limit ?, 1  
+```
