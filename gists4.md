@@ -1120,3 +1120,82 @@ register_shutdown_function方法观察并捕获程序最后的状态http://www.b
 使用cli模式，如果有curl，没设置超时时间，就会一直存在于内存，如果多的话，就会内存溢出，服务器崩溃。
 sdk里面加上curl_setopt($connection, CURLOPT_TIMEOUT, 30)，就不会有一直存在的php进程
 ```
+###[Python解析PDF](https://github.com/euske/pdfminer/)
+```php
+git clone https://github.com/euske/pdfminer
+$ python setup.py install
+If you are using python 3 you will need to pip install pdfminer.six
+ http://gohom.win/2015/12/18/pdfminer/
+
+$ pdf2txt.py samples/simple1.pdf
+#http://stackoverflow.com/questions/5725278/how-do-i-use-pdfminer-as-a-library
+from bs4 import BeautifulSoup
+import requests
+import re
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from cStringIO  import StringIO
+from io import open
+from pdfminer.pdfpage import PDFPage
+def convert_pdf_to_txt(path):
+    rsrcmgr = PDFResourceManager()
+    retstr = StringIO()
+    codec = 'utf-8'
+    laparams = LAParams()
+    device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
+     fp = file(path, 'rb')
+    #fp = requests.get("http://pythonscraping.com/pages/warandpeace/chapter1.pdf").content
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    password = ""
+    maxpages = 0
+    caching = True
+    pagenos=set()
+    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,caching=caching, check_extractable=True):
+        interpreter.process_page(page)
+    fp.close()
+    device.close()
+    str = retstr.getvalue()
+    retstr.close()
+    return str
+print convert_pdf_to_txt('pdfminer-master/samples/simple1.pdf') 
+
+# -*- coding: utf-8 -*-
+from bs4 import BeautifulSoup
+import requests
+import re
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from cStringIO  import StringIO
+from io import open
+from pdfminer.pdfpage import PDFPage
+def pdf_txt(url):
+    rsrcmgr = PDFResourceManager()
+    retstr = StringIO()
+    codec = 'utf-8'
+    laparams = LAParams()
+    device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
+    f = requests.get(url).content
+    fp = StringIO(f)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    password = ""
+    maxpages = 0
+    caching = True
+    pagenos = set()
+    for page in PDFPage.get_pages(fp,
+                                  pagenos,
+                                  maxpages=maxpages,
+                                  password=password,
+                                  caching=caching,
+                                  check_extractable=True):
+        interpreter.process_page(page)
+    fp.close()
+    device.close()
+    str = retstr.getvalue()
+    retstr.close()
+    return str
+print pdf_txt('http://pythonscraping.com/pages/warandpeace/chapter1.pdf')
+
+
+```
