@@ -29,3 +29,19 @@ print text
 # python3 安装使用pip install pdfminer3k
 import os import subprocess from os.path import isfile,join ef = 'D:/xpdf/pdftotext.exe' cfg = 'D:/xpdf/xpdfrc' file = 'D:/xpdf/1.pdf' def convert(file): bo = subprocess.check_output([ef,'-f','1','-l','1','-cfg',cfg,'-raw',file,'-']) #这个命令中的所有调用文件参数必须使用full path.否则调用出错。 return bo.decode('utf-8') dr = r'M:\0700 SPEC&GAD' files = [f for f in os.listdir(dr) if isfile(join(dr,f)) and f.endswith('.pdf')] for file in files: bo = convert(join(dr,file)) if len(bo)!=0: print(bo.split('\r\n'))
 ```
+###[使用浏览器打开网页](http://gohom.win/2015/12/22/pyWebbrowser/)
+```php
+import webbrowser
+a=webbrowser.get('safari')
+#a=webbrowser.MacOSX('safari')
+a.open("http://www.baidu.com")
+```
+###npm包列表
+```php
+$ ls `npm root -g`
+anywhere       browser-sync  json-server  nodeppt     spy-debugger
+apidoc         dredd         jstophp      phantomjs   tianqi
+asciify        gulp          livepool     puer        tldr
+baidu-ocr-api  hexo          m-console    sails       webpack
+bower          http-server   markdown     spawn-sync  weinre
+```
