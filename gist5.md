@@ -45,3 +45,37 @@ asciify        gulp          livepool     puer        tldr
 baidu-ocr-api  hexo          m-console    sails       webpack
 bower          http-server   markdown     spawn-sync  weinre
 ```
+###[音乐audio 的 play()](https://segmentfault.com/q/1010000007479793)
+```php
+#需要用户主动去触发才得行
+    <div>
+        <audio controls="true" id="audio">
+            <source src="http://i.dxlfile.com/app/music/27.mp3" />
+            <!-- <source src="http://i.dxlfile.com/app/music/27.ogg" /> -->
+            <!-- <source src="http://i.dxlfile.com/app/music/27.ogg" /> -->
+        </audio>
+        <a href="javascript:;" id="fakeClick"></a>
+    </div>
+    <script>
+    var audio = document.getElementById("audio");
+    var aEle = document.getElementById("fakeClick");
+
+    aEle.addEventListener('click', function(e) {
+        e.preventDefault();
+        audio.play();
+    })
+
+    function fakeClick(fn) {
+        var evt;
+        if (document.createEvent) {
+            evt = document.createEvent("MouseEvents");
+            if (evt.initMouseEvent) {
+                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                aEle.dispatchEvent(evt);
+            }
+        }
+    }
+
+    audio.addEventListener("canplay", fakeClick);
+    </script>
+```
