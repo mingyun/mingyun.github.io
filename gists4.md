@@ -1114,3 +1114,9 @@ id	username	logindate
 1	fdipzone	2015-01-02
 2	terry	2015-01-03
 ```
+###[内存溢出](https://segmentfault.com/q/1010000007997441)
+```php
+register_shutdown_function方法观察并捕获程序最后的状态http://www.bo56.com/%E4%B8%80%E6%AC%A1php%E8%BF%9B%E7%A8%8B%E8%AF%A1%E5%BC%82%E9%80%80%E5%87%BA%E7%9A%84%E6%8E%92%E6%9F%A5%E8%BF%87%E7%A8%8B/ 
+使用cli模式，如果有curl，没设置超时时间，就会一直存在于内存，如果多的话，就会内存溢出，服务器崩溃。
+sdk里面加上curl_setopt($connection, CURLOPT_TIMEOUT, 30)，就不会有一直存在的php进程
+```
