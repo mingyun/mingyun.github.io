@@ -79,3 +79,23 @@ bower          http-server   markdown     spawn-sync  weinre
     audio.addEventListener("canplay", fakeClick);
     </script>
 ```
+###[返回100条不重复的记录](https://segmentfault.com/q/1010000008024825)
+```php
+'UPDATE `list` SET `State` = '1', `pid` = ' . getmypid() . '  WHERE `State` = '0' LIMIT 100;'
+'SELECT * FROM `list` WHERE `pid` = ' . getmypid() . ' LIMIT 100'
+'UPDATE `list` SET `pid` = ' . getmypid() . ' WHERE `pid` = '0''
+```
+###随机红包
+```php
+function randomRed($total,$num,$min = 0.01){
+        $list = [];
+        for($i= 1;$i< $num;$i++){
+            $safe_total = ($total-($num-$i)*$min)/($num-$i);//随机安全上限
+            $money      = mt_rand($min*100,$safe_total*100)/100;
+            $total      = $total-$money;
+            $list[$i]   = round($money,2);
+        }
+        $list[$num] = round($total,2);
+        return $list;
+    }
+```
