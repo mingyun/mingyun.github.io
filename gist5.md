@@ -146,3 +146,33 @@ for (var x in triangle) {
 var keys = Object.keys(triangle);
 然后再把 keys 数组排序，然后再遍历这个数组
 ```
+###[I Don't Know HTML](https://zhuanlan.zhihu.com/p/24748391)
+```php
+浏览器不支持 JavaScript 时 “隐藏” JavaScript 代码
+<script type="text/javascript">
+<!--
+function displayMsg() {
+    alert("Hello World!")
+}
+//-->
+</script> 
+<base href="www.zhihu.com/" target="_blank"><a href="liukanshan.gif">
+
+www.zhihu.com/liukanshan.gif 并且有 target 属性，值为 _blank
+通过其 dir 属性改变被其包围的文字的书写方向
+<bdo dir="rtl">
+Thanks for watching my blog.
+</bdo>
+输出是：
+
+.golb ym gnihctaw rof sknahT
+<details>
+  <!-- 默认显示 summary 中的内容 -->
+  <summary>页面加载后会显示summary包围的内容</summary>
+  <!-- 默认以下内容是隐藏的,可以通过点击展开-->
+  <p>这里可以放任何内容，但是默认是隐藏的</p>
+  <p>也可以通过设置 <details open>默认展开所有内容<p>
+</details>
+
+
+```
