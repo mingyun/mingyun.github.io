@@ -176,3 +176,105 @@ Thanks for watching my blog.
 
 
 ```
+###[home目录下所有的文件列表](https://zhuanlan.zhihu.com/p/24722347)
+```php
+[ item for item in os.listdir(os.path.expanduser('~')) if os.path.isfile(item) ]
+home目录下所有目录的目录名到绝对路径之间的字典
+{ item: os.path.realpath(item) for item in os.listdir(os.path.expanduser('~')) if os.path.isdir(item) }
+
+```
+###[map 有返回值（返回修改后的数组），forEach 没有返回值](https://segmentfault.com/q/1010000007977209)
+```php
+for 是循环的基础语法，可以有 for...in, foo...of,for(let i = 0; i < len; i++) 等。在for循环中可以使用 continue, break 来控制循环。
+
+forEach 可以当做是for(let i = 0; i < len; i++)的简写，但是不能完成 i + n 这种循环，同时也不支持 continue 和 break，只能通过 return 来控制循环。另外，使用forEach的话，是不能退出循环本身的。
+
+map的用法应该是循环当前可循环对象，并且返回新的可循环对象，跟for和forEach是不同的。
+forEach相比普通的for循环的优势在于对稀疏数组的处理，会跳过数组中的空位
+var arr = new Array(1000);
+
+arr[0] = 1;
+arr[99] = 3;
+arr[999] = 5;
+// for循环
+for (var i = 0, l = arr.length; i < l; i++) {
+    console.log('arr[%s]', i, arr[i]);
+}
+console.log('i :' , i);
+// ...
+// arr[0] 1
+// ...
+// arr[99] 3
+// ...
+// arr[999] 5
+// i : 1000
+
+// for - in 循环
+var count = 0;
+for(var j in arr){
+    count ++ ;
+    if(arr.hasOwnProperty(j)){
+        console.log('arr[%s]', j, arr[j]);
+    }
+}
+console.log('count : ', count);
+// arr[0] 1
+// arr[99] 3
+// arr[999] 5
+// i : 1000
+var arr = new Array(1000);
+arr[0] = 1;
+arr[99] = 3;
+arr[999] = 5;
+
+var count = 0;
+arr.forEach(function(value, index) {
+    count++;
+    console.log(typeof index);
+    console.log(index, value);
+});
+console.log('count', count);
+// number
+// 0 1
+// number
+// 99 3
+// number
+// 999 5
+// count 3
+```
+###[JavaScript数组去重](https://zhuanlan.zhihu.com/p/24753549)
+```php
+function unique(arr) {
+    var ret = [];
+    arr.forEach(function(item){
+        if(ret.indexOf(item) === -1){
+            ret.push(item);
+        }
+    });
+    return ret;
+}
+function unique(arr) {
+    return arr.filter(function(item, index){
+        // indexOf返回第一个索引值，indexOf()使用的是严格比较，也就是===
+        // 如果当前索引不是第一个索引，说明是重复值
+        return arr.indexOf(item) === index;
+    });
+}
+利用了对象（tmp）的key不可以重复的特性来进行去重
+function unique(arr) {
+    var ret = [];
+    var len = arr.length;
+    var tmp = {};
+    for(var i=0; i<len; i++){
+        if(!tmp[arr[i]]){
+            tmp[arr[i]] = 1;
+            ret.push(arr[i]);
+        }
+    }
+    return ret;
+}
+function unique(arr){
+    var set = new Set(arr);
+    return Array.from(set);
+}
+```
