@@ -278,3 +278,13 @@ function unique(arr){
     return Array.from(set);
 }
 ```
+###php自动执行
+```php
+$start = 1;
+for ($i = 0; $i < 10; $i++) {
+    print_r(
+        (function ($hello) use (&$start) {
+            return json_encode([$start, $hello, $start += rand(1, 5)]);
+        })('黑PHP真的好玩吗？') . "\n");
+}
+```
