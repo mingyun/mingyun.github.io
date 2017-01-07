@@ -99,3 +99,50 @@ function randomRed($total,$num,$min = 0.01){
         return $list;
     }
 ```
+###[html5lib](https://www.v2ex.com/t/331908#reply6)
+```php
+# -*- coding: utf-8 -*-
+
+import requests
+from bs4 import BeautifulSoup
+
+def get_info_from(url):
+    headers = {
+        "User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"
+    }
+    web_data = requests.get(url, headers=headers)
+    web_data.encoding = 'utf-8'
+    # print(web_data.text)    # 输出的结果中，搜索 t_con ，可以搜到
+    soup = BeautifulSoup(web_data.text, 'lxml')#xml 改成 html5lib,解析器对非标准的 html 格式的解析结果不一样， lxml 会忽略掉不符合规则的标签， html5lib 会自动补全不正确的
+    # print(soup)     # 输出的结果中，搜索 t_con, 搜不到了，为什么经过处理后却搜索不到了呢？
+
+if __name__ == "__main__":
+    test_url = "http://tieba.baidu.com/f?kw=%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0&ie=utf-8&pn=0"
+    get_info_from(test_url)
+```
+###jquery eq
+```php
+ var a = Math.ceil($("li").length/2)
+    for (var i=0; i<a; i++) { 
+    //循环5次
+        var j = i + Math.floor($("li").length/2)
+        console.log(j) 
+    // j = 5，6，7，8，9
+        $("li:eq(j)").addClass("display") 
+    //失败
+        //$("li").eq(j).addClass("display") //或者$("li:eq("+j+")")
+    //成功
+    }
+```
+###[顺序读取JSON中的数据](https://segmentfault.com/q/1010000000327993)
+```php
+var triangle = {a:1, b:2, c:3};
+for (var x in triangle) {
+    console.log(x)
+}
+//应尽量避免编写依赖对象属性顺序的代码。如果想顺序遍历一组数据，请使用数组并使用 for 语句遍历。 如果想按照定义的次序遍历对象属性
+先把所有 key 取出来，比如用 Object.keys()
+
+var keys = Object.keys(triangle);
+然后再把 keys 数组排序，然后再遍历这个数组
+```
