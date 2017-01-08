@@ -523,3 +523,212 @@ var_export($equal);
 注释掉json_encode($arrB)时，$equal为true，去掉注释，$equal为false
 
 ```
+###[print的时候实际上调用了tuple的__str](https://segmentfault.com/q/1010000007950587)
+```php
+>>> h = u'你好'
+>>> (h, 8).__str__()
+"(u'\\u4f60\\u597d', 8)"
+```
+###[MySQL之ROUND函数四舍五入的陷阱](https://segmentfault.com/a/1190000008042499)
+使用两个字段相乘的时候，最终的结果是按照float类型处理的，而在计算机中float类型不是精确的数，因此处理结果会按照第二条来，而直接整数字段与1.005这样的小数运算的结果是因为两个参与运算的值都是精确数，因此按照第一条规则计算。从field5和field6执行ROUND函数的结果可以明确的看确实是转换为了最近的偶数
+###[json_decode null](https://segmentfault.com/q/1010000008049796)
+```php
+ $string = '{"user_info_list":[{"subscribe":1,"openid":"oXd_Ftx6jQ7MMMOitkfjM9KQUTnQ","nickname":"Grace 阿欢","sex":2,"language":"zh_CN","city":"U\q","province":"l³S","country":"","headimgurl":"http://wx.qlogo.cn/mmopen/ajNVdqHZLLDcN5f9gjLJMpnHYJuRbJVeBsMibByNHsyuUCLEBEWGhhlH5EkvzGLibN7ic3TMDUVOnkHOBJLf8mZGQ/0","subscribe_time":1465995165,"remark":"","groupid":0,"tagid_list":[]}]}';
+
+$str = str_replace('\\','\\\\',$string);
+
+ $result = json_decode($str, true);
+ var_dump($result);
+
+```
+###[Curl模拟提交数据](https://segmentfault.com/a/1190000008041341)
+```php
+<?php
+
+
+ //模拟登录
+ function login_post($url, $cookie, $post) {
+     $curl = curl_init();//初始化curl模块
+     curl_setopt($curl, CURLOPT_URL, $url);//登录提交的地址
+     curl_setopt($curl, CURLOPT_HEADER, 0);//是否显示头信息
+     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 0);//是否自动显示返回的信息
+     curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); //设置Cookie信息保存在指定的文件中
+     curl_setopt($curl, CURLOPT_POST, 1);//post方式提交
+     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($post));//要提交的信息
+     curl_exec($curl);//执行cURL
+     curl_close($curl);//关闭cURL资源，并且释放系统资源
+ }
+
+ // 登录成功后获取数据
+ function get_content($url, $cookie) {
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $url);
+     curl_setopt($ch, CURLOPT_HEADER, 0);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+     curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie); //读取cookie
+     $rs = curl_exec($ch); //执行cURL抓取页面内容
+     curl_close($ch);
+     return $rs;
+ }
+
+ // 登录成功后模拟发帖
+ function post_thread($url, $cookie, $post)
+ {
+   $curl = curl_init();//初始化curl模块
+   curl_setopt($curl, CURLOPT_URL, $url);//登录提交的地址
+   curl_setopt($curl, CURLOPT_HEADER, 0);//是否显示头信息
+   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 0);//是否自动显示返回的信息
+   curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie); //读取cookie
+   curl_setopt($curl, CURLOPT_POST, 1);//post方式提交
+   curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($post));//要提交的信息
+   curl_exec($curl);//执行cURL
+   curl_close($curl);//关闭cURL资源，并且释放系统资源
+ }
+
+ //设置post的数据
+$post = array (
+    'user_id' => '123456@qq.com',
+    'password' => '123456',
+    'goto_page' => 'http://m.app.cn/index.php',
+    'act' => 'login',
+    't' => time(),
+);
+
+//登录地址
+$url = "http://m.app.cn/account/login.php";
+
+//设置cookie保存路径
+$cookie = dirname(__FILE__) . '/cookie_curl.txt';
+
+//登录后要获取信息的地址
+$url2 = "http://m.app.cn/user/wap/my_index.php";
+
+// 1.模拟登录
+ login_post($url, $cookie, $post);
+
+// 2.获取登录页的信息
+// $content = get_content($url2, $cookie);
+
+
+//匹配页面信息
+// $preg = "/<td class='portrait'>(.*)<\/td>/i";
+// preg_match_all($preg, $content, $arr);
+// $str = $arr[1][0];
+//输出内容
+// echo $content;
+
+// 3.模拟发帖
+$thread_info = array(
+  'action'   => 'pub',
+  'title'    => 'Test curl',
+  'content'  => 'Hello, world.',
+  't'        => time(),
+);
+$pub_thread_url = 'http://m.app.cn/thread/api/pub_thread.php';
+
+$ret = post_thread($pub_thread_url, $cookie, $thread_info);
+print_r($ret);
+
+//删除cookie文件
+@ unlink($cookie);
+?>
+
+```
+###[PHP生成CSV之内部换行](https://segmentfault.com/a/1190000008016567)
+`$description_value = '"'.str_replace(array(',','&nbsp;','<br>','<br/>','<br />'),array('，',' ',PHP_EOL,PHP_EOL,PHP_EOL),$description_value).'"';`
+###[分类树函数](https://segmentfault.com/a/1190000008029990)
+```php
+/**
+ * 定义分类树函数
+ *     @param     items         需要分类的二维数组 
+ *     @param     $id         主键（唯一ID）
+ *     @param     $belong_id     关联主键的PID
+ *  @son 可以自定义往里面插入就行
+ */
+    function catagory($items,$id='id',$belong_id='belong_id',$son = 'children'){
+        $tree = array(); //格式化的树
+        $tmpMap = array();  //临时扁平数据
+     
+        foreach ($items as $item) {
+            $tmpMap[$item[$id]] = $item;
+        }
+     
+        foreach ($items as $item) {
+            if (isset($tmpMap[$item[$belong_id]])) {
+                $tmpMap[$item[$belong_id]][$son][] = &$tmpMap[$item[$id]];
+            } else {
+                $tree[] = &$tmpMap[$item[$id]];
+            }
+        }
+        unset($tmpMap);
+        return $tree;
+    }
+    ```
+###[重定向后怎么获取真实地址](https://segmentfault.com/a/1190000007968941)
+```php
+$url="http://dwz.cn/4Ww6cV";//
+        
+        /** $url="http://g.cn";//实际会跳转到google.cn,
+            在此次贴下部分http头：注意看Status Code 和Location部分
+                    Request URL:http://g.cn/
+                    Request Method:GET
+                    Status Code:301 Moved Permanently (from cache)
+                    Remote Address:203.208.39.242:80
+                    Response Headers
+                    Cache-Control:private, max-age=2592000
+                    Content-Length:218
+                    Content-Type:text/html; charset=UTF-8
+                    Date:Fri, 30 Dec 2016 05:58:51 GMT
+                    Expires:Fri, 30 Dec 2016 05:58:51 GMT
+                    Location:http://www.google.cn/
+                    Server:gws
+                    X-Frame-Options:SAMEORIGIN
+                    X-XSS-Protection:1; mode=bloc
+         **/
+                    
+                    
+        $headers = get_headers($url,true);//加true更友好
+
+        var_dump($headers['Location']);
+/**
+output=>["Location"]=>
+  string(188) "https://www.taobao.com/markets/promotion/niandushengdian2016neiyi?spm=a21bo.50862.201862-1.d1.JGeGgF&pos=1&acm=20140506001.1003.2.1437526&scm=1003.2.20140506001.OTHER_1481324141839_1437526"
+**/
+
+$ch=  curl_init($url);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);//看名字就知道，follow location,去掉此选项无效
+curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+curl_setopt($ch, CURLOPT_NOBODY, 1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+curl_exec($ch);
+$info = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+echo $info;
+```
+###[导入Excel文件](https://segmentfault.com/a/1190000007977937)
+```php
+function import(){
+    $filePath = 'storage/exports/'.iconv('UTF-8', 'GBK', '学生成绩').'.xls';
+    Excel::load($filePath, function($reader) {
+        $data = $reader->all();
+        dd($data);
+    });
+}
+Excel::create('学生成绩',function($excel) use ($cellData){
+     $excel->sheet('score', function($sheet) use ($cellData){
+         $sheet->rows($cellData);
+     });
+})->store('xls')->export('xls');将该Excel文件保存到服务器上，可以使用 store 方法
+//=>output:https://www.taobao.com/markets/promotion/niandushengdian2016neiyi?spm=a21bo.50862.201862-1.d1.JGeGgF&pos=1&acm=20140506001.1003.2.1437526&scm=1003.2.20140506001.OTHER_1481324141839_1437526
+```
+###[ssh login](https://segmentfault.com/a/1190000008029990)
+```php
+$user="root";//远程用户名
+$pass="******";//远程密码
+$connection=ssh2_connect('10.10.10.10',22);
+ssh2_auth_password($connection,$user,$pass);
+$cmd="ps aux";//命令
+$ret=ssh2_exec($connection,$cmd);
+stream_set_blocking($ret, true);
+echo (stream_get_contents($ret));
+```
