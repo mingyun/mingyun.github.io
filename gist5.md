@@ -418,3 +418,108 @@ server {
     }
 }
 ```
+###[@加标签](https://segmentfault.com/q/1010000007971440)
+```php
+$text = preg_replace_callback('(@[^\s]+)',function($matches){
+    //这里直接把要替换的结果return出去就可以了
+    return "<a href='javascript:;'>{$matches[0]}</a> ";
+},'是否订购@刘一届 @测试 @zxldev');
+
+print_r($text);
+是否订购<a href="javascript:;">@刘一届</a> <a href="javascript:;">@测试</a> <a href="javascript:;">@zxldev</a>
+```
+###填充0
+```php
+//格式化函数
+function formatString($i){
+    return str_pad(substr("$i",0,1),strlen($i),'0',STR_PAD_RIGHT);
+}
+//测试调用
+$result = array();
+foreach(array(120,560,2360,12345) as $item){
+        $result[] = formatString($item);
+}
+//打印结果
+print_r($result);[100,500,2000,10000]
+```
+###[update时怎么排除当前记录](https://segmentfault.com/q/1010000007981653)
+```php
+use Illuminate\Validation\Rule;
+
+Validator::make($data, [
+    'email' => [
+        'required',
+        Rule::unique('users')->ignore($user->id),
+    ],
+]);
+backend/user/{id}
+public function rules()
+    {
+        $id = $this->route('id'); //获取当前需要排除的id
+        return [
+            'email' => "required|email|unique:users,email,".$id,
+        ];
+    }
+```
+###ajax post json
+```php
+$data=json_decode(file_get_contents('php://input'));
+先encode然后decode一遍才行$data=json_decode(json_encode($request->all()))
+```
+###[解决分页效率问题](http://www.moell.cn/article/17)
+```php
+select name from user where sex='女' order by last_login_time limit 10000000,10
+select 字段列...... from table inner join (
+            select  主键 from table
+            where x.sex='女' order by last_login_time limit 1000000,10
+ ) as x using(主键);
+```
+###[PHP中global的问题](https://segmentfault.com/q/1010000007244617)
+```php
+function test_global() {
+    global $vars;
+    $vars='OK';  
+}
+ 
+test_global();  
+echo $vars;      //OK
+<?php
+//#1全局的时候$GLOBALS['var']就是$var。
+$var=999;
+unset($GLOBALS['var']);
+var_dump($var); //报错 NULL
+
+
+//#2在函数内部，$GLOBALS['var']就是外部全局的$var
+$var=999;
+function test(){
+    unset($GLOBALS['var']);
+}
+test();
+var_dump($GLOBALS['var']); //报错 NULL
+var_dump($var); //报错 NULL
+
+
+//#3没有全局$var的时候，函数内部执行global $var;会创建一个空值的内部$var和一个空值的外部$var，在链接起来。
+function test2(){
+    global $var;
+    var_dump($var); //NULL
+    var_dump($GLOBALS['var']); //NULL
+    $var = 999;
+}
+test2();
+var_dump($var); //999
+var_dump($GLOBALS['var']); //999
+```
+###[SplFixedArray ](https://segmentfault.com/q/1010000007979799)
+```php
+$arrA = SplFixedArray ::fromArray(array(true));
+$arrB = SplFixedArray ::fromArray(array(false));
+
+//json_encode($arrB);
+
+$equal = ($arrA == $arrB);
+var_export($equal);
+注释掉json_encode($arrB)时，$equal为true，去掉注释，$equal为false
+
+```
