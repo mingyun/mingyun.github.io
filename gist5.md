@@ -304,7 +304,7 @@ results = cur.fetchone()
 for result in results: 
     print str(result)    
 ```
-### iconv 转换编码
+###iconv 转换编码
 如果出现错误 illegal input sequence at position，可以尝试忽略（iconv -f UTF-8 -t GBK//IGNORE ...）或转换（iconv -f UTF-8 -t GBK//TRANSLIT ...）无效字符。
 ###[微信如何查看页面源码](http://www.w3cmark.com/2017/weixin-debug-open.html)
 在微信会话列表页点击右上角“加号按钮”，选择菜单中的”添加朋友”，在添加朋友界面的搜索框中输入字符串：“:help”，然后点击搜索
@@ -326,5 +326,95 @@ body{
 
 Object.defineProperty(navigator,'platform',{get:function(){return 'Android';}});
 
-    ```
-    
+    ```
+###[is_writeable函数bug问题](http://blog.csdn.net/u013474436/article/details/50674040)
+```php
+function is_really_writable($file)
+    {
+        // If we're on a Unix server with safe_mode off we call is_writable
+        if (DIRECTORY_SEPARATOR == '/' AND @ini_get("safe_mode") == FALSE)
+        {
+            return is_writable($file);
+        }
+
+        // For windows servers and safe_mode "on" installations we'll actually
+        // write a file then read it.  Bah...
+        if (is_dir($file))
+        {
+            $file = rtrim($file, '/').'/'.md5(mt_rand(1,100).mt_rand(1,100));
+
+            if (($fp = @fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+            {
+                return FALSE;
+            }
+
+            fclose($fp);
+            @chmod($file, DIR_WRITE_MODE);
+            @unlink($file);
+            return TRUE;
+        }
+        elseif ( ! is_file($file) OR ($fp = @fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+        {
+            return FALSE;
+        }
+
+        fclose($fp);
+        return TRUE;
+    }
+```
+###[斐波那契数列](https://www.v2ex.com/t/331932)
+```php
+$total = [0, 1];
+
+for ($i = 2; $i < 10; $i++)
+{
+	$total[] = $total[$i - 1] + $total[$i - 2];
+}
+>>> $total
+=> [
+     0,
+     1,
+     1,
+     2,
+     3,
+     5,
+     8,
+     13,
+     21,
+     34,
+   ]
+   a, b = b , a+b
+   import numpy 
+
+def mm_fib(n): 
+    return (numpy.matrix([[2,1],[1,1]])**(n//2))[0,(n+1)%2] 
+
+[mm_fib(i) for i in range(20)]
+
+def fib1(n):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    return fib1(n-1) + fib1(n-2)
+```
+###[git add . 仅仅记录了增加或修改的文件，要用 git add -A](https://www.v2ex.com/t/332492)
+```php
+Git Version 1.x git add 时候 add 没 add 删除的部分
+ignorecase=false
+git add -A = git add . + git add -u 
+Git v.2.x 中 `git add .`会跟踪删除记录
+http://stackoverflow.com/questions/572549/difference-between-git-add-a-and-git-add 
+```
+###[代理服务器](https://zhuanlan.zhihu.com/p/24382606)
+```php
+server {
+    location / {
+        proxy_pass http://localhost:8080/;
+    }
+
+    location ~ \.(gif|jpg|png)$ {
+        root /data/images;
+    }
+}
+```
