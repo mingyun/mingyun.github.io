@@ -288,3 +288,43 @@ for ($i = 0; $i < 10; $i++) {
         })('黑PHP真的好玩吗？') . "\n");
 }
 ```
+###[print 打印嵌在其它结构里的字符串会默认 escape 模式](https://www.v2ex.com/t/332933#reply2)
+```php
+cur.execute(sql+entering) 
+results = cur.fetchone() 
+
+print results 
+print results[0]
+改成 
+cur.execute(sql+entering) 
+results = cur.fetchone() 
+
+ 
+#print 中文的话还要加一个 str 
+for result in results: 
+    print str(result)    
+```
+### iconv 转换编码
+如果出现错误 illegal input sequence at position，可以尝试忽略（iconv -f UTF-8 -t GBK//IGNORE ...）或转换（iconv -f UTF-8 -t GBK//TRANSLIT ...）无效字符。
+###[微信如何查看页面源码](http://www.w3cmark.com/2017/weixin-debug-open.html)
+在微信会话列表页点击右上角“加号按钮”，选择菜单中的”添加朋友”，在添加朋友界面的搜索框中输入字符串：“:help”，然后点击搜索
+里面有四个调试功能：上传日子/修复数据/上传文件/js调试功能
+###[词云工具wordcloud2](https://github.com/timdream/wordcloud2.js/)
+`WordCloud(document.getElementById('my_canvas'), { list: list } );`
+###页面翻转
+```php
+body{
+    -webkit-transform: rotate(3deg);
+    -moz-transform: rotate(3deg);
+    -o-transform: rotate(3deg);
+	padding-top:20px;
+    }
+    ```
+    ###[一行js代码破解百度云大文件下载限制](http://blog.jarjar.cn/one-line-js-crack-baidu-yun/)
+    ```php
+    Object.defineProperty(this , 'navigator' , {value: { platform: "" }});
+
+Object.defineProperty(navigator,'platform',{get:function(){return 'Android';}});
+
+    ```
+    
