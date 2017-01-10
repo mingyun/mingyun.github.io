@@ -322,14 +322,15 @@ body{
     -o-transform: rotate(3deg);
 	padding-top:20px;
     }
-    ```
-    ###[一行js代码破解百度云大文件下载限制](http://blog.jarjar.cn/one-line-js-crack-baidu-yun/)
-    ```php
+```
+
+###[一行js代码破解百度云大文件下载限制](http://blog.jarjar.cn/one-line-js-crack-baidu-yun/)
+```php
     Object.defineProperty(this , 'navigator' , {value: { platform: "" }});
 
 Object.defineProperty(navigator,'platform',{get:function(){return 'Android';}});
 
-    ```
+```
 ###[is_writeable函数bug问题](http://blog.csdn.net/u013474436/article/details/50674040)
 ```php
 function is_really_writable($file)
@@ -666,7 +667,8 @@ print_r($ret);
         unset($tmpMap);
         return $tree;
     }
-    ```
+```
+
 ###[重定向后怎么获取真实地址](https://segmentfault.com/a/1190000007968941)
 ```php
 $url="http://dwz.cn/4Ww6cV";//
