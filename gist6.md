@@ -304,3 +304,123 @@ if (!empty($tmpList)) {
 >>> [num for elem in vec for num in elem]
 [1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
+###[$_GET 和 $_POST](http://www.restran.net/2016/09/26/php-security-notes/)
+```php
+http://ctf4.shiyanbar.com/web/false.php?name[]=a&password[]=b
+如果 GET 参数中设置 name[]=a，那么 $_GET['name'] = [a]，php 会把 []=a 当成数组传入， $_GET 会自动对参数调用 urldecode。
+
+$_POST 同样存在此漏洞，提交的表单数据，user[]=admin，$_POST['user'] 得到的是 ['admin'] 是一个数组
+md5([]) === false
+echo is_numeric(233333);       # 1
+echo is_numeric('233333');    # 1
+echo is_numeric(0x233333);    # 1
+echo is_numeric('0x233333');   # 1
+echo is_numeric('233333abc');  # 0
+变量覆盖 extract
+//var.php?var=new  
+$var='init';  
+parse_str($_SERVER['QUERY_STRING']);  
+print $var;
+```
+###比较
+```php
+// 0x 开头会被当成16进制54975581388的16进制为 0xccccccccc
+// 十六进制与整数，被转换为同一进制比较
+'0xccccccccc' == '54975581388' 
+// 字符串在与数字比较前会自动转换为数字，如果不能转换为数字会变成0
+1 == '1'
+1 == '01'
+10 == '1e1'
+100 == '1e2' 
+0 == 'a' // a 转换为数字为 0
+// 十六进制数与带空格十六进制数，被转换为十六进制整数
+'0xABCdef' == '     0xABCdef'
+'0010e2' == '1e3'
+// 0e 开头会被当成数字，又是等于 0*10^xxx=0
+// 如果 md5 是以 0e 开头，在做比较的时候，可以用这种方法绕过
+'0e509367213418206700842008763514' == '0e481036490867661113260034900752'
+'0e481036490867661113260034900752' == '0' 
+
+var_dump(md5('240610708') == md5('QNKCDZO'));
+var_dump(md5('aabg7XSs') == md5('aabC9RqS'));
+var_dump(sha1('aaroZmOk') == sha1('aaK1STfY'));
+var_dump(sha1('aaO8zKZF') == sha1('aa3OFF9m'));
+```
+###python发送邮件
+```php
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#http://www.restran.net/2015/02/12/python-postfix-email/
+import smtplib
+import time, traceback, sys, os
+from email.mime.text import MIMEText
+
+def send_mail(mail_from, password, mail_to, subject, content):
+
+    handle = smtplib.SMTP('smtp.163.com', 25)
+    handle.login(mail_from, password)
+    time_str = time.strftime('%Y-%m-%d %X', time.localtime(time.time()))
+    msg = '<html><body>' + content + "<br><br><span style='color:#999;font-size:"\
+                        + "10px;font-family:Verdana;'>" \
+                        + time_str + " by " + mail_from + "</span>"+'</body></html>'
+    send_msg = MIMEText(msg, 'html', 'utf-8')
+    send_msg['Subject'] = subject
+    handle.sendmail(mail_from, mail_to, send_msg.as_string())
+    handle.close()
+
+if __name__ == '__main__':
+    send_mail('your_name@163.com', 'your_password', 'Hello Python!', 'Say hello to Python! :)')
+
+```
+###[Python 中一个逗号引发的悲剧](http://www.restran.net/2015/11/07/python-comma-issue/)
+```php
+>>> a = [
+...     'foo'
+...     'bar',
+...     'tree'
+... ]
+>>>
+>>> b = 'foo' 'bar'
+>>>
+>>> print a
+['foobar', 'tree']
+>>> print b
+foobar
+只要把两个字符串放在一起，中间有空白或者没有空白，两个字符串自动连接为一个字符串。
+
+也就是说 'foo' + 'bar' 等价于 'foo' 'bar'
+>>> a = {'foo': 'bar'}
+>>> b = a.get('foo'),
+>>> c = a.get('foo')
+>>> print(b)
+('bar',)
+>>> print(c)
+bar
+```
+###[linux commands]()
+```php
+把 mydata.zi p解压到 mydatabak 目录里面
+
+unzip mydata.zip -d mydatabak
+sudo pkill -f uwsgi -9
+cd /proc ll 进程号
+# -p 后面跟的是端口
+ssh 192.168.1.102 -l root -p 22
+```
+###[Python 对小整数的定义是 [-5, 257)](http://www.restran.net/2015/10/22/how-python-code-run/)
+```php
+所有位于这个范围内的整数使用的都是同一个对象 id 函数可以用来查看一个对象的唯一标志，可以认为是内存地址
+>>> a = 1
+>>> id(a)
+40059744
+>>> b = 1
+>>> id(b)
+40059744
+>>> c = 257
+>>> id(c)
+41069072
+>>> d = 257
+>>> id(257)
+41069096
+
+```
