@@ -173,4 +173,134 @@ Number.isNaN = Number.isNaN || function(value) {
 因为Number(null)会返回0，isNaN()内部会先调用Number(value)转换下值,然后再比较，所以 
 isNaN(null)，即isNaN(0),会返回false
 ```
-###
+###把每个对象加一个逗号放一行
+`notepad++ 然后查找 '},' 替换成'},\n'  str.replace(/},/g,'},\n');`
+###更新nodejs
+```php
+列出安装npm包npm list -g --depth=0  ls `npm root -g` 
+下载https://npm.taobao.org/mirrors/node/latest-v6.x/node-v6.9.3-x64.msi 
+ 
+npm config set registry=https://registry.npm.taobao.org
+
+```
+###[ js把php的内置函数都实现一遍 ](https://github.com/niklasvh/php.js)
+```php
+http://locutus.io/php  http://phpjs.hertzen.com/console.html?gist=3171392 http://pdfmyurl.com/
+```
+###[JSON 重组](https://segmentfault.com/q/1010000008006459)
+```php
+ var src = {
+    "title": "限制标题字数",
+    "desc": "",
+    "tagInput": "",
+    "interest": "1",
+    "fwb": "这是富文本11111",
+    "goodImg01": "",
+    "goodTitle01": "富文本1下面礼物名字1",
+    "goodPrice01": "富文本1下面礼物1的价格",
+    "goodId01": "富文本1下面礼物1的ID",
+    "goodImg02": "",
+    "goodTitle02": "富文本1下面礼物2名字2",
+    "goodPrice02": "富文本1下面礼物2的价格",
+    "goodId02": "富文本1下面礼物2的ID",
+    "goodImg03": "",
+    "goodTitle03": "富文本1下面礼物3名字",
+    "goodPrice03": "富文本1下面礼物3的价格",
+    "goodId03": "富文本1下面礼物3的ID",
+    "fwb1": "这是富文本2222",
+    "goodImg11": "",
+    "goodTitle11": "富文本2下面的礼物名字",
+    "goodPrice11": "富文本2下面的礼物价格",
+    "goodId11": "富文本2下面的礼物ID"
+}
+     [{
+         "fwb": "这是富文本11111",
+         "good": [{
+                 "goodImg": "",
+                 "goodTitle": "富文本1下面礼物名字1",
+                 "goodPrice": "富文本1下面礼物1的价格",
+                 "goodId": "富文本1下面礼物1的ID"
+             },
+             {
+                 "goodImg": "",
+                 "goodTitle": "富文本1下面礼物2名字2",
+                 "goodPrice": "富文本1下面礼物2的价格",
+                 "goodId": "富文本1下面礼物2的ID"
+             },
+             {
+                 "goodImg": "",
+                 "goodTitle": "富文本1下面礼物3名字",
+                 "goodPrice": "富文本1下面礼物3的价格",
+                 "goodId": "富文本1下面礼物3的ID"
+             }
+         ]
+     },
+     {
+         "fwb": "这是富文本2222",
+         "good": [{
+                 "goodImg": "",
+                 "goodTitle": "富文本2下面礼物名字1",
+                 "goodPrice": "富文本2下面礼物1的价格",
+                 "goodId": "富文本2下面礼物1的ID"
+             },
+             {
+                 "goodImg": "",
+                 "goodTitle": "富文本2下面礼物2名字2",
+                 "goodPrice": "富文本2下面礼物2的价格",
+                 "goodId": "富文本2下面礼物2的ID"
+             },
+             {
+                 "goodImg": "",
+                 "goodTitle": "富文本2下面礼物3名字",
+                 "goodPrice": "富文本2下面礼物3的价格",
+                 "goodId": "富文本2下面礼物3的ID"
+             }
+         ]
+     }
+ ]
+ var srcStr=JSON.stringify(src);
+//加fwb
+srcStr=srcStr.replace(/("goodId\d{2}":"[^"]*",)("goodImg\d{2}":)/g,'$1"fwb":"",$2');
+//自定义一个符号比如::分隔
+srcStr=srcStr.replace(/,("fwb[^"]*")/g,'::"fwb"');
+srcStr=srcStr.split('::');
+
+var srcRes=[];
+var i=1;
+var temp={};
+//一项一项取就好了
+while(srcStr[i]){
+    srcStr[i]=srcStr[i].replace(/,"([a-zA-Z]+)\d{2}"/g,',"$1"');
+    srcStr[i]= srcStr[i+1]?('{'+srcStr[i]+'}'):('{'+srcStr[i]);
+    temp=JSON.parse(srcStr[i]);
+    temp.mark=i;
+    srcRes.push(temp);
+    i++;
+}
+console.log(srcRes);
+```
+###[正则表达式`replace`](https://segmentfault.com/q/1010000007965483)
+```php
+String.prototype.replace.call('223322', /22(\d{2})22/, 'replaced!')
+//"replaced!"
+String.prototype.replace是会搜寻整个正则表达式/22(d{2})22/的内容并用'replaced!'字符串来替换, 不管正则内有没有分组;
+String.prototype.replace.call('223322', /22(\d{2})22/, '$1')
+//"33"
+'$1'则指代捕获组1的内容, 在这里就是'33'. 因此整个正则所匹配的内容会被替换成为'$1'的内容.
+
+具体到这里, /((d{3}))/g匹配的是'(555)', 捕获组1捕获到的则是'555', 因此'(555)'会被替换为'555' + '-'.
+```
+###redis sAdd数组不能为空
+```php
+var apiMenu = $.parseJSON('{!! $jsonListArray !!}'); #将php数组转为js数组对象
+if (!empty($tmpList)) {
+                $keyWord = array_column($tmpList, 'keywords');
+                RedisFacade::sAdd(Kwd::WHOLE_KEY_LIMIT, $keyWord);
+            }
+```
+###数组扁平化
+```php
+>>> vec = [[1,2,3], [4,5,6], [7,8,9]]
+>>> [num for elem in vec for num in elem]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
