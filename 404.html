@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <title>你请求的页面找不到</title>
+    <style type="text/css">
+        .tip {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 260px;
+            height: 260px;
+            margin-top: -130px;
+            margin-left: -130px;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .tip {
+                margin-top: -180px;
+            }
+        }
+        a {
+            text-decoration: none;
+        }
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        .btn-outline {
+            color: #3db6e4;
+            background-color: transparent;
+            border-color: #3db6e4;
+            /*transition: background-color .2s ease-in;*/
+        }
+        .btn-outline:hover{
+            color: #fff;
+            background-color: #3db6e4;
+        }
+        body {
+            background: #fff;
+            font-family: Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+        }
+        @-webkit-keyframes rotate {
+            from {
+                -webkit-transform: rotate(0deg)
+            }
+            to {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+        @-moz-keyframes rotate {
+            from {
+                -moz-transform: rotate(0deg)
+            }
+            to {
+                -moz-transform: rotate(359deg)
+            }
+        }
+        @-o-keyframes rotate {
+            from {
+                -o-transform: rotate(0deg)
+            }
+            to {
+                -o-transform: rotate(359deg)
+            }
+        }
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg)
+            }
+            to {
+                transform: rotate(359deg)
+            }
+        }
+        @-webkit-keyframes rotate2 {
+            from {
+                -webkit-transform: rotate(0deg)
+            }
+            to {
+                -webkit-transform: rotate(360deg)
+            }
+        }
+        @-moz-keyframes rotate2 {
+            from {
+                -moz-transform: rotate(0deg)
+            }
+            to {
+                -moz-transform: rotate(359deg)
+            }
+        }
+        @-o-keyframes rotate2 {
+            from {
+                -o-transform: rotate(0deg)
+            }
+            to {
+                -o-transform: rotate(359deg)
+            }
+        }
+        @keyframes rotate2 {
+            from {
+                transform: rotate(0deg)
+            }
+            to {
+                transform: rotate(359deg)
+            }
+        }
+        .windmill-area {
+            display: block;
+            position: relative;
+            margin: 0 auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(61, 182, 228, 0.5);
+        }
+        .windmill {
+        }
+        .windmill .pillar {
+            position: absolute;
+            top: 58px;
+            left: 69px;
+            display: block;
+            height: 0;
+            width: 4px;
+            border-width: 0 4px 70px 4px;
+            border-style: none solid solid;
+            border-color: transparent transparent #fff;
+        }
+        .windmill .axis {
+            position: absolute;
+            top: 50px;
+            left: 71px;
+            width: 4px;
+            height: 4px;
+            border: 3px #fff solid;
+            background: #a5cad6;
+            border-radius: 5px;
+            z-index: 88;
+            -webkit-transition-property: -webkit-transform;
+            -webkit-transition-duration: 1s;
+            -moz-transition-property: -moz-transform;
+            -moz-transition-duration: 1s;
+            -webkit-animation: rotate 4s linear infinite;
+            -moz-animation: rotate 4s linear infinite;
+            -o-animation: rotate 4s linear infinite;
+            animation: rotate 4s linear infinite;
+        }
+        .windmill .swing {
+            position: absolute;
+            top: 1px;
+            left: -2px;
+            display: block;
+            height: 0;
+            width: 2px;
+            border-width: 40px 2px 0px 2px;
+            border-style: solid solid none;
+            border-color: #fff transparent transparent;
+            box-shadow: 1px 1px 1px rgba(105, 97, 97, 0.1);
+            -webkit-transform-origin: 0px 0px;
+            -webkit-transform: rotate(60deg);
+            -moz-transform-origin: 0px 0px;
+            -moz-transform: rotate(60deg);
+            -ms-transform-origin: 0px 0px;
+            -ms-transform: rotate(60deg);
+            -o-transform-origin: 0px 0px;
+            -o-transform: rotate(60deg);
+            transform-origin: 0px 0px;
+            transform: rotate(60deg);
+        }
+        .windmill .swing2 {
+            position: absolute;
+            top: 0px;
+            left: 4.5px;
+            display: block;
+            height: 0;
+            width: 2px;
+            border-width: 40px 2px 0px 2px;
+            border-style: solid solid none;
+            border-color: #fff transparent transparent;
+            -webkit-transform-origin: 0px 0px;
+            -webkit-transform: rotate(180deg);
+            -moz-transform-origin: 0px 0px;
+            -moz-transform: rotate(180deg);
+            -ms-transform-origin: 0px 0px;
+            -ms-transform: rotate(180deg);
+            -o-transform-origin: 0px 0px;
+            -o-transform: rotate(180deg);
+            transform-origin: 0px 0px;
+            transform: rotate(180deg);
+        }
+        .windmill .swing3 {
+            position: absolute;
+            top: 6px;
+            left: 3px;
+            display: block;
+            height: 0;
+            width: 2px;
+            border-width: 40px 2px 0px 2px;
+            border-style: solid solid none;
+            border-color: #fff transparent transparent;
+            -webkit-transform-origin: 0px 0px;
+            -webkit-transform: rotate(300deg);
+            -moz-transform-origin: 0px 0px;
+            -moz-transform: rotate(300deg);
+            -ms-transform-origin: 0px 0px;
+            -ms-transform: rotate(300deg);
+            -o-transform-origin: 0px 0px;
+            -o-transform: rotate(300deg);
+            transform-origin: 0px 0px;
+            transform: rotate(300deg);
+        }
+        .windmill .axis:hover {
+            -webkit-animation: rotate2 .3s linear infinite;
+            -moz-animation: rotate2 .3s linear infinite;
+            -o-animation: rotate2 .3s linear infinite;
+            animation: rotate2 .3s linear infinite;
+        }
+        .windmill.left .pillar {
+            top: 58px;
+            left: 59px;
+        }
+        .windmill.left .axis {
+            top: 50px;
+            left: 60px;
+        }
+        .windmill.right .pillar {
+            top: 58px;
+            left: 97px;
+            width: 2px;
+            border-width: 0 3px 50px 3px;
+        }
+        .windmill.right .axis {
+            top: 54px;
+            left: 97px;
+            border: 2px #fff solid;
+            background: #a5cad6;
+        }
+        .windmill.right .swing {
+            top: 1px;
+            left: -1px;
+            width: 1px;
+            border-width: 25px 1px 0px 1px;
+        }
+        .windmill.right .swing2 {
+            top: -1px;
+            left: 3px;
+            width: 1px;
+            border-width: 25px 1px 0px 1px;
+        }
+        .windmill.right .swing3 {
+            top: 4px;
+            left: 4px;
+            width: 1px;
+            border-width: 25px 1px 0px 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tip">
+    <div class="windmill-area">
+        <span class="windmill left">
+            <span class="pillar"></span>
+            <span class="axis">
+                <span class="swing"></span>
+                <span class="swing2"></span>
+                <span class="swing3"></span>
+            </span>
+        </span>
+
+        <span class="windmill right">
+            <span class="pillar"></span>
+            <span class="axis">
+                <span class="swing"></span>
+                <span class="swing2"></span>
+                <span class="swing3"></span>
+            </span>
+        </span>
+    </div>
+
+    <p style="font-size: 22px;text-align: center;color:#3db6e4">你请求的页面找不到</p>
+    <a href="/" class="btn btn-outline">返回首页http://www.restran.net/2015/08/19/nginx-frontend-helper/</a>
+</div>
+</body>
+</html>
