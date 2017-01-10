@@ -424,3 +424,92 @@ ssh 192.168.1.102 -l root -p 22
 41069096
 
 ```
+###[nginx 反向代理](http://www.restran.net/2015/08/19/nginx-frontend-helper/)
+```php
+server {
+  listen  *:5000;
+  access_log  logs/mysite_access.log;
+  error_log   logs/mysite_error.log;
+
+  # 为了调试方便，我不缓存
+  expires 0;
+  
+  # 开启 gzip，跟真实环境一样
+  gzip on;
+  
+  # 网站的路径 
+  location / {
+    root  "D:/path/to/mysite/html";
+    index  index.html index.htm;
+  }
+  
+  # 静态文件的路径 
+  location /static {
+    alias "D:/path/to/mysite/static"; 
+  } 
+  
+  # 我们的 api 接口会使用特殊前缀 @ 来区分
+  # 把所有 uri 以 /@api_some_data 开头的转发到接口服务器
+  location /@api_some_data {
+    # 看情况，是否需要重写 uri
+    # rewrite /@api_some_data/(.*) /$1  break;
+    # 转发到接口服务器的地址
+    proxy_pass http://192.168.1.2:8000;
+    proxy_set_header Cookie $http_cookie;
+  }
+}
+$.ajax({
+    url: '/@api_some_data/get_data/',
+    type: 'POST',
+    cache: false,
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify(post_data),
+    success: function (response) {
+        // handle success
+    },
+    error: function () {
+        // handle error
+    }
+});
+```
+###[zhihu-card](https://laike9m.com/blog/fa-bu-zhihu-card-020,95/)
+```php
+<div class="zhihu-card" data-userhash="your hash"></div>
+<script src="//cdn.jsdelivr.net/zhihu-card/latest/widget.js"></script>
+```
+###[互联网公司GitHub repo 语言使用情况](https://laike9m.com/blog/hu-lian-wang-gong-si-github-repo-yu-yan-shi-yong-qing-kuang,56/)
+```php
+import requests
+from collections import defaultdict
+from os.path import join
+from pprint import pprint
+
+
+class GetLangStat():
+
+    api_url = "https://api.github.com/orgs"
+    ORGANIZATIONS = (
+        'Microsoft', 'aws', 'google', 'twitter', 'facebook',
+        'alibaba'
+    )
+    stats = {org: defaultdict(int) for org in ORGANIZATIONS}
+
+    @classmethod
+    def get_one_org_repos(cls, org):
+        print(org)
+        url = join(cls.api_url, org, 'repos')
+        r = requests.get(url)
+        for repo in r.json():
+            cls.stats[org][repo['language']] += 1
+
+    @classmethod
+    def get_all_org_repos(cls):
+        for org in cls.ORGANIZATIONS:
+            cls.get_one_org_repos(org)
+        pprint(cls.stats)
+
+
+if __name__ == '__main__':
+    GetLangStat.get_all_org_repos()
+```
