@@ -1,11 +1,14 @@
 ###php导出excel
 ```php
+导出csv文件数字会自动变科学计数法的解决方法 只要把数字字段后面加上显示上看不见的字符即可，字符串前面或者结尾加上制表符"\t".
+php 程序可以这样判断，注意一定是"\t"，不是'\t'. 如果是phpexcel导出的话，把”\t”换成” “即可(双引号直接有个空格)   1.48361E+13
+
 header("Content-type:text/csv");   
 header("Content-Disposition:attachment;filename=".$filename);   
 header('Cache-Control:must-revalidate,post-check=0,pre-check=0');   
 header('Expires:0');   
 header('Pragma:public');
-$str='第一行,第二行';
+$str="\t".'第一行,第二行';
 $str =  iconv('utf-8','GBK//IGNORE',$str);
 echo $str;
 ob_flush();
