@@ -513,3 +513,57 @@ class GetLangStat():
 if __name__ == '__main__':
     GetLangStat.get_all_org_repos()
 ```
+###获取登录用户
+`echo $username = getenv("username");`
+###[文件夹上传](https://laike9m.com/blog/wen-jian-jia-shang-chuan-cong-qian-duan-dao-hou-duan,59/)
+```php
+<form method="POST" enctype=multipart/form-data>
+  <input type='file' name="file" webkitdirectory >
+  <button>upload</button>
+</form> 
+<input type='file' webkitdirectory >  
+<button id="upload-btn" type="button">upload</button> 
+
+var files = [];
+$(document).ready(function(){
+  $("input").change(function(){
+    files = this.files;
+  });
+});
+$("#upload-btn").click(function(){
+  var fd = new FormData();
+  for (var i = 0; i < files.length; i++) {
+    fd.append("file", files[i]);
+  }
+  $.ajax({
+    url: "/upload/",
+    method: "POST",
+    data: fd,
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function(data){
+      console.log(data);
+    }
+  });
+});
+```
+###[laravel 配合 angular跨域问题](https://segmentfault.com/q/1010000008059752)
+```php
+去掉VerifyCsrfToken中间件，也可以在app/Http/Middleware/VerifyCsrfToken.php的$except数组中加上要跳过Csrf验证的路由
+$http({
+    method: 'post',
+    url: 'http://www.b.com/test/index',
+    data: {
+        //withCredentials: true,
+        customers: 'testname',
+        email: 'testemail@qq.com'
+    },
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+}).success(function (r) {
+    console.log(r);
+});
+
+```
