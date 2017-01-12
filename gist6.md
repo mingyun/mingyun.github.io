@@ -567,3 +567,176 @@ $http({
 });
 
 ```
+###[闭包实现一个缓存型函数](http://jixianqianduan.com/frontend-resource/2015/12/20/fornt-end-interview-questions.html)
+```php
+function cache(fn){
+    var map = {};
+    return function(){
+        var args = arguments;
+        var key = Array.prototype.join.call(args, ',');
+        console.log("--key=" + key);
+        if(map[key]){
+            console.log("该调用被缓存");
+            return map[key];
+        }else{
+            console.log("该调用未被缓存");
+            return map[key] = fn.apply(this, args);
+        }
+    }
+}
+
+var factorial = cache(function(n){
+   return n < 1?1:n* factorial(n-1);
+});
+
+console.log(factorial(3));
+console.log(factorial(4));
+```
+###[按四个数字格式化;数字按照因为数字添加逗号；](http://jixianqianduan.com/frontend-resource/2015/12/20/fornt-end-interview-questions.html)
+```php
+'937493453453'.replace(/(\d{4})/g, '$1 ').trim()//"9374 9345 3453"
+
+'937493453453'.split('').reverse().join('').replace(/(\d{3})/g, '$1,').replace(/,$/,'').split('').reverse().join('');
+```
+###事件绑定
+```php
+function on(type, fn) {
+    var el = this;
+    if (el.addEventListener) {
+        el.addEventListener(type, fn, false);
+    } else if (el.attacheEvent) {
+        el.attachEvent('on' + type, fn.bind(el));
+    } else {
+        el['on' + type] = fn;
+    }
+}
+
+var $ = function(selector) {
+    document.getElementById(selector).__proto__.on = on;
+    return document.getElementById(selector);
+}
+
+$('test').on('click', function(e) {
+    console.log('obj');
+});
+```
+###实现ajax请求函数
+```php
+function ajax(opt){
+    let xhr;
+    if(window.ActiveXObject){
+        xhr = new ActiveXObject('Microsoft.XMLHTTP');
+    }else{
+        xhr = new XMLHttpRequest();
+    }
+
+    xhr.open(opt.type, opt.url, true);
+    xhr.send(opt.data);
+
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+            opt.success(xhr.responseText);
+        }else{
+            opt.error(xhr.error);
+        }
+    }
+}
+
+ajax({
+    type: 'get',
+    url: 'http://www.a.com',
+    data: {
+        name: 'ouven'
+    },
+    success: function(data){
+        console.log(data);
+    },
+    error: function(e){
+        console.log(e);
+    }
+});
+```
+###两个大数相加
+```php
+function add(num1, num2) {
+    var numArr1 = num1.toString().split('').reverse(),
+        numArr2  = num2.toString().split('').reverse(),
+        maxLength = numArr1.length > numArr2.length?numArr1.length:numArr2.length;
+        flowArr = [0],
+        resultArr = [];
+
+    for(let i = 0; i < maxLength; i++){
+        numArr1[i] = parseInt(numArr1[i], 10) || 0;
+        numArr2[i] = parseInt(numArr2[i], 10) || 0;
+
+        if(numArr1[i] + numArr2[i] + (flowArr[i] || 0) >= 10){
+            resultArr[i] = numArr1[i] + numArr2[i] - 10;
+            flowArr[i+1] = 1;
+        }else{
+            resultArr[i] = numArr1[i] + numArr2[i];
+            flowArr[i+1] = 0;
+        }
+    }
+
+    for(let i = 0; i < flowArr.length; i++){
+        resultArr[i] = (resultArr[i] || 0) + (flowArr[i] || 0);
+    }
+
+    if(resultArr[flowArr.length -1] === 0){
+        resultArr.pop();
+    }
+
+    return resultArr.reverse().join('');
+}
+
+console.log(add('410', '699'));
+```
+###[segmentfault草稿箱功能](https://segmentfault.com/q/1010000008097246)
+```php
+var seed;
+element.addEventListener('keyup',function(e){
+  if(seed){
+  clearTimeout(seed);
+}
+seed = setTimeout(saveDraft, 5000);
+})
+```
+###[id不能为数字](https://segmentfault.com/q/1010000008096164)
+```php
+  var id=Math.random();
+    $('body').html('<div id='+id+'>hha</div>');
+    //$('#'+id).removeAttr('id');
+    $(('#'+id).replace('.', '\\.')).removeAttr('id');
+```
+###版本比较
+```php
+function version( v1, v2 ) {
+  var arr1 = v1.replace(/-/g,'.').split('.');
+  var arr2 = v2.replace(/-/g,'.').split('.');console.log(arr1,arr2);
+  var maxLen = Math.max(arr1.length, arr2.length);
+  for ( var i = 0; i < maxLen; i++ ) {
+  	if(parseInt(arr1[i]) == parseInt(arr2[i])) continue;
+  	return parseInt(arr1[i]) > parseInt(arr2[i]) ? true :false;
+  }
+  return false;
+}
+versionCompare('10.11.111','10.2.2');//
+var VersionCompare = function (currVer, promoteVer) {
+    currVer = currVer || "0.0.0";
+    promoteVer = promoteVer || "0.0.0";
+    if (currVer == promoteVer) return false;
+    var currVerArr = currVer.split(".");
+    var promoteVerArr = promoteVer.split(".");
+    var len = Math.max(currVerArr.length, promoteVerArr.length);
+    for (var i = 0; i < len; i++) {
+        var proVal = ~~promoteVerArr[i],
+            curVal = ~~currVerArr[i];
+        if (proVal < curVal) {
+            return false;
+        } else if (proVal > curVal) {
+            return true;
+        }
+    }
+    return false;
+};
+```
