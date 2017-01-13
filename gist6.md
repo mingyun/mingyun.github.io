@@ -920,7 +920,31 @@ var a = JSON.parse('{"name":"小明","age":14}',function (key,value) {debugger
             else if(key === ""){return value}
             else {return undefined;}
         });
-        
+ //  Object {name: "小明同学"}     
+ JSON.parse('{"p": 5}', function (k, v) {
+    if(k === '') return v;     // 如果到了最顶层，则直接返回属性值，
+    return v * 2;              // 否则将属性值变为原来的 2 倍。
+});                            // { p: 10 }
+
+JSON.parse('{"1": 1, "2": 2,"3": {"4": 4, "5": {"6": 6}}}', function (k, v) {
+    console.log(k); // 输出当前的属性名，从而得知遍历顺序是从内向外的，
+                    // 最后一个属性名会是个空字符串。
+    return v;       // 返回原始属性值，相当于没有传递 reviver 参数。
+});
+
+// 1
+// 2
+// 4
+// 6
+// 5
+// 3 
+// ""
+遍历的时候，最后一次key是"",需要直接返回原值。
+var a = JSON.parse('{"name":"小明","age":14}',function (key,value) {
+            if(key === "name") return value+"同学";
+            return value;
+        });
+console.log(a);
 ```
 ###[判断一个进程是否在运行](https://segmentfault.com/q/1010000008109156)
 ```php
@@ -939,6 +963,7 @@ nginx     13545  0.0  0.5  48336  2504 ?        S    22:27   0:00 nginx: worker 
 <script src="js/linkagesel-min.js"></script>
 <script src="js/district-all.js"></script>
 <script>
+//https://github.com/waitingsong/LinkageSel
 $(document).ready(function(){
     var data1 = {
         1: {name: '蔬菜', cell: { 10: {name: '菠菜', price: 4 }, 11: {name: '茄子', price: 5} }
@@ -1039,4 +1064,69 @@ import urllib2
 opener = urllib2.build_opener()
 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 opener.open('http://www.example.com/')
+```
+###[JS prototype原型问题](https://segmentfault.com/q/1010000008111252)
+```php
+初始状态只有函数有prototype.
+实例的__proto__指向其构造函数的prototype.
+函数也有__proto__因为函数是Function函数构造函数的实例。
+var obj = {};
+//等价与
+var obj = new Object();
+
+function fn() {};
+var fn = new Function();
+```
+###[数组遍历](https://segmentfault.com/q/1010000008070485)
+```php
+    var arr = [{
+            s: 8,
+            e: 16
+        }, {
+            s: 17,
+            e: 23.5
+        }, {
+            s: 7,
+            e: 11
+        }, {
+            s: 23.5,
+            e: 24
+        }, {
+            s: 23.5,
+            e: 24
+        },{
+            s: 4,
+            e: 5
+        },{
+            s: 3,
+            e: 4.5
+        }];
+
+    arr.sort(function(a,b){
+        return a.s == b.s ? a.e - b.e : a.s - b.s
+    });
+
+    for(item of arr)console.log(item);
+    
+    
+    var result = [];
+    while(arr.length){
+        var obj = arr[0];
+        arr.splice(0,1);
+        for(var i = 0 ; i < arr.length ; i ++){
+            var cur = arr[i];
+            
+            if(cur.s > obj.e){
+                result.push(obj);
+                break;
+            }else if(cur.e >= obj.e){
+                obj.e = cur.e;
+                arr.splice(i--,1);
+            }else{
+                arr.splice(i--,1);
+            }                
+        }
+    }
+    result.push(obj); [{s:7,e:24},{3,5}]
+ 
 ```
