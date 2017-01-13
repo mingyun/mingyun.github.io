@@ -806,6 +806,18 @@ function array_dot($array, $prepend = '')
         return $results;
     }
 
+function recursiveFind(array $array, $needle)
+{
+    $iterator  = new RecursiveArrayIterator($array);
+    $recursive = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+    $aHitList = array();
+    foreach ($recursive as $key => $value) {print_r($value);
+        if ($key === $needle) {
+            array_push($aHitList, $value);
+        }
+    }
+    return $aHitList;
+}
 ```
 ###[search](http://stackoverflow.com/questions/1019076/how-to-search-by-key-value-in-a-multidimensional-array-in-php)
 ```php
@@ -846,4 +858,185 @@ Array
         )
 
 )
+```
+###php保存为word
+```php
+<?php
+	$fileName = 'test.doc';
+	// header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+	// header('Content-Type: application/msword');
+	header("Content-type: application/vnd.ms-word");
+	// header("Content-Disposition: attachment; Filename=SaveAsWordDoc.doc");
+	header('Content-Disposition: attachment;filename=' . $fileName);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=Windows-1252\">
+<title>Saves as a Word Doc</title>
+</head>
+<body>
+<h1>Header</h1>
+  php保存为word
+<ul>
+<li>List 1</li>
+<li>List 2</li>
+</ul>
+</body>
+</html>
+```
+###[mysql查询逗号分隔](https://segmentfault.com/q/1010000008104666)
+```php
+SELECT data.id,GROUP_CONCAT(seal.name) AS name 
+FROM data 
+left join seal on FIND_IN_SET(seal.id,data.seal_id) 
+GROUP BY data.id;
+seal表
+seal_id name 
+1 合同章
+2 财务章
+3 法人章
+
+data表
+id seal_id 
+1 1,2
+2 1,3
+3 1,2,3
+
+如何查询data表连seal表 得到
+array(
+[0]=>array('id'=1,'name'=合同章,财务章)，
+[1]=>array('id'=2,'name'=合同章,法人章 )，
+[2]=>array('id'=3,'name'=合同章,财务章,法人章 )，
+
+)
+```
+###[JSON.parse](https://segmentfault.com/q/1010000008106720)
+```php
+var a = JSON.parse('{"name":"小明","age":14}',function (key,value) {debugger
+            if(key === "name"){
+                return value+"同学";
+            }
+            else if(key === ""){return value}
+            else {return undefined;}
+        });
+        
+```
+###[判断一个进程是否在运行](https://segmentfault.com/q/1010000008109156)
+```php
+[root@nginx conf.d]# ps -aux | grep  "nginx" | grep -v "grep" 
+root       1950  0.0  0.4  47904  2232 ?        Ss   03:43   0:00 nginx: master process nginx
+nginx     13545  0.0  0.5  48336  2504 ?        S    22:27   0:00 nginx: worker process
+[root@nginx conf.d]# ps -aux | grep  "nginx" | grep -v "grep" > /dev/null
+[root@nginx conf.d]# echo $?
+0
+
+```
+###[无限级联动下拉菜单](http://linkagesel.xiaozhong.biz/)
+```php
+<script src="js/jquery.js"></script>
+<script src="js/comm.js"></script>
+<script src="js/linkagesel-min.js"></script>
+<script src="js/district-all.js"></script>
+<script>
+$(document).ready(function(){
+    var data1 = {
+        1: {name: '蔬菜', cell: { 10: {name: '菠菜', price: 4 }, 11: {name: '茄子', price: 5} }
+        },
+        3: {name: '水果', 
+            cell: { 
+                20: {name: '苹果', cell: {201: {name: '红富士', price: 20}  } } ,
+                21: {name: '桃', 
+                        cell: { 
+                            210: {name: '猕猴桃', price: 30}, 
+                            211: {name: '油桃', price: 31}, 
+                            212: {name: '蟠桃', priece: 32} }
+                }
+            }
+        },
+        9: {name: '粮食', 
+            cell: { 
+                30: {name: '水稻',    cell: { 301: {name: '大米', cell: {3001: {name: '五常香米', price: 50}} } }   } 
+            }
+        }
+    };
+    var opts = {
+            data: data1,
+            select: '#demo1'
+    };
+    var linkageSel1 = new LinkageSel(opts);
+     
+    $('#getSelectedValue').click(function() {
+        var v = linkageSel.getSelectedValue();
+        alert(v);
+    });
+     
+    $('#getSelectedData').click(function() {
+        var name = linkageSel.getSelectedData('name'),
+            price = linkageSel.getSelectedData('price');
+        alert('名称:' + name + ' 价格:' + price);
+ 
+    });
+});
+</script>
+```
+###[urllib2.urlopen()相当于python3.X中的urllib.request.urlopen()](https://my.oschina.net/sukai/blog/611451)
+```php
+使用带参数的GET方法取回URL
+>>> import urllib
+>>> params = urllib.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+>>> f = urllib.urlopen("http://www.musi-cal.com/cgi-bin/query?%s" % params)
+>>> print f.read()
+使用POST方法
+>>> import urllib
+>>> params = urllib.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+>>> f = urllib.urlopen("http://www.musi-cal.com/cgi-bin/query", params)
+>>> print f.read()
+使用HTTP代理,自动跟踪重定向
+>>> import urllib
+>>> proxies = {'http': 'http://proxy.example.com:8080/'}
+>>> opener = urllib.FancyURLopener(proxies)
+>>> f = opener.open("http://www.python.org")
+>>> f.read()
+不使用代理
+>>> import urllib
+>>> opener = urllib.FancyURLopener({})
+>>> f = opener.open("http://www.python.org/")
+>>> f.read()
+GET一个URL
+>>> import urllib2
+>>> f = urllib2.urlopen('http://www.python.org/')
+>>> print f.read()
+
+使用基本的HTTP认证
+import urllib2
+auth_handler = urllib2.HTTPBasicAuthHandler()
+auth_handler.add_password(realm='PDQ Application',
+                          uri='https://mahler:8092/site-updates.py',
+                          user='klem',
+                          passwd='kadidd!ehopper')
+opener = urllib2.build_opener(auth_handler)
+urllib2.install_opener(opener)
+urllib2.urlopen('http://www.example.com/login.html')
+build_opener() 默认提供很多处理程序, 包括代理处理程序, 代理默认会被设置为环境变量所提供的.
+
+一个使用代理的例子
+proxy_handler = urllib2.ProxyHandler({'http': 'http://www.example.com:3128/'})
+proxy_auth_handler = urllib2.ProxyBasicAuthHandler()
+proxy_auth_handler.add_password('realm', 'host', 'username', 'password')
+
+opener = urllib2.build_opener(proxy_handler, proxy_auth_handler)
+opener.open('http://www.example.com/login.html')
+
+添加HTTP请求头部
+import urllib2
+req = urllib2.Request('http://www.example.com/')
+req.add_header('Referer', 'http://www.python.org/')
+r = urllib2.urlopen(req)
+
+更改User-agent
+import urllib2
+opener = urllib2.build_opener()
+opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+opener.open('http://www.example.com/')
 ```
