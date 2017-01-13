@@ -740,3 +740,110 @@ var VersionCompare = function (currVer, promoteVer) {
     return false;
 };
 ```
+###正则匹配id
+```php
+var span = document.createElement("span");
+span.innerHTML = '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="variables_get" id="nLf_BhSsE?miY*(Kqsak" x="237" y="65"><field name="NAME">qqqqq</field></block></xml>';
+var field= span.getElementsByTagName('field')[0];
+var text = field.innerHTML;//qqqqq
+```
+###[根据距离和时间算平均](https://segmentfault.com/q/1010000008105087)
+```php
+$distance=5;
+$time=strtotime('0:30:30');
+$time= date('s',$time)+date('i',$time)*60+date('H',$time)*3600;
+$pace = $time / $distance;//366
+$strtime=gmstrftime('%H:%M:%S',$pace);//00:06:06
+```
+###[多维数组判断](http://php.net/manual/zh/function.in-array.php)
+```php
+function in_array_recursive($needle, $haystack) { 
+
+    $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($haystack)); 
+
+    foreach($it as $element) { 
+        if($element == $needle) { 
+            return true; 
+        } 
+    } 
+
+    return false; 
+} 
+ $arr= [
+     [
+         "id"   => 1,
+         "type" => 1
+     ],
+     [
+         "id"   => 2,
+         "type" => 2
+     ],
+     [
+         "id"   => 3,
+         "type" => 3
+     ],
+     [
+         "id"   => 4,
+         "type" => 4
+     ]
+ ];
+var_dump(in_array_recursive(2,$arr));
+var_dump(in_array_recursive(5,$arr));
+//laravel
+in_array(2,array_dot($arr));
+function array_dot($array, $prepend = '')
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $results = array_merge($results, array_dot($value, $prepend.$key.'.'));
+            } else {
+                $results[$prepend.$key] = $value;
+            }
+        }
+
+        return $results;
+    }
+
+```
+###[search](http://stackoverflow.com/questions/1019076/how-to-search-by-key-value-in-a-multidimensional-array-in-php)
+```php
+function search($array, $key, $value)
+{
+    $results = array();
+
+    if (is_array($array)) {
+        if (isset($array[$key]) && $array[$key] == $value) {
+            $results[] = $array;
+        }
+
+        foreach ($array as $subarray) {
+            $results = array_merge($results, search($subarray, $key, $value));
+        }
+    }
+
+    return $results;
+}
+
+$arr = array(0 => array(id=>1,name=>"cat 1"),
+             1 => array(id=>2,name=>"cat 2"),
+             2 => array(id=>3,name=>"cat 1"));
+
+print_r(search($arr, 'name', 'cat 1'));
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => cat 1
+        )
+
+    [1] => Array
+        (
+            [id] => 3
+            [name] => cat 1
+        )
+
+)
+```
