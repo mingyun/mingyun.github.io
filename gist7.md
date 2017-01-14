@@ -62,7 +62,7 @@ if(Hash::check($input, $hash)){
     
 }
 ```
-###[将任意内容的字符串唯一均匀地转换为1～n之间的一个整数]()
+###[将任意内容的字符串唯一均匀地转换为1～n之间的一个整数](https://segmentfault.com/q/1010000008113634)
 ```php
 $str = 'Created by PhpStorm.';
 
@@ -74,4 +74,31 @@ $result = abs($crc32) % 100;
 
 var_dump($result);//59
 
+```
+###[无限节点的树结构插件](https://segmentfault.com/q/1010000008113650)
+```php
+  var data = [{name: '水果', id: 1, children: [
+            {name:'水果1',id:2,children:[
+                {name:'水果2',id:3,children:[
+                    {name:'水果2',id:3,children:[]}        
+                ]}
+            ]}
+        ]
+    }];
+    
+ function render(data){
+         
+    data.forEach(function(item,index){
+        item.status = false;
+        if(item.children){
+            render(item.children);
+        }
+    }); 
+    console.log(JSON.stringify(data));
+    return data;
+ }
+ 
+ render(data);
+ JSON.stringify(data)
+"[{"name":"水果","id":1,"children":[{"name":"水果1","id":2,"children":[{"name":"水果2","id":3,"children":[{"name":"水果2","id":3,"children":[],"status":false}],"status":false}],"status":false}],"status":false}]"
 ```
