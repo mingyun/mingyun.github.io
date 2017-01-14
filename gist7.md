@@ -238,3 +238,15 @@ x, y = symbols('x y')
 print solve(x * 2 - 4, x)#[2]
 print solve([2 * x - y - 3, 3 * x + y - 7],[x, y])#{y: 1, x: 2}
 ```
+###[判断类型](https://github.com/chunpu/min-is/blob/gh-pages/index.js)
+```php
+is.wechatApp = function() {
+	if ('object' == typeof wx) {
+		if (wx && is.fn(wx.createVideoContext)) {
+			// wechat js sdk has no createVideoContext
+			return true
+		}
+	}
+	return false
+}
+```
