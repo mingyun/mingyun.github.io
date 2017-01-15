@@ -499,4 +499,106 @@ timeit.timeit('1000000000 in xrange(0,1000000000,10)', number=1)
 import timeit
 timeit.timeit('1000000000 in range(0,1000000000,10)', number=1)
 4.490355838248402e-06
+```###[ Laravel 5.2 处理 Emoji 表情](https://laravel-china.org/topics/3615)
+```php
+https://github.com/unicodeveloper/laravel-emoji
+databases.php 配置文件
+没必要修改MySQL配置的，依次检查你的数据库、表、字段的字符集设置即可
+ 'mysql_utf8mb4' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => env('DB_PREFIX', 'pn_'),
+            'strict' => false,
+            'engine' => null,
+        ],
+	class Comment extends Model
+{
+    protected $connection = 'mysql_utf8mb4';
+        protected $table = 'comment';
+}
+```
+###[PHP调用phantomjs](https://laravel-china.org/topics/3590)
+```php
+composer require "jonnyw/php-phantomjs:4.*"
+$client = Client::getInstance();
+//这一步非常重要，务必跟服务器的phantomjs文件路径一致
+$client->getEngine()->setPath('/usr/local/bin/phantomjs');
+$request  = $client->getMessageFactory()->createRequest();
+$response = $client->getMessageFactory()->createResponse();
+
+//设置请求方法
+$request->setMethod('GET');
+//设置请求连接
+$request->setUrl($link);
+//发送请求获取响应
+$client->send($request, $response);
+
+if($response->getStatus() === 200) {
+    //输出抓取内容
+    echo $response->getContent();
+    //获取内容后的处理
+}
+$client = Client::getInstance();
+$client->isLazy(); // 让客户端等待所有资源加载完毕
+
+$request = $client->getMessageFactory()->createRequest();
+$request->setTimeout(5000); // 设置超时时间(超过这个时间停止加载并渲染输出画面)
+```
+###[Supervisor 管理 Laravel 队列进程](https://blog.tanteng.me/2017/01/supervisor-laravel-queue/)
+```php
+pip install supervisor
+echo_supervisord_conf > /etc/supervisord.conf
+[include]
+files = /etc/supervisor/*.conf
+supervisord -c /etc/supervisord.conf
+sudo supervisorctl reread
+
+sudo supervisorctl update
+
+sudo supervisorctl start laravel-worker:*
+```
+###[定时任务](https://laravel-china.org/topics/3552)
+```php
+app\Console\Kernerl.php
+ protected function schedule(Schedule $schedule)
+    {
+        $schedule->call(function () {
+            DB::table('test')->insert(['name'=>'test']);
+        })->everyMinute();
+    }
+    * * * * * /usr/bin/php /www/artisan schedule:run >> /dev/null 2>&1
+```
+###[图片拖动文本框自动上传](https://laravel-china.org/topics/3613)
+```php
+public function attachment(Request $request)
+    {
+        $file = $request->file('image');
+        // 图片验证
+        $input = array('image' => $file);
+        $rules = array(
+            'image' => 'image'
+        );
+        // 自动验证
+        $validator = \Validator::make($input, $rules);
+        // 失败处理
+        if ($validator->fails()) return \Response::json([
+            'error' => 'Please choose a picture.'
+        ]);
+        // 移动目录地址
+        $destinationPath = 'uploads/';
+        // 获取图片文件名
+        $filename = \Auth::user()->id . '_' . time() . $file->getClientOriginalName();
+        // 移动图片
+        $file->move($destinationPath, $filename);
+
+        return \Response::json([
+            'filename' => '/' . $destinationPath . $filename
+        ]);
+    }
 ```
