@@ -602,3 +602,74 @@ public function attachment(Request $request)
         ]);
     }
 ```
+###[sql数据去重问题](https://segmentfault.com/q/1010000008098772)
+```php
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sendid` int(11) NOT NULL DEFAULT '0',
+  `receiveid` int(11) NOT NULL DEFAULT '0',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+INSERT INTO `message` (`id`, `sendid`, `receiveid`, `create_time`)
+VALUES
+    (1, 321, 3, '2017-01-13 10:23:03'),
+    (2, 322, 4, '2017-01-13 10:23:11'),
+    (3, 123123, 9, '2017-01-13 10:23:25'),
+    (4, 0, 0, '2017-01-13 10:22:54'),
+    (5, 4, 321, '2017-01-13 10:22:54'),
+    (6, 4, 322, '2017-01-13 10:23:17'),
+    (7, 9, 12232, '2017-01-13 10:23:30'),
+    (8, 0, 0, '2017-01-13 11:29:42');
+    SELECT *
+FROM   message m3
+WHERE  id NOT IN (#查询需要去重的id
+           select DISTINCT m1.id
+           FROM            message AS m1
+           INNER JOIN      message AS m2
+           WHERE           m1.id != m2.id #过滤掉自身关联
+           AND             ((
+                                                           m1.receiveid = m2.sendid
+                                           AND             m1.sendid = m2.receiveid)
+                           OR              (
+                                                           m1.sendid = m2.sendid
+                                           AND             m1.receiveid = m2.receiveid ) )
+           AND             m1.create_time < m2.create_time #
+           GROUP BY        m1.id,
+                           m2.id);    
+```
+###[pthreads 模块无法在 web 模式下运行](https://segmentfault.com/q/1010000008101102)
+```php
+创建两个配置文件（解决，web模式下添加 pthreads 扩展出错）。
+
+php.ini        # web 模式下会自动加载
+php-cli.ini    # php-cli 模式下回自动加载
+```
+###[php5.6中捕获fatal error(E_ERROR)](https://segmentfault.com/q/1010000008101135)
+```php
+function handle()
+{
+    $error = error_get_last();
+    var_dump($error);
+}
+
+register_shutdown_function('handle');
+
+hahah();
+```
+###[PHP如何远程下载](https://segmentfault.com/q/1010000008090535)
+```php
+$text = urlencode("苏醒的秘密.txt");
+$url  = "http://dzs.qisuu.com/txt/" . $text;
+echo file_get_contents($url);
+```
+###[解析xml](https://segmentfault.com/q/1010000008094579)
+```php
+$xml = file_get_contents("php://input");
+$xml = new \SimpleXMLElement($xml);
+$data = [];
+        foreach ($xml as $key => $value) {
+            $data[$key] = strval($value);
+        }
+```
