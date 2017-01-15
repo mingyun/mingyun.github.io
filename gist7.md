@@ -250,3 +250,159 @@ is.wechatApp = function() {
 	return false
 }
 ```
+###[php curl](https://github.com/php-curl-class/php-curl-class)
+```php
+require __DIR__ . '/vendor/autoload.php';
+//https://www.v2ex.com/t/333980#;  https://github.com/jmathai/php-multi-curl 
+use \Curl\Curl;
+$curl = new Curl();
+$curl->setOpt(CURLOPT_FOLLOWLOCATION, true);
+$curl->post('https://www.example.com/login/', array(
+    'username' => 'myusername',
+    'password' => 'mypassword',
+));
+
+$mc = JMathai\PhpMultiCurl\MultiCurl::getInstance();
+
+  // Set up your cURL handle(s).
+  $ch = curl_init('http://www.google.com');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_POST, 1);
+
+  // Add your cURL calls and begin non-blocking execution.
+  $call = $mc->addCurl($ch);
+
+  // Access response(s) from your cURL calls.
+  $code = $call->code;
+```
+###[避免重复注册同一个事件](https://segmentfault.com/q/1010000008078938)
+```php
+// 缓存列表
+var clientList = {};
+
+// 注册
+regist = function(key, fn) {            
+    clientList[key] = null;   // 每次都清空，就不需要管他到底有没有注册过
+    clientList[key] = fn;    // 重新注册一个
+};
+
+
+// 注册remove事件
+regist("remove", function(){console.log("remove function")});
+// 执行
+clientList["remove"]();
+```
+###[ajax是异步的](https://segmentfault.com/q/1010000008078306)
+```php
+var list = [];//大的集合
+$.each(that.categoryList, function(index,value){
+   $.ajax({
+       type: 'get',
+       url: that.getHotUrl,
+       data:{
+           category:value.id,
+           pageIndex:1,
+           pageSize:2,
+           token:token
+       },
+       dataType: 'json',
+       success: function(response){
+          if(response.code==200){
+              var obj = new Object();  //集合对象
+              obj.category_name=value.name;
+              obj.items = response.data.items;
+              console.log(obj);
+              list.push(obj);
+          }
+      },
+      error: function(err) {
+           console.log(err);
+     }
+  });
+});
+console.log(list);//null
+
+先执行的是console.log(list);
+然后在执行console.log(obj);
+
+setTimeout(function(){
+    console.log(list);
+},100);
+```
+###[FileAPI上传文件](https://github.com/mailru/FileAPI)
+```php
+<div>
+        <!-- "js-fileapi-wrapper" -- required class -->
+        <div class="js-fileapi-wrapper upload-btn">
+            <div class="upload-btn__txt">Choose files</div>
+            <input id="choose" name="files" type="file" multiple />
+        </div>
+        <div id="images"><!-- previews --></div>
+    </div>
+
+    <script>window.FileAPI = { staticPath: '/js/FileAPI/dist/' };</script>
+    <script src="/js/FileAPI/dist/FileAPI.min.js"></script>
+    <script>
+        var choose = document.getElementById('choose');
+        FileAPI.event.on(choose, 'change', function (evt){
+            var files = FileAPI.getFiles(evt); // Retrieve file list
+
+            FileAPI.filterFiles(files, function (file, info/**Object*/){
+                if( /^image/.test(file.type) ){
+                    return  info.width >= 320 && info.height >= 240;
+                }
+                return  false;
+            }, function (files/**Array*/, rejected/**Array*/){
+                if( files.length ){
+                    // Make preview 100x100
+                    FileAPI.each(files, function (file){
+                        FileAPI.Image(file).preview(100).get(function (err, img){
+                            images.appendChild(img);
+                        });
+                    });
+
+                    // Uploading Files
+                    FileAPI.upload({
+                        url: './ctrl.php',
+                        files: { images: files },
+                        progress: function (evt){ /* ... */ },
+                        complete: function (err, xhr){ /* ... */ }
+                    });
+                }
+            });
+        });
+    </script>
+    
+    /**
+ * 获取要上传的文件大小
+ * https://segmentfault.com/q/1010000008080489
+ * @param element 需要配合jquery使用，$(上传文件的input)
+ * @returns {*}
+ */
+function fileSize(element) {
+    try {
+        var fileSize = 0;
+        // for IE
+        if (window.ActiveXObject) {
+            // before making an object of ActiveXObject,
+            // please make sure ActiveX is enabled in your IE browser
+            var objFSO = new ActiveXObject("Scripting.FileSystemObject");
+            var filePath = element.get(0).value;
+            var objFile = objFSO.getFile(filePath);
+            fileSize = objFile.size; //size in kb
+        }
+        // for FF, Safari, Opeara and Others
+        else {
+            fileSize = element.get(0).files[0].size; //size in kb
+        }
+
+        //fileSize = fileSize / 1048576; //size in mb
+
+        return fileSize;
+    }
+    catch (e) {
+        return null;
+    }
+}
+
+```
