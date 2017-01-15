@@ -673,3 +673,191 @@ $data = [];
             $data[$key] = strval($value);
         }
 ```
+###[php单例模式](https://segmentfault.com/q/1010000008048988)
+```php
+class test
+{
+    private $props = [];
+    private static $instance;
+    private function __construct()
+    {
+        echo 2;
+    }
+
+    public static function getInstance()
+    {
+        if( !( self::$instance instanceof self ) )
+        {
+            echo 1;
+            self::$instance =new self();
+        }
+        return self::$instance;
+    }
+
+    private function __clone()
+    {
+    }
+
+    public function setProp($key, $val)
+    {
+        $this->props[$key] = $val;
+    }
+
+    public function getProp($key)
+    {
+        return $this->props[$key];
+    }
+}
+$a = test::getInstance(); //12
+$b = test::getInstance(); //没有输出
+
+$a->setProp("name", "zhangsan");
+echo $b->getProp("name");   //zhangsan
+```
+###[php bind](https://segmentfault.com/q/1010000008121858)
+```php
+function bind(Callable $func)
+{
+    $args = func_get_args();
+    array_shift($args);
+
+    return function() use ($func, $args) {
+        return call_user_func_array($func, array_merge($args, func_get_args()));
+    };
+}
+
+function add($x, $y) {
+    return $x + $y;
+}
+
+$add0 = bind('add');
+var_dump($add0(1, 2));
+
+$add1 = bind('add', 1);
+var_dump($add1(2));
+
+$add12 = bind('add', 1, 2);
+var_dump($add12());
+```
+###[PHP无限分类查找](https://segmentfault.com/q/1010000008092063)
+```php
+function unlimitedForLayer($cate, $child_name = 'child' , $pid_name = 'pid' , $id_name = 'id',$pid = 0){
+    $arr = array();
+    foreach ($cate as $v){
+        if ($v[$pid_name] == $pid){
+            $v[$child_name] = unlimitedForLayer($cate,$child_name,$pid_name,$id_name,$v[$id_name]);
+            $arr[] = $v;
+        }
+    }
+    return $arr;
+}
+<?php
+
+$search_type = array(
+  array('id'=>1,'name'=>"一级a",'parent_id'=>0),
+  array('id'=>2,'name'=>"一级b",'parent_id'=>0),
+  array('id'=>3,'name'=>"二级a",'parent_id'=>1),
+  array('id'=>4,'name'=>"二级b",'parent_id'=>1),
+  array('id'=>5,'name'=>"二级c",'parent_id'=>1),
+  array('id'=>6,'name'=>"三级a",'parent_id'=>5),
+  array('id'=>7,'name'=>"三级b",'parent_id'=>5),
+  array('id'=>8,'name'=>"四级a",'parent_id'=>7),
+  array('id'=>9,'name'=>"三级c",'parent_id'=>3),
+  array('id'=>10,'name'=>"四级b",'parent_id'=>7),
+  array('id'=>11,'name'=>"三级d",'parent_id'=>2),
+  array('id'=>12,'name'=>"四级c",'parent_id'=>11),
+  array('id'=>13,'name'=>"四级d",'parent_id'=>11),
+  array('id'=>14,'name'=>"三级e",'parent_id'=>2),
+  array('id'=>15,'name'=>"三级f",'parent_id'=>14)
+);
+
+// 相当于 select * from search_type where parent_id = 0 的结果
+function select_where_parent_id( $parent_id, $data_source ) {
+    $results = array();
+    foreach ($data_source as $value) {
+        if( $value['parent_id'] == $parent_id ) {
+            $results[] = $value;
+        }
+    }
+    return $results;
+}
+
+$childs = array();
+
+// &$childs : 结果对象引用
+// $parent_id : 父节点id
+// $search : 查询对象数据
+// $index : 递推深度，方便控制多少层
+function get_type(&$childs, $parent_id, $search, $index) {
+    $result = select_where_parent_id( $parent_id, $search );
+    if( !empty($result) ) {
+        $childs[$parent_id] = $result;
+        foreach ($result as $value) {
+            get_type( $childs, $value['id'], $search, ++$index );
+        }
+    }
+}
+
+
+get_type($childs, 0, $search_type, 1);
+echo json_encode($childs);
+```
+###[golang版ss服务](https://segmentfault.com/a/1190000008050152)
+```php
+go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
+
+cd shadowsocks/
+
+ls
+    bin pkg src
+
+cd bin/
+
+shadowsocks-server -h # 查看帮助
+
+vim config.json # 编写配置文件
+    {
+        "server":"127.0.0.1",
+        "server_port":8388,
+        "local_port":1080,
+        "password":"xxxx",
+        "method": "aes-128-cfb-auth",
+        "timeout":600
+    }
+
+./shadowsocks-server > log & # 在后台运行ss服务
+```
+###[唯一ID生成原理](http://blog.daydaygo.top/post/php-uniq-id)
+```php
+// mysql 自增ID + 事务 + 时间 + 随机数
+public function generateTradeNumber()
+{
+    $tradeTime = date('YmdHi', time());
+
+    $lastTrade     = TradeNumber::findBySql('SELECT * FROM `Trade` ORDER BY id DESC LIMIT 1 FOR UPDATE');
+    $lastTradeTime = '';
+    if (!empty($lastTrade)) {
+        $lastTradeNumber = $lastTrade->getTradeNumber();
+        $lastTradeTime   = substr($lastTradeNumber, 0, 12);
+        $lastTradeSerial = substr($lastTradeNumber, 12);
+        if ($tradeTime == $lastTradeTime) {
+            return $lastTradeTime . ($lastTradeSerial >= 99999 ? $lastTradeSerial + 1 : '0' . ($lastTradeSerial + 1));
+        }
+    }
+
+    $initSerialNumber = rand(10000, 99999);
+    return $tradeTime . '0' . $initSerialNumber;
+}
+```
+###[nginx proxy_pass](https://segmentfault.com/a/1190000008061457)
+```php
+location ^~ /static/ 
+{ 
+# http://backup/。。。 不带location中的东西
+# 只要proxy_pass后面有东西就不带location中的东西
+proxy_pass http://www.test.com/; 
+}
+# location中的匹配路径为/static/。加了/之后proxy_pass 不会加上/static/
+# curl http://localhost:3000/static/index.html
+# proxy_pass 转发为 http://www.test.com/index.html
+```
