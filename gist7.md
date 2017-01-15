@@ -406,3 +406,97 @@ function fileSize(element) {
 }
 
 ```
+###[http方式的git push需要密码](https://segmentfault.com/q/1010000008103122)
+```php
+http协议不会记住也不会知道请求来自于谁，除非使用特殊方法，如cookie。因此对于那些需要授权的服务器，必须输入用户名和密码进行验证才能获取或推送数据，这样服务器才知道你是谁到底能不能获取或推送数据。
+http协议的特点恰恰与ssh协议相反，ssh协议靠ssh key来识别你到底有没有权限推送或者获取数据，而ssh key保存在本地，如果你本地没有ssh key的话，当然是无法完成获取或推送数据的操作的。二者刚好形成互补对立的关系。
+http协议
+优点：省去了本地配置的麻烦，只要有URL和相应的权限便能进行相应的操作
+缺点：每次操作都需要频繁验证，除非使用密码缓存机制git config --global credential.helper wincred
+ssh协议
+优点：推送或获取数据时不需要每次输入密码进行验证
+缺点：在使用之前需要进行配置，并生成ssh key
+
+```
+###[0.1 + 0.2 = 0.30000000000000004](https://www.zhihu.com/question/20679634)
+```php
+在有限的存储空间下，绝大部分的十进制小数都不能用二进制浮点数来精确表示。例如，0.1 这个简单的十进制小数就不能用二进制浮点数来表示。
+不用浮点数相加，让他们放大为整数相加，再缩小变为浮点数
+// 不符合预期：
+for(let i=0, j=100; i<j; i++) { console.log(i++ * 0.1); }
+// 符合预期:
+for(let i=0, j=100; i<j; i++) { console.log(i++ / 10); }
+function add(v1, v2) {
+  var r1, r2, m;
+  try {
+    r1 = v1.toString().split(".")[1].length; 
+  } catch (e) {
+    r1 = 0;
+  }
+  console.log('r1:', r1); // 获取v1剪切小数点的后的位数 "r1:" 1
+  try {
+    r2 = v2.toString().split(".")[1].length;
+  } catch (e) {
+    r2 = 0;
+  }
+  console.log('r2:', r2); // 获取v2剪切小数点的后的位数 "r2:" 1
+  m = Math.pow(10, Math.max(r1, r2)); // 使用 Math.pow 获取倍数，10的r1、r2中取最大值次幂。
+  console.log('m:', m); // "m:" 10
+  return (v1 * m + v2 * m) / m;
+}
+var a = 0.1;
+var b = 0.2;
+console.log(add(a, b)); // 0.3
+console.log(a + b); // 0.30000000000000004
+```
+###[js闭包](https://segmentfault.com/q/1010000008077806)
+```js
+for(var i=0;i<boxes.length;i++){
+    boxes[i].index=i+1;
+    boxes[i].onclick=function(){
+        alert(this.index)
+        }
+}
+for(var i=0;i<boxes.length;i++){
+     (function(i){
+                 boxes[i].onclick=function(){
+                         alert(i+1);
+                     }                    
+                 })(i);    
+}
+
+```
+###[高并发下，每个请求返回 100 条不重复的记录](https://www.v2ex.com/t/332511)
+```php
+乐观锁，先用 php 从 mysql 读取出没执行过的最后 100 条记录
+
+SELECT * FROM list WHERE State = '0' LIMIT 100
+
+然后一条一条修改 State 改成 1 ，修改成功的，则是有效可用的，否则就是被其他线程抢先修改了
+
+UPDATE list SET State = '1' WHERE Id='1' AND State = '0'
+遇到并发数据竞争第一个想到的应该是 redis ，因为 redis 天生单线程无竞争
+
+用悲观锁select * from list where state = 0 for update limit 100; 然后再把 state 更新为 1.
+加个字段 pid ， UPDATE 的时候，顺便把这 100 条数据打上进程的标记： 
+'UPDATE `list` SET `State` = '1', `pid` = ' . getmypid() . ' WHERE `State` = '0' LIMIT 100;' 
+锁定了之后，再： 
+'SELECT * FROM `list` WHERE `pid` = ' . getmypid() . ' LIMIT 100' 
+来拿到这 100 条数据
+```
+###[Python2 中的 xrange 与 python3 中的 range](https://www.v2ex.com/t/334489#reply0)
+```php
+#python2
+
+timeit.timeit('1000000000 in range(0,1000000000,10)', number=1)
+5.50357640805305
+
+timeit.timeit('1000000000 in xrange(0,1000000000,10)', number=1)
+2.3025200839183526
+
+# python3
+
+import timeit
+timeit.timeit('1000000000 in range(0,1000000000,10)', number=1)
+4.490355838248402e-06
+```
