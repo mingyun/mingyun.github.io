@@ -894,3 +894,34 @@ Math.pow(2,53)
 算某天再过20天是几月几号new Date(2017, 6, 20+20);
 计算2016年7月份有多少天new Date(2016, 7, 0).getDate(); //31
 ```
+###[PHP脚本执行卡住的问题排查记录](http://tabalt.net/blog/php-script-execution-stuck-record/)
+```php
+ps aux | grep 'php' | grep -v 'php-fpm'
+[tabalt@localhost ~] sudo strace -p 13793
+Process 13793 attached - interrupt to quit
+[tabalt@localhost ~] sudo netstat -tunpa | grep 13793
+tcp        0      0 192.168.1.100:38019        192.168.1.101:3306        ESTABLISHED 13793/php
+tcp        0      0 192.168.1.100:47107        192.168.1.102:6379        CLOSE_WAIT  13793/php 
+echo("start foreach\n");
+foreach($types as $type)
+{
+    echo("foreach $type\n");
+    $result[$type] = $this->getSites($type);
+}
+echo("end foreach\n"); 
+//getSites方法 实现拿8个不重复的网址写了2个循环，如果结果中不重复的网址只有7个就会有一个空，少于7个就会有死循环！于是查了下type为2的网址个数，果然是只有6个！
+$sites = array();   // 省略从数据库查询的代码
+$siteNum = 8;       // 省略从配置读的代码
+$urlKeys = $result = array();
+for($i = 0; $i < $siteNum; $i++)
+{
+    do {
+        $site = array_shift($sites);
+        $urlKey = md5($site['url']);
+    } while(array_key_exists($urlKey, $urlKeys));
+
+    $urlKeys[$urlKey] = 1;
+    $result[] = $site;
+}
+return $result;
+```
