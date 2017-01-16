@@ -1174,6 +1174,26 @@ public function sendRequest(Curl $curl, $data) {
 ```php
 MySQL的utf8编码只支持3个字节的长度，而emoji的编码多为4个字节甚至6个字节的长度
 preg_replace("#(\\\ud[0-9a-f]{3})|(\\\ue[0-9a-f]{3})#ie",$nick_name)
+function remove_emoji($text) {
+  // Match Emoticons
+  $regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
+
+  // Match Miscellaneous Symbols and Pictographs
+  $regex_symbols = '/[\x{1F300}-\x{1F5FF}]/u';
+
+  // Match Transport And Map Symbols
+  $regex_transport = '/[\x{1F680}-\x{1F6FF}]/u';
+  
+  // Match flags (iOS)
+  $regex_flags = '/[\x{1F1E0}-\x{1F1FF}]/u';
+
+  return preg_replace(array($regex_emoticons, $regex_symbols, $regex_transport, $regex_flags), '', $text);
+}
+function remove_emoji2($text) {
+  return preg_replace('/[\x{1F600}-\x{1F64F}]|[\x{1F300}-\x{1F5FF}]|[\x{1F680}-\x{1F6FF}]|[\x{1F1E0}-\x{1F1FF}]/u', '', $text);
+}
+$str = "无敌abc648@XXX.c0m😄😊";
+echo remove_emoji2($str);//无敌abc648@XXX.c0m
 ```
 ###[PDOStatement::bindParam的一个陷阱](http://www.jianshu.com/p/90d2ec0e1051)
 ```php
