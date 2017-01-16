@@ -861,3 +861,36 @@ proxy_pass http://www.test.com/;
 # curl http://localhost:3000/static/index.html
 # proxy_pass 转发为 http://www.test.com/index.html
 ```
+###[MySQL timestamp 2038](https://laravel-china.org/topics/2473)
+```php
+$table->dateTime('created_at');
+$table->dateTime('published_at');
+ public $timestamps = false;
+$safe_date = new DateTime('2040-02-01');
+
+$user = new User;
+$user->created_at = $safe_date->format('l j F Y H:i');
+datetime 更像日历上面的时间和你手表的时间的结合，就是指具体某个时间。
+timestamp 更适合来记录时间
+timestamp 和 UNIX timestamps显示直观，出问题了便于排错，比好多很长的 int 数字好看多了 timestamp 是自带时区转换的
+int 是从1970年开始累加的，如果之前的时间需要用负数支持
+```
+###[0.1 + 0.2==0.30000000000000004](https://segmentfault.com/q/1010000008122579)
+```php
+//http://0.30000000000000004.com/
+(0.1).toString(2)
+"0.0001100110011001100110011001100110011001100110011001101"
+9007199254740992 + 1 = 9007199254740992
+Math.pow(2,53)
+9007199254740992
+当结果大于 Math.pow(2, 53) 时，会出现精度丢失，导致最终结果存在偏差，而当结果大于 Number.MAX_VALUE，直接返回 Infinity
+(0.1 * 10 + 0.2 * 10) / 10 
+=> 0.3
+2177.74*100
+=> 217773.99999999997
+先乘10的整数倍，然后再用toFixed进行四舍五入，这样能保证结果还是准确的http://www.cnblogs.com/lvdabao/p/5690173.html
+(2177.74*100).toFixed(0); //217774
+<a href="xxx.jpg" download="改名后的文件,jpg" />
+算某天再过20天是几月几号new Date(2017, 6, 20+20);
+计算2016年7月份有多少天new Date(2016, 7, 0).getDate(); //31
+```
