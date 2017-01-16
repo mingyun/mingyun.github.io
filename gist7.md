@@ -499,7 +499,8 @@ timeit.timeit('1000000000 in xrange(0,1000000000,10)', number=1)
 import timeit
 timeit.timeit('1000000000 in range(0,1000000000,10)', number=1)
 4.490355838248402e-06
-```###[ Laravel 5.2 处理 Emoji 表情](https://laravel-china.org/topics/3615)
+```
+###[ Laravel 5.2 处理 Emoji 表情](https://laravel-china.org/topics/3615)
 ```php
 https://github.com/unicodeveloper/laravel-emoji
 databases.php 配置文件
@@ -1172,7 +1173,7 @@ public function sendRequest(Curl $curl, $data) {
 ```
 ###[过滤微信昵称中的emoji表情](http://www.jianshu.com/p/646cb8a28f7f)
 ```php
-MySQL的utf8编码只支持3个字节的长度，而emoji的编码多为4个字节甚至6个字节的长度
+MySQL的utf8编码只支持3个字节的长度，而emoji的编码多为4个字节甚至6个字节的长度https://github.com/hidehalo/Emoji 
 preg_replace("#(\\\ud[0-9a-f]{3})|(\\\ue[0-9a-f]{3})#ie",$nick_name)
 function remove_emoji($text) {
   // Match Emoticons
