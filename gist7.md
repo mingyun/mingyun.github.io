@@ -925,3 +925,76 @@ for($i = 0; $i < $siteNum; $i++)
 }
 return $result;
 ```
+###[PHP中的Traits](https://segmentfault.com/a/1190000002970128)
+```php
+当方法或属性同名时，当前类中的方法会覆盖 trait的 方法，而 trait 的方法又覆盖了基类中的方法。
+
+trait Drive {
+        public function hello() {
+            echo "hello drive\n";
+        }
+        public function driving() {
+            echo "driving from drive\n";
+        }
+    }
+    class Person {
+        public function hello() {
+            echo "hello person\n";
+        }
+        public function driving() {
+            echo "driving from person\n";
+        }
+    }
+    class Student extends Person {
+        use Drive;
+        public function hello() {
+            echo "hello student\n";
+        }
+    }
+    $student = new Student();
+    $student->hello();//hello student
+
+    $student->driving();//driving from drive
+使用insteadof和as操作符来解决冲突，insteadof是使用某个方法替代另一个，而as是给方法取一个别名
+<?php
+trait Trait1 {
+    public function hello() {
+        echo "Trait1::hello\n";
+    }
+    public function hi() {
+        echo "Trait1::hi\n";
+    }
+}
+trait Trait2 {
+    public function hello() {
+        echo "Trait2::hello\n";
+    }
+    public function hi() {
+        echo "Trait2::hi\n";
+    }
+}
+class Class1 {
+    use Trait1, Trait2 {
+        Trait2::hello insteadof Trait1;
+        Trait1::hi insteadof Trait2;
+    }
+}
+class Class2 {
+    use Trait1, Trait2 {
+        Trait2::hello insteadof Trait1;
+        Trait1::hi insteadof Trait2;
+        Trait2::hi as hei;
+        Trait1::hello as hehe;
+    }
+}
+$Obj1 = new Class1();
+$Obj1->hello();
+$Obj1->hi();
+echo "\n";
+$Obj2 = new Class2();
+$Obj2->hello();
+$Obj2->hi();
+$Obj2->hei();
+$Obj2->hehe();
+
+```
