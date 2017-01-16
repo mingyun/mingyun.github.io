@@ -1290,3 +1290,232 @@ public function calcDistance($lat1, $lng1, $lat2, $lng2) {
     return ($miles * 1.609344);
 }
 ```
+###[chrome浏览器表单自动填充存在的隐患](https://segmentfault.com/q/1010000008134902)
+```php
+1、input类型即type="text" 改成type="hidden";
+2、使用样式将input隐藏起来 如 <input type="text" style="display:none;">
+3、使用样式将input隐藏起来 如 <input type="text" style="visibility:hide;">
+下面这三种方式目前在最新版本的chrome浏览已经不存在此问题
+```
+###[MySQL排序原理与案例分析 ](http://www.cnblogs.com/cchust/p/5304594.html)
+```php
+可以利用索引避免排序的SQL
+
+SELECT * FROM t1 ORDER BY key_part1,key_part2;
+
+SELECT * FROM t1 WHERE key_part1 = constant ORDER BY key_part2;
+
+SELECT * FROM t1 WHERE key_part1 > constant ORDER BY key_part1 ASC;
+
+SELECT * FROM t1 WHERE key_part1 = constant1 AND key_part2 > constant2 ORDER BY key_part2;
+不能利用索引避免排序的SQL
+
+//排序字段在多个索引中，无法使用索引排序
+
+SELECT * FROM t1 ORDER BY key_part1,key_part2, key2;
+
+ 
+
+//排序键顺序与索引中列顺序不一致，无法使用索引排序
+
+SELECT * FROM t1 ORDER BY key_part2, key_part1;
+
+ 
+
+//升降序不一致，无法使用索引排序
+
+SELECT * FROM t1 ORDER BY key_part1 DESC, key_part2 ASC;
+
+ 
+
+//key_part1是范围查询，key_part2无法使用索引排序
+
+SELECT * FROM t1 WHERE key_part1> constant ORDER BY key_part2;
+```
+###[动态修改php的配置项](http://www.bo56.com/%e5%8a%a8%e6%80%81%e4%bf%ae%e6%94%b9php%e7%9a%84%e9%85%8d%e7%bd%ae%e9%a1%b9/)
+```php
+程序每次执行都自动加载一个header.php
+是apache+php的组合，我们可以在apache的配置文件中加入如下指令即可。
+
+
+Php_value auto_prepend_file /home/www/bo56.com/header.php
+如果是nginx+php组合，可以加入如下指令
+
+fastcgi_param PHP_VALUE "auto_prepend_file=/home/www/bo56.com/header.php";
+注意，nginx中多次使用 PHP_VALUE时，最后的一个会覆盖之前的。如果想设置多个配置项，需要写在一起，然后用换行分割。如：
+
+fastcgi_param PHP_VALUE "auto_prepend_file=/home/www/bo56.com/header.php \n auto_append_file=/home/www/bo56.com/external/footer.php";
+```
+###[sql语句中的通配符](http://www.bo56.com/%e6%b3%a8%e6%84%8fsql%e8%af%ad%e5%8f%a5%e4%b8%ad%e7%9a%84%e9%80%9a%e9%85%8d%e7%ac%a6%ef%bc%8c%e5%88%ab%e6%8e%89%e5%9d%91%e9%87%8c%e9%9d%a2/)
+```php
+select en_name from action_conf where en_name like 'exp_site_10_%'
+select en_name from action_conf where en_name like 'exp\_site\_10\_%'
+% 替代一个或多个字符
+_ 仅替代一个字符
+[charlist] 字符列中的任何单一字符
+[^charlist]或[!charlist] 不在字符列中的任何单一字符
+```
+###[个echo引起的进程崩溃](http://www.bo56.com/%e4%b8%80%e4%b8%aaecho%e5%bc%95%e8%b5%b7%e7%9a%84%e8%bf%9b%e7%a8%8b%e5%b4%a9%e6%ba%83/)
+```php
+sleep(50);
+echo "aaa\n";
+file_put_contents("/tmp/test.txt",time());
+$ php test.php &
+
+$ php test.php > /dev/null 2 >&1 &
+$ nohup php test.php &
+```
+###[php实现并发处理之curl篇](http://www.bo56.com/php%e5%ae%9e%e7%8e%b0%e5%b9%b6%e5%8f%91%e5%a4%84%e7%90%86%e4%b9%8bcurl%e7%af%87/)
+```php
+/*
+ * @purpose: 使用curl并行处理url
+ * @return: array 每个url获取的数据
+ * @param: $urls array url列表
+ * @param: $callback string 需要进行内容处理的回调函数。示例：func(array)
+ */
+function curl($urls = array(), $callback = '')
+{
+    $response = array();
+    if (empty($urls)) {
+        return $response;
+    }
+    $chs = curl_multi_init();
+    $map = array();
+    foreach($urls as $url){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_NOSIGNAL, true);
+        curl_multi_add_handle($chs, $ch);
+        $map[strval($ch)] = $url;
+    }
+    do{
+        if (($status = curl_multi_exec($chs, $active)) != CURLM_CALL_MULTI_PERFORM) {
+            if ($status != CURLM_OK) { break; } //如果没有准备就绪，就再次调用curl_multi_exec
+            while ($done = curl_multi_info_read($chs)) {
+                $info = curl_getinfo($done["handle"]);
+                $error = curl_error($done["handle"]);
+                $result = curl_multi_getcontent($done["handle"]);
+                $url = $map[strval($done["handle"])];
+                $rtn = compact('info', 'error', 'result', 'url');
+                if (trim($callback)) {
+                    $callback($rtn);
+                }
+                $response[$url] = $rtn;
+                curl_multi_remove_handle($chs, $done['handle']);
+                curl_close($done['handle']);
+                //如果仍然有未处理完毕的句柄，那么就select
+                if ($active > 0) {
+                    curl_multi_select($chs, 0.5); //此处会导致阻塞大概0.5秒。
+                }
+            }
+        }
+    }
+    while($active > 0); //还有句柄处理还在进行中
+    curl_multi_close($chs);
+    return $response;
+}
+ 
+//使用方法
+function deal($data){
+    if ($data["error"] == '') {
+        echo $data["url"]." -- ".$data["info"]["http_code"]."\n";
+    } else {
+        echo $data["url"]." -- ".$data["error"]."\n";
+    }
+}
+$urls = array();
+for ($i = 0; $i < 10; $i++) {
+    $urls[] = 'http://www.baidu.com/s?wd=etao_'.$i;
+    $urls[] = 'http://www.so.com/s?q=etao_'.$i;
+    $urls[] = 'http://www.soso.com/q?w=etao_'.$i;
+}
+curl($urls, "deal");
+```
+###[正则检测是否为utf8编码](http://www.bo56.com/%e4%bd%bf%e7%94%a8%e6%ad%a3%e5%88%99%e6%a3%80%e6%b5%8b%e6%98%af%e5%90%a6%e4%b8%bautf8%e7%bc%96%e7%a0%81/)
+```php
+function is_utf8($string) {
+    return preg_match('%^(?:
+            [\x09\x0A\x0D\x20-\x7E] # ASCII
+            | [\xC2-\xDF][\x80-\xBF] # non-overlong 2-byte
+            | \xE0[\xA0-\xBF][\x80-\xBF] # excluding overlongs
+            | [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2} # straight 3-byte
+            | \xED[\x80-\x9F][\x80-\xBF] # excluding surrogates
+            | \xF0[\x90-\xBF][\x80-\xBF]{2} # planes 1-3
+            | [\xF1-\xF3][\x80-\xBF]{3} # planes 4-15
+            | \xF4[\x80-\x8F][\x80-\xBF]{2} # plane 16
+    )*$%xs', $string);
+}
+$str = "牛皮凉鞋";
+var_dump(is_utf8($str));
+```
+###[apc可能导致php-fpm罢工](http://www.bo56.com/%e5%b0%8f%e5%bf%83%ef%bc%8capc%e5%8f%af%e8%83%bd%e5%af%bc%e8%87%b4php-fpm%e7%bd%a2%e5%b7%a5%ef%bc%81%e6%98%af%e6%97%b6%e5%80%99%e6%8b%a5%e6%8a%b1opcache%e4%ba%86%e3%80%82/)
+```php
+php中集成了一个phpdbg的工具。可以像gdb调试c语言程序一样 http://phpdbg.com/docs
+ps aux |grep php
+sudo pstack 11740
+ sudo gdb -p 26748
+```
+###[字符串数字比较](http://www.bo56.com/%e5%87%a0%e9%81%93%e6%97%a0%e8%81%8a%e7%9a%84php%e7%9a%84%e6%af%94%e8%be%83%e8%bf%90%e7%ae%97%e9%a2%98%ef%bc%8c%e6%9c%89%e5%85%b4%e8%b6%a3%e7%9a%84%e7%8e%a9%e4%b8%80%e7%8e%a9/)
+
+```php
+当比较的一方是数字时，字符串会转换成数字，然后再进行比较。
+
+如果比较的两方全部为字符串时，当然就不存在转换，只是单纯的进行字符串比较了。
+
+需要注意的是，字符串转换成数字时，如果字符串被视为十进制格式时，大概的转换规则如下：
+
+1.过滤前面的一些字符。这些字符包括 空格，'\t' ，'\n' ， '\r' ，'\v' ， '\f' 和 0
+
+2.把后面不是数字的字符和之后字符也过滤掉。如 123abc4 就会把a和之后的字符过滤掉。
+$key=1;
+var_dump($key == " \t01ab");//true
+	$key='1';
+var_dump($key == " \t01ab");//false
+$key=0;
+var_dump($key == " \t01ab");//false
+
+$key=0;
+var_dump($key == " \t00ab");//true
+$key=0;
+var_dump($key == " ab");//true
+$key='0';
+var_dump($key == " ab");//false
+
+```
+###[决crond脚本执行并发冲突](http://www.bo56.com/%e8%a7%a3%e5%86%b3crond%e8%84%9a%e6%9c%ac%e6%89%a7%e8%a1%8c%e5%b9%b6%e5%8f%91%e5%86%b2%e7%aa%81%e9%97%ae%e9%a2%98/)
+```php
+之前执行的test.php还未结束，新的test.php又被执行
+$lockfile = '/tmp/mytest.lock';  
+   
+if(file_exists($lockfile)){  
+    exit();  
+}
+file_put_contents($lockfile, date("Y-m-d H:i:s"));
+   
+sleep(70);
+ 
+unlink($lockfile);
+$fp = popen("ps aux | grep 'test.php' | wc -l", "r");
+$proc_num = fgets($fp);
+if ($proc_num > 3) {
+    exit;
+}
+sleep(70);
+
+```
+###[php中的register_shutdown_function和fastcgi_finish_request](http://www.bo56.com/%e5%a6%99%e7%94%a8php%e4%b8%ad%e7%9a%84register_shutdown_function%e5%92%8cfastcgi_finish_request/)
+```php
+function catch_error(){
+    $error = error_get_last();
+    if($error){
+        var_dump($error);
+    }
+}
+register_shutdown_function("catch_error");
+ini_set('memory_limit','1M');
+$content = str_repeat("aaaaaaaaaaaaaaaaaaaaaaa",100000);
+echo "aa";
+```
