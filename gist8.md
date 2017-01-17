@@ -345,3 +345,198 @@ readfile($file);
 // 删除临时文件
 unlink($file); 
 ```
+###[php对象数组转型的BUG](http://www.hdj.me/a-php-object-to-array-bug)
+```php
+$o = new stdClass();
+$o->{'123'} = 1;
+$a = (array) $o;
+var_dump($a);
+var_dump(isset($a['123']));
+var_dump(isset($a[123]));
+ 
+$a = array(1,2,3);
+$o = (object) $a;
+var_dump($o);
+var_dump(isset($o->{1}));
+var_dump(isset($o->{'1'}));
+class Test {
+    private $a = 1;
+    protected $b = 2;
+    public $c = 3;
+}
+$o = new Test();
+$a = (array) $o;
+var_dump($a);
+var_dump($a["\0Test\0a"]);
+var_dump($a["\0*\0b"]);
+```
+###[php/js获取客户端mac地址](http://www.hdj.me/php-js-get-client-mac-addr)
+```php
+class MacAddr
+{  
+    public $returnArray = array();   
+    public $macAddr;  
+ 
+    function __contruct($os_type=null){
+        if(is_null($os_type)) $os_type = PHP_OS;  
+        switch (strtolower($os_type)){  
+        case "linux":  
+            $this->forLinux();  
+            break;  
+        case "solaris":  
+            break;  
+        case "unix":  
+            break;  
+        case "aix":  
+            break;  
+        default:  
+            $this->forWindows();  
+            break;  
+        }  
+        $temp_array = array();  
+        foreach($this->returnArray as $value ){  
+            if(preg_match("/[0-9a-f][0-9a-f][:-]"."[0-9a-f][0-9a-f][:-]"."[0-9a-f][0-9a-f][:-]"."[0-9a-f][0-9a-f][:-]"."[0-9a-f][0-9a-f][:-]"."[0-9a-f][0-9a-f]/i", $value, $temp_array)){  
+                $this->macAddr = $temp_array[0];  
+                break;  
+            }  
+        }  
+        unset($temp_array);  
+        return $this->macAddr;  
+    }
+ 
+    function forWindows(){  
+        @exec("ipconfig /all", $this->returnArray);  
+        if($this->returnArray)  
+            return $this->returnArray;  
+        else{  
+            $ipconfig = $_SERVER["WINDIR"]."system32ipconfig.exe";  
+            if (is_file($ipconfig))  
+                @exec($ipconfig." /all", $this->returnArray);  
+            else 
+                @exec($_SERVER["WINDIR"]."systemipconfig.exe /all", $this->returnArray);  
+            return $this->returnArray;  
+        }  
+    }
+ 
+    function forLinux(){  
+        @exec("ifconfig -a", $this->returnArray);  
+        return $this->returnArray;  
+    }  
+}  
+ 
+$mac = new MacAddr(PHP_OS);  
+echo $mac->macAddr;  
+echo "<br />";
+ 
+// 获取客户端
+// linux
+$command = "arp -a {$_SERVER['REMOTE_ADDR']}";
+echo $command;
+echo "<br />";
+$result=`{$command}`; 
+ 
+// windows
+$command = "nbtstat -a {$_SERVER['REMOTE_ADDR']}";
+echo $command;
+echo "<br />";
+$result=`{$command}`; 
+print_r($result);  
+```
+###[print不是一个函数](http://www.hdj.me/language-construct-of-php)
+```php
+// 初始化一个字符串变量
+$func = 'foo';
+ 
+// 找到名字和这个字符串一样的函数，并且执行它
+$func();
+$func = 'print';
+ 
+// 这样做会产生异常，因为print不是一个函数，而是语言的构成部分
+$func('hello world');
+
+```
+###[PHP程序里的敏感信息](http://www.hdj.me/hidden-php-configs)
+```php
+nginx 
+fastcgi_param DATABASE_HOST 192.168.0.1;
+fastcgi_param DATABASE_USER administrator;
+fastcgi_param DATABASE_PASSWORD e1bfd762321e409cee4ac0b6e84
+return array(
+    'database' => array(
+        'host'     => $_SERVER['DATABASE_HOST'],
+        'user'     => $_SERVER['DATABASE_USERNAME'],
+        'password' => $_SERVER['DATABASE_PASSWORD'],
+    ),
+);
+通过php-fpm的env指令来设置：
+
+env[DATABASE_HOST] = 192.168.0.1
+env[DATABASE_USERNAME] = administrator
+env[DATABASE_PASSWORD] = e1bfd762321e409cee4ac0b6e841963c
+```
+###[php在CLI模式下传入值的几种方法](http://www.hdj.me/php-cli-getoptions)
+```php
+$opt= getopt('m:n:');
+// $value_m= $opt&#91;'m'&#93;;
+// $value_n= $opt&#91;'n'&#93;;
+print_r($opt);
+php test.php -mvaluem -n value n
+
+```
+###[内网机器的获取公网IP](http://www.hdj.me/intranet-computer-get-internet-ip-by-php)
+```php
+function getClientIp(){  
+    $socket = socket_create(AF_INET, SOCK_STREAM, 6);  
+    $ret = socket_connect($socket,'ns1.dnspod.net',6666);  
+    $buf = socket_read($socket, 16);  
+    socket_close($socket);  
+    return $buf;      
+} 
+```
+###[微博开发之@替换](http://www.hdj.me/weiboapi-dev-replace-at)
+```php
+$users['pony']      = '马化腾';
+$users['ponyma']    = '坡泥马';
+$users['ponyli']    = '坡泥李';
+$text = "@pony:特别声明,@ponyli@ponyma@ponywong@ponylao什么的都不是我";
+preg_match_all('/@\w+/', $text, $matches);
+if(is_array($matches[0]) && !empty($matches[0])){
+    $replaces       = array_combine($matches[0], $matches[0]);
+}
+foreach($users as $userid=>$username){
+    $replaces['@'.$userid]  = "<a href='http://t.qq.com/{$userid}'>{$username}</a>";
+}
+$html               = strtr($text, $replaces);
+echo $html;
+<a href=’http://t.qq.com/pony’>马化腾</a>:特别声明,<a href=’http://t.qq.com/ponyli’>坡泥李</a><a href=’http://t.qq.com/ponyma’>坡泥马</a>@ponywong@ponylao什么的都不是我 
+```
+###[preg_match正则匹配的字符串长度问题](http://www.hdj.me/strlen-of-preg-match)
+“pcre.backtrack_limit ”的值默认只设了100000。
+解决办法：ini_set(‘pcre.backtrack_limit’, 999999999);
+###[代码压缩](http://www.hdj.me/when-php-strip-whitespace-meet-heredoc)
+`php_strip_whitespace压缩`
+###[匹配图片地址](http://www.hdj.me/php-regular-match-image-src)
+$p = "/src=\"([^\"]+)/isu";
+//$p = "/<&#91;^>]+>/isu";
+//$p = "/<a&#91;^>]+>/isu";
+preg_match_all($p, $html, $m);
+var_dump($m);
+###[PHP断点续传下载](http://www.hdj.me/php-reget-download-support)
+```php
+$fname = './MMLDZG.mp3';
+$fp = fopen($fname,'rb');
+$fsize = filesize($fname);
+if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) {     $start = $match&#91;1&#93;; } else {     $start = 0; } @header("Cache-control: public"); @header("Pragma: public"); if ($star--> 0) {
+    fseek($fp, $start);
+    Header("HTTP/1.1 206 Partial Content");
+    Header("Content-Length: " . ($fsize - $start));
+    Header("Content-Ranges: bytes" . $start . "-" . ($fsize - 1) . "/" . $fsize);
+} else {
+    header("Content-Length: $fsize");
+    Header("Accept-Ranges: bytes");
+}
+@header("Content-Type: application/octet-stream");
+@header("Content-Disposition: attachment;filename=mmdld.mp3");
+fpassthru($fp);
+fpassthru();//函数输出文件指针处的所有剩余数据。http://www.hdj.me/omb-download-in-php-code
+```
