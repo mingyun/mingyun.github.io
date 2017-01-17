@@ -106,3 +106,49 @@ $_GET += [
 		return Arr::get($array, $key, $default);
 	}
 ```
+###[浮点数计算比较](http://www.5idev.com/p-php_float_bcadd_ceil_floor.shtml)
+```php
+$a = 0.2+0.7;
+$b = 0.9;
+var_dump($a == $b);
+printf("%0.20f", $a);0.89999999999999991118
+printf("%0.20f", $b);0.90000000000000002220
+var_dump(bcadd(0.2,0.7,1) == 0.9);	// 输出：bool(true) 
+echo ceil( round((2.1/0.7),1) );
+$a = 0.1;
+$b = 0.9;
+$c = 1;
+
+printf("%.20f", $a+$b); // 1.00000000000000000000
+printf("%.20f", $c-$b); // 0.09999999999999997780
+$f = 0.07;
+var_dump($f * 100 == 7);//输出false
+$f = 0.07;
+//输出7.00000000000000088818
+echo number_format($f * 100, 20);
+$f = 0.07;
+var_dump($f * 100 == 7);
+//输出0，表示两个数字精度为小数点后3位的时候相等
+var_dump(bccomp($f * 100, 7, 3));
+```
+###[foreach循环后,无法用while+list+each循环输出](https://segmentfault.com/q/1010000008146643)
+```php
+$prices = array('Tom' => 100, 'len' => 20, 'youuu' => 38);
+foreach ($prices as $key => $value) {
+    echo "$key - $value <br/> ";
+}
+while (list($name, $price) = each($prices)) {
+    echo "$name - $price <br/>";
+} 
+使用过一次while (list($name, $price) = each($prices))之后，因为使用了each函数会将数组内部的指针移动到最后，再次遍历的时候没有重置指针位置，就会出现不管怎么遍历都没有结果。
+
+而使用foreach则会在每次遍历的时候自动设置指针到数组顶部，因此可以遍历出结果。
+
+题主可以在使用while (list($name, $price) = each($prices))遍历一次之后，使用reset函数重置数组指针之后就可以了
+
+reset($prices);
+while (list($name, $price) = each($prices)) {
+    echo "$name - $price \n";
+}
+
+```
