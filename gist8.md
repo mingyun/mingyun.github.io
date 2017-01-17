@@ -540,3 +540,37 @@ if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && preg_matc
 fpassthru($fp);
 fpassthru();//函数输出文件指针处的所有剩余数据。http://www.hdj.me/omb-download-in-php-code
 ```
+###[CURL不依赖COOKIEJAR获取COOKIE](http://www.hdj.me/get-cookie-without-cookiejar-by-curl)
+```php
+// 初始化CURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+// 获取头部信息
+curl_setopt($ch, CURLOPT_HEADER, 1);
+// 返回原生的（Raw）输出
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 执行并获取返回结果
+$content = curl_exec($ch);
+// 关闭CURL
+curl_close($ch);
+// 解析HTTP数据流
+list($header, $body) = explode("\r\n\r\n", $content);
+// 解析COOKIE
+preg_match("/set\-cookie:([^\r\n]*)/i", $header, $matches);
+// 后面用CURL提交的时候可以直接使用
+// curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+$cookie = $matches[1];
+```
+###[汉诺塔算法](http://www.hdj.me/some-php-algorithm)
+```php
+function hanoi($n,$x,$y,$z){
+    if($n==1){
+        echo 'move disk 1 from '.$x.' to '.$z."\n";
+    }else{
+        hanoi($n-1,$x,$z,$y);
+        echo 'move disk '.$n.' from '.$x.' to '.$z."\n";
+        hanoi($n-1,$y,$x,$z);
+    }     
+}
+hanoi(3,'A','B','C');
+```
