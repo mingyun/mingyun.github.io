@@ -1130,3 +1130,29 @@ var fn = new Function();
     result.push(obj); [{s:7,e:24},{3,5}]
  
 ```
+###[MySQL sql_mode ](http://seanlook.com/2016/04/22/mysql-sql-mode-troubleshooting/)
+```php
+mysql> show variables like "sql_mode";
++---------------+--------------------------------------------+
+| Variable_name | Value                                      |
++---------------+--------------------------------------------+
+| sql_mode      | STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION |
++---------------+--------------------------------------------+
+NOT NULL 列没有默认值但代码里也没给值，在非严格模式下，int列默认为0，string列默认为’’了，所以不成问题；但在严格模式下，是直接返回失败的。
+
+mysql配置文件的加载顺序：
+$ mysqld --help --verbose|grep -A1 -B1 cnf
+Default options are read from the following files in the given order:
+/etc/my.cnf /etc/mysql/my.cnf /usr/etc/my.cnf ~/.my.cnf
+mysql按照上面的顺序加载配置文件，后面的配置项会覆盖前面的。最后终于在 /usr/my.cnf 找到有一条sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES，把这个文件删掉，/etc/my.cnf 里面的就生效了。
+存储过程里把 ‘’ 传给int型的，严格模式是不允许，而非严格模式只是一个warning。（命令行执行完语句后，show warnings 可看见）
+
+那么解决这类问题的终极（推荐）办法其实是，考虑到数据的兼容性和准确性，MySQL就应该运行在严格模式下！无论开发环境还是生产环境，否则代码移植到线上可能产生隐藏的问题。
+查看当前连接会话的sql模式：
+mysql> select @@session.sql_mode;
+或者从环境变量里取
+mysql> show variables like "sql_mode";
+查看全局sql_mode设置：
+mysql> select @@global.sql_mode;
+只设置global，需要重新连接进来才会生效
+```
