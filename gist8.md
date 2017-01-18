@@ -669,7 +669,7 @@ insert  into `test`(`id`,`name`,`age`,`mate`) values (2,'aaaaa',28,0),
 (9,'eeee',60,1);
 alter ignore table test add unique idx_name (name); 去掉name重名的记录
 
-DELETE  test AS a  FROM test AS a,
+DELETE  a  FROM test AS a,
 (
 SELECT * 
 FROM  test
