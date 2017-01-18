@@ -769,7 +769,63 @@ final_result = paste(sql1,sql2);
 ```
 ###[MySQL的隐式类型转换陷阱](http://seanlook.com/2016/05/05/mysql-type-conversion/)
 ```php
+SELECT f_col3_id,f_qq1_id FROM d_dbname.t_tb1 WHERE f_col1_id=1226391 and f_col2_id=1244378 and 
+f_qq1_id in (12345,23456,34567,45678,56789,67890,78901,89012,90123,901231,901232,901233)
 
+mysql>explain extended SELECT f_col3_id,f_qq1_id FROM d_dbname.t_tb1  use index(idx_corpid_qq1id) WHERE f_col1_id=1226391 and f_col2_id=1244378 and f_qq1_id in (12345,23456,34567,45678,56789,67890,78901,89012,90123,901231,901232,901233);
++------+---------------+--------+--------+---------------------+------------------+------------+----------+-------------+------------------------------------+
+| id   | select_type   | table  | type   | possible_keys       | key              | key_len    | ref      | rows        | Extra                              |
++------+---------------+--------+--------+---------------------+------------------+------------+----------+-------------+------------------------------------+
+| 1    | SIMPLE        | t_tb1  | ref    | idx_corpid_qq1id    | idx_corpid_qq1id | 8          | const    | 2375752     | Using index condition; Using where |
++---- -+---------------+--------+--------+---------------------+------------------+------------+----------+-------------+------------------------------------+
+共返回 1 行记录,花费 17.48 ms.
+mysql>show warnings;
++-----------------+----------------+-----------------------------------------------------------------------------------------------------------------------+
+| Level           | Code           | Message                                                                                                               |
++-----------------+----------------+-----------------------------------------------------------------------------------------------------------------------+
+| Warning         |           1739 | Cannot use range access on index 'idx_corpid_qq1id' due to type or collation conversion on field 'f_qq1_id'           |
+| Note            |           1003 | /* select#1 */ select `d_dbname`.`t_tb1`.`f_col3_id` AS `f_col3_id`,`d_dbname`.`t_tb1`.`f_qq1_id` AS `f_qq1_id` from `d_dbname`.`t_tb1` USE INDEX (`idx_corpid_qq1id`) where |
+|                 |                |  ((`d_dbname`.`t_tb1`.`f_col2_id` = 1244378) and (`d_dbname`.`t_tb1`.`f_col1_id` = 1226391) and (`d_dbname`.`t_tb1`.`f_qq1_id` in |
+|                 |                | (12345,23456,34567,45678,56789,67890,78901,89012,90123,901231,901232,901233)))                                        |
++-----------------+----------------+-----------------------------------------------------------------------------------------------------------------------+
+共返回 2 行记录,花费 10.81 ms.
+mysql> select 11 + '11', 11 + 'aa', 'a1' + 'bb', 11 + '0.01a';  
++-----------+-----------+-------------+--------------+
+| 11 + '11' | 11 + 'aa' | 'a1' + 'bb' | 11 + '0.01a' |
++-----------+-----------+-------------+--------------+
+|        22 |        11 |           0 |        11.01 |
++-----------+-----------+-------------+--------------+
+1 row in set, 4 warnings (0.00 sec)
+mysql> show warnings;
++---------+------+-------------------------------------------+
+| Level   | Code | Message                                   |
++---------+------+-------------------------------------------+
+| Warning | 1292 | Truncated incorrect DOUBLE value: 'aa'    |
+| Warning | 1292 | Truncated incorrect DOUBLE value: 'a1'    |
+| Warning | 1292 | Truncated incorrect DOUBLE value: 'bb'    |
+| Warning | 1292 | Truncated incorrect DOUBLE value: '0.01a' |
++---------+------+-------------------------------------------+
+4 rows in set (0.00 sec)
+mysql> select '11a' = 11, '11.0' = 11, '11.0' = '11', NULL = 1;
++------------+-------------+---------------+----------+
+| '11a' = 11 | '11.0' = 11 | '11.0' = '11' | NULL = 1 |
++------------+-------------+---------------+----------+
+|          1 |           1 |             0 |     NULL |
++------------+-------------+---------------+----------+
+1 row in set, 1 warning (0.01 sec)
+假如应用前端没有WAF防护，那么下面的sql很容易注入：
+mysql> select * from t_account where fname='A' ;
+fname传入  A' OR 1='1  
+mysql> select * from t_account where fname='A' OR 1='1';
+fname传入 A'+'B ，fpassword传入 ccc'+0 ：
+mysql> select * from t_account where fname='A'+'B' and fpassword='ccc'+0;
++-----+-----------+-------------+
+| fid | fname     | fpassword   |
++-----+-----------+-------------+
+|   1 | xiaoming  | p_xiaoming  |
+|   2 | xiaoming1 | p_xiaoming1 |
++-----+-----------+-------------+
+2 rows in set, 7 warnings (0.00 sec)
 ```
 ###[常用linux alias](http://seanlook.com/2014/03/09/linux-bash/)
 ```php
@@ -865,8 +921,14 @@ java -jar /opt/jodconverter-2.2.2/lib/jodconverter-cli-2.2.2.jar /home/oa/docker
 # vi /usr/local/xpdf-chinese-simplified/add-to-xpdfrc
 ```
 
-###[]()
+###后台用户权限
 ```php
+
+用户表 users: id name
+角色表 roles: id role_name
+用户角色表 user_roles: user_id role_id
+角色权限表 permissions : menu_id role_id
+权限菜单表 admin_menus : id menu_name url parent_id 
 $router->group(
     ['middleware' => ['auth', 'menu'], 'prefix' => 'admin', 'namespace' => 'Admin'],
     function () use ($router) {
