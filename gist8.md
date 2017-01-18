@@ -680,3 +680,86 @@ order by null
 WHERE a.name = b.name AND a.id > b.id;
 
 ```
+###[监控MySQL你还应该收集表信息](http://seanlook.com/2016/12/04/mysql-schema-gather-statistics/)
+```js
+SELECT
+    IFNULL(@@hostname, @@server_id) SERVER_NAME,
+    %s as HOST,
+    t.TABLE_SCHEMA,
+    t.TABLE_NAME,
+    t.TABLE_ROWS,
+    t.DATA_LENGTH,
+    t.INDEX_LENGTH,
+    t.AUTO_INCREMENT,
+  c.COLUMN_NAME,
+  c.DATA_TYPE,
+  LOCATE('unsigned', c.COLUMN_TYPE) COL_UNSIGNED
+  # CONCAT(c.DATA_TYPE, IF(LOCATE('unsigned', c.COLUMN_TYPE)=0, '', '_unsigned'))
+FROM
+    information_schema.`TABLES` t
+LEFT JOIN information_schema.`COLUMNS` c ON t.TABLE_SCHEMA = c.TABLE_SCHEMA
+AND t.TABLE_NAME = c.TABLE_NAME
+AND c.EXTRA = 'auto_increment'
+WHERE
+    t.TABLE_SCHEMA NOT IN (
+        'mysql',
+        'information_schema',
+        'performance_schema',
+        'sys'
+    )
+AND t.TABLE_TYPE = 'BASE TABLE'
+sudo pip install mysql-python influxdb
+
+ 
+CREATE DATABASE "mysql_info"
+CREATE RETENTION POLICY "mysql_info_schema" ON "mysql_info" DURATION 730d REPLICATION 1 DEFAULT
+40 23,5,12,18 * * * /opt/DBschema_info/mysql_schema_info.py >> /tmp/collect_DBschema_info.log 2>&1
+利用 mydumper 导出表时会把各表（结构）单独导成一个文件的特性
+
+```
+###[实时抓取MySQL慢查询现场的程序](http://seanlook.com/2016/09/27/python-mysql-querykill/)
+```php
+https://github.com/seanlook/myquerykill
+```
+###[utf8 与 utf8mb4 异同](http://seanlook.com/2016/10/23/mysql-utf8mb4/)
+```php
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET utf8mb4;
+连接的时候需要使用set names utf8mb4便可以插入四字节字符。（如果依然使用 utf8 连接，只要不出现四字节字符则完全没问题）。
+修改服务端 character-set-server=utf8mb4
+CREATE TABLE t1 (
+  f_id varchar(20) NOT NULL,
+  f_action char(25) NOT NULL DEFAULT '' COMMENT '',
+  PRIMARY KEY (`f_id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+CREATE TABLE t1_copy_mb4 (
+  f_id varchar(20) CHARACTER SET utf8mb4 NOT NULL,
+  f_action char(25) NOT NULL DEFAULT '' COMMENT '',
+  PRIMARY KEY (`f_id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+1.
+EXPLAIN extended select * from t1 INNER JOIN t1_copy_mb4 t2 on t1.f_id=t2.f_id where t1.f_id='421036';
+2.
+EXPLAIN extended select * from t1 INNER JOIN t1_copy_mb4 t2 on t1.f_id=t2.f_id where t2.f_id='421036';
+
+```
+###[MySQL避免索引列使用 OR 条件](http://seanlook.com/2016/04/05/mysql-avoid-or-query/)
+```php
+select f_crm_id from d_dbname1.t_tbname1 where  f_xxx_id = 926067  
+and (f_mobile ='1234567891' or f_phone ='1234567891' ) limit 1
+mysql的每条查询，每个表上只能选择一个索引。如果使用了 idx_id_mobile 索引，恰好有一条数据，因为有 limit 1 ，那么恭喜很快得到结果；但如果 f_mobile 没有数据，那 f_phone 字段只能在f_id条件下挨个查找，扫描12w行
+(select f_crm_id from d_dbname1.t_tbname1 where  f_xxx_id = 900000  and f_mobile ='1234567891' limit 1 )
+UNION ALL 
+(select f_crm_id from d_dbname1.t_tbname1 where  f_xxx_id = 900000  and f_phone ='1234567891' limit 1 )
+
+sql1 = (select a.f_crm_id from d_dbname1.t_tbname1 as a where a.f_create_time > from_unixtime('1464397527') limit 0,200 );
+sql1.execute();
+sql1_count = sql1.result.count
+if sql1_count < 200 :
+  sql2 = (select a.f_crm_id from d_dbname1.t_tbname1 as a where a.f_modify_time > from_unixtime('1464397527') and a.f_create_time <= from_unixtime('1464397527') limit 0, (200 - sql1_count) );
+  sql2.execute();
+final_result = paste(sql1,sql2);
+```
+###[MySQL的隐式类型转换陷阱](http://seanlook.com/2016/05/05/mysql-type-conversion/)
+```php
+
+```
