@@ -574,3 +574,109 @@ function hanoi($n,$x,$y,$z){
 }
 hanoi(3,'A','B','C');
 ```
+###[过滤emoji](https://segmentfault.com/q/1010000007329875)
+```php
+var param = "";
+var regRule = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g;
+if(param.match(regRule)) {
+    param = param.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");
+    alert("不支持表情");
+} 
+```
+###[MySQL关联比较](https://segmentfault.com/q/1010000008146270)
+```php
+姓名 分数
+小红 97
+小白 86
+小黑 44
+
+另外有一张rank表
+low up rank
+90 100 A 
+80 90 B
+70 80 C
+60 70 D
+0 60 E
+ 
+我最后想得出结果为
+姓名 分数 rank 
+小红 97 A
+小白 86 B
+小黑 44 E
+SELECT grade.name,grade.score,rank.rank from grade JOIN rank ON grade.score > rank.low and grade.score < rank.up
+```
+###一次匹配
+```php
+function str_replace_once($needle, $replace, $haystack)
+    {
+        $pos = strpos($haystack, $needle);
+        if ($pos === false) {
+            return $haystack;
+        }
+        return substr_replace($haystack, $replace, $pos, strlen($needle));
+    }
+```
+###[微博短链接算法php版本](http://www.hdj.me/php-shorturl-function)
+```php
+function shorturl($url='', $prefix='', $suffix='') {
+    $base = array(
+            "a","b","c","d","e","f","g","h",
+            "i","j","k","l","m","n","o","p",
+            "q","r","s","t","u","v","w","x",
+            "y","z","0","1","2","3","4","5",
+            "6","7","8","9","A","B","C","D",
+            "E","F","G","H","I","J","K","L",
+            "M","N","O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z");
+  
+    $hex = md5($prefix.$url.$suffix);
+    $hexLen = strlen($hex);
+    $subHexLen = $hexLen / 8;
+    $output = array();
+  
+    for ($i = 0; $i < $subHexLen; $i++) {
+        $subHex = substr ($hex, $i * 8, 8);
+        $int = 0x3FFFFFFF & (1 * ('0x'.$subHex));
+        $out = '';
+        for ($j = 0; $j < 6; $j++) {
+            $val = 0x0000003D & $int;
+            $out .= $base&#91;$val&#93;;
+            $int = $int >> 5;
+        }
+        $output[] = $out;
+    }
+    return $output;
+}
+```
+###[mysql表删除重复记录方法总结及效率对比](http://www.hdj.me/mysql-remove-repeat-records)
+```php
+CREATE TABLE `test` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(20) DEFAULT NULL COMMENT '姓名',
+  `age` tinyint(4) DEFAULT NULL COMMENT '年龄',
+  `mate` tinyint(4) DEFAULT '1' COMMENT '有无配偶(1-有 0-无)',
+  PRIMARY KEY (`id`),
+  KEY `idx_name` (`name`),
+  KEY `idx_age` (`age`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+insert  into `test`(`id`,`name`,`age`,`mate`) values (2,'aaaaa',28,0),
+(3,'bbbb',23,0),
+(4,'cccc',25,1),
+(5,'dddd',26,0),
+(6,'eeee',24,0),
+(7,'fffff',18,0),
+(8,'eeee',40,1),
+(9,'eeee',60,1);
+alter ignore table test add unique idx_name (name); 去掉name重名的记录
+
+DELETE  test AS a  FROM test AS a,
+(
+SELECT * 
+FROM  test
+GROUP BY name 
+HAVING count(1) >1
+order by null
+) AS b
+WHERE a.name = b.name AND a.id > b.id;
+
+```
