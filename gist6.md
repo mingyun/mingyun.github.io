@@ -1156,3 +1156,125 @@ mysql> show variables like "sql_mode";
 mysql> select @@global.sql_mode;
 只设置global，需要重新连接进来才会生效
 ```
+###无限分类
+```php
+$tree = [
+  [
+    "id" => 4583,
+    "menu_id" => 1,
+    "role_id" => 1,
+    "type" => "admin",
+    "created_at" => "-0001-11-30 00:00:00",
+    "updated_at" => "-0001-11-30 00:00:00",
+    "menu" =>[
+      "id" => 1,
+      "name" => "后台首页",
+      "url" => "0",
+      "parent_id" => 0,
+      "created_at" => "2015-05-15 18:13:12",
+      "updated_at" => "2015-08-25 15:12:20",
+    ]
+  ],
+ [
+    "id" => 4584,
+    "menu_id" => 3,
+    "role_id" => 1,
+    "type" => "admin",
+    "created_at" => "-0001-11-30 00:00:00",
+    "updated_at" => "-0001-11-30 00:00:00",
+    "menu" => [
+      "id" => 3,
+      "name" => "用户管理",
+      "url" => "0",
+      "parent_id" => 0,
+      "created_at" => "2015-05-15 18:13:30",
+      "updated_at" => "2015-05-15 18:13:33",
+    ]
+  ],
+  [
+    "id" => 4586,
+    "menu_id" => 5,
+    "role_id" => 1,
+    "type" => "admin",
+    "created_at" => "-0001-11-30 00:00:00",
+    "updated_at" => "-0001-11-30 00:00:00",
+    "menu" => [
+      "id" => 5,
+      "name" => "用户管理",
+      "url" => "/admin",
+      "parent_id" => 3,
+      "created_at" => "2015-05-15 18:13:30",
+      "updated_at" => "2015-05-15 18:13:33",
+    ]
+  ]
+ ];
+ $data = [];
+foreach($tree as $key=>$val){
+    $temp=$val['menu'];
+
+    if(empty($temp)){
+        continue;
+    }
+    if(!empty($temp['url']) && !empty($temp['parent_id'])){
+        $data[$temp['parent_id']]['children'][$temp['id']] = $temp;
+    }else{
+        $data[$temp['id']]['parent'] = $temp;
+    }
+}
+print_r($data);
+Array
+(
+    [1] => Array
+        (
+            [parent] => Array
+                (
+                    [id] => 1
+                    [name] => 后台首页
+                    [url] => 0
+                    [parent_id] => 0
+                    [created_at] => 2015-05-15 18:13:12
+                    [updated_at] => 2015-08-25 15:12:20
+                )
+
+        )
+
+    [3] => Array
+        (
+            [parent] => Array
+                (
+                    [id] => 3
+                    [name] => 用户管理
+                    [url] => 0
+                    [parent_id] => 0
+                    [created_at] => 2015-05-15 18:13:30
+                    [updated_at] => 2015-05-15 18:13:33
+                )
+
+            [children] => Array
+                (
+                    [5] => Array
+                        (
+                            [id] => 5
+                            [name] => 用户管理
+                            [url] => /admin
+                            [parent_id] => 3
+                            [created_at] => 2015-05-15 18:13:30
+                            [updated_at] => 2015-05-15 18:13:33
+                        )
+
+                )
+
+        )
+
+)
+
+授权菜单：
+
+后台首页
+    默认首页
+用户管理
+    用户列表   付费会员
+菜单管理
+    菜单列表   添加菜单   角色分配   用户授权   内部用(权限标识，不是产品
+
+```
