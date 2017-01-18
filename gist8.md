@@ -864,3 +864,221 @@ java -jar /opt/jodconverter-2.2.2/lib/jodconverter-cli-2.2.2.jar /home/oa/docker
 /usr/local/bin/pdf2swf -t docker4.pdf -o docker4.swf -T 9 -f -z
 # vi /usr/local/xpdf-chinese-simplified/add-to-xpdfrc
 ```
+
+###[]()
+```php
+$router->group(
+    ['middleware' => ['auth', 'menu'], 'prefix' => 'admin', 'namespace' => 'Admin'],
+    function () use ($router) {
+        $router->controller('user', 'UserController');
+});
+class MenuMiddleware {
+public function handle($request, Closure $next)
+	{   
+        $user_id = Auth::id();
+        //判断是否有后台权限
+        $user_pro = UserRelationRole::where("user_id","=",$user_id)->first();
+        if(!empty($user_pro)){
+            $user_pro = $user_pro->toArray();
+        }else{
+            $user_pro = [];
+        }
+        if(empty($user_pro)){
+            return redirect('/');
+        }
+        $url = Route::current()->uri();
+        
+	    $menu = $this->getMenuPermission();dump($url,$user_pro,$menu);die();
+        $menu_str = implode(",",$menu);
+        if($url != 'admin'){
+            //验证
+            $url_arr = explode("/",$url);
+            if(count($url_arr)==2){
+                if(strpos($menu_str,$url)===false){
+                    return response("没有权限1",403);
+                }
+            }else if(count($url_arr)>2){
+                $arr[] = $url_arr[0];
+                $arr[] = $url_arr[1];
+                $arr_str = implode("/",$arr);
+                if(strpos($menu_str,$arr_str)===false){
+                    return response("没有权限2",403);
+                }
+            }
+        }
+		return $next($request);
+	}
+	}
+mysql> select *from user_relation_roles where user_id=13\G
+*************************** 1. row ***************************
+        id: 3
+   user_id: 13
+   role_id: 3
+created_at: 2015-05-20 00:16:38
+updated_at: 2015-05-20 00:33:53
+1 row in set (0.00 sec)
+
+mysql> select *from roles where id=3\G
+*************************** 1. row ***************************
+        id: 3
+ role_name: 研发部
+created_at: 2015-05-14 23:22:02
+updated_at: 2015-05-14 23:22:05
+1 row in set (0.01 sec)
+mysql> select *from permissions where role_id=3 and type='admin';
++------+---------+---------+-------+---------------------+---------------------+
+
+| id   | menu_id | role_id | type  | created_at          | updated_at          |
+
++------+---------+---------+-------+---------------------+---------------------+
+
+| 1135 |       1 |       3 | admin | 2015-06-27 21:41:38 | 2015-06-27 21:41:38 |
+
+| 1136 |       3 |       3 | admin | 2015-06-27 21:41:38 | 2015-06-27 21:41:38 |
+
+| 1137 |      16 |       3 | admin | 2015-06-27 21:41:38 | 2015-06-27 21:41:38 |
+
+| 1138 |      57 |       3 | admin | 2015-06-27 21:41:38 | 2015-06-27 21:41:38 |
+mysql> select *from admin_menus where id=3;
++----+----------+-----+-----------+---------------------+---------------------+
+| id | name     | url | parent_id | created_at          | updated_at          |
++----+----------+-----+-----------+---------------------+---------------------+
+|  3 | 用户管理 | 0   |         0 | 2015-05-15 18:13:30 | 2015-05-15 18:13:33 |
++----+----------+-----+-----------+---------------------+---------------------+
+1 row in set (0.00 sec)
+
+
+/**
+     * 根据用户ID，返回菜单列表
+     */
+    public function getMenus($user_id = 0,$type = 'admin'){
+        if(empty($user_id)){
+            return false;
+        }
+        
+            //先获取角色
+            $role = UserRelationRole::where('user_id',$user_id)->first();
+            if(empty($role)){
+                return false;
+            }
+            $roles = Roles::find($role->role_id)->toArray();
+            /*
+            public function menu(){
+
+        		return $this->belongsTo(AdminMenu::class,'menu_id');
+    		}
+             */
+            //通过角色获取权限
+        	$permissions = Permissions::with('menu')->whereRaw("`role_id` =".$role->role_id." and `type`='".$type."'")->get();
+            $data[$type] = array();
+            dump($permissions->toarray());
+            /*
+            array:114 [▼
+			  0 => array:7 [▼
+			    "id" => 4583
+			    "menu_id" => 1
+			    "role_id" => 1
+			    "type" => "admin"
+			    "created_at" => "-0001-11-30 00:00:00"
+			    "updated_at" => "-0001-11-30 00:00:00"
+			    "menu" => array:6 [▼
+			      "id" => 1
+			      "name" => "后台首页"
+			      "url" => "0"
+			      "parent_id" => 0
+			      "created_at" => "2015-05-15 18:13:12"
+			      "updated_at" => "2015-08-25 15:12:20"
+			    ]
+			  ]
+			  1 => array:7 [▼
+			    "id" => 4584
+			    "menu_id" => 3
+			    "role_id" => 1
+			    "type" => "admin"
+			    "created_at" => "-0001-11-30 00:00:00"
+			    "updated_at" => "-0001-11-30 00:00:00"
+			    "menu" => array:6 [▼
+			      "id" => 3
+			      "name" => "用户管理"
+			      "url" => "0"
+			      "parent_id" => 0
+			      "created_at" => "2015-05-15 18:13:30"
+			      "updated_at" => "2015-05-15 18:13:33"
+			    ]
+			  ]
+			  2 => array:7 [▶]
+             */
+            $data['role'] = $roles;
+            if(!empty($permissions)){
+                foreach($permissions as $key=>$val){
+                    $temp=$val->menu;
+
+                    if(empty($temp)){
+                        continue;
+                    }
+                    $temp = $temp->toArray();
+
+                    if(!empty($temp['url']) && !empty($temp['parent_id'])){
+                        $data[$type][$temp['parent_id']]['children'][$temp['id']] = $temp;
+                    }else{
+                        $data[$type][$temp['id']]['parent'] = $temp;
+                    }
+                }
+            }
+            /*
+            array:2 [▼
+		  "admin" => array:20 [▼
+		    1 => array:2 [▼
+		      "parent" => array:6 [▼
+		        "id" => 1
+		        "name" => "后台首页"
+		        "url" => "0"
+		        "parent_id" => 0
+		        "created_at" => "2015-05-15 18:13:12"
+		        "updated_at" => "2015-08-25 15:12:20"
+		      ]
+		      "children" => array:1 [▼
+		        2 => array:6 [▼
+		          "id" => 2
+		          "name" => "默认首页"
+		          "url" => "admin/index"
+		          "parent_id" => 1
+		          "created_at" => "2015-05-15 18:13:07"
+		          "updated_at" => "2015-06-06 02:09:29"
+		        ]
+		      ]
+		    ]
+		    3 => array:2 [▶]
+		    "role" => array:4 [▼
+		    "id" => 1
+		    "role_name" => "管理员"
+		    "created_at" => "2015-05-14 23:20:06"
+		    "updated_at" => "2015-05-22 01:26:38"
+		  ]
+             */
+        return $data;
+    }
+    /**
+     * 返回用后台权限地址
+     * array:94 [▼
+	*	  0 => "admin/index"
+	*	  1 => "admin/user"
+	*	  2 => "admin/user/vip"
+	*	  3 => "admin/menu"
+     */
+    public function getMenuPermission(){
+        $menu = $this->getMenus(\Auth::id());dump($menu);
+        $menu_url = [];
+        if(!empty($menu)){
+            foreach($menu['admin'] as $key=>$values){
+                if(!empty($values['children'])){
+                    foreach($values['children'] as $val){
+                        $menu_url[] = $val['url'];
+                    }
+                }
+            }
+        }
+        return $menu_url;
+    }
+
+```
