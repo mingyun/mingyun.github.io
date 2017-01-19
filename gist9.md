@@ -192,6 +192,28 @@ $array = array_keys($array);
 ```
 ###["replace into" 的坑](https://wowphp.com/post/k08pekpxd9q7.html)
 ```js
+mysql> SHOW CREATE TABLE auto\G
+*************************** 1. row ***************************
+       Table: auto
+Create Table: CREATE TABLE `auto` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `k` int(10) unsigned NOT NULL,
+  `v` varchar(100) DEFAULT NULL,
+  `extra` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_k` (`k`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1
+1 row in set (0.01 sec)
+INSERT INTO auto (k, v, extra) VALUES (1, '1', 'extra 1'), (2, '2', 'extra 2'), (3, '3', 'extra 3');
+xupeng@diggle7:3600(dba_m) [dba] mysql> SELECT * FROM auto;
++----+---+------+---------+
+| id | k | v    | extra   |
++----+---+------+---------+
+|  1 | 1 | 1    | extra 1 |
+|  2 | 2 | 2    | extra 2 |
+|  3 | 3 | 3    | extra 3 |
++----+---+------+---------+
+REPLACE INTO auto (k, v) VALUES (1, '1-1');
 在执行 REPLACE INTO auto (k) VALUES (1) 时首先尝试 INSERT INTO auto (k) VALUES (1)，但由于已经存在一条 k=1 的记录，发生了 duplicate key error，于是 MySQL 会先删除已有的那条 k=1 即 id=1 的记录，然后重新写入一条新的记录。
 满足这一需求的 MySQL 方言是:
 
@@ -249,4 +271,60 @@ for($i = count($data); $i--;) {	//	我是关注点所在行
 $end = xdebug_time_index();
  
 echo $end - $start;
+```
+###[ghost.py模拟登陆Facebook](http://stackoverflow.com/questions/32959173/login-to-facebook-using-the-ghost-py-python-package)
+```js
+from ghost import Ghost, Session
+
+ghost = Ghost()
+USERAGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0"
+
+with ghost.start():
+    session = Session(ghost, download_images=False, display=True, user_agent=USERAGENT)
+    page, rs = session.open("https://m.facebook.com/login.php", timeout=120)
+    assert page.http_status == 200
+
+    session.evaluate("""
+    document.querySelector('input[name="email"]').value = 'email@email.com';
+    document.querySelector('input[name="pass"]').value = 'email-password';
+    """)
+
+    session.evaluate("""document.querySelector('input[name="login"]').click();""",
+                 expect_loading=True)
+
+    """
+    import codecs
+
+    with codecs.open('fb.html', encoding='utf-8', mode='w') as f:
+       f.write(session.content)
+    """
+
+    # session.save_cookies('fbookie')
+    session.capture_to(path='fbookie.png')
+
+    # gracefully clean off to avoid errors
+    session.webview.setHtml('')
+    session.exit()
+with ghost.start() as session:
+    page, extra_resources = session.open("http://jeanphix.me")
+    assert page.http_status == 200 and 'jeanphix' in page.content    
+    page, resources = ghost.evaluate("agree()", expect_loading=True)
+```
+###[去除重复的json](https://segmentfault.com/q/1010000008164996)
+```js
+var arr = [];
+var list = [{"name":"123"},{"name":"123"},{"name":"456"}];
+for(var i = 0; i < list.length; i++){
+if(i == 0) arr.push(list[i]);
+if(arr.length > 0 && i > 0){
+    for(var j = 0; j < arr.length; j++){
+        if(arr[j].name != list[i].name){
+            arr.push(list[i]);
+        break;
+        }
+    }
+}
+}
+for(var x = 0; x <arr.length; x++)
+{alert(arr[x].name);}
 ```
