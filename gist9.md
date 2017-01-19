@@ -428,3 +428,206 @@ $it = new FilesystemIterator('../');
      echo $fileinfo->getFilename() . "\n";
  }
  ```
+###[querySelector返回的是一个元素数组，不能直接绑定事件](https://segmentfault.com/q/1010000007811043 )
+```js
+tooldetails = documnet.getElementByClassName('name');
+for(var i = 0; i < tooldetails.length; i++){
+    tooldetails[i].addEventlistener("click",tooldetailsFunc);
+} 
+```
+###[js里面采用window.open(url,"_blank")跳转方式，被浏览器拦截](https://segmentfault.com/q/1010000008090476)
+`点击两次，在添加一个按钮，第二次的时候在调用window.open()`
+###[MySQL行转列](http://stackoverflow.com/questions/1241178/mysql-rows-to-columns)
+```js
+SELECT 
+    hostid, 
+    sum( if( itemname = 'A', itemvalue, 0 ) ) AS A,  
+    sum( if( itemname = 'B', itemvalue, 0 ) ) AS B, 
+    sum( if( itemname = 'C', itemvalue, 0 ) ) AS C 
+FROM 
+    bob 
+GROUP BY 
+    hostid;
+```
+###ajax from serialize
+```js
+$.ajax({
+   type: "POST",
+   url:"ajax.php",
+   data:$('#formID').serialize(),// 要提交的表单
+   success: function(msg) {alert(msg);},
+   error: function(error){alert(error);}
+});
+
+```
+###Html转义
+```js
+//获取Html转义字符  
+function htmlEncode( html ) {  
+  return document.createElement( 'a' ).appendChild(   
+         document.createTextNode( html ) ).parentNode.innerHTML;  
+};  
+//获取Html   
+function htmlDecode( html ) {  
+  var a = document.createElement( 'a' ); a.innerHTML = html;  
+  return a.textContent;  
+}; htmlEncode('>')
+```
+###获取网页url
+`$x('//a').map(function(i){return i.href;}) `
+###laravel 获取上传文件内容
+```js
+$file = Request::file('suggest_batch');
+
+        $file = file_get_contents($file->getRealPath());
+
+```
+###包含HTML标签
+```js
+function contains_html($str)
+    {
+        return $str != strip_tags($str);
+    }
+    ```
+    ###主库查询
+    ```js
+    
+    $this->setConnection('webinar');链接指定数据库// 强制走主库
+					$webinarDailyObj = new WebinarDailyFlow();
+                    $webinarDailyObj->setConnection('master_write');
+$model = new self();
+        $count = $model->setConnection('master_write')->where('webinar_id', $webinarId)->count();
+$count=\DB::connection('master_write')->table('users')->find(20);
+
+    ```
+###sql拼接
+```js
+foreach( $multipleData as $data ) {
+                $whereIn .= "'".$data[$referenceColumn]."', ";
+            }
+            $q = rtrim($q, ", ")." WHERE ".$referenceColumn." IN (".  rtrim($whereIn, ', ').")";
+ 
+            return DB::update(DB::raw($q));
+            ```
+###[php识别二维码](http://git.oschina.net/capitalist/php-qr-decoder)
+```js
+include_once('./lib/QrReader.php');
+$qrcode = new QrReader('path/to_image');  //图片路径
+$text = $qrcode->text(); //返回识别后的文本
+```
+###[php脚本自动识别验证码]()
+```js
+require 'TesseractOCR.php';
+
+function weizhang($car_code, $fdjh)
+{
+
+    $shanghui = mb_substr($car_code, 0, 1, 'utf-8');
+
+    $pre = array(
+        '冀' => 'he',
+        '云' => 'yn'
+    );
+
+    $url_pre = $pre[$shanghui];
+
+    $headers = array(
+        'Host: '.$url_pre.'.122.gov.cn',
+        'Origin: http://'.$url_pre.'.122.gov.cn',
+        'Referer: http://'.$url_pre.'.122.gov.cn/views/inquiry.html?q=j',
+        'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36 QQBrowser/4.1.4132.400'
+    );
+
+    //初始化变量
+    $cookie_file = 'cookie.txt';
+    $login_url = "http://$url_pre.122.gov.cn/views/inquiry.html?q=j";
+    $post_url = "http://$url_pre.122.gov.cn/m/publicquery/vio";
+    $verify_code_url = "http://$url_pre.122.gov.cn/captcha?nocache=".time();
+
+    $curl = curl_init();
+    $timeout = 5;
+    curl_setopt($curl, CURLOPT_URL, $login_url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
+    curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie_file); //获取COOKIE并存储
+    $contents = curl_exec($curl);
+    curl_close($curl);
+
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $verify_code_url);
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_file);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $img = curl_exec($curl);
+    curl_close($curl);
+
+    $fp = fopen("verifyCode.jpg", "w");
+    fwrite($fp, $img);
+    fclose($fp);
+
+    $code = (new TesseractOCR('verifyCode.jpg'))->psm(7)->run();
+
+	$code = explode("\n", $code);
+
+	$code = $code[1];
+    echo $code.PHP_EOL;
+    if (strlen($code) != 4) {
+        return json_encode(array('code'=>500));
+    }
+
+    $data = array(
+        'hpzl'=>'02',
+        'hphm1b' => substr($car_code, -6),
+        'hphm' => $car_code,
+        'fdjh' => $fdjh,
+        'captcha' => $code,
+        'qm' => 'wf',
+        'page' => 1
+    );
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $post_url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie_file);
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+    //unlink($cookie_file);
+    //unlink('verifyCode.jpg');
+
+    return $result;
+}
+
+$count = 0;
+
+
+// 车牌号
+$car_code = '冀Dxxxxx';
+// 发动机后6位
+$fdjh = 'xxxxxx';
+
+while (true) {
+
+    $count++;
+
+    if ($count>50) {
+        exit('查询失败');
+    }
+
+    $res = weizhang($car_code, $fdjh);
+
+    $info = json_decode($res, true);
+
+    echo $res.PHP_EOL;
+
+    if ($info['code'] == 200) {
+        echo '车牌号: '. $car_code.PHP_EOL;
+        echo '未处理违章数: '.$info['data']['content']['zs'];
+        exit();
+    }
+}
+```
