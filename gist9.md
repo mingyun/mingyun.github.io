@@ -328,3 +328,103 @@ if(arr.length > 0 && i > 0){
 for(var x = 0; x <arr.length; x++)
 {alert(arr[x].name);}
 ```
+###[树形结构的迭代器展开为一维结构](http://www.cnblogs.com/xingmeng/p/3583204.html)
+```js
+$fruits = array("a" => "lemon", "b" => "orange", array("a" => "apple", "p" => "pear"));
+$arrayiter = new RecursiveArrayIterator($fruits);
+$iteriter = new RecursiveIteratorIterator($arrayiter);
+foreach ($iteriter as $key => $value) {
+    $d = $iteriter->getDepth();
+    echo "depth=$d k=$key v=$value\n";
+}
+print_r($iteriter->getArrayCopy());
+/**output
+depth=0 k=a v=lemon
+depth=0 k=b v=orange
+depth=1 k=a v=apple
+depth=1 k=p v=pear
+ **/
+ SimpleXML转换为数组
+ $xml = <<<XML
+<books>
+    <book>
+        <title>PHP Basics</title>
+        <author>Jim Smith</author>
+    </book>
+    <book>XML basics</book>
+</books>
+XML;
+// SimpleXML转换为数组 http://www.ruanyifeng.com/blog/2008/07/php_spl_notes.html
+function sxiToArray($sxi)
+{
+    $a = array();
+    for ($sxi->rewind(); $sxi->valid(); $sxi->next()) {
+        if (!array_key_exists($sxi->key(), $a)) {
+            $a[$sxi->key()] = array();
+        }
+        if ($sxi->hasChildren()) {
+            $a[$sxi->key()][] = sxiToArray($sxi->current());
+        } else {
+            $a[$sxi->key()][] = strval($sxi->current());
+        }
+    }
+    return $a;
+}
+
+$xmlIterator = new SimpleXMLIterator($xml);
+$rs = sxiToArray($xmlIterator);
+print_r($rs);
+/**output
+Array
+(
+    [book] => Array
+        (
+            [0] => Array
+                (
+                    [title] => Array
+                        (
+                            [0] => PHP Basics
+                        )
+
+                    [author] => Array
+                        (
+                            [0] => Jim Smith
+                        )
+
+                )
+
+            [1] => XML basics
+        )
+
+)
+ **/
+ //找出../目录中.php扩展名的文件
+$iterator = new GlobIterator('./*.php');
+if (!$iterator->count()) {
+    echo '无php文件';
+} else {
+    $n = 0;
+    printf("总计 %d 个php文件\r\n", $iterator->count());
+    foreach ($iterator as $item) {
+        printf("[%d] %s\r\n", ++$n, $iterator->key());
+    }
+}
+$it = new DirectoryIterator("../");
+foreach ($it as $file) {
+    //用isDot ()方法分别过滤掉“.”和“..”目录
+    if (!$it->isDot()) {
+        echo $file . "\n";
+    }
+}
+//列出指定目录中所有文件
+ $path = realpath('../');
+ $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
+ foreach ($objects as $name => $object) {
+     echo "$name\n";
+ }
+
+$it = new FilesystemIterator('../');
+ foreach ($it as $fileinfo) {
+     echo $fileinfo->getFilename() . "\n";
+ }
+ ```
