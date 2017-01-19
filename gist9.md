@@ -70,3 +70,51 @@ data:text/html,<style type="text/css">.e{position:absolute;top:0;right:50%;botto
 <script\x2Ftype="text/javascript">javascript:alert(1);</script>
 <script\x0Atype="text/javascript">javascript:alert(1);</script>
 ```
+###[javascript 实现html页面的关键字搜索](https://segmentfault.com/q/1010000008155078)
+```js
+document.getElementsByClassName('markdown-body')[0].innerHTML=html.replace(searchKey, '<span class=\'highlight\'>' + searchKey + '</span>')
+
+```
+###[json转换](https://segmentfault.com/q/1010000008155612)
+```js
+let arr = [{
+    "id": "1",
+    "parentId": "0",
+    "nodeName": "公告资讯",
+}, {
+    "id": "2",
+    "parentId": "1",
+    "nodeName": "查看公告",
+}, {
+    "id": "4",
+    "parentId": "0",
+    "nodeName": "公告资讯",
+}, {
+    "id": "5",
+    "parentId": "4",
+    "nodeName": "查看公告",
+}, {
+    "id": "6",
+    "parentId": "4",
+    "nodeName": "查看公告1",
+}];
+let result = arr.reduce(function(prev, item) {
+    prev[item.parentId] ? prev[item.parentId].push(item) : prev[item.parentId] = [item];
+    return prev;
+}, {});
+for (let prop in result) {
+    result[prop].forEach(function(item, i) {
+        result[item.id] ? item.children = result[item.id] : ''
+    });
+}
+result = result[0];
+console.log(JSON.stringify(result))
+[{"id":"1","parentId":"0","nodeName":"公告资讯","children":[{"id":"2","parentId":"1","nodeName":"查看公告"}]},{"id":"4","parentId":"0","nodeName":"公告资讯","children":[{"id":"5","parentId":"4","nodeName":"查看公告"},{"id":"6","parentId":"4","nodeName":"查看公告1"}]}]
+```
+###[js 获取当天凌晨的时间戳](https://segmentfault.com/q/1010000008160697)
+```js
+var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)) / 1000;
+//一天是86400秒   故n天前的时间戳为
+var ThreeDayAgo = timeStamp - 86400 * n;
+console.log(ThreeDayAgo)
+```
