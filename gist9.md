@@ -73,7 +73,30 @@ data:text/html,<style type="text/css">.e{position:absolute;top:0;right:50%;botto
 ###[javascript 实现html页面的关键字搜索](https://segmentfault.com/q/1010000008155078)
 ```js
 document.getElementsByClassName('markdown-body')[0].innerHTML=html.replace(searchKey, '<span class=\'highlight\'>' + searchKey + '</span>')
+<div data-v-4fced2a0="" class="markdown-body">
+  <section data-v-4fced2a0=""><h1 id="Hello">Hello</h1>
+    <h2>hello1</h2>
+    <h2>hello2</h2>
+    <p><code>&lt;span&gt;<span>{{</span>sss<span>}}</span>&lt;/span&gt;</code></p>
+    <blockquote><p>This is test.</p></blockquote>
+    <ul>
+      <li>How are you?</li>
+      <li>Fine, Thank you, and you?</li>
+      <li>I'm fine， too. Thank you.</li>
+      <li>
+        🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃🌚🙃🙃
+      </li>
+    </ul>
+    <h1 id="最新消息">最新消息</h1>
+  </section>
+</div>
+ (function () {
 
+    var searchKey = 'F'
+    var html = document.getElementsByClassName('markdown-body')[0].innerHTML
+   document.getElementsByClassName('markdown-body')[0].innerHTML=html.replace(searchKey, '<span class=\'highlight\'>' + searchKey + '</span>')
+
+  }())
 ```
 ###[json转换](https://segmentfault.com/q/1010000008155612)
 ```js
@@ -117,4 +140,20 @@ var timeStamp = new Date(new Date().setHours(0, 0, 0, 0)) / 1000;
 //一天是86400秒   故n天前的时间戳为
 var ThreeDayAgo = timeStamp - 86400 * n;
 console.log(ThreeDayAgo)
+```
+###[xmlToString](https://segmentfault.com/q/1010000008161339)
+```js
+function xmlToString(xmlData) { 
+
+    var xmlString;
+    //IE
+    if (window.ActiveXObject){
+        xmlString = xmlData.xml;
+    }
+    // code for Mozilla, Firefox, Opera, etc.
+    else{
+        xmlString = (new XMLSerializer()).serializeToString(xmlData);
+    }
+    return xmlString;
+}
 ```
