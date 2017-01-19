@@ -631,3 +631,29 @@ while (true) {
     }
 }
 ```
+###[sql注入技巧](http://www.slideshare.net/p8361/sql-14437201)
+```js
+SelectNAME_CONST(a,1),NAME_CONST(b,2) a b 1 2 
+```
+###[下载并安装 安装 Elasticsearch + Kibana + Marvel](https://pigjian.com/article/elasticsearch-kibana-marvel)
+```js
+sudo apt-get install default-jre
+sudo apt-get install default-jdk
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+sudo apt-get install oracle-java8-set-default
+curl -L -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.3.4/elasticsearch-2.3.4.tar.gz
+tar -xvf elasticsearch-2.3.4.tar.gz
+cd elasticsearch-2.3.4 #进入你解压的文件夹
+./bin/elasticsearch
+curl 'localhost:9200'
+curl -L -O https://download.elastic.co/kibana/kibana/kibana-4.5.3-linux-x64.tar.gz
+tar -zxvf kibana-4.5.3-linux-x64.tar.gz
+cd elasticsearch-2.3.4
+sudo ./bin/plugin install license
+sudo ./bin/plugin install marvel-agent
+cd kibana-4.5.3
+sudo ./bin/kibana plugin --install elasticsearch/marvel/latest
+./bin/kibana
+```
