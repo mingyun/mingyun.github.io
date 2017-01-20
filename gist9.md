@@ -776,3 +776,67 @@ if __name__=="__main__":
         get_pass()  
         print "done (%.2f seconds)" % (time.clock() - start)  
 ```
+###[模拟登陆58](https://segmentfault.com/q/1010000008172084)
+```js
+# -*- coding: utf-8 -*-
+from selenium import webdriver
+import time
+
+driver = webdriver.Chrome()
+driver.get("https://passport.58.com/login")
+
+time.sleep(2)
+driver.maximize_window() 
+
+driver.find_element_by_xpath('//*[@id="pwdLogin"]/i').click()
+driver.find_element_by_xpath('//*[@id="usernameUser"]').send_keys("your username")
+# 执行一段JS让密码框显示出来，页面上看到的哪个模拟点击不行
+driver.execute_script("document.getElementById('passwordUser').setAttribute('style', 'display: block;')")
+time.sleep(2)
+driver.find_element_by_xpath('//*[@id="passwordUser"]').send_keys("your password")
+#点击登陆按钮
+driver.find_element_by_xpath('//*[@id="btnSubmitUser"]').click()
+# driver.close()
+
+from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+driver = webdriver.Firefox()
+driver.get('https://passport.58.com/')
+driver.find_element_by_xpath("//div[@class='pwdlogin']").click()#先点击密码登录才会有usernameUser这个id元素
+driver.find_element_by_xpath("//input[@id='usernameUser']").click()#ok
+```
+###[MySQL数字类型int与tinyint、float与decimal如何选择](http://seanlook.com/2016/04/29/mysql-numeric-int-float/)
+```js
+int型数据无论是int(4)还是int(11)，都已经占用了 4 bytes 存储空间，M表示的只是显示宽度(display width, max value 255)，并不是定义int的长度。
+DECIMAL(M,D)。M是数字最大位数（精度precision），范围1-65；D是小数点右侧数字个数（标度scale），范围0-30，但不得超过M。
+DECIMAL(18,9)，整数部分和小数部分各9位，所以各占4字节，共8bytes
+DECIMAL(7,3)：
+
+能存的数值范围是 -9999.999 ~ 9999.999，占用4个字节
+123.12 -> 123.120，因为小数点后未满3位，补0
+123.1245 -> 123.125，小数点只留3位，多余的自动四舍五入截断
+12345.12 -> 保存失败，因为小数点未满3位，补0变成12345.120，超过了7位。严格模式下报错，非严格模式存成9999.999
+float与float(10)是没区别的，float默认能精确到6位有效数字
+坚决不允许使用float去存money，使用decimal更加稳妥
+decimal(8,2)数值范围是 -999999.99 ~ 999999.99
+1000000超过了6位,严格模式下报错，非严格模式存成999999.99 https://segmentfault.com/q/1010000008170644/a-1020000008171065
+```
+###[decimal(14,2)改成decimal(22,10)](https://segmentfault.com/q/1010000008165935)
+```js
+$sql = "SELECT CONCAT( 'alter table ', table_name, ' MODIFY COLUMN ', column_name, ' decimal(22,10) DEFAULT NULL;' ) AS execSql, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.columns a WHERE TABLE_SCHEMA = '".YourDBName."' AND data_type IN ('decimal')";
+// 返回的结果里已经将要执行的更改sql拼接好了，接下来遍历执行就行了
+$return = $this->dbh->query($sql)->fetchAll();
+foreach($return as $sql)
+{
+    try
+    {
+        $this->dbh->query($sql->execSql);
+    }
+    catch (PDOException $e)
+    {
+        echo 'error: '. $e->getMessage() ."exec sql : ".$sql->execSql.PHP_EOL.PHP_EOL;
+    }
+}
+
+
+```
