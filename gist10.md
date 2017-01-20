@@ -716,3 +716,32 @@ if __name__ == "__main__":
     tornado.ioloop.IOLoop.instance().start()
    // 支持PHP的结巴项目地址：https://github.com/fukuball/jieba-php
 ```
+###[PHP 微信网页版 API分析及使用](https://github.com/wangyupeng/weixin_webapi)
+###[ PHP 中文分詞](https://github.com/fukuball/jieba-php)
+```js
+ini_set('memory_limit', '1024M');
+
+require_once "/path/to/your/vendor/multi-array/MultiArray.php";
+require_once "/path/to/your/vendor/multi-array/Factory/MultiArrayFactory.php";
+require_once "/path/to/your/class/Jieba.php";
+require_once "/path/to/your/class/Finalseg.php";
+use Fukuball\Jieba\Jieba;
+use Fukuball\Jieba\Finalseg;
+Jieba::init();
+Finalseg::init();
+
+$seg_list = Jieba::cut("怜香惜玉也得要看对象啊！");
+var_dump($seg_list);
+
+$seg_list = Jieba::cut("我来到北京清华大学", true);
+var_dump($seg_list); #全模式
+
+$seg_list = Jieba::cut("我来到北京清华大学", false);
+var_dump($seg_list); #默認精確模式
+
+$seg_list = Jieba::cut("他来到了网易杭研大厦");
+var_dump($seg_list);
+
+$seg_list = Jieba::cutForSearch("小明硕士毕业于中国科学院计算所，后在日本京都大学深造"); #搜索引擎模式
+var_dump($seg_list);
+```
