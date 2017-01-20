@@ -745,3 +745,17 @@ var_dump($seg_list);
 $seg_list = Jieba::cutForSearch("小明硕士毕业于中国科学院计算所，后在日本京都大学深造"); #搜索引擎模式
 var_dump($seg_list);
 ```
+###[js排序问题](https://segmentfault.com/q/1010000008180878)
+```js
+先数字再是字母加数字，有字母前缀的，按字母排序
+a=['1','20','a3','c9','b1','19','11']
+["1", "20", "a3", "c9", "b1", "19", "11"]
+a.sort()
+["1", "11", "19", "20", "a3", "b1", "c9"]
+a.sort(function(x,y){
+  if(isNaN(x) && isnan(y)) return x>;
+  if(isnan(x)) return -1;
+  if(isnan(y)) return -1;
+  return x-y;
+})直接sort 有bug 如 ['1', '1a', '20','a3','c9','b1','19','11']
+```
