@@ -882,3 +882,542 @@ r = requests.get(url, proxies=proxies)
 r.encoding = r.apparent_encoding
 print r.text
 ```
+###[jQuery 导出table表格](http://www.jqueryscript.net/table/Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel.html)
+```js
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+//table2excel.js
+;(function ( $, window, document, undefined ) {
+		var pluginName = "table2excel",
+				defaults = {
+				exclude: ".noExl",
+                name: "Table2Excel"
+		};
+
+		// The actual plugin constructor
+		function Plugin ( element, options ) {
+				this.element = element;
+				// jQuery has an extend method which merges the contents of two or
+				// more objects, storing the result in the first object. The first object
+				// is generally empty as we don't want to alter the default options for
+				// future instances of the plugin
+				this.settings = $.extend( {}, defaults, options );
+				this._defaults = defaults;
+				this._name = pluginName;
+				this.init();
+		}
+
+		Plugin.prototype = {
+			init: function () {
+				var e = this;
+				e.template = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\"><head><!--[if gte mso 9]><xml>";
+				e.template += "<x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions>";
+				e.template += "<x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>";
+				e.tableRows = "";
+
+				// get contents of table except for exclude
+				$(e.element).find("tr").not(this.settings.exclude).each(function (i,o) {
+					e.tableRows += "<tr>" + $(o).html() + "</tr>";
+				});
+				this.tableToExcel(this.tableRows, this.settings.name);
+			},
+			tableToExcel: function (table, name) {
+				var e = this;
+				e.uri = "data:application/vnd.ms-excel;base64,";
+				e.base64 = function (s) {
+					return window.btoa(unescape(encodeURIComponent(s)));
+				};
+				e.format = function (s, c) {
+					return s.replace(/{(\w+)}/g, function (m, p) {
+						return c[p];
+					});
+				};
+				e.ctx = {
+					worksheet: name || "Worksheet",
+					table: table
+				};
+				window.location.href = e.uri + e.base64(e.format(e.template, e.ctx));
+			}
+		};
+
+		$.fn[ pluginName ] = function ( options ) {
+				this.each(function() {
+						if ( !$.data( this, "plugin_" + pluginName ) ) {
+								$.data( this, "plugin_" + pluginName, new Plugin( this, options ) );
+						}
+				});
+
+				// chain jQuery functions
+				return this;
+		};
+
+})( jQuery, window, document );
+<script src="http://www.jqueryscript.net/demo/Export-Html-Table-To-Excel-Spreadsheet-using-jQuery-table2excel/src/jquery.table2excel.js"></script>
+<button>Export</button>
+<tr class="noExl">
+  <th>#</th>
+  <th>Column heading</th>
+  <th>Column heading</th>
+  <th>Column heading</th>
+</tr>
+$("button").click(function(){
+  $("#table2excel").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Worksheet Name",
+    filename: "SomeFile" //do not include extension
+  }); 
+});
+
+```
+###[Python将文本转为图片](https://blog.oldj.net/2012/02/19/text-to-image/)
+```js
+
+```
+###[mysql递归查询，mysql中从子类ID查询所有父类](http://blog.csdn.net/qiaqia609/article/details/52119535)
+```js
+id  name    parent_id 
+--------------------------- 
+1   Home        0 
+2   About       1 
+3   Contact     1 
+4   Legal       2 
+5   Privacy     4 
+6   Products    1 
+7   Support     1 
+SELECT T2.id, T2.name 
+FROM ( 
+    SELECT 
+        @r AS _id, 
+        (SELECT @r := parent_id FROM table1 WHERE id = _id) AS parent_id, 
+        @l := @l + 1 AS lvl 
+    FROM 
+        (SELECT @r := 5, @l := 0) vars, 
+        table1 h 
+    WHERE @r <> 0) T1 
+JOIN table1 T2 
+ON T1._id = T2.id 
+ORDER BY T1.lvl DESC 
+
+
+
+
+代码@r := 5标示查询id为5的所有父类。结果如下
+1, ‘Home’
+2, ‘About’
+4, ‘Legal’
+5, ‘Privacy’
+
+id pid level name path
+1 0 1 编程语言 0-1
+2 1 2 PHP 0-1-2
+3 1 2 JAVA 0-1-3
+4 2 3 PHP移动开发 0-1-2-4
+5 3 3 JAVAEE 0-1-3-5
+6 0 1 JS框架 0-6
+http://www.dewen.net.cn/q/10238/PHP+Mysql%E6%97%A0%E9%99%90%E7%BA%A7%E5%88%86%E7%B1%BB%E9%AB%98%E6%95%88%E6%9F%A5%E8%AF%A2
+path的是由父ID-自身ID这种格式组成，查询按照path字段排序即可。
+select * from table order by path asc;
+SELECT id,path FROM sh_privilege ORDER BY CONCAT(path,‘-‘,id);
+ 8 的子权限：SELECT id,path FROM sh_privilege WHERE CONCAT(‘-‘,path,‘-‘) LIKE ‘%-8-%’;
+这样查询分类变得简单了，修改分类的时候也需要更新path字段。
+```
+###[一句SQL实现MYSQL的递归查询](http://www.cnblogs.com/dukou/p/4691543.html)
+```js
+CREATE TABLE `treenodes` (
+    `id` int , -- 节点ID
+    `nodename` varchar (60), -- 节点名称
+    `pid` int  -- 节点父ID
+); 
+INSERT INTO `treenodes` (`id`, `nodename`, `pid`) VALUES
+('1','A','0'),('2','B','1'),('3','C','1'),
+('4','D','2'),('5','E','2'),('6','F','3'),
+('7','G','6'),('8','H','0'),('9','I','8'),
+('10','J','8'),('11','K','8'),('12','L','9'),
+('13','M','9'),('14','N','12'),('15','O','12'),
+('16','P','15'),('17','Q','15'),('18','R','3'),
+('19','S','2'),('20','T','6'),('21','U','8');
+ SELECT id AS ID,pid AS 父ID ,levels AS 父到子之间级数, paths AS 父到子路径 FROM (
+     SELECT id,pid,
+     @le:= IF (pid = 0 ,0,  
+         IF( LOCATE( CONCAT('|',pid,':'),@pathlevel)   > 0  ,      
+                  SUBSTRING_INDEX( SUBSTRING_INDEX(@pathlevel,CONCAT('|',pid,':'),-1),'|',1) +1
+        ,@le+1) ) levels
+     , @pathlevel:= CONCAT(@pathlevel,'|',id,':', @le ,'|') pathlevel
+      , @pathnodes:= IF( pid =0,',0', 
+           CONCAT_WS(',',
+           IF( LOCATE( CONCAT('|',pid,':'),@pathall) > 0  , 
+               SUBSTRING_INDEX( SUBSTRING_INDEX(@pathall,CONCAT('|',pid,':'),-1),'|',1)
+              ,@pathnodes ) ,pid  ) )paths
+    ,@pathall:=CONCAT(@pathall,'|',id,':', @pathnodes ,'|') pathall 
+        FROM  treenodes, 
+    (SELECT @le:=0,@pathlevel:='', @pathall:='',@pathnodes:='') vv
+    ORDER BY  pid,id
+    ) src
+ORDER BY id
+ ID   父ID  父到子之间级数  父到子路径
+------  ------  ------------  ---------------
+     1       0        0           ,0             
+     2       1        1           ,0,1           
+     3       1        1           ,0,1           
+     4       2        2           ,0,1,2         
+     5       2        2           ,0,1,2         
+     6       3        2           ,0,1,3         
+     7       6        3           ,0,1,3,6       
+     8       0        0           ,0             
+     9       8        1           ,0,8           
+    10       8        1           ,0,8           
+    11       8        1           ,0,8           
+    12       9        2           ,0,8,9         
+    13       9        2           ,0,8,9         
+    14      12        3           ,0,8,9,12      
+    15      12        3           ,0,8,9,12      
+    16      15        4           ,0,8,9,12,15   
+    17      15        4           ,0,8,9,12,15   
+    18       3        2           ,0,1,3         
+    19       2        2           ,0,1,2         
+    20       6        3           ,0,1,3,6       
+    21       8        1           ,0,8       
+
+ CREATE FUNCTION `getParentList`(rootId varchar(100))   
+RETURNS varchar(1000)   
+BEGIN   
+DECLARE fid varchar(100) default '';   
+DECLARE str varchar(1000) default rootId;   
+  
+WHILE rootId is not null  do   
+    SET fid =(SELECT parentid FROM treeNodes WHERE id = rootId);   
+    IF fid is not null THEN   
+        SET str = concat(str, ',', fid);   
+        SET rootId = fid;   
+    ELSE   
+        SET rootId = fid;   
+    END IF;   
+END WHILE;   
+return str;  
+END  
+//http://happyqing.iteye.com/blog/2166841
+select getParentList('001001001001001');   
+  
+select * from sbkfwh where FIND_IN_SET(id,getParentList('001001001001002'))   
+```
+###[MySQL递归查询](https://my.oschina.net/freekeeper/blog/647078)
+```js
+CREATE TABLE `area` (
+    `area_id` INT(11) NOT NULL AUTO_INCREMENT,
+    `parent_id` INT(11) NULL DEFAULT NULL,
+    `name` VARCHAR(60) NULL DEFAULT NULL,
+    `level` TINYINT(4) NULL DEFAULT NULL,
+    `aleph` VARCHAR(5) NULL DEFAULT NULL,
+    `show_order` INT(11) NULL DEFAULT NULL,
+    `status` TINYINT(4) NULL DEFAULT NULL,
+    PRIMARY KEY (`area_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=MyISAM;
+CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `queryChildAreaIds`(`areaId` INT, `deep` INT)
+    RETURNS varchar(1024) CHARSET utf8
+    LANGUAGE SQL
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+    COMMENT '查询指定区域的所有下级的地区ID集'
+BEGIN
+DECLARE tempIds VARCHAR(512);
+DECLARE result VARCHAR(1024);
+DECLARE deeps INT;
+
+SET tempIds = areaId;
+SET result = '';
+SET deeps = deep;
+
+WHILE deeps > 0 AND tempIds IS NOT NULL DO
+    SET deeps = deeps - 1;
+    SELECT group_concat(area_id) INTO tempIds from AREA where 
+    FIND_IN_SET(parent_id, tempIds) > 0;
+    IF tempIds IS NOT NULL THEN 
+        IF LENGTH(result) = 0 THEN
+            SET result = CONCAT(result, tempIds);
+        ELSE 
+            SET result = CONCAT(result, ',', tempIds);
+        END IF;
+    END IF;
+END WHILE;
+return result;
+END
+
+CREATE DEFINER=`root`@`127.0.0.1` FUNCTION `queryParentAreaIds`(`areaId` INT, `deep` INT)
+    RETURNS varchar(256) CHARSET utf8
+    LANGUAGE SQL
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+    COMMENT '查询指定区域的所有上级的地区ID集合'
+BEGIN
+DECLARE tempId INT;
+DECLARE lastId INT;
+DECLARE deeps INT;
+DECLARE result VARCHAR(256);
+
+SET tempId = areaId;
+SET result = '';
+SET deeps = deep;
+
+WHILE deeps > 0 AND tempId > 0 DO
+    SET deeps = deeps - 1;
+    SET lastId = areaId;
+    SELECT parent_id INTO tempId FROM AREA where area_id=tempId and `status`=1 limit 1;
+    IF tempId IS NULL OR lastId = tempId THEN 
+        SET areaId = 0;
+    ELSEIF LENGTH(result) = 0 THEN
+        SET result = CONCAT(result, tempId);
+    ELSE 
+        SET result = CONCAT(result, ',', tempId);
+    END IF;
+END WHILE;
+return result;
+END
+```
+###[mysql如何解决评论递归查询](https://www.zhihu.com/question/26899921)
+```js
+表数据字段有:spirit_id,content,create_user,ip,create_time,art_id,delete_flag,parent_id
+如果不止两层的树形结构也是可以查询的
+SELECT 
+    a.*, b.parent_id
+FROM
+    the_table a
+        INNER JOIN
+    the_table b ON a.parent_id = b.spirit_id
+WHERE
+    a.art_id = 'article158767679'
+这样你就把article158767679文章下面的所有树都查出来了，会显得很乱，如果你要查某一棵树，可以增加一个字段摆放树根root，这棵树的所有节点都必须要有这棵树的根信息，这样只需要把最后一个where改成a.root='some_id'就可以具体确定某一棵树了。
+
+ 增加一个字段full_parent_id,存储方式为/XXX/XXX/；层级以此类推，查询方法，select *from table where full_parent_id like %/parent_id/% order by createtime，大概就是这个意思了
+
+我们在设计的时候都是用父ID的这种比较传统的实现方法来的
+不过区别是：所有回复不会互相嵌套，回复的父ID都是评论的ID，也就是说只存在两级，所有的回复之前除了“回复xxx” 能看出来关系外，是没有直接关系的。只不过所有回复按时间升序排列，所以看起来它们之间有关系。当时这样设计的原因是这样设计还可以同时满足“我可以删除回复对话的任意一条而不影响其它回复”。
+A 评论了内容：内容不错 (id: 1， parent_id: 0)
+   B 回复 A： 我也觉得 (id:2, parent:1)
+   C 回复 B： 真的不错 (id:3, parent:1)
+   B 回复 A： @A 看来是真的好啊哈哈。 (id:4, parent:1)
+
+ 
+```
+###[MySQL节点无限分类表](https://github.com/vergil-lai/mysql-node-categoires)
+```js
+地区表，在基本的parent_id上，加入node_index字段，保存每级节点id
+
+id	parent_id	level	name	node_index
+19	0	1	广东省	,0,19,
+289	19	2	广州市	,0,19,289,
+291	19	2	深圳市	,0,19,291,
+3040	289	3	天河区	,0,19,289,3040,
+3041	289	3	海珠区	,0,19,289,3041,
+29014	3040	4	员村街道	,0,19,289,3040,29014,
+那么，如果需要搜索parent_id为289的“广州市”下所有子地区分类，可以使用以下SQL：
+
+SELECT * FROM `category_has_node` WHERE `node_index` LIKE ',0,19,289,%';
+```
+###[PHP递归实现无限级分类](http://www.helloweba.com/view-blog-204.html)
+```js
+function get_str($id = 0) { 
+    global $str; 
+    $sql = "select id,title from class where pid= $id";  
+    $result = mysql_query($sql);//查询pid的子类的分类 
+    if($result && mysql_affected_rows()){//如果有子类 
+        $str .= '<ul>'; 
+        while ($row = mysql_fetch_array($result)) { //循环记录集 
+            $str .= "<li>" . $row['id'] . "--" . $row['title'] . "</li>"; //构建字符串 
+            get_str($row['id']); //调用get_str()，将记录集中的id参数传入函数中，继续查询下级 
+        } 
+        $str .= '</ul>'; 
+    } 
+    return $str; 
+} 
+
+/**
+ * 此方法由@Tonton 提供
+ * http://my.oschina.net/u/918697
+ * @date 2012-12-12 
+ */
+function genTree5($items) { 
+    foreach ($items as $item) 
+        $items[$item['pid']]['son'][$item['id']] = &$items[$item['id']]; 
+    return isset($items[0]['son']) ? $items[0]['son'] : array(); 
+} 
+ 
+/**
+ * 将数据格式化成树形结构
+ * @author Xuefen.Tong
+ * @param array $items
+ * @return array 
+ */
+function genTree9($items) {
+    $tree = array(); //格式化好的树
+    foreach ($items as $item)
+        if (isset($items[$item['pid']]))
+            $items[$item['pid']]['son'][] = &$items[$item['id']];
+        else
+            $tree[] = &$items[$item['id']];
+    return $tree;
+}
+ 
+$items = array(
+    1 => array('id' => 1, 'pid' => 0, 'name' => '江西省'),
+    2 => array('id' => 2, 'pid' => 0, 'name' => '黑龙江省'),
+    3 => array('id' => 3, 'pid' => 1, 'name' => '南昌市'),
+    4 => array('id' => 4, 'pid' => 2, 'name' => '哈尔滨市'),
+    5 => array('id' => 5, 'pid' => 2, 'name' => '鸡西市'),
+    6 => array('id' => 6, 'pid' => 4, 'name' => '香坊区'),
+    7 => array('id' => 7, 'pid' => 4, 'name' => '南岗区'),
+    8 => array('id' => 8, 'pid' => 6, 'name' => '和兴路'),
+    9 => array('id' => 9, 'pid' => 7, 'name' => '西大直街'),
+    10 => array('id' => 10, 'pid' => 8, 'name' => '东北林业大学'),
+    11 => array('id' => 11, 'pid' => 9, 'name' => '哈尔滨工业大学'),
+    12 => array('id' => 12, 'pid' => 8, 'name' => '哈尔滨师范大学'),
+    13 => array('id' => 13, 'pid' => 1, 'name' => '赣州市'),
+    14 => array('id' => 14, 'pid' => 13, 'name' => '赣县'),
+    15 => array('id' => 15, 'pid' => 13, 'name' => '于都县'),
+    16 => array('id' => 16, 'pid' => 14, 'name' => '茅店镇'),
+    17 => array('id' => 17, 'pid' => 14, 'name' => '大田乡'),
+    18 => array('id' => 18, 'pid' => 16, 'name' => '义源村'),
+    19 => array('id' => 19, 'pid' => 16, 'name' => '上坝村'),
+);
+echo "<pre>";
+print_r(genTree5($items));
+print_r(genTree9($items));
+ 
+//后者输出格式，前者类似，只是数组键值不一样，不过不影响数据结构
+/*http://www.oschina.net/code/snippet_173183_11767 
+Array
+(
+[0] => Array
+    (
+        [id] => 1
+        [pid] => 0
+        [name] => 江西省
+        [son] => Array
+            (
+                [0] => Array
+                    (
+                        [id] => 3
+                        [pid] => 1
+                        [name] => 南昌市
+                    )
+ 
+                [1] => Array
+                    (
+                        [id] => 13
+                        [pid] => 1
+                        [name] => 赣州市
+                        [son] => Array
+                            (
+                                [0] => Array
+                                    (
+                                        [id] => 14
+                                        [pid] => 13
+                                        [name] => 赣县
+                                        [son] => Array
+                                            (
+                                            [0] => Array
+                                                (
+                                                    [id] => 16
+                                                    [pid] => 14
+                                                    [name] => 茅店镇
+                                                    [son] => Array
+                                                        (
+                                                        [0] => Array
+                                                            (
+                                                            [id] => 18
+                                                            [pid] => 16
+                                                            [name] => 义源村
+                                                            )
+ 
+                                                        [1] => Array
+                                                            (
+                                                            [id] => 19
+                                                            [pid] => 16
+                                                            [name] => 上坝村
+                                                            )
+ 
+                                                        )
+ 
+                                                )
+ 
+                                            [1] => Array
+                                                (
+                                                    [id] => 17
+                                                    [pid] => 14
+                                                    [name] => 大田乡
+                                                )
+ 
+                                            )
+ 
+                                    )
+ 
+                                [1] => Array
+                                    (
+                                        [id] => 15
+                                        [pid] => 13
+                                        [name] => 于都县
+                                    )
+ 
+                            )
+ 
+                    )
+ 
+            )
+ 
+    )
+ 
+[1] => Array
+    (
+        [id] => 2
+        [pid] => 0
+        [name] => 黑龙江省
+        [son] => Array
+            (
+                [0] => Array
+                    (
+                        [id] => 4
+                        [pid] => 2
+                        [name] => 哈尔滨市
+                        [son] => Array
+                            (
+                            [0] => Array
+                                (
+                                    [id] => 6
+                                    [pid] => 4
+                                    [name] => 香坊区
+                                    [son] => Array
+                                        (
+                                        [0] => Array
+                                            (
+                                                [id] => 8
+                                                [pid] => 6
+                                                [name] => 和兴路
+                                                [son] => Array
+                                                    (
+                                                        [0] => Array
+                                                            (
+                                                            [id] => 10
+                                                            [pid] => 8
+                                                            [name] => 
+                                                             东北林业大学
+                                                            )
+ 
+                                                        [1] => Array
+                                                            (
+                                                            [id] => 12
+                                                            [pid] => 8
+                                                            [name] => 
+                                                            哈尔滨师范大学
+                                                            )
+ 
+                                                    )
+ 
+                                            )
+ 
+                                        )
+ 
+                                )
+```
