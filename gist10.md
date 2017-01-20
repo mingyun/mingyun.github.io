@@ -61,6 +61,20 @@ Sec-WebSocket-Protocol: B
 ```
 ###[多个密钥 ssh key 登录不同linux服务器](http://blog.41ms.com/post/55.html)
 ```js
+http://blog.41ms.com/post/26.html
+ssh-keygen -t rsa
+scp id_rsa.pub root@www.example.com:/root/.ssh
+mv id_rsa.pub authorized_keys
+chmod 700 /root/.ssh/authorized_keys
+chmod 600 /root/.ssh
+把密码放到本地用户的.ssh目录下，并分别命令，并创建config文件。
+Host 别名
+
+HostName 服务器地址
+
+User 用户名
+
+IdentifyFile 密钥路径
 Host 41ms    // host别名
     HostName www.41ms.com    // 连接服务的地址或ip
     User wangyupeng    // 用户名
@@ -348,4 +362,277 @@ string(5) "world"
 [3]=>    
 string(15) "该说些什么"    
 }
+```
+###[ 把数组随机插入到另一个给定有序数组中](http://blog.41ms.com/post/7.html)
+```js
+$a = array(0,1,2,3,4,5,6,7,8,9);
+$b = array('wang', 'yu', 'peng');
+
+$count_b = count($b);
+$count_a = count($a);
+
+for ($i=0; $i<$count_b; $i++) {
+    $offset = mt_rand(0, $count_a-1);
+    array_splice($a, $offset, 0, $b[$i]);
+}
+
+$count_b = count($b);
+$rand_keys = array_rand($a, $count_b);
+$count_rand_keys = count($rand_keys);
+
+// 排序随机键标，使其从大到小
+rsort($rand_keys);
+
+$box = array();
+foreach ($a as $k=>$v) {
+    $box[] = $v;
+
+    if (!$count_rand_keys) continue;
+    // 取随机键标，从小到大依次取
+    $rand_key = $rand_keys[$count_rand_keys-1];
+
+    if ($k == $rand_key) {
+        $count_rand_keys--;
+        $box[] = array_pop($b);
+    }
+}
+Array
+(
+    [0] => 0
+    [1] => 1
+    [2] => 2
+    [3] => 3
+    [4] => peng
+    [5] => 4
+    [6] => 5
+    [7] => yu
+    [8] => 6
+    [9] => 7
+    [10] => 8
+    [11] => wang
+    [12] => 9
+)
+```
+###[http请求，简单的数据完整性校对思路](http://blog.41ms.com/post/29.html)
+```js
+/**
+ * 加密请求数据
+ * @param array $data
+ * @return array
+ */
+function encrypt_http_data($data = array())
+{
+    if (empty($data)) {
+        return $data;
+    }
+
+    $now = time();
+    $data['time'] = $now;
+    ksort($data);
+    $sData = implode($data);
+
+    $length = ($now % 10) + 10;
+
+    $data['token'] = substr(md5($sData), 0, $length);
+
+    return $data;
+}
+
+$data['uid'] = 123456789;
+$data['order_id'] = 12345678;
+
+$data = encrypt_http_data($data);
+
+$url = 'http://blog.41ms.com/api/test.php?' . http_build_query($data);
+
+$result = file_get_contents($url);
+/**
+ * 检测数据完整性
+ * @param $data
+ * @return bool
+ */
+function check_data($data)
+{
+    if (empty($data) || !isset($data['token'])) {
+        return false;
+    }
+
+    $token = $data['token'];
+    unset($data['token']);
+    ksort($data);
+    $sData = implode($data);
+    $length = ($data['time'] % 10) + 10;
+
+    if (substr(md5($sData), 0, $length) !== $token) {
+        return false;
+    }
+
+    return true;
+}
+
+// 验证数据完整性
+
+$data = $_REQUEST;
+
+if (!check_data($data)) {
+    exit('error');
+}
+```
+###[利用office online 在线查看excel，word，ppt文档](http://blog.41ms.com/post/37.html)
+```js
+http://view.officeapps.live.com/op/view.aspx?src=你的文档路径
+在线浏览Office文档：http://blogs.office.com/2013/04/10/office-web-viewer-view-office-documents-in-a-browser/
+查看docx文档：http://view.officeapps.live.com/op/view.aspx?src=newteach.pbworks.com%2Ff%2Fele%2Bnewsletter.docx
+查看xlsx文档：http://view.officeapps.live.com/op/view.aspx?src=http%3A%2F%2Flearn.bankofamerica.com%2Fcontent%2Fexcel%2FWedding_Budget_Planner_Spreadsheet.xlsx
+查看PPT文档：http://view.officeapps.live.com/op/view.aspx?src=http%3a%2f%2fvideo.ch9.ms%2fbuild%2f2011%2fslides%2fTOOL-532T_Sutter.ppt
+```
+###[西方公历换算天干地支纪年法，生肖换算](http://blog.41ms.com/post/43.html)
+```js
+/**
+ * 根据西方公历年获取天干地支纪年法和生肖信息
+ * @param $year 西方公历年，例：2015 默认当年
+ * @return array
+ */
+public function getTgdzInfo($year=null){
+
+    $year = empty($year) ? date('Y') : $year;
+
+    $tiangan_list = array('庚', '辛', '壬', '癸', '甲', '乙', '丙', '丁', '戊', '己');
+    $dizhi_list = array('申', '酉', '戌', '亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未');
+    $shengxiao = array(
+        '申'=>'猴',
+        '酉'=>'鸡',
+        '戌'=>'狗',
+        '亥'=>'猪',
+        '子'=>'鼠',
+        '丑'=>'牛',
+        '寅'=>'虎',
+        '卯'=>'兔',
+        '辰'=>'龙',
+        '巳'=>'蛇',
+        '午'=>'马',
+        '未'=>'羊'
+    );
+
+    $tiangan = $tiangan_list[$year % 10];
+    $dizhi = $dizhi_list[$year % 12];
+
+    $info = array(
+        'tiangan'=>$tiangan,
+        'dizhi'=>$dizhi,
+        'shengxiao'=>$shengxiao[$dizhi]
+    );
+
+    return $info;
+}
+```
+###[PHP 余弦相似性，实现字符串相似度提取异已字符串](http://blog.41ms.com/post/32.html)
+```js
+/**
+ * 根据余弦相似性计算两个字符串相似度，0-1之间，越大越相似
+ * @param $s1
+ * @param $s2
+ * @return float|int 相似度
+ */
+function similarity($s1, $s2)
+{
+    $tmp = array();
+
+    for ($i=0; $i<=strlen($s1); $i++) {
+        $a = ord($s1[$i]);
+        $tmp[$a][0] = $tmp[a][0]+1;
+    }
+
+    for ($i=0; $i<=strlen($s2); $i++) {
+        $a = ord($s2[$i]);
+        $tmp[$a][1] = $tmp[a][1]+1;
+    }
+
+    $a1 = 0;
+    $a2 = 0;
+    $a3 = 0;
+
+
+    if (count($tmp) > 0) {
+        foreach ($tmp as $i => $v) {
+            $a1 += $v[0] * $v[1];
+            $a2 += $v[0] * $v[0];
+            $a3 += $v[1] * $v[1];
+        }
+    } else {
+        return 0;
+    }
+
+    return $a1 / sqrt($a2 * $a3);
+}
+
+
+/**
+ * 只提取中文，英文，数字
+ * @param $str
+ * @return string
+ */
+function filter_str( $str )
+{
+    $pattern = '/[^\x{4e00}-\x{9fa5}\d\w]+/u';
+    $res = preg_replace($pattern, '', $str);
+    return $res;
+}
+
+
+// 读取一个文件，每行一个字符串
+$files = file('content.txt');
+
+// 模拟数据库结构数据
+$str_list = array();
+foreach ($files as $k => $v) {
+    list($id, $content) = explode(',', trim($v));
+    $item = array(
+        'id' => $id,
+        'content' => filter_str($content)
+    );
+    $str_list[] = $item;
+}
+
+
+foreach ($str_list as $k => $v) {
+
+    // 提取异己数据
+    $other_contents = '';
+    foreach ($str_list as $k2 => $v2) {
+        if ($k != $k2) {
+            $other_contents .= $v2['content'];
+        }
+    }
+
+    // 相似度与数据关联
+    $str_list[$k]['score'] = similarity($v['content'], $other_contents);
+}
+
+// 相似度降序排序
+$score_list = array();
+foreach ($str_list as $v) {
+    $score_list[] = $v['score'];
+}
+
+array_multisort($score_list, SORT_ASC, $str_list);
+
+// 获取中位数
+$middle_key = floor(count($str_list)/2);
+
+// 提取结果
+$box = array();
+foreach ($str_list as $v) {
+
+    // 中位数据
+    $middle_item = $str_list[$middle_key];
+    // 中位数与最大值的距离
+    $middle_score_distance = max($score_list) - $middle_item['score'];
+
+    if (abs($v['score']-$middle_item['score']) > abs($middle_score_distance)) {
+        $box[] = $v;
+    }
+}
+
+var_dump($box);
 ```
