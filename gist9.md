@@ -971,7 +971,21 @@ $("button").click(function(){
 ```
 ###[Python将文本转为图片](https://blog.oldj.net/2012/02/19/text-to-image/)
 ```js
-
+import os
+import Image, ImageFont, ImageDraw
+ 
+text = u"这是一段测试文本，test 123。"
+ 
+im = Image.new("RGB", (300, 50), (255, 255, 255))
+dr = ImageDraw.Draw(im)
+font = ImageFont.truetype(os.path.join("fonts", "msyh.ttf"), 14)
+ font = ImageFont.truetype(os.path.join("fonts", "simsun.ttc"), 18)
+dr.text((10, 5), text, font=font, fill="#000000")
+ 
+im.show()
+im.save("t.png")
+PIL 1.1.7有问题 换成PIL 1.1.6试试
+ImportError: The _imagingft C module is not installed 
 ```
 ###[mysql递归查询，mysql中从子类ID查询所有父类](http://blog.csdn.net/qiaqia609/article/details/52119535)
 ```js
@@ -1420,4 +1434,7 @@ Array
                                         )
  
                                 )
+				
+LinkageSel：javascript无限级联动下拉菜单 省市地多级联动多属性值下拉菜单 附带中国行政区划数据 http://www.oschina.net/code/snippet_126398_5391 				
+				
 ```
