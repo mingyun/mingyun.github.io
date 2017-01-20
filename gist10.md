@@ -480,6 +480,7 @@ if (!check_data($data)) {
 ```
 ###[利用office online 在线查看excel，word，ppt文档](http://blog.41ms.com/post/37.html)
 ```js
+https://products.office.com/en-us/office-online/view-office-documents-online?legRedir=true&redir=0&CorrelationId=d491f26f-cf70-4177-9b1a-d1b02204806e# 
 http://view.officeapps.live.com/op/view.aspx?src=你的文档路径
 在线浏览Office文档：http://blogs.office.com/2013/04/10/office-web-viewer-view-office-documents-in-a-browser/
 查看docx文档：http://view.officeapps.live.com/op/view.aspx?src=newteach.pbworks.com%2Ff%2Fele%2Bnewsletter.docx
@@ -635,4 +636,83 @@ foreach ($str_list as $v) {
 }
 
 var_dump($box);
+```
+###[git log 太多日志时直接全部输出](https://segmentfault.com/q/1010000007977721)
+```js
+禁用 pager 分页就行了
+
+git --no-pager log
+```
+###[php扩展trie_filter，利用词库，过滤敏感词]()
+```js
+https://github.com/wulijun/php-ext-trie-filter
+$ tar zxvf libdatrie-0.2.4.tar.gz
+$ cd libdatrie-0.2.4
+$ make clean
+$ ./configure --prefix=$LIB_PATH
+$ make
+$ make install
+$ $INSTALL_PHP_PATH/bin/phpize
+$ ./configure --with-php-config=$INSTALL_PHP_PATH/bin/php-config --with-trie_filter=$LIB_PATH
+$ make
+$ make install
+修改php.ini，增加一行：extension=trie_filter.so，然后重启PHP。
+ini_set('memory_limit', '512M');
+$arrWord = file('dict.txt');
+
+$resTrie = trie_filter_new();
+
+foreach ($arrWord as $k => $v) {
+    trie_filter_store($resTrie, $v);
+}
+trie_filter_save($resTrie, __DIR__ . '/blackword.tree');
+$resTrie = trie_filter_load(__DIR__ . '/blackword.tree');
+
+$str = '王玉鹏的媳妇叫刘敏，王玉鹏的邮箱地址是wangyupeng@jiayuan.com，想不想知道他的QQ号呢？';
+$arrRet = trie_filter_search_all($resTrie, $str);
+
+print_all($str, $arrRet);
+
+function print_all($str, $res) {//print_r($res);
+    echo "$str\n";
+    foreach ($res as $k => $v) {
+        echo $k."=>{$v[0]}-{$v[1]}-".substr($str, $v[0], $v[1])."\n";
+    }
+}
+http://blog.41ms.com/post/41.html
+
+```
+###[python脚本库，实现一些简单功能的脚本]( https://github.com/iloster/PythonScripts)
+###[pyton 结巴中文分词 完成敏感词过滤系统](http://blog.41ms.com/post/40.html)
+```js
+#!/usr/bin/python
+# encoding=utf-8
+import tornado.ioloop
+import tornado.web
+import jieba
+import jieba.posseg as pseg
+import json
+
+jieba.load_userdict('dict.txt')
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        content = self.get_argument('content')
+        words = pseg.cut(content) 
+        result = []
+        // 只获取自定义词库中的分词
+        for word, flag in words:
+            if flag=="custom" :
+                result.append(word) 
+        
+        self.write(json.dumps(result))
+            
+application = tornado.web.Application([
+    (r"/", MainHandler),
+])
+
+if __name__ == "__main__":
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
+   // 支持PHP的结巴项目地址：https://github.com/fukuball/jieba-php
 ```
