@@ -840,3 +840,45 @@ foreach($return as $sql)
 
 
 ```
+###[ORDER BY在子查询里面忽略了](https://mariadb.com/kb/en/mariadb/why-is-order-by-in-a-from-subquery-ignored/)
+```js
+ 获取每个分组下的最新一条
+那只要在插入的时候将之前的都设置为old    新的状态为new mysql好像返回的时间最靠前的记录，mariadb返回id最靠前的记录
+select * from (select * from a order by id desc) group by some mysql不支持同时group by 和order by
+select * from A where created_at = (select max(created_at) from A as t where t.id = A.id) group by A.id
+这文章说了，ORDER BY在子查询里面忽略了。。。。 后来改用max子查询的方法，就好了。
+
+```
+###[Tesseract识别中文图片](http://qianjiye.de/2015/08/tesseract-ocr)
+```js
+下载文件https://github.com/tesseract-ocr/tesseract/wiki 对应语言文件https://github.com/tesseract-ocr/tessdata
+https://github.com/tesseract-ocr/tesseract/wiki/Data-Files 
+tesseract -l chi_sim myscan.png out #使用中文
+tesseract images/9531.jpeg stdout -l eng -psm 7 digits
+
+    images/9531.jpeg：输入待OCR的图片；
+    stdout：输出结果到终端，也可用文件名，表示输出到文件；
+    -l eng：使用英文识别库；
+    -psm 7：表示分页方式，7表示将图片视为单行文字；
+    digits：识别配置文件，这里表示只识别数字。
+
+查看目前支持那些语言：
+
+tesseract --list-langs # chi_sim chi_tra eng osd
+from pyocr import tesseract
+
+builder = tesseract.builders.TextBuilder()
+builder.tesseract_configs = ['-psm', '7', 'scbid'] 
+result = tesseract.image_to_string(Image.open('ocr_test.png'), 'eng', builder)
+```
+###[request乱码](https://segmentfault.com/q/1010000008173276)
+```js
+import requests
+word = input('>')
+payload = {'keyword':word}
+r = requests.get('http://search.bilibili.com/all', params=payload)
+print(r.text.encode('utf-8'))
+r = requests.get(url, proxies=proxies)
+r.encoding = r.apparent_encoding
+print r.text
+```
