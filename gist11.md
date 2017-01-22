@@ -537,5 +537,264 @@ function compute(x) {
 }
 getSomething().then(compute);
 
+
  
+```
+###[把第一个数组的值作为剩下数组的键名](https://segmentfault.com/q/1010000008191624)
+```js
+$data=[['id','name'],[1,'a'],[2,'b'],[3,'c']];
+
+
+$keys = array_shift($data);
+
+$result = array_map(function ($values) use ($keys) {
+    return array_combine($keys, $values);
+}, $data);
+print_r($result);
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => a
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [name] => b
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [name] => c
+        )
+
+)
+```
+###[在Laravel中导入Excel文件](https://segmentfault.com/q/1010000008192716)
+```js
+PHP excel xls读取扩展https://github.com/xavieryang007/Xavxls  
+```
+###[mysql IF ELSE](https://segmentfault.com/q/1010000008137290)
+```js
+IF EXISTS (SELECT 1 FROM dual WHERE 1=1) 
+THEN
+    #TODO
+ELSE 
+    #TODO
+END IF;
+```
+###[mysql求游戏排名](https://segmentfault.com/q/1010000008130461)
+```js
+CREATE TABLE `active_gamescore` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `active_id` int(11) NOT NULL DEFAULT '0' COMMENT '关联active.id',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '参与用户',
+  `score` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分数',
+  `created_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间（时间戳）',
+  PRIMARY KEY (`id`),
+  KEY `active_id` (`active_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=240076 DEFAULT CHARSET=utf8 COMMENT='小游戏分数记录';
+select user_id,a.sc,min(created_at) tm 
+from (select user_id,max(score) sc from active_gamescore group by user_id) a 
+join active_gamescore b 
+on a.user_id=b.user_id and a.sc=b.score 
+group by a.user_id,a.sc 
+order by a.sc desc,tm asc limit 20;
+```
+###[sql数据去重问题](https://segmentfault.com/q/1010000008098772)
+```js
+ CREATE TABLE `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sendid` int(11) NOT NULL DEFAULT '0',
+  `receiveid` int(11) NOT NULL DEFAULT '0',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+INSERT INTO `message` (`id`, `sendid`, `receiveid`, `create_time`)
+VALUES
+    (1, 321, 3, '2017-01-13 10:23:03'),
+    (2, 322, 4, '2017-01-13 10:23:11'),
+    (3, 123123, 9, '2017-01-13 10:23:25'),
+    (4, 0, 0, '2017-01-13 10:22:54'),
+    (5, 4, 321, '2017-01-13 10:22:54'),
+    (6, 4, 322, '2017-01-13 10:23:17'),
+    (7, 9, 12232, '2017-01-13 10:23:30'),
+    (8, 0, 0, '2017-01-13 11:29:42');
+根据sendid和receiveid进行数据去重，就是说其实id=22的数据和id=25的数据是一条数据
+SELECT *
+FROM   message m3
+WHERE  id NOT IN (#查询需要去重的id
+           select DISTINCT m1.id
+           FROM            message AS m1
+           INNER JOIN      message AS m2
+           WHERE           m1.id != m2.id #过滤掉自身关联
+           AND             ((
+                                                           m1.receiveid = m2.sendid
+                                           AND             m1.sendid = m2.receiveid)
+                           OR              (
+                                                           m1.sendid = m2.sendid
+                                           AND             m1.receiveid = m2.receiveid ) )
+           AND             m1.create_time < m2.create_time #
+           GROUP BY        m1.id,
+                           m2.id);    
+```
+###[laravel sql](https://segmentfault.com/q/1010000008148200)
+```js
+<?php
+
+namespace App\Providers;
+
+use DB;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\ServiceProvider;
+use Log;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+
+    }
+
+    /**
+     * @param $needle
+     * @param $replace
+     * @param $haystack
+     * @return mixed
+     */
+    private function str_replace_once($needle, $replace, $haystack)
+    {
+        $pos = strpos($haystack, $needle);
+        if ($pos === false) {
+            return $haystack;
+        }
+        return substr_replace($haystack, $replace, $pos, strlen($needle));
+    }
+
+    public function boot()
+    {
+        DB::listen(function (QueryExecuted $query) {
+            if ($query->bindings) {
+                $sql = $query->sql;
+                foreach ($query->bindings as $val) {
+                    if (is_string($val)) {
+                        $val = "\"" . strval($val) . "\"";
+                    }
+                    $sql = $this->str_replace_once("?", $val, $sql);
+                }
+                Log::debug($sql, $query->bindings);
+            } else {
+                Log::debug($query->sql, $query->bindings);
+            }
+
+        });
+    }
+}
+
+```
+###[把一个数组放入另一个数组的子数组里](https://segmentfault.com/q/1010000008144703)
+```js
+$floor_list=array(
+        array('floor_num'=>'1'),
+        array('floor_num'=>'2'),
+        array('floor_num'=>'3'),
+        array('floor_num'=>'4')
+    );
+
+$room_list=array('101','102','103','104','201','202','203','204','301','302','303','304','401','402','403','404');
+
+$room_datas=array();
+foreach ($room_list as $k => $v) {
+    $floor_num=substr($v, 0,1);
+    $room_datas[$floor_num][]=$v;
+}
+
+foreach ($floor_list as $k => $v) {
+    $floor_num=$v['floor_num'];
+    $floor_list[$k]['rooms']=isset($room_datas[$floor_num])?$room_datas[$floor_num]:array();
+}
+
+print_r($floor_list);
+
+/*
+Array
+(
+    [0] => Array
+        (
+            [floor_num] => 1
+            [rooms] => Array
+                (
+                    [0] => 101
+                    [1] => 102
+                    [2] => 103
+                    [3] => 104
+                )
+
+        )
+
+    [1] => Array
+        (
+            [floor_num] => 2
+            [rooms] => Array
+                (
+                    [0] => 201
+                    [1] => 202
+                    [2] => 203
+                    [3] => 204
+                )
+
+        )
+
+    [2] => Array
+        (
+            [floor_num] => 3
+            [rooms] => Array
+                (
+                    [0] => 301
+                    [1] => 302
+                    [2] => 303
+                    [3] => 304
+                )
+
+        )
+
+    [3] => Array
+        (
+            [floor_num] => 4
+            [rooms] => Array
+                (
+                    [0] => 401
+                    [1] => 402
+                    [2] => 403
+                    [3] => 404
+                )
+
+        )
+
+)
+ */
+```
+###[Only variables should be assigned by reference](https://segmentfault.com/q/1010000008144401)
+```js
+function &getArr(){
+    static $arr = [3,4,6];
+    return $arr;
+}
+
+$arr2 = &getArr();
+$arr2[0] = 100;
+var_dump($arr2);
+
+$arr3 = &getArr();
+var_dump($arr3);
 ```
