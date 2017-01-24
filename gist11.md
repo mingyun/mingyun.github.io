@@ -798,3 +798,119 @@ var_dump($arr2);
 $arr3 = &getArr();
 var_dump($arr3);
 ```
+###[php artisan serve不支持https](http://stackoverflow.com/a/12946566/2429469)
+php内置的web服务器仅仅用于本地测试使用，不支持ssl加密，所以使用php artisan serve来启动https服务显然是不行的。
+
+可以使用php-fpm的方式来启动你的web服务，这样就可以支持https的访问方式了
+###[json字符串中带双引号解析](https://segmentfault.com/q/1010000008195853)
+```js
+var s = '{"name" : "\\"张三\\"在提这样\\"一个\\"问题"}';
+JSON.parse(s);
+var s = '{name : "\\"张三\\"在提这样\\"一个\\"问题"}';
+eval("[" + s + "]");
+```
+###[ cmd 解析命令对空格敏感环境变量有空格加引号](https://segmentfault.com/q/1010000008202080 )
+```js
+D:\一大段\python.exe
+加上双引号...
+"D:\一大段\python.exe" 
+```
+###移动网页上传图片只允许拍照而不出现相册<input type="file" capture="camera" accept="image/*" />
+###[static是php面向对象的延迟绑定功能](https://segmentfault.com/q/1010000008209807)
+```js
+
+class A {
+    const HH = "hello";
+    function show()
+    {
+        echo static::HH, PHP_EOL;
+    }
+}
+
+class B extends A {
+    const HH = "world";
+}
+
+
+(new A)->show();
+(new B)->show();
+$ php test.php
+hello
+world
+```
+###[计算指定工作日后的日期](https://segmentfault.com/q/1010000008208219)
+```js
+<?php
+
+class BusinessDaysCalculator {
+
+    const MONDAY    = 1;
+    const TUESDAY   = 2;
+    const WEDNESDAY = 3;
+    const THURSDAY  = 4;
+    const FRIDAY    = 5;
+    const SATURDAY  = 6;
+    const SUNDAY    = 7;
+
+    /**
+     * @param DateTime   $startDate       Date to start calculations from
+     * @param DateTime[] $holidays        Array of holidays, holidays are no conisdered business days.
+     * @param DateTime[]      $nonBusinessDays Array of days of the week which are not business days.
+     *  @param DateTime[]      $specialBusinessDay Array is the special work day.
+     */
+    public function __construct(DateTime $startDate, array $holidays, array $nonBusinessDays ,array $specialBusinessDay) {
+        $this->date = $startDate;
+        $this->holidays=[];
+        foreach($holidays as $holiday){
+            array_push($this->holidays,new DateTime($holiday));
+        }
+        $this->nonBusinessDays = $nonBusinessDays;
+        $this->specialBusinessDay = $specialBusinessDay;
+    }
+
+    public function addBusinessDays($howManyDays) {
+        $i = 0;
+        while ($i < $howManyDays) {
+            $this->date->modify("+1 day");
+            if ($this->isBusinessDay($this->date)) {
+                $i++;
+            }
+        }
+    }
+
+    public function getDate() {
+        return $this->date->format('Y-m-d');
+    }
+
+    private function isBusinessDay(DateTime $date) {
+        if(in_array($date->format('Y-m-d') , $this->specialBusinessDay)) return true; //判断当前日期是否是因法定节假日调休而上班的周末，这种情况也算工作日
+
+        if (in_array((int)$date->format('N'), $this->nonBusinessDays)) {
+            return false; //当前日期是周末
+        }
+
+        foreach ($this->holidays as $day) {
+            if ($date->format('Y-m-d') == $day->format('Y-m-d')) {
+                return false; //当前日期是法定节假日
+            }
+        }
+
+        return true;
+    }
+
+}
+
+$holidays=["2017-01-27","2017-01-28","2017-01-29","2017-01-30","2017-01-31","2017-02-01","2017-02-02"];//从聚合数据接口获得
+$specialBusinessDay=["2017-01-22"];//因法定节假日调休而上班的周末，这种情况也算工作日.因为这种情况少，可以通过手动配置
+$calculator = new BusinessDaysCalculator(
+    new DateTime(), //当前时间
+    $holidays,
+    [BusinessDaysCalculator::SATURDAY, BusinessDaysCalculator::SUNDAY],
+    $specialBusinessDay
+);
+
+$calculator->addBusinessDays(2); // 2个工作日后的时间
+
+$afterBusinessDay=$calculator->getDate();
+echo $afterBusinessDay;
+```
