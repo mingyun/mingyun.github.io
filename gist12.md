@@ -601,3 +601,65 @@ function count() {
 }
 count();
 ```
+###[ {'k1': 大于66的所有值, 'k2': 小于66的所有值}](https://segmentfault.com/q/1010000008235827)
+```js
+nums = [11,22,33,44,55,66,77,88,99,90]
+
+d = {'k1': [x for x in nums if x > 66], 'k2': [x for x in nums if x ＜ 66]}
+```
+###[firstOrCreate方法判断返回的模型是新增的还是原有的，](https://segmentfault.com/q/1010000008234906)
+```js
+$user = User::firstOrCreate($userData);
+if($user->wasRecentlyCreated){
+    // 新用户处理
+    
+}
+```
+###[删除数组中的空格或字符串](https://segmentfault.com/q/1010000008230865)
+```js
+foreach ($table_rows as $row => $tr) {
+        foreach ($tr->childNodes as $td) {
+            $data[$row][] = preg_replace("/[^a-zA-Z0-9]/", "", $td->nodeValue);
+        }
+    }
+```
+###[segmentfault可以被站点镜像](https://segmentfault.com/q/1010000008231284)
+wget -c -w 2 -m https://segmentfault.com/ 
+###[字符串中的所有字符变成它ASCII码中前7位的数字](https://segmentfault.com/q/1010000008229265)
+```js
+>>> s='hijkl'
+>>> bytes(map(lambda c:c-7,bytes(s,'ascii'))).decode('ascii')
+'abcde'
+```
+###[正则表达式中'/'](https://segmentfault.com/q/1010000008224056)
+分隔符已经用了/,所以表达式里要使用/时就需要用反斜杠\转义.
+
+你写成调用RegExp的话就可以不用分隔符了:
+
+var routeStripper = new RegExp("^[#/]\s+$", "g");
+###[输入某年某月某日，全年的第几天](https://segmentfault.com/q/1010000008217387)
+var endDate = new Date(y, m-1, d),
+    startDate = new Date(y, 0, 0),
+    days = (endDate - startDate) / 1000 / 60 / 60 / 24;
+
+document.write("该天为一年中的第"+ days +"天");
+###[运算符号使下面等式成立](https://segmentfault.com/q/1010000008213102)
+let a = [2,2,2,2,2,2,2,2,2,2];
+a[1]  +  a[1]  +  a[1]  = 6
+2 +  2  + 2    = 6
+a[3]  +  a[3]  +  a[3]  = 6
+a[4]  +  a[4]  +  a[4]  = 6
+a[5]  +  a[5]  +  a[5]  = 6
+a[6]  +  a[6]  +  a[6]  = 6
+a[7]  +  a[7]  +  a[7]  = 6
+a[8]  +  a[8]  +  a[8]  = 6
+a[9]  +  a[9]  +  a[9]  = 6
+( 1  +   1   +   1 )!          = 6
+  2  +   2   +   2             = 6
+  3  *   3   -   3             = 6
+  4  +   4   -   sqrt(4)       = 6
+  5  +   5   /   5             = 6
+  6  *   6   /   6             = 6
+  7  -   7   /   7             = 6
+  8  -   sqrt( sqrt( 8 + 8 ))  = 6
+  9  -   9   /   sqrt(9)       = 6
