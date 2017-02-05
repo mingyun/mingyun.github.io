@@ -368,3 +368,236 @@ function convert_utf8($data){
 $text = file_get_contents($filename);
 $text = convert_utf8($text);
 ```
+###[php7的fpm]()
+```js
+路径参考/etc/php/7.0/fpm
+路径参考 /etc/init.d/php7.0-fpm status|start|stop
+如果不需要fpm，根据你需要请求的协议 ，可以使用swoole，workman之类的框架，无需fpm，只需要指定到指定的监听端口。
+```
+###[1-2+3-4+5 ... 99的所有数的和](https://segmentfault.com/q/1010000008235645)
+```js
+>>> num = 0
+>>> for i in range(100):
+...     if i % 2 == 0:
+...         num = num - i
+...     else:
+...         num = num + i
+...
+>>> num
+50
+def compute(n):
+    if n % 2 is 1:
+        return int(((n - 1) / 2) * (-1) + n)
+    else:
+        return int((n / 2) * (-1))
+        >>> rslt=0
+>>> for n in range(1,100):
+    rslt += n*(-1,1)[n&1]
+
+    
+>>> rslt
+50
+>>> sum(( n*(-1,1)[n&1] for n in range(1,100) ))
+50
+>>> sum((sum(range(1, 100)[::2]), -sum(range(1, 100)[1::2])))
+>>> 50
+>>> # functools和itertools是你最强大的利器。
+```
+###[laravel/eloquent 的python 版本](https://segmentfault.com/q/1010000007964817)
+```js
+https://github.com/sdispater/orator
+users = User.where('votes', '>', 100).take(10).get()
+
+for user in users:
+
+    print(user.name)
+count = User.where('votes', '>', 100).count()
+```
+###[中文首字母](https://segmentfault.com/q/1010000008248979)
+```js
+function getFirstCharter($str)
+    {
+        if (empty($str)) {
+            return '';
+        }
+
+        $fchar = ord($str{0});
+
+        if ($fchar >= ord('A') && $fchar <= ord('z'))
+            return strtoupper($str{0});
+
+        $s1 = iconv('UTF-8', 'gb2312', $str);
+
+        $s2 = iconv('gb2312', 'UTF-8', $s1);
+
+        $s = $s2 == $str ? $s1 : $str;
+
+        $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+
+        if ($asc >= -20319 && $asc <= -20284)
+            return 'A';
+
+        if ($asc >= -20283 && $asc <= -19776)
+            return 'B';
+
+        if ($asc >= -19775 && $asc <= -19219)
+            return 'C';
+
+        if ($asc >= -19218 && $asc <= -18711)
+            return 'D';
+
+        if ($asc >= -18710 && $asc <= -18527)
+            return 'E';
+
+        if ($asc >= -18526 && $asc <= -18240)
+            return 'F';
+
+        if ($asc >= -18239 && $asc <= -17923)
+            return 'G';
+
+        if ($asc >= -17922 && $asc <= -17418)
+            return 'H';
+
+        if ($asc >= -17417 && $asc <= -16475)
+            return 'J';
+
+        if ($asc >= -16474 && $asc <= -16213)
+            return 'K';
+
+        if ($asc >= -16212 && $asc <= -15641)
+            return 'L';
+
+        if ($asc >= -15640 && $asc <= -15166)
+            return 'M';
+
+        if ($asc >= -15165 && $asc <= -14923)
+            return 'N';
+
+        if ($asc >= -14922 && $asc <= -14915)
+            return 'O';
+
+        if ($asc >= -14914 && $asc <= -14631)
+            return 'P';
+
+        if ($asc >= -14630 && $asc <= -14150)
+            return 'Q';
+
+        if ($asc >= -14149 && $asc <= -14091)
+            return 'R';
+
+        if ($asc >= -14090 && $asc <= -13319)
+            return 'S';
+
+        if ($asc >= -13318 && $asc <= -12839)
+            return 'T';
+
+        if ($asc >= -12838 && $asc <= -12557)
+            return 'W';
+
+        if ($asc >= -12556 && $asc <= -11848)
+            return 'X';
+
+        if ($asc >= -11847 && $asc <= -11056)
+            return 'Y';
+
+        if ($asc >= -11055 && $asc <= -10247)
+            return 'Z';
+
+        return null;
+
+    }
+```
+###[then返回的是一个新的promise对象](https://segmentfault.com/q/1010000008249358)
+```js
+var promise1 = new Promise(function(resolve, reject) {
+  resolve(1);
+});
+var promise2 = new Promise(function(resolve, reject) {
+  reject(3);
+});
+promise1.then(function(val) {
+  console.log(val); // 1
+  return promise2;
+}).then(function(val) {
+  console.log('成功' + val); 
+},function(val){
+  console.log('失败' + val) // 失败3
+});
+```
+###[Python 随机产生中文字符](https://segmentfault.com/q/1010000008241060)
+```js
+import random
+a = '你们好'
+lists = list(a)
+print(lists)
+# 随机取出2个
+res = random.sample(lists,2)
+print(res)
+```
+###[unicode转中文](https://segmentfault.com/q/1010000008185071)
+```js
+decodeURIComponent('\u6211\u662F')
+
+function unicode2ch($str)
+{
+    if (!$str) {
+        return false;
+    }
+    if($decode=json_decode($str)){
+        return $decode;
+    }
+    $str = '['.$str.']';
+    $decode = json_decode($str);
+    if(count($decode)===1){
+        return $decode[0];
+    }
+    return false;
+}
+
+$st = '中';
+$en = json_encode($st);
+echo unicode2ch($en);
+```
+###[箭头函数里的this是定义时所在的作用域，而不是运行时所在的作用域](https://segmentfault.com/q/1010000008247977)
+```js
+var obj2 = {
+    id: 2333,
+    test: () => console.log(this)
+}
+var obj2 = {};
+obj2.id = 2333;
+var _this = this;
+obj2.test = function(){console.log(_this);}
+function OBJ(){
+    this.id = 2333;
+    this.test = () => console.log(this);
+}
+var obj2 = new OBJ();
+function OBJ(){
+    this.id = 2333;
+    var _this = this;
+    this.test = function(){console.log(_this);}
+}
+var obj2 = new OBJ();
+```
+###[计算页面刷新次数](https://segmentfault.com/q/1010000008226123)
+```js
+function count() {
+    // 当前浏览器是否支持localStorage
+    if(window.localStorage) {
+        // 是否已经有记录了，如果有进入操作
+        if(window.localStorage.getItem("count")) {
+            //拿出key对应的value， 因为存储进去的是字符串。
+            var c = parseInt(window.localStorage.getItem("count"));
+            // 设置key，value加1
+            window.localStorage.setItem("count",c+1);
+            console.log(parseInt(window.localStorage.getItem("count")));
+        }else {
+            //如果没有检查到key, 那肯定没设置，那就让他默认为0
+            window.localStorage.setItem("count",0);
+            console.log(0);
+        }
+    }
+}
+count();
+```
