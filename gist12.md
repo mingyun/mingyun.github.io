@@ -328,3 +328,43 @@ list=[10,23,1,53,654,54,16,646,65,3155,546,31]
 print bubble_sort(list)
 
 ```
+###[获取某个页面中的input的csrf_token](https://segmentfault.com/q/1010000008256515)
+```js
+"symfony/css-selector": "3.1.*",
+"symfony/dom-crawler": "3.1.*",
+"guzzlehttp/guzzle": "6.2.*"
+$body = (new \GuzzleHttp\Client)->get('http://bosonnlp.com/account/login')->getBody()->getContents();
+$csrf = (new \Symfony\Component\DomCrawler\Crawler($body))->filter('#csrf_token')->attr('value');
+var_dump($csrf);
+$res = (new \GuzzleHttp\Client)->post('http://bosonnlp.com/account/login', ['connect_timeout' => 10,
+    'form_params' => [
+        'csrf_token' => $csrf,
+        'email' => 'xxx',
+        'password' => 'xxx',
+    ],
+]);
+// 登陆后拿到的html
+$body = $res->getBody()->getContents();
+$dom = new \Symfony\Component\DomCrawler\Crawler($body);
+
+// 检查是否登录失败并抛出异常
+if ($err_str = $dom->filter('.email-warn')->text()){
+    throw new \Exception($err_str);
+}
+csrfToken是和session相关的，如果你获取csrf和登录post用的不是一个sessionid的话，csrf是无效的。所以，获取csrf和post登录请共用这一个client以共享同一个cookie $client = new Client(['cookies'=>true]);
+```
+###[convert_utf8](https://segmentfault.com/q/1010000008255392)
+```js
+function convert_utf8($data){
+  if( !empty($data) ){
+    $fileType = mb_detect_encoding($data , mb_list_encodings(), true);
+    if( strtolower($fileType) != 'utf-8'){
+      $data = mb_convert_encoding($data ,'utf-8' , $fileType);  
+    }
+  }
+  return $data;
+}
+
+$text = file_get_contents($filename);
+$text = convert_utf8($text);
+```
