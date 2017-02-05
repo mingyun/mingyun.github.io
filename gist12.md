@@ -663,3 +663,28 @@ a[9]  +  a[9]  +  a[9]  = 6
   7  -   7   /   7             = 6
   8  -   sqrt( sqrt( 8 + 8 ))  = 6
   9  -   9   /   sqrt(9)       = 6
+###[Python 表达式 i += x 与 i = i + x 等价吗](https://www.v2ex.com/t/338218)
+```js
+>>> l1 = range(3)
+>>> l2 = l1
+>>> l2 += [3]
+>>> l1
+[0, 1, 2, 3]
+>>> l2
+[0, 1, 2, 3]
+代码 2
+
+>>> l1 = range(3)
+>>> l2 = l1
+>>> l2 = l2 + [3]
+>>> l1
+[0, 1, 2]
+>>> l2
+[0, 1, 2, 3]
+```
+###[php7.1 里， mcrypt_encrypt()用openssl_encrypt()函数代替](https://www.v2ex.com/t/338027#reply6)
+mcrypt_decrypt(MCRYPT_BLOWFISH, $passphrase, base64_decode($data), MCRYPT_MODE_CBC, $iv); 
+openssl_decrypt($data, "BF-CBC", $passphrase, 0, $iv); 
+
+base64_encode(mcrypt_encrypt(MCRYPT_BLOWFISH, $passphrase, $data, MCRYPT_MODE_CBC, $iv)); 
+openssl_encrypt($data, "BF-CBC", $passphrase, null, $iv); 
