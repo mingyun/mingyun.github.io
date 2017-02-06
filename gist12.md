@@ -719,3 +719,11 @@ public function downToLocal(){
 }
     
 ```
+###[base64加密](https://segmentfault.com/q/1010000004355638)
+```js
+从结果来看应该就是 Base64。（区分大小写，字母数量大于数字的数量还有 = ）。应该就是某种方法加密之后，再用Base64编码的。前一段Base64解码出来是 aHR19\x06 \x06是ACK，确认的意思。所以后面可能是用aHR19作为密钥加密的结果。
+    $str = "YUhSMTkG==NUa0Q9PW92TDJzeExtRndjREV4TVM1dmNtY3ZRWEJ3VW1sdVp5OHhMekF3TXk4eU5qa3ZaVFk1TkdVMU9EazBNbVkzWldWa01UQTRZbVl5T0RFMk5UYzFOek5oWVdZdWJUUnk=";
+    $arr = explode("PW92", $str); #拆分前后两部分       
+    $str1 = "http:/";  #修正前面部分       
+    echo $str1.base64_decode(base64_decode($arr[1])); #分别解密后，拼接，再进一步解密    
+```
