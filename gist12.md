@@ -1461,3 +1461,77 @@ Laravel框架默认存储每次请求(每次命令行执行也相当于一次请
 在普通的http中数据库请求语句并不多，所有不会导致问题，但是需要大量数据库查询的命令行工具就显然不能这么干，解决方法是禁用query日志：
 DB::connection()->disableQueryLog();  //禁用query log
 ```
+###[loading加載完成後消失](https://segmentfault.com/q/1010000007647748)
+https://jsfiddle.net/6gpjjv40/
+https://github.com/anchengjian/components/tree/master/loading-bar 
+$(document).on("readystatechange",function(){
+
+     if (document.readyState == "complete") {
+         $(".loading").remove();
+}
+});
+###[laravel框架加载流程](http://elickzhao.github.io/2016/05/laravel%E6%A1%86%E6%9E%B6%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B/)
+![img](http://elickzhao.github.io/image/16-5/2.svg)
+```js
+public/index.php
+//引入composer自动加载程序
+require __DIR__.'/../bootstrap/autoload.php';
+//启动框架,生成应用程序
+$app = require_once __DIR__.'/../bootstrap/app.php';
+//运行应用程序,接收Request请求
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+//经过路由器分发到路由,控制器,中间件的处理返回Response
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+);
+//发送响应到浏览器
+$response->send();
+//销毁请求与响应
+$kernel->terminate($request, $response);
+bootstrap/app.php
+//创建应用程序
+$app = new Illuminate\Foundation\Application(
+    realpath(__DIR__.'/../')
+);
+//重要的接口绑定 (会根据不同请求,做不同响应.所以主要说下Http)
+$app->singleton(
+    Illuminate\Contracts\Http\Kernel::class,
+    App\Http\Kernel::class
+);
+$app->singleton(
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
+);
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
+//返回应用程序
+return $app;
+app/Http/Kernel.php
+namespace App\Http;
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+//这里需要说明下,Kernel继承自HttpKernel也就是框架基础核心.
+//基础核心主要作用就是,加载这里配置的中间件,还有就是启动框架的各种服务
+//因为该文件内容较多就不展示了,可以自己稍微看一下
+class Kernel extends HttpKernel
+{
+    //设置了全局中间件
+    protected $middleware = [
+        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\VerifyCsrfToken::class,
+    ];
+    //设置了路由中间件
+    protected $routeMiddleware = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'test'=> \App\Http\Middleware\TestMiddleware::class,
+        'mi'=> \App\Http\Middleware\MiMiddleware::class,
+    ];
+}
+```
