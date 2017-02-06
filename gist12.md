@@ -727,3 +727,123 @@ public function downToLocal(){
     $str1 = "http:/";  #修正前面部分       
     echo $str1.base64_decode(base64_decode($arr[1])); #分别解密后，拼接，再进一步解密    
 ```
+###[二维数组元素组合的算法](https://segmentfault.com/q/1010000003786297)
+```js
+$arr = array(
+    array('a','b','c'),
+    array('c','f'),
+    array('g','z'),
+    array('x','y')
+);
+//$arr子集元素长度可能会多一些
+//将$arr的子集元素与$arr其他子集元素两两组合或者三三四四组合
+//子集array('a','b','c')中的元素不需要组合
+//两两组合
+$newarr = array(
+  array('a','c'),
+  array('a','f'),
+  array('b','c'),
+  array('b','f'),
+  array('c','c'),
+  array('c','f'),
+  ……
+)
+//三三组合
+$newarr = array(
+  array('a','c','g'),
+  array('a','f','g'),
+  array('b','c','g'),
+  array('b','f','g'),
+  array('c','c','g'),
+  array('c','f','g'),
+  ……
+)
+//四四组合
+$newarr = array(
+  array('a','c','g','x'),
+  array('a','f','g','x'),
+  array('b','c','g','x'),
+  array('b','f','g','x'),
+  array('c','c','g','x'),
+  array('c','f','g','x'),
+  ……
+)
+$arr = array(
+    array('a', 'b', 'c'),
+    array('c', 'f'),
+    array('g', 'z'),
+    array('x', 'y')
+);
+
+//$arr：原始数组，$cNum：组合长度
+function getCombination($arr, $cNum) {
+    if ($cNum === 0) {
+        return return array(
+            array('a'),
+            array('b'),
+            array('c'),
+        );
+    } else {
+        $tmpArr2 = $arr;
+        $resultArr = array();
+        array_pop($tmpArr2);
+        $lastNewArr = getCombination($tmpArr2, $cNum - 1);
+        for ($i = 0; $i < count($lastNewArr); $i++) {
+            for ($j = 0; $j < count($arr[$cNum]); $j++) {
+                $tmpArr = $lastNewArr[$i];
+                $tmpArr[] = $arr[$cNum][$j];
+                $resultArr[] = $tmpArr;
+            }
+        }
+        return $resultArr;
+    }
+}
+
+print_r(getCombination($arr, count($arr) - 1));
+//PHP计算二维数组笛卡尔积
+class Descartes
+{
+    public $sourceArray;
+    public $resultArray;
+
+    public function __construct($array, $result)
+    {
+        $this->sourceArray = $array;
+        $this->resultArray = $result;
+    }
+
+    public function calcDescartes($arrIndex, $arrResult)
+    {
+        if ($arrIndex >= count($this->sourceArray)) {
+            array_push($this->resultArray, $arrResult);
+            return ;
+        }
+
+        $currentArray = $this->sourceArray[$arrIndex];
+        $currentArrayCount = count($currentArray);
+        $arrResultCount = count($arrResult);
+
+        for ($i = 0; $i < $currentArrayCount; ++$i) {
+            $currentArraySlice = array_slice($arrResult, 0, $arrResultCount);
+            array_push($currentArraySlice, $currentArray[$i]);
+            $this->calcDescartes($arrIndex + 1, $currentArraySlice);
+        }
+    }
+
+}
+
+$example = [
+    ['a', 'b', 'c'],
+    ['c', 'f'],
+    ['g', 'z'],
+    ['x', 'y']
+];
+
+$result = [];
+
+$descartes = new Descartes($example, $result);
+$descartes->calcDescartes(0, $result);
+
+var_dump($descartes->resultArray);
+
+```
