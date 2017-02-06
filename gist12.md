@@ -1056,3 +1056,386 @@ Array
 $string = openssl_encrypt('要加密的数据','des-cfb','秘钥des为8位',0,'IV des为8位');
 var_dump($string);
 ```
+###[js前端插件](http://elickzhao.github.io/2017/01/js%E5%89%8D%E7%AB%AF%E6%8F%92%E4%BB%B6%E5%A4%A7%E6%80%BB%E7%BB%93/)
+打字输入效果的插件https://github.com/Zhouzi/TheaterJS 
+强大的纯Js模态消息对话框插件 https://github.com/limonte/sweetalert2 
+一个好看的时钟 https://github.com/objectivehtml/FlipClock 
+###[npm 及 node.js 升级自己](http://elickzhao.github.io/2017/01/Npm%E5%8F%8A%20node.js%20%E5%8D%87%E7%BA%A7%E8%87%AA%E5%B7%B1%20/)
+```js
+npm -g install npm
+# node有一个模块叫n（这名字可够短的。。。），是专门用来管理node.js的版本的。
+# 首先安装n模块：
+npm install -g n 
+#升级node.js到最新稳定版
+n stable
+# n 后面也可以跟随版本号比如： 
+n v0.10.26
+n这个程序好像只是在linux下才好使,windows下是没用的.
+```
+###[JS 数组的 push 与 concat 区别](http://elickzhao.github.io/2016/12/JS%20%E6%95%B0%E7%BB%84%E7%9A%84%20push%20%E4%B8%8E%20concat%20%E5%8C%BA%E5%88%AB/)
+```js
+var a = [1,2,3,4];
+a.push(5);  //a 现在是1,2,3,4,5
+var a = [1,2,3,4];
+var b = [5,6];
+var c = a.concat(b); // a,b 数组都不变，c变成了1,2,3,4,5,6
+//这里要注意是 c 变成了合并数组 不是 b , 所以这和push是有区别的
+var arr1= [1,2,3];  
+arr1.push.apply(arr1,[4,5]);  // 这时 arr1 就是 [1,2,3,4,5]
+
+```
+###[cooking 更易上手的前端构建工具](http://elickzhao.github.io/2016/12/cooking%20%E7%AE%80%E4%BB%8B%20%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/)
+首先确保是在 NPM 3+, Node 4+, Python 2.7+ 环境下运行
+
+第一步：安装 cooking 命令行工具
+
+npm i cooking-cli -g
+
+第二步：使用创建项目
+
+cooking create my-project vue
+
+第三步：开始开发
+
+cd my-project && cooking watch
+
+后续：打包、测试等
+
+cooking build # or cooking run test
+https://zhuanlan.zhihu.com/p/22387692
+https://cookingjs.github.io/zh-cn/intro.html
+
+###[Windows 系统下设置Nodejs NPM全局路径](http://elickzhao.github.io/2016/12/Windows%20%E7%B3%BB%E7%BB%9F%E4%B8%8B%E8%AE%BE%E7%BD%AENodejs%20NPM%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/)
+```js
+查看配置命令
+npm config ls -l
+
+Windows下的Nodejs npm路径是appdata，很不爽，想改回来，但是在cmd下执行以下命令也无效
+
+npm config set cache “C:\Program Files\nodejs\node_cache”
+
+npm config set prefix “C:\Program Files\nodejs”
+
+最后在nodejs的安装目录中找到node_modules\npm.npmrc文件
+
+修改如下即可：
+
+prefix = D:\nodejs\node_global
+cache = D:\nodejs\node_global
+```
+###[laravel 修改用户验证为MD5加密方式](http://elickzhao.github.io/2016/11/laravel%20%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E9%AA%8C%E8%AF%81%E4%B8%BAMD5%E5%8A%A0%E5%AF%86%E6%96%B9%E5%BC%8F/)
+```js
+(laravel插件) laravel-backup 备份插件http://elickzhao.github.io/2016/10/[laravel%E6%8F%92%E4%BB%B6]%20laravel-backup%20%E5%A4%87%E4%BB%BD%E6%8F%92%E4%BB%B6/  https://packagist.org/packages/spatie/laravel-backup
+Illuminate\Auth\EloquentUserProvider
+larave后台日志插件rap2hpoutre/laravel-log-viewer和ARCANEDEV/LogViewer  http://elickzhao.github.io/2016/06/larave%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%8F%92%E4%BB%B6/
+// 114行左右
+/**
+ * Validate a user against the given credentials.
+ *
+ * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+ * @param  array  $credentials
+ * @return bool
+ */
+public function validateCredentials(UserContract $user, array $credentials)
+{
+    $plain = $credentials['password'];
+    //XXX 自己修改的 md5验证, 这是最快捷的方式,虽然存在隐患,以后再解决吧
+    return md5($plain) == $user->getAuthPassword();
+    //return $this->hasher->check($plain, $user->getAuthPassword());
+}
+实现 Hasher 接口,然后替换掉原来的 BcryptHasher 这个类
+namespace Illuminate\Contracts\Hashing;
+interface Hasher
+{
+    public function make($value, array $options = []);
+    public function check($value, $hashedValue, array $options = []);
+    public function needsRehash($hashedValue, array $options = []);
+}
+//实现这个接口很简单
+    public function validateCredentials(UserContract $user, array $credentials)
+    {
+        $plain = $credentials['password'];
+        //return md5($plain) == $user->getAuthPassword();
+        //这里的 hasher 的就行了. 不过还是得改代码
+        return $this->hasher->check($plain, $user->getAuthPassword());
+    }
+```
+###[php 抽象类的用法 (abstract)](http://elickzhao.github.io/2016/10/php%20%E6%8A%BD%E8%B1%A1%E7%B1%BB%E7%9A%84%E7%94%A8%E6%B3%95%20(abstract)/)
+```js
+定义为抽象的类不能被实例化。任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。被定义为抽象的方法只是声明了其调用方式（参数），不能定义其具体的功能实现。
+namespace ApiDemo\Repositories\Eloquent;
+abstract class BaseRepository
+{
+    protected $model;
+    public function __construct()
+    {
+        $this->model = app()->make($this->model());
+    }
+    abstract public function model();
+    public function paginate($limit = null)
+    {
+        return $this->model
+            ->paginate($limit);
+    }
+ namespace ApiDemo\Repositories\Eloquent;
+use ApiDemo\Repositories\Contracts\UserRepositoryContract;
+class UserRepository extends BaseRepository implements UserRepositoryContract
+{
+    public function model()
+    {
+        return 'ApiDemo\Models\User';
+    }
+}   
+```
+###[Gravatar头像](http://elickzhao.github.io/2016/10/%E8%A7%A3%E5%86%B3%20Gravatar%20%E8%A2%AB%E5%A2%99%E5%AF%BC%E8%87%B4%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/)
+http://www.gravatar.com
+http://0.gravatar.com
+http://1.gravatar.com
+http://2.gravatar.com
+http://gravatar.com
+http://cn.gravatar.com 使用这个就好了
+https://secure.gravatar.com
+###[JSFiddle 改写展示标签](http://elickzhao.github.io/2016/07/JSFiddle%20%E6%94%B9%E5%86%99%E5%B1%95%E7%A4%BA%E6%A0%87%E7%AD%BE/)
+```js
+原有的标签顺序狠不好,JS文件在前显示结果在后.所以要改一下,把结果放在前面.
+//jsfiddle.net/elick/s03Lk51x/embedded/result,js,html,css
+其实很简单,embedded/后面这个结构就是标签顺序.http://code.hcharts.cn/blog-demo/OYZT3i/1 
+//其实这个很直白了 因为一般bool值 表示 ture 为 1 false 为 0
+!0 == true 
+!!0 == false 
+//但是 !0 === true 这是错的 恒等于 是不会转义类型的 所以 0 还是 int 型  所以不能与 bool 型相等
+//这些都是同理了
+!1 == false
+!!1 == true
+//这是设置 a 为 undefined , 如果用字符串代替会存在浏览器兼容问题
+//也可以在 return 时使用,表示返回空,只是执行操作.
+//具体看下面参考文档
+var a = viod 0;
+```
+###[php 隐藏下载地址](http://elickzhao.github.io/2016/07/php%20%E9%9A%90%E8%97%8F%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80/)
+```js
+$file_size = filesize($url); 
+header("Content-type: application/octet-stream"); 
+header("Accept-Ranges: bytes"); 
+header("Accept-Length: $file_size");
+header("Content-Disposition: attachment; filename=".basename($url)); 
+header("location: $url");
+```
+###[PHP 扩展模块 phpize 解释](http://elickzhao.github.io/2016/06/PHP%20%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97%20phpize%20%E8%A7%A3%E9%87%8A/)
+	
+/home/vsrank/php/bin/phpize
+make  
+make install
+extension="/home/vsrank/php/lib/php/extensions/no-debug-non-zts-20090626/sockets.so"
+###[js 操作文件 FileAPI](http://elickzhao.github.io/2016/05/js%20%E6%93%8D%E4%BD%9C%E6%96%87%E4%BB%B6%20FileAPI/)
+```js
+!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="user-scalable=no, width=400, initial-scale=0.8, maximum-scale=0.8" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="yes" />
+	<meta name="format-detection" content="email=no" />
+	<meta name="HandheldFriendly" content="true" />
+	<script>
+		// Объект настройки
+		var FileAPI = {
+			debug: true, // режим отладки
+			staticPath: './' // путь до флешек
+		};
+	</script>
+	<title>Document</title>
+	<script src="dist/FileAPI.min.js"></script>
+</head>
+<body>
+	<input type="file" name='my-input' id='singleFile'>
+	<script>
+	(function (){
+		FileAPI.event.on(singleFile,'change' ,function (evt/**Event*/){
+		  // Retrieve file list
+		  var files = FileAPI.getFiles(singleFile);
+				if( files.length ){
+					FileAPI.each(files, function (file){
+						FileAPI.readAsText(file, "utf-8", function (evt/**Object*/){
+						  if( evt.type == 'load' ){
+						    // Success
+						     var text = evt.result;
+						     //console.log(text);
+						     alert(text);
+						  } else if( evt.type =='progress' ){
+						    var pr = evt.loaded/evt.total * 100;
+						    console.log(pr);
+						  } 
+						});
+					});
+				}
+		});
+	})();
+	</script>
+</body>
+</html>
+https://github.com/mailru/FileAPI
+```
+###[Laravel项目 基本开发流程](http://elickzhao.github.io/2016/05/Laravel%E9%A1%B9%E7%9B%AE%20%E5%9F%BA%E6%9C%AC%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/)
+```js
+composer create-project laravel/laravel myapp --prefer-dist
+//安装程序
+composer require barryvdh/laravel-ide-helper
+//配置文件到 config > app.php > 服务数组里
+Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+//生成提示文件 这样一些静态命令才会有提示
+php artisan ide-helper:generate
+//在composer.json里 添加更新时命令 (为确保提示为最新的 当加载程序变更时 自动重启生成 顺序不能变)
+        "pre-update-cmd": [
+            "php artisan clear-compiled",
+            "php artisan ide-helper:generate",
+            "php artisan optimize"
+        ],//安装程序
+composer require barryvdh/laravel-debugbar
+//配置程序
+Barryvdh\Debugbar\ServiceProvider::class,
+//配置门面别名
+'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+```
+###[laravel模型学习笔记](http://elickzhao.github.io/2016/06/laravel%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/)
+```js
+//指定表名  
+protected $table = 'my_flights';
+//这个限制只决定怎么插入到数据库 不决定怎么取出数据
+protected $dateFormat = 'Y-m-d';
+//白名单 可以直接创建数据的字段
+protected $fillable = ['title','intro','content','published_at'];
+//黑名单 除此之外的字段都可以直接创建
+protected $guarded = ['created_at','updated_at'];
+//设置字段为Carbon实例 可以直接使用Carbon方法
+protected $dates = ['published_at'];
+//属性转换类型 key是字段名称 value是要转换成的类型
+protected $casts = ['is_admin' => 'boolean',];
+//数组转换 把数组转化成JSON格式存入数据库 读取时自动转化成数组
+protected $casts = ['options' => 'array', ];function flight()
+{
+    //默认外键为flight_id  这里的外键还是相对于Flight来说的  这是因为这个是belongsTO从属表  所以外键是位于表内字段
+    //return $this->belongsTo('App\Flight','f_id','airline');
+    //这里内键也是相对Flight说 其实是Flight的内部字段
+    return $this->belongsTo('App\Flight','flight_fid','airline');
+}
+//隐藏模型的一些属性 直接输出的时候是无法看见的
+protected $hidden = ['password'];
+//显示白名单 那些字段直接输出是可以被看到的
+protected $visible = ['first_name', 'last_name'];
+//追加字段到返回数组中 而且是数据库没有的字段 而且需要访问器的帮忙
+//但这个不理解有什么用处 他其实是通过已有字段经过判断后输出 两个字段都能返回 只不过这个返回是布尔值
+protected $appends = ['is_admin'];
+App\Flight::updateOrCreate(['name'=>'Flight 10'],['airline'=>'888']);
+
+DB::table('users')
+->whereExists(function ($query) {
+    $query->select(DB::raw(1))
+        ->from('orders')
+        ->whereRaw('orders.user_id = users.id');
+})
+->get();
+select * from users where exists (select 1 from orders where orders.user_id = users.id)
+生成上面那句语句 exists 判断括号内语句是否为真 为真则搜索 为假则放弃
+public function fly(){
+    //外键一般用当前模型的表名加ID 例如 flight_id
+    //这个外键是int类型或者是varchar类型都可以
+    //第三个参数是表内关联的键  也是就是当期模型的表所含的字段  外键是关联外部的表所含的字段
+    return $this->hasOne('App\Flys','flight_fid','airline');
+}
+/*
+  实际上在底层无论是hasOne方法还是belongsTo方法都可以接收额外参数，
+  比如如果user_accounts中关联users的外键是$foreign_key，该外键对应users表中的列是$local_key，
+  那么我们可以这样调用hasOne方法：
+  $this->hasOne('App\Models\UserAccount',$foreign_key,$local_key);
+  调用belongsTo方法也是一样：
+  $this->belongsTo('App\User',$foreign_key,$local_key);
+  此外，belongsTo还接收一个额外参数$relation，用于指定关联关系名称，
+  其默认值为调用belongsTo的方法名，这里是user。
+ * */
+ //注意我们定义中间表的时候没有在结尾加s并且命名规则是按照字母表顺序，
+//将role放在前面，user放在后面，并且用_分隔
+//所以RoleUser这个model必须指定表名 要不会出错的 protected $table = 'role_user';
+//至于字段就没有说道了
+$user = User::find(1);
+```
+###[composer 一些使用记录](http://elickzhao.github.io/2016/04/composer%20%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/)
+```js
+composer selfupdate                      
+composer require "foo/bar:1.0.0"                    安装一个库
+composer update foo/bar                             更新单个库
+composer create-project laravel/laravel myapp --prefer-dist 创建laravel项目
+composer config -g repo.packagist composer https://packagist.phpcomposer.com 配置仓库镜像
+composer global require "laravel/installer=~1.1"    全局安装laravel安装器
+composer install update --prefer-dist               后面这个参数是强制使用压缩包
+composer install --profile                          后面这个参数是显示安装时间
+composer dump-autoload --optimize                   生产环境优化
+composer update symfony/yaml --prefer-source        强制克隆代码 用于修改库文件
+当你更新一个修改的库的时候 会提示你是否放弃修改
+----------------------------------------------------------------------------------------------------
+$ composer update
+Loading composer repositories with package information  
+Updating dependencies  
+  - Updating symfony/symfony v2.2.0 (v2.2.0- => v2.2.0)
+    The package has modified files:
+    M Dumper.php
+    Discard changes [y,n,v,s,?]?
+    全局配置目录
+C:\Users\elick\AppData\Roaming\Composer
+```
+###[PHP 获取服务器详细信息](http://elickzhao.github.io/2016/04/PHP%20%E8%8E%B7%E5%8F%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF%E4%BB%A3%E7%A0%81/)
+```js
+获取系统类型及版本号：	php_uname()
+只获取系统类型：	php_uname('s')
+只获取系统版本号：	php_uname('r')
+获取PHP运行方式：	php_sapi_name()
+获取前进程用户名：	Get_Current_User()
+$_ENV[]	存储当前WEB环境变量
+```
+###[bootstrap 该死的IE兼容](http://elickzhao.github.io/2016/05/bootstrap%20%E8%AF%A5%E6%AD%BB%E7%9A%84IE%E5%85%BC%E5%AE%B9/)
+```js
+if (!("classList" in document.documentElement)) {
+    //兼容ie8  HTMLElement
+    window.HTMLElement = window.HTMLElement || Element;
+    //兼容ie9 classlist
+    Object.defineProperty(HTMLElement.prototype, 'classList', {
+      get: function() {
+        var self = this;
+        function update(fn) {
+          return function(value) {
+            var classes = self.className.split(/\s+/g),
+              index = classes.indexOf(value);
+            fn(classes, index, value);
+            self.className = classes.join(" ");
+          }
+        }
+        return {
+          add: update(function(classes, index, value) {
+            if (!~index) classes.push(value);
+          }),
+          remove: update(function(classes, index) {
+            if (~index) classes.splice(index, 1);
+          }),
+          toggle: update(function(classes, index, value) {
+            if (~index)
+              classes.splice(index, 1);
+            else
+              classes.push(value);
+          }),
+          contains: function(value) {
+            return !!~self.className.split(/\s+/g).indexOf(value);
+          },
+          item: function(i) {
+            return self.className.split(/\s+/g)[i] || null;
+          }
+        };
+      }
+    });
+  }
+</script>
+window.HTMLElement = window.HTMLElement || Element;
+
+```
