@@ -1439,3 +1439,25 @@ if (!("classList" in document.documentElement)) {
 window.HTMLElement = window.HTMLElement || Element;
 
 ```
+###[Chrome 控制台console的用法](http://elickzhao.github.io/2016/11/Chrome%20%E6%8E%A7%E5%88%B6%E5%8F%B0console%E7%9A%84%E7%94%A8%E6%B3%95/)
+```js
+arr=["$$", "$x", "dir", "dirxml", "keys", "values", "profile", "profileEnd", "monitorEvents", "unmonitorEvents", "inspect", "copy", "clear", "getEventListeners", "undebug", "monitor", "unmonitor", "table", "$0", "$1", "$2", "$3", "$4", "$_"]
+console.log("%d年%d月%d日",2011,3,26);
+console.log("圆周率是%f",3.1415926);
+copy通过此命令可以将在控制台获取到的内容复制到剪贴板
+$ // 简单理解就是 document.querySelector 而已。
+$$ // 简单理解就是 document.querySelectorAll 而已。
+$_ // 是上一个表达式的值
+$0-$4 // 是最近5个Elements面板选中的DOM元素，待会会讲。
+dir // 其实就是 console.dir
+keys // 取对象的键名, 返回键名组成的数组
+values // 去对象的值, 返回值组成的数组
+console.dirxml用来显示网页的某个节点（node）所包含的html/xml代码
+```
+###[Laravel大量数据库查询导致php进程内存耗尽](http://blog.csdn.net/geniuslinchao/article/details/51491308)
+```js
+$item = DB::table('表名')->where('user_id', $user_id)->where.
+Laravel框架默认存储每次请求(每次命令行执行也相当于一次请求)的所有数据库查询语句！！！
+在普通的http中数据库请求语句并不多，所有不会导致问题，但是需要大量数据库查询的命令行工具就显然不能这么干，解决方法是禁用query日志：
+DB::connection()->disableQueryLog();  //禁用query log
+```
