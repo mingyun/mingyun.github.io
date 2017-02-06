@@ -683,8 +683,39 @@ a[9]  +  a[9]  +  a[9]  = 6
 [0, 1, 2, 3]
 ```
 ###[php7.1 里， mcrypt_encrypt()用openssl_encrypt()函数代替](https://www.v2ex.com/t/338027#reply6)
+```js
 mcrypt_decrypt(MCRYPT_BLOWFISH, $passphrase, base64_decode($data), MCRYPT_MODE_CBC, $iv); 
 openssl_decrypt($data, "BF-CBC", $passphrase, 0, $iv); 
 
 base64_encode(mcrypt_encrypt(MCRYPT_BLOWFISH, $passphrase, $data, MCRYPT_MODE_CBC, $iv)); 
-openssl_encrypt($data, "BF-CBC", $passphrase, null, $iv); 
+openssl_encrypt($data, "BF-CBC", $passphrase, null, $iv);
+``` 
+###[cli下pdo不可用](https://segmentfault.com/q/1010000008258119)
+```js
+系统中装有两套以上的php环境，浏览器访问用和cli不是同一套，可以检查一下web服务用的php的完整路径，然后使用这个路径下的php执行cli模式，比如/usr/local/php/bin/php xx.php
+```
+###[显示存在storage目录中的图片文件](https://segmentfault.com/q/1010000008258288)
+```js
+// 控制器
+// https://github.com/shellus/shcms/blob/v2.0.0/app/Http/Controllers/FileController.php
+
+class FileController extends Controller
+{
+    public function show($id){
+        return File::findOrFail($id) -> downResponse();
+    }
+}
+
+// Model
+https://github.com/shellus/shcms/blob/v2.0.0/app/File.php
+
+public function downResponse(){
+    return new BinaryFileResponse($this -> downToLocal());
+}
+public function downToLocal(){
+    $temp_path = tempnam(sys_get_temp_dir(), $this->id);
+    $is_success = file_put_contents($temp_path, \Storage::disk('public')->get($this -> full_path));
+    return $temp_path;
+}
+    
+```
