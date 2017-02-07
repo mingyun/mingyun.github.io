@@ -472,3 +472,41 @@ session_start();
         curl_close($ch);
     }
 ```
+###[mysql商家商品获取](https://segmentfault.com/q/1010000008271106)
+```js
+SELECT seller
+FROM (SELECT
+        seller,
+        count(product) AS product_count
+      FROM seller_product
+      WHERE product IN (001, 002)
+      GROUP BY seller) AS seller_list
+WHERE product_count = 2
+```
+###[两个列表的“笛卡尔乘积” ](http://www.iteye.com/topic/106747)
+```js
+>>> functools.reduce(lambda x,y: x+y**2,range(1,3))
+5
+>>> [(x , y) for x in range(4) for y in [3,1,7,8]]
+[(0, 3), (0, 1), (0, 7), (0, 8), (1, 3), (1, 1), (1, 7), (1, 8), (2, 3), (2, 1),
+ (2, 7), (2, 8), (3, 3), (3, 1), (3, 7), (3, 8)]
+>>>
+26个英语字母，分别用1～26标识，就是一个单词所有标识的和http://www.iteye.com/topic/750294
+import types  
+reduce(lambda x,y:(x if type(x)==types.IntType else ord(x)-96)+ord(y)-96,[x for x in 'attitude'])  
+sum([ord(i)-96 for i in list('attitude')]) 
+sum( [ ord(ch) - 96 for ch in 'attitude' ] )  
+
+```
+###[ 检测时间是否正确](http://blog.csdn.net/u010265663/article/details/50493781)
+```js
+function check_Datetime($str, $format = "Y-m-d H:i:s"){
+    $time = strtotime($str);  //转换为时间戳
+    $checkstr = date($format, $time); //在转换为时间格式
+    if($str == $checkstr){
+        return 1;
+    }else{
+        return 2;
+    }
+}
+```
