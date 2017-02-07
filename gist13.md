@@ -569,4 +569,76 @@ True
   4.2如果你的webpack是是用npm安装的，则在dos下执行npm config get prefix；后续步骤同4.1所述；
 5.关闭dos窗口，再次打开dos；就好了；
 echo $NODE_PATH;http://elickzhao.github.io/2016/10/webpace%20%E9%9B%B6%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/   http://www.yatessss.com/2016/01/29/%E5%88%9D%E5%AD%A6webpack%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91.html
+https://zhuanlan.zhihu.com/p/20397902  Webpack傻瓜指南（二）开发和部署技巧 
+ webpack --display-error-details来打印错误详情。
+ Webpack 中涉及路径配置最好使用绝对路径，建议通过 path.resolve(__dirname, "app/folder") 或 path.join(__dirname, "app", "folder") 的方式来配置，以兼容 Windows 环境
+  webpack --progress --colors
+  # 安装
+$ npm install webpack-dev-server -g
+在浏览器打开 http://localhost:8080/ 或 http://localhost:8080/webpack-dev-server/ 可以浏览项目中的页面和编译后的资源输出
+# 运行
+$ webpack-dev-server --progress --colors
+demo https://github.com/zhaoda/webpack-handbook/blob/master/examples/start/webpack.config.js
+```
+###[数组排序](https://segmentfault.com/q/1010000008276449)
+```js
+var arr_1 = ["2017-02-05", "2017-02-06", "2017-02-04", "2017-01-31", "2017-02-01", "2017-02-02", "2017-02-03"]
+
+var arr_2 = ["142146.00", "93380.03", "49825.00", "90437.00", "69174.00", "73603.00", "76662.00"]
+
+
+var arr_3 = [];
+
+arr_1.forEach(function(v, i){
+  arr_3.push({
+    'date': v,
+    'money': arr_2[i]
+  });
+});
+
+arr_3.sort(function(a, b){
+  return a.date > b.date
+});
+
+console.log(JSON.stringify(arr_3));
+//[{"date":"2017-01-31","money":"90437.00"},{"date":"2017-02-01","money":"69174.00"},{"date":"2017-02-02","money":"73603.00"},{"date":"2017-02-03","money":"76662.00"},{"date":"2017-02-04","money":"49825.00"},{"date":"2017-02-05","money":"142146.00"},{"date":"2017-02-06","money":"93380.03"}]
+```
+###[shell判断两个文件是否相等](https://segmentfault.com/q/1010000008276725)
+```js
+#cat temp
+#/bin/sbin
+file1=/workstation/develop/a.txt
+file2=/workstation/develop/a.txt
+diff $file1 $file2 > /dev/null
+if [ $0 == 0 ]; then
+    echo "yes"
+else
+    echo "no"
+fi
+x=$(diff --binary p1.js ex2.js);
+if [[ -z $x ]]; then
+  echo '相等'; 
+else
+  echo '不相等';
+fi
+```
+###[数组remove元素](https://segmentfault.com/q/1010000008273313)
+```js
+Array.prototype.remove = function(num){
+    var l = this.length;
+    for(var i=0;i<this.length;i++){
+        if(this[i]==num){
+            this.splice(i,1)
+        }
+    }
+    if(l==this.length){
+        console.log("没有删除任何元素")
+    }
+}
+
+var arr = new Array("111111",8,11,4,5);
+
+arr.remove("111111")
+console.log(arr);
+
 ```
