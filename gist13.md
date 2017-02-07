@@ -556,3 +556,17 @@ True
 >>> e
 [1, 2, [3333, 4]] #因为时深拷贝，这时e中内部元素[]列表的值不会因为a中的值改变而改变
 ```
+###[nodejs npm webpack Cannot find module ‘webpack/lib/node/NodeTemplatePlugin](http://www.fddcn.cn/cannot-find-module-webpacklibnodenodetemplateplugin.html)
+```js
+当你在windows系统的dos下执行：webpack命令时在dos下出现 “Cannot find module ‘webpack/lib/node/NodeTemplatePlugin”；
+解决方法是：配置环境变量，指定webpack/lib/node/NodeTemplatePlugin的准确路径；
+1.右键我的电脑点击属性，弹出以”系统“为标题的窗口；
+2.点击左侧高级系统，弹出系统属性窗口；
+3.点击环境变量，弹出环境变量窗口；
+4.
+  4.1如果你的webpack是是用cnpm安装的，则在dos下执行cnpm config get prefix，然后会在界面输出一个路径；我的是F:\Program Files\nodejs
+然后在第3步弹出的环境变量窗口中 系统变量里新建变量NODE_PATH，值为：以第4步得到的路径开头，F:\Program Files\nodejs\node_modules;然后一直点击确定；
+  4.2如果你的webpack是是用npm安装的，则在dos下执行npm config get prefix；后续步骤同4.1所述；
+5.关闭dos窗口，再次打开dos；就好了；
+echo $NODE_PATH;http://elickzhao.github.io/2016/10/webpace%20%E9%9B%B6%E5%9F%BA%E7%A1%80%E6%95%99%E7%A8%8B/   http://www.yatessss.com/2016/01/29/%E5%88%9D%E5%AD%A6webpack%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91.html
+```
