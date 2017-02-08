@@ -800,3 +800,19 @@ getprim(1000)
 ###[用phantomjs生成截图文件很大](https://segmentfault.com/q/1010000008283594)
 phantomjs rasterize.js "http://www.XXX.com/aa/bb/c.html" x.png
 可以在截图后调用第三方包对图像进行后续处理，比如PNG Quant
+###[laravel 本地 跳转一个链接需要2~3s](https://segmentfault.com/q/1010000008284766)
+mysql连接用127.0.0.1而不是localhost。慢的原因是localhost解析到ipv6了，然后tcp连接1秒，超时，转而链接ipv4，所以导致了不管干什么都在1秒以上了
+###[webpack 2 默认不支持简写的loader了](https://segmentfault.com/q/1010000008286904)
+在 Webpack 2 中，你不能在使用 style-loader 的缩写 style 形式，因为 Webpack 2 不会再自动补全成 style-loader 。 你应该使用 loader 的全称，也就是 style-loader、css-loader 
+###日期间隔
+```js
+$a='2017-01-11';
+$b='2017-02-12';
+
+$arr = [];
+for($i=strtotime($a);$i<=strtotime($b);$i+=86400){
+    $arr[]=date('Y-m-d',$i);
+}
+
+print_r($arr);
+```
