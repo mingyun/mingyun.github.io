@@ -1105,3 +1105,84 @@ def getText(url):
 getText('http://www.360.cn/')
 
 ```
+###[下载美女图](https://www.waitalone.cn/netbian-images-down.html)
+```js
+#!/usr/bin/env python
+# -*- coding: gbk -*-
+# -*- coding: utf-8 -*-
+# Date: 2016/4/25
+# Created by 独自等待
+# 博客 http://www.waitalone.cn/
+import urllib2
+
+try:
+    from lxml import html
+except ImportError:
+    raise SystemExit(u'模块导入错误,请使用pip install lxml安装!')
+
+nums = 10  # 下载多少页,每页大概18张
+imgtype = 'meinv'  # 壁纸的分类,比如：meinv,fengjing
+
+
+def downlist():
+    u"获取需要下载的壁纸列表函数"
+    todownlist = []  # 保存需要下载的壁纸URL
+
+    for i in range(1, nums + 1):
+        if i == 1:
+            url = 'http://www.netbian.com/' + imgtype + '/index.htm'
+        else:
+            url = 'http://www.netbian.com/' + imgtype + '/index_%d.htm' % i
+        try:
+            response = urllib2.urlopen(url, timeout=10).read()
+        except Exception, msg:
+            print msg
+        else:
+            imglink = html.fromstring(response)
+            imgalist = imglink.xpath('//div[@class="list"]/ul/li/a/@href')
+            imgalist = [l.replace('.htm', '') for l in imgalist if 'desk' in l]
+            downlist = ['http://www.netbian.com' + d + '-1920x1080.htm' for d in imgalist]
+            todownlist.extend(downlist)
+    return todownlist
+
+
+def downimg():
+    u"下载壁纸并自动更名"
+    cnt = 0
+    for link in downlist():
+        cnt += 1
+        try:
+            response = urllib2.urlopen(link, timeout=10).read()
+        except Exception, msg:
+            print msg
+        else:
+            img = html.fromstring(response)
+            imgsrclist = img.xpath('//td[@align="left"]/img/@src')
+            try:
+                if imgsrclist:
+                    imgres = urllib2.urlopen(imgsrclist[0]).read()
+                else:
+                    continue
+            except Exception, msg:
+                print msg
+            else:
+                print u'[!] 爷,小的正努力下载[ %s ]类第[ %.3d ]张壁纸!' % (imgtype, cnt)
+                with open(imgtype + u'壁纸%.3d.jpg' % cnt, 'wb') as imgfile:
+                    imgfile.write(imgres)
+
+
+if __name__ == '__main__':
+    print '+' + '-' * 60 + '+'
+    print u'\t\tPython 彼岸壁纸下载器'
+    print u'\t   Blog：http://www.waitalone.cn/'
+    print u'\t\t Code BY： 独自等待'
+    print u'\t\t Time：2016-04-25'
+    print '+' + '-' * 60 + '+'
+    print u'正在下载中,请稍候……\n'
+    try:
+        downimg()
+    except KeyboardInterrupt:
+        print u'[x] 爷,还没有下载完哦!'
+    print u'\n恭喜爷,已经下载完毕.请查看!'
+
+```
