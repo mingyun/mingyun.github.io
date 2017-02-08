@@ -741,4 +741,21 @@ $v = $arr[0];
 $v = $arr[1];
 $v = $arr[2];
 //var_dump($arr);
+
+php是没有块级作用域的！！！
+也就是说，第一个循环结束后，$item依然指向数组的第三个成员。
+之后每次循环，就把数组的第一个值写到第三个成员，然后是第二个值写个第三个成员，然后是第二个值写个第三个成员，但此时第三个值已经被上次修改成2了，所以这次第三个值会被修改成2
+```
+###[字典中根据value值取对应的key值](https://segmentfault.com/q/1010000008277059)
+```js
+def get_keys(d, value):
+    return [k for k,v in d.items() if v == value]
+    
+get_keys({'a':'001', 'b':'002'}, '001') # => ['a']
+>>> dicxx = {'a':'001', 'b':'002'}
+>>> list(dicxx.keys())[list(dicxx.values()).index("001")]
+'a'
+dicxx = {'a':'001', 'b':'002'}
+new_dict = {v:k for k,v in dicxx.items()}  # {'001': 'a', '002': 'b'}
+new_dict['001']  # 'a'
 ```
