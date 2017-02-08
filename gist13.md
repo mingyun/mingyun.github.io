@@ -759,3 +759,44 @@ dicxx = {'a':'001', 'b':'002'}
 new_dict = {v:k for k,v in dicxx.items()}  # {'001': 'a', '002': 'b'}
 new_dict['001']  # 'a'
 ```
+###文字转图片
+```js
+text = u"这是一段测试文本，test 123。"
+ 
+im = Image.new("RGB", (300, 50), (255, 255, 255))
+dr = ImageDraw.Draw(im)
+#font = ImageFont.truetype(os.path.join("fonts", "msyh.ttf"), 14)
+font = ImageFont.truetype("STKAITI.ttf", 18)
+dr.text((10, 5), text, font=font, fill="#000000")
+ 
+im.show()
+im.save("t.png")
+print [x for x in xrange(1, 100) if not [y for y in xrange(2, x/2+1) if x % y == 0]]
+http://python-china.org/t/254
+print reduce(lambda l, y : not 0 in map(lambda x: y % x, l) and l + [y] or l, xrange(2, 100), [])
+filter(lambda prime: all(prime%num for num in range(2, prime)), range(2, max))
+```
+###定义求质数的函数
+```js
+def getprim(n):
+    #我们从3开始，提升效率，呵呵，微乎其微啦
+    p=3
+    x=0
+    while(x<n):
+        result=True
+        for i in range(2,p-1):
+            if(p%i==0):
+                result=False
+        if result==True:
+        x=x+1
+    rst=p
+    #注意:这里加2是为了提升效率，因为能被双数肯定不是质数。
+    p=+2 
+    print(rst)
+
+调用函数
+getprim(1000)
+```
+###[用phantomjs生成截图文件很大](https://segmentfault.com/q/1010000008283594)
+phantomjs rasterize.js "http://www.XXX.com/aa/bb/c.html" x.png
+可以在截图后调用第三方包对图像进行后续处理，比如PNG Quant
