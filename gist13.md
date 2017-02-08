@@ -642,3 +642,103 @@ arr.remove("111111")
 console.log(arr);
 
 ```
+###[获取前七天的日期](https://segmentfault.com/q/1010000008278376)
+var dayBefore=new Date().getTime()-24*60*60*7*1000;;
+var result=new Date(dayBefore).getDate();
+console.log(result);
+
+###[git diff打印两个文件的不同之处](https://segmentfault.com/q/1010000008280203)
+--- a/readme.txt
++++ b/readme.txt
+这个意思就是，你的 readme.txt 文件有改动。
+
+======= 是分割线
+分割线以上到 <<<<<<< HEAD 有两行，表示你本地的 HEAD 里面加了两行内容
+分割线以下到 >>>>>>> origin/master 没有内容，表示 origin remote 的 master branch 这个位置是空的
+"---"表示变动前的版本，"+++"表示变动后的版本。
+###[李白打酒](https://segmentfault.com/q/1010000008252344)
+```js
+话说大诗人李白，一生好饮。幸好他从不开车。
+一天，他提着酒壶，从家里出来，酒壶中有酒2斗。他边走边唱：
+无事街上走，提壶去打酒。
+逢店加一倍，遇花喝一斗。
+
+这一路上，他一共遇到店5次，遇到花10次，已知最后一次遇到的是花，他正好把酒喝光了。 
+请你计算李白遇到店和花的次序，可以把遇店记为a，遇花记为b。则：babaabbabbabbbb 就是合理的次序。像这样的答案一共有多少呢？请你计算出所有可能方案的个数（包含题目给出的）。
+注意：通过浏览器提交答案。答案是个整数。不要书写任何多余的内容。
+用递归法可以得到答案是14：
+
+bababaababbbbbb
+babaabbabbabbbb
+babaababbbbbabb
+baabbbaabbabbbb
+baabbabbbaabbbb
+baabbabbabbbabb
+baababbbbbababb
+abbbabaabbabbbb
+abbbaabbbaabbbb
+abbbaabbabbbabb
+abbabbbabaabbbb
+abbabbbaabbbabb
+abbabbabbbababb
+ababbbbbabababb
+除了正向递归，还可以反向递归：
+
+正向：从(花,店,酒) = (0,0,2)出发，递归到(10,5,0)结束。
+反向：从(10,5,0)倒推，(10,5,0) -> (9,5,1) -> (8,5,2) ……直到(0,0,2)结束。
+试着手工推导两三步就会发现，倒推法可能更好。因为只有当酒量为偶数时，我们才需要考虑用店将酒量减半。而正推法每一步都要考虑花和店两种情况。实际执行也发现倒推法明显优于正推法。
+
+下图是倒推法调用树。圆圈里的数字是每一步递推后的酒量，箭头上的字母 P(ub)=酒店，F(lowe)r=花。红色路径是符合要求的顺序。总递归调用149次（缓存中间结果，形式相同的调用只算一次）
+```
+###[PHP易错面试题收集](https://zhuanlan.zhihu.com/p/25088168)
+```js
+$arr = [1,2,3];
+    foreach($arr as &$v) {
+        //nothing todo.
+    }
+    foreach($arr as $v) {
+        //nothing todo.
+    }
+    var_export($arr);
+    //output:array(0=>1,1=>2,2=>2)
+class SomeClass
+{
+    private $properties = [];
+    public function __set($name, $value)
+    {
+       $this->properties[$name] = $value;
+    }
+    public function __get($name)
+    {
+        return $this->properties[$name];
+    }
+}
+
+
+$obj = new SomeClass();
+$obj->name = 'phpgod';
+$obj->age = 2;
+$obj->gender = 'male';
+
+var_dump($obj->name);
+//output:string(6) "phpgod"
+var_dump(isset($obj->name));
+//output:bool(false)
+
+ https://segmentfault.com/q/1010000008279730
+ 标准的写法：在使用了“ & ”的 foreach 之后，需要写一句 unset($v); 释放掉临时的引用。
+
+该题的两个foreach的代码效果类似于以下代码：
+
+$v = &$arr[0];
+$v = &$arr[1];
+$v = &$arr[2];
+//var_dump($arr);
+
+//请注意这个时候的$v是和$arr[2]等价的
+
+$v = $arr[0];
+$v = $arr[1];
+$v = $arr[2];
+//var_dump($arr);
+```
