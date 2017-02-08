@@ -816,3 +816,292 @@ for($i=strtotime($a);$i<=strtotime($b);$i+=86400){
 
 print_r($arr);
 ```
+###[PHP防御XSS攻击的终极解决方案](https://www.waitalone.cn/xss-fix.html)
+```js
+function clean_xss(&$string, $low = False)
+	{
+		if (! is_array ( $string ))
+		{
+			$string = trim ( $string );
+			$string = strip_tags ( $string );
+			$string = htmlspecialchars ( $string );
+			if ($low)
+			{
+				return True;
+			}
+			$string = str_replace ( array ('"', "\\", "'", "/", "..", "../", "./", "//" ), '', $string );
+			$no = '/%0[0-8bcef]/';
+			$string = preg_replace ( $no, '', $string );
+			$no = '/%1[0-9a-f]/';
+			$string = preg_replace ( $no, '', $string );
+			$no = '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S';
+			$string = preg_replace ( $no, '', $string );
+			return True;
+		}
+		$keys = array_keys ( $string );
+		foreach ( $keys as $key )
+		{
+			clean_xss ( $string [$key] );
+		}
+	}
+1.在输出html时，加上Content Security Policy的Http Header
+
+（作用：可以防止页面被XSS攻击时，嵌入第三方的脚本文件等）
+（缺陷：IE或低版本的浏览器可能不支持）
+
+2.在设置Cookie时，加上HttpOnly参数
+
+（作用：可以防止页面被XSS攻击时，Cookie信息被盗取，可兼容至IE6）
+（缺陷：网站本身的JS代码也无法操作Cookie，而且作用有限，只能保证Cookie的安全）
+
+3.在开发API时，检验请求的Referer参数
+
+（作用：可以在一定程度上防止CSRF攻击）
+（缺陷：IE或低版本的浏览器中，Referer参数可以被伪造）
+1.尽量使用innerText(IE)和textContent(Firefox),也就是jQuery的text()来输出文本内容
+
+2.必须要用innerHTML等等函数，则需要做类似php的htmlspecialchars的过滤（参照@eechen的答案）
+
+```
+###[喜马拉雅mp3批量下载工具PHP版](https://www.waitalone.cn/ximalaya-php-download.html)
+```js
+<?php
+
+/**php ximalaya.php http://www.ximalaya.com/52622741/album/4519297
+ * Created by 独自等待
+ * Date: 2016/10/11
+ * Time: 14:35
+ * Name: ximalaya.php
+ * 独自等待博客：http://www.waitalone.cn/
+ */
+print_r('
++---------------------------------------------------------------------+
+                       喜马拉雅mp3批量下载工具
+                     Site：http://www.waitalone.cn/
+                        Exploit BY： 独自等待
+                          Time：2016-10-11
++---------------------------------------------------------------------+
+');
+set_time_limit(0);
+error_reporting(7);
+if ($argc < 2) {
+    print_r('
++---------------------------------------------------------------------+
+Useage: php ' . $argv[0] . ' 喜马拉雅mp3专辑地址
+Example: php ' . $argv[0] . ' http://www.ximalaya.com/1412917/album/239463
++---------------------------------------------------------------------+
+    ');
+    exit;
+}
+
+class ximalaya
+{
+    public $url;
+
+    public function __construct($url)
+    {
+        $this->url = $url;
+    }
+
+    public function getpage()
+    {
+        $purl = array();
+        $response = file_get_contents($this->url);
+        if (preg_match_all('/class=\'pagingBar_page\'/', $response, $match)) {
+            $pagelen = count($match[0]);
+            for ($i = 1; $i <= $pagelen; $i++) {
+                $purl[] = $this->url . '?page=' . $i;
+            }
+        } else {
+            $purl[] = $this->url;
+        }
+        return $purl;
+    }
+
+    public function analyze($trackid)
+    {
+        $mp3_arr = array();
+        $trackurl = 'http://www.ximalaya.com/tracks/' . $trackid . '.json';
+        $response = file_get_contents($trackurl);
+        $jsonobj = json_decode($response, true);
+        $title = $jsonobj['title'];
+        $mp3 = $jsonobj['play_path'];
+        $mp3_arr['title'] = iconv('utf-8', 'gbk//IGNORE', $title);
+        $mp3_arr['mp3'] = $mp3;
+        return $mp3_arr;
+    }
+
+    public function getids($purl)
+    {
+        $ids = array();
+        if (strpos($purl, 'sound')) {
+            $ids[] = substr($purl, strrpos($purl, '/') + 1);
+        } else {
+            $response = file_get_contents($purl);
+            preg_match('/sound_ids="(.+?)"/', $response, $match);
+            $ids = explode(',', $match[1]);
+        }
+        return $ids;
+    }
+
+    public function down()
+    {
+        $todown = $this->getpage();
+        foreach ($todown as $purl) {
+            foreach ($this->getids($purl) as $ids) {
+                $idsarr = $this->analyze($ids);
+                $title = $idsarr['title'];
+                $mp3_url = $idsarr['mp3'];
+                $filename = $title . '.mp3';
+                echo $filename . ' ' . $mp3_url . PHP_EOL;
+                fwrite(fopen('mp3.txt', 'ab+'), $filename . ' | ' . $mp3_url . PHP_EOL);
+                if (function_exists('system')) {
+                    @ob_start();
+                    $res = system('aria2c.exe -s 10 -j 10 ' . $mp3_url . ' --out=' . $filename);
+                    @ob_get_contents();
+                    @ob_end_clean();
+                    if (strpos($res, 'OK')) {
+                        echo $filename . ' 下载成功!' . PHP_EOL;
+                    } else {
+                        echo $filename . ' 下载失败!' . PHP_EOL;
+                    }
+                } else {
+                    echo '请开启system函数以便多线程下载!tips: check disable_functions in php.ini' . PHP_EOL;
+                }
+            }
+        }
+    }
+}
+
+$ximalaya = new ximalaya($argv[1]);
+$ximalaya->down();
+
+
+```
+###[用PHP发送POST请求]()
+```js
+/** 
+ * 发送post请求 
+ * @param string $url 请求地址 
+ * @param array $post_data post键值对数据 
+ * @return string 
+ */  
+function send_post($url, $post_data) {  
+  
+  $postdata = http_build_query($post_data);  
+  $options = array(  
+    'http' => array(  
+      'method' => 'POST',  
+      'header' => 'Content-type:application/x-www-form-urlencoded',  
+      'content' => $postdata,  
+      'timeout' => 15 * 60 // 超时时间（单位:s）  
+    )  
+  );  
+  $context = stream_context_create($options);  
+  $result = file_get_contents($url, false, $context);  
+  
+  return $result;  
+}  
+  
+//使用方法  
+$post_data = array(  
+  'username' => 'stclair2201',  
+  'password' => 'handan'  
+);  
+send_post('http://www.waitalone.cn', $post_data);
+<?php  
+/** 
+ * Socket版本 
+ * 使用方法： 
+ * $post_string = "app=socket&version=beta"; 
+ * request_by_socket('waitalone.cn', '/restServer.php', $post_string); 
+ */  
+function request_by_socket($remote_server,$remote_path,$post_string,$port = 80,$timeout = 30) {  
+  $socket = fsockopen($remote_server, $port, $errno, $errstr, $timeout);  
+  if (!$socket) die("$errstr($errno)");  
+  fwrite($socket, "POST $remote_path HTTP/1.0");  
+  fwrite($socket, "User-Agent: Socket Example");  
+  fwrite($socket, "HOST: $remote_server");  
+  fwrite($socket, "Content-type: application/x-www-form-urlencoded");  
+  fwrite($socket, "Content-length: " . （strlen($post_string) + 8） . "");  
+  fwrite($socket, "Accept:*/*");  
+  fwrite($socket, "");  
+  fwrite($socket, "mypost=$post_string");  
+  fwrite($socket, "");  
+  $header = "";  
+  while ($str = trim(fgets($socket, 4096))) {  
+    $header .= $str;  
+  }  
+  
+  $data = "";  
+  while (!feof($socket)) {  
+    $data .= fgets($socket, 4096);  
+  }  
+  
+  return $data;  
+}  
+?>  
+<?php  
+/**  
+ * Curl版本  
+ * 使用方法：  
+ * $post_string = "app=request&version=beta";  
+ * request_by_curl('http://www.waitalone.cn/restServer.php', $post_string);  
+ */  
+function request_by_curl($remote_server, $post_string) {  
+  $ch = curl_init();  
+  curl_setopt($ch, CURLOPT_URL, $remote_server);  
+  curl_setopt($ch, CURLOPT_POSTFIELDS, 'mypost=' . $post_string);  
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+  curl_setopt($ch, CURLOPT_USERAGENT, "waitalone.cn's CURL Example beta");  
+  $data = curl_exec($ch);  
+  curl_close($ch);  
+  
+  return $data;  
+}  
+
+```
+###[Python certificate verify failed解决方法](https://www.waitalone.cn/python-ssl-error.html)
+```js
+import ssl
+import urllib2
+ 
+context = ssl._create_unverified_context()
+print urllib2.urlopen("https://www.xxx.com/", context=context).read()
+import ssl
+import urllib2
+ 
+ssl._create_default_https_context = ssl._create_unverified_context
+print urllib2.urlopen("https://www.xxx.com/").read()
+
+```
+###[lxml 中文乱码解决](https://www.waitalone.cn/lxml-text.html)
+```js
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Date: 2016/2/14
+# Created by 独自等待
+# 博客 http://www.waitalone.cn/
+import urllib2
+from lxml import etree
+from lxml.html.clean import Cleaner
+
+
+def getText(url):
+    '''
+    获取指定url返回页的所有文字
+    :param url: 需要抓取的url
+    :return: 返回文字
+    '''
+    page = urllib2.urlopen(url, timeout=10).read()
+    page = unicode(page, "utf-8")  # 转换编码,否则会导致输出乱码
+    cleaner = Cleaner(style=True, scripts=True, page_structure=False, safe_attrs_only=False)  # 清除掉CSS等
+    str = etree.HTML(cleaner.clean_html(page))
+    texts = str.xpath('//*/text()')  # 获取所有文本
+    for t in texts:
+        print t.strip().encode('gbk', 'ignore')
+
+
+getText('http://www.360.cn/')
+
+```
