@@ -1514,3 +1514,54 @@ if __name__ == '__main__':
         parser.error("Incorrect number of arguments")
     print get_image(filename, username, password)
 ```
+###[php安全](https://www.waitalone.cn/introduction-to-code-auditing.html)
+```js
+%00空字符截断：【PHP版本小于5.3】
+<?php                                 
+include($_GET['file'].'.php');      
+//1.php?file=2.txt%00
+//2.txt里面是 <?php phpinfo()?>
+?>
+iconv函数字符编码转换截断：【对PHP版本有要求】
+chr(128)—chr(255)可以截断字符
+<?php 
+$a = '1'.chr(130).'2’; 
+echo $a."<br>";                   //1?2
+echo iconv("UTF-8", "GBK", $a);   //1
+?>
+
+php:// 输入输出流：
+<?php
+    include($_GET[‘file']);
+?>
+1.php?file=php://filter/convert.base64-encode(内容被base64编码)/resource=example.txt(远程文件)
+<script language="php">…</script>
+<?…?>：php3.0.4版本后可用
+<%…%>：asp标签，需要asp_tags=on，默认是off
+GBK的宽字节注入：%df ' 单引号自动被转义成(%5c)，同时%df与%5c连在一起组合成運字单引号依然在，成功闭合。【php与mysql交互过程中发生的编码转换问题】
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/> 
+<?php
+$sql = "WHERE id='".urldecode("-1%df%5c' == ")."'"; 
+print_r(mb_convert_encoding($sql,"UTF-8","GBK"));
+?>
+未exit/return/die：
+<?php
+if(file_exists('install.lock)){
+    header("Location:xxx.com");
+    //exit();
+}
+echo "test";
+?>
+is_numeric():当传入参数为hex时 直接通过并返回true 并且MYSQL可以直接使用hex编码代替字符串明文 可以二次注入 并且可能造成XSS漏洞
+>>> is_numeric('0x73656C656374')
+=> true
+in_array(): 比较之前会自动转换类型
+if(in_array($a,[1,2,3])){
+  $sql="select where id='".$a."';//?id=1' unino select 
+}
+当assert()的参数为字符串时 可执行PHP代码
+eval(" phpinfo(); ");【√】 eval(" phpinfo() ");【X】
+assert(" phpinfo(); ");【√】 assert(" phpinfo() ");【√】
+#
+call_user_func($_GET['a'],$_GEI['b']);
+```
