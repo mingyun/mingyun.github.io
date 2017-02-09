@@ -1186,3 +1186,91 @@ if __name__ == '__main__':
     print u'\n恭喜爷,已经下载完毕.请查看!'
 
 ```
+###[PythonZip压缩成功](https://segmentfault.com/q/1010000008290294)
+```js
+#!/usr/bin/env bash
+
+zip -r target.zip target_dir/
+
+if [ $? -eq 0 ]; then
+    echo "Success"
+else
+    echo "Failed"
+fi
+#!/usr/bin/env python
+
+import commands
+
+status = commands.getstatusoutput("zip -r target.zip target_dir/")[0]
+
+if status == 0:
+    print "Success"
+else:
+    print "Failed"
+```
+###[nodejs做一个简易的tcp聊天程序](https://segmentfault.com/q/1010000008293716)
+```js
+var net=require('net');
+
+var count=0, users={};
+
+var server=net.createServer(function(conn){
+    conn.write(
+        '\n\r > welcome to\033[92m node-chat\033[39m !'+
+        '\n\r > '+count+' other people are connected at this time.'+
+        '\n\r > please write your name and press enter: '
+    );
+    count++;
+
+    conn.setEncoding('utf8');
+
+    var nickname;
+
+    function broadcast(msg, exceptMyself){
+        for(var i in users){
+            if(!exceptMyself||i!=nickname){
+                users[i].write(msg);
+            }
+        }
+    }
+
+    var tmp = '';
+
+    conn.on('data',function(data){
+      tmp += data;
+      if (tmp.indexOf('\n') === -1) {
+        return;
+      }
+      data = tmp.replace(/\r|\n/g, '');
+
+        if(!nickname){
+            if(users[data]){
+                conn.write('\r\n\033[93m> nickname already in use. try again:\033[39m\r\n ');
+                return;
+            }else{
+                nickname=data;
+                users[nickname]=conn;
+
+                broadcast('\r\n\033[90m > '+nickname+' joined the room\033[39m\r\n', true);
+            }
+        }else{
+            broadcast('\r\n\033[96m> '+nickname+':\033[39m '+data+'\r\n');
+        }
+
+        process.stdout.write(tmp);
+    });
+    conn.on('close',function(){
+        count--;
+        delete users[nickname];
+        broadcast('\r\n\033[096m> '+nickname+' left the room\033[39m \r\n');
+    });
+});
+
+server.listen(3000,function(){
+    console.log('\033[96m server listening on *:3000\033[39m');
+});
+```
+###[找不到webpack](https://segmentfault.com/q/1010000008294703)
+```js
+没有安装 webpack，devDependencies 里需要添加 webpack。因为 webpack-dev-server 里依赖 webpack 是 peerDependencies，npm@>=3 不会再自动安装 peerDependencies 下的依赖。
+```
