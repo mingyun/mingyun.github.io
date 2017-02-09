@@ -53,3 +53,15 @@ EOF;
 echo preg_replace('/\s*src=("[^"]*")|(\'[^\']*\')/', '', $context);
 preg_replace('#<script.*?)\s+src=".+?"(.*?>)#','$1$2',$str)
 ```
+###.htaccess: Options not allowed here
+```js
+vi httpd.conf
+<Directory />
+    #AllowOverride none
+    #Require all denied
+    Options All
+    AllowOverride All
+    Order deny,allow
+    Allow from all
+</Directory>
+```
