@@ -355,3 +355,40 @@ Number.prototype.toFixed = function (exponent) {
 你能登陆是因为你有私钥, 只要你私钥不泄漏, 别人拿到公钥也是干瞪眼
 所谓"公钥登录"，原理很简单，就是用户将自己的公钥储存在远程主机上。登录的时候，远程主机会向用户发送一段随机字符串，用户用自己的私钥加密后，再发回来。远程主机用事先储存的公钥进行解密，如果成功，就证明用户是可信的，直接允许登录shell，不再要求密码。
 ```
+###[灵感源自QQ浏览器微信调试工具 内网穿透](http://www.yatessss.com/2016/03/29/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E2%80%94%E5%A4%96%E7%BD%91%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E5%88%B0%E6%9C%AC%E5%9C%B0%E9%A1%B5%E9%9D%A2.html)
+```js
+http://www.ngrok.cc/  https://natapp.cn/ 
+以natapp来举例。只要下载相应操作系统的客户端，然后把它解压，cd进入到解压后的目录中，运行命令./ngrok -config ngrok.cfg -subdomain myapp 80。
+
+这里需要注意myapp这个是你要自己定义的域名，80是你要映射到本地的端口，然后访问http://myapp.ngrok.natapp.cn就可以和本地联通了
+```
+###[微信jssdk withCredentials跨域请求](http://www.yatessss.com/2016/03/30/%E5%BE%AE%E4%BF%A1JSSDK%E5%9D%91%E5%95%8A%E5%9D%91.html)
+请求头中就会带上cookie，而后台要接受这个凭据的话，在服务端的响应头必须添加Access-Control-Allow-Credentials: true，并且服务端需指定一个域名（Access-Control-Allow-Origin:www.xxxxxx.com），而不能使用泛型（Access-Control-Allow-Origin: * ）这样我们就可以跨域发送cookie了
+记得向后台传递url的时候一定要进行encodeURI编码
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'http://www.xxx.com/api');
+xhr.withCredentials = true;
+xhr.onload = onLoadHandler;
+xhr.send();
+$.ajax({
+ 	url: url,
+ 	type: 'get',
+ 	data:  data,
+ 	dataType: 'json',
+ 	xhrFields: {
+   		withCredentials: true
+ 	},
+###[分转换为元](http://www.yatessss.com/2016/02/19/%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93.html)
+```js
+//分转换为元
+var fen_yuan = function(val){
+    //toFixed来确定保留两位小数  因为除以100 所以都会整除
+    var str = (val/100).toFixed(2) + '';
+    var intSum = str.substring(0,str.indexOf(".")).replace( /\B(?=(?:\d{3})+$)/g, ',' );
+    //取到整数部分
+    var dot = str.substring(str.length,str.indexOf("."))
+    //取到小数部分
+    var ret = intSum + dot;
+    return ret;
+}
+```
