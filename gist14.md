@@ -609,3 +609,22 @@ index.html
 </html>
 
 ```
+###[nginx分析日志的工具](https://segmentfault.com/q/1010000008061100)
+elk三件套（LogStash、Elasticsearch、Kinaba），比较好用
+这三个是一整套的，l是收集log日志的，e是存储的，k是展示的，三种分别各司其职，你可以分开用，例如l收集log日志，然后把日志插入mysql数据库，不用e来存储，然后你自己写展示层， 不用k来展示，都可以的
+nginx plus  日志易 http://api1024.com/archives/120 
+###[正则表达式匹配](https://segmentfault.com/q/1010000008310749)
+```js
+'x1'.split('x'); x 做为分隔符, 按它拆分之后, 它前面没有内容, 所以是空, 而后面是1, 所以最终结果是 空字符串 和 1.
+```
+###[如何查看这个函数是怎么运行的](https://segmentfault.com/q/1010000008314140)
+```js
+var a = [];
+    for (var i = 0; i < 10; i++) {
+      a[i] = function () {
+        document.write(i);
+      };
+    }
+    a[6](); // 10
+    在 source 里有一个 Snippets，新建一个 snippet，然后将这段代码拷贝进去，设置断点并执行就可以了
+```
