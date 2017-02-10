@@ -539,3 +539,73 @@ public function sendMessage($room, $event, $obj = [])
             ->emit($event, $obj);
     }                
 ```
+###[简易socket.io demo](https://segmentfault.com/a/1190000002665449)
+```js
+mkdir chat
+cd chat
+npm init 
+npm install socket.io express
+
+index.js
+var express = require('express');
+var app = express();
+var server  = require('http').createServer(app);
+var io = require('socket.io')(server);
+var port = process.env.PORT || 3000;
+
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function (req, res) {
+    res.sendFile('index.html');
+});
+
+io.on('connection', function (socket) {
+    console.log('a user connected');
+
+    socket.on('chat message', function (data) {
+        io.emit('reply message',data);
+    });
+    socket.on('disconnect', function () {
+        console.log('a user left');
+    })
+});
+
+server.listen(port, function () {
+    console.log('server start on port : %d',port);
+});
+
+main.js
+var socket = io();
+
+$('button[type=submit]').click(function(){
+    socket.emit('chat message', $('#input').val());
+    $('#input').val('');
+    return false;
+});
+
+socket.on('reply message', function (data) {
+    $('#message').append($('<li>').text(data));
+});
+
+index.html
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>socket.io chatroom</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+
+</head>
+<body>
+
+<ul id="message"></ul>
+<form action="">
+    <input type="text" id="input"><button type="submit">Send</button>
+</form>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
+
+```
