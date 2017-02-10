@@ -247,3 +247,49 @@ echo myHash($str);  // window 85222734
 // obj <obj>
 var a = obj(function () {})()
 ```
+###[获取location跳转地址](https://segmentfault.com/q/1010000008300089)
+```js
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_HEADER, 1);
+curl_setopt($curl, CURLOPT_NOBODY,1);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+$content=curl_exec($curl);
+$headerStr=curl_getinfo($curl);
+curl_close($curl);
+print_r($headerStr);
+$url = 'http://c.b1za.com/h.2SXXls?cv=nXP87fAkEx&sm=0d941d';
+
+$html = file_get_contents($url);
+
+preg_match('/var url = \'(.+?)\'/', $html, $urls);
+print_r($urls);
+if (count($urls) !== 2) {
+  die('获取跳转URL失败!');
+}
+
+$url = $urls[1];
+
+$html = file_get_contents($url, false, stream_context_create(array ('http' => array ('follow_location' => false))));
+
+print_r($http_response_header);
+
+Array
+(
+    [0] => var url = 'http://a.m.taobao.com/i37424802695.htm?price=288&sourceType=item&suid=8be20505-0a16-4863-8c8c-1910b7373a3b&ut_sk=1.U%2B2FehgzDrwDAJm7pzfsyyn8_12278902_1485154518051.Copy.1&un=133fdc823ca48dcfd9378eee1c005948&share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.352.22903886283&short_name=h.2SXXls'
+    [1] => http://a.m.taobao.com/i37424802695.htm?price=288&sourceType=item&suid=8be20505-0a16-4863-8c8c-1910b7373a3b&ut_sk=1.U%2B2FehgzDrwDAJm7pzfsyyn8_12278902_1485154518051.Copy.1&un=133fdc823ca48dcfd9378eee1c005948&share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.352.22903886283&short_name=h.2SXXls
+)
+Array
+(
+    [0] => HTTP/1.1 301 Moved Permanently
+    [1] => Server: nginx
+    [2] => Date: Fri, 10 Feb 2017 02:52:22 GMT
+    [3] => Content-Type: text/html
+    [4] => Content-Length: 280
+    [5] => Connection: close
+    [6] => Location: http://item.taobao.com/item.htm?id=37424802695&price=288&sourceType=item&suid=8be20505-0a16-4863-8c8c-1910b7373a3b&ut_sk=1.U%2B2FehgzDrwDAJm7pzfsyyn8_12278902_1485154518051.Copy.1&un=133fdc823ca48dcfd9378eee1c005948&share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.352.22903886283&short_name=h.2SXXls
+)
+preg_match('#Location:(.*)#',$http_response_header[6],$m);
+print_r($m);
+```
