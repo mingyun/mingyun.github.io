@@ -313,3 +313,39 @@ echo $_dbHandle->lastInsertId(); //插入的自增ID,插入失败时为0
 从百度图说发现的：handsontable https://handsontable.com/examples.html
 基于Node.js实现的EtherCalchttps://ethercalc.org/gn7851og3d5j
 ```
+###[python xlrd模块 怎么获得单元格格式信息](https://segmentfault.com/q/1010000008270267)
+```js
+import xlrd
+from xlutils.filter import process, XLRDReader, XLWTWriter
+def copy2(wb):
+    w = XLWTWriter()
+    process(XLRDReader(wb, 'unknown.xls'), w)
+    return w.output[0][1], w.style_list
+
+rb = xlrd.open_workbook('C:\\Users\\sa\\Desktop\\1.xls', formatting_info=True, on_demand=True)
+wb, s = copy2(rb)
+wbs = wb.get_sheet(0)
+rbs = rb.get_sheet(0)
+styles = s[rbs.cell_xf_index(0, 0)]
+rb.release_resources()  #关闭模板文件
+
+wbs.write(0, 0, 'aa', styles)
+wb.save("C:\\Users\\sa\\Desktop\\2.xls")
+```
+###[mysql中的FIND_IN_SET](https://segmentfault.com/q/1010000008308314)
+```js
+select * from table_name where find_in_set('5',type_id) or find_in_set('8',type_id) or find_in_set('9',type_id) ;
+SELECT * FROM table WHERE CONCAT(',' , type_id , ',') LIKE '%,6,%' OR CONCAT(',' , type_id , ',') LIKE '%,9,%';
+```
+###[对象不仅有属性，还有方法](https://segmentfault.com/q/1010000008303260)
+```js
+时下流行的orm或者active records, 不就是一个对象存储一个实体(数据表中的一条记录), 对象可以封装对这些数据的操作，而数组是办不到的。
+
+所以如果是单纯存数据，就用数组，但如果你要定义对这些数据的操作，我更建议使用对象.
+```
+###[关于.toFixed()的重写](https://segmentfault.com/q/1010000008310032)
+```js
+Number.prototype.toFixed = function (exponent) {
+    return parseInt(this * Math.pow(10, exponent) + (this >= 0 ? 0.5 : -0.5)) / Math.pow(10, exponent);
+}
+```
