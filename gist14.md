@@ -349,3 +349,9 @@ Number.prototype.toFixed = function (exponent) {
     return parseInt(this * Math.pow(10, exponent) + (this >= 0 ? 0.5 : -0.5)) / Math.pow(10, exponent);
 }
 ```
+###[如果第三者知道客户端的ssh公钥，那他能登录服务器](https://segmentfault.com/q/1010000008309357)
+```js
+服务端拿着公钥是为了验证客户端用私钥加密的信息，只有拥有私钥的人才能加密出服务端认识的信息，所以第三者知道公钥也没用。http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html
+你能登陆是因为你有私钥, 只要你私钥不泄漏, 别人拿到公钥也是干瞪眼
+所谓"公钥登录"，原理很简单，就是用户将自己的公钥储存在远程主机上。登录的时候，远程主机会向用户发送一段随机字符串，用户用自己的私钥加密后，再发回来。远程主机用事先储存的公钥进行解密，如果成功，就证明用户是可信的，直接允许登录shell，不再要求密码。
+```
