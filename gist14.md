@@ -272,9 +272,10 @@ if (count($urls) !== 2) {
 $url = $urls[1];
 
 $html = file_get_contents($url, false, stream_context_create(array ('http' => array ('follow_location' => false))));
-
+http://php.net/manual/zh/reserved.variables.httpresponseheader.php
+$http_response_header 数组与 get_headers() 函数类似。当使用HTTP 包装器时，$http_response_header 将会被 HTTP 响应头信息填充。$http_response_header 将被创建于局部作用域中。
 print_r($http_response_header);
-
+get_headers($url,1);
 Array
 (
     [0] => var url = 'http://a.m.taobao.com/i37424802695.htm?price=288&sourceType=item&suid=8be20505-0a16-4863-8c8c-1910b7373a3b&ut_sk=1.U%2B2FehgzDrwDAJm7pzfsyyn8_12278902_1485154518051.Copy.1&un=133fdc823ca48dcfd9378eee1c005948&share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.352.22903886283&short_name=h.2SXXls'
@@ -292,4 +293,23 @@ Array
 )
 preg_match('#Location:(.*)#',$http_response_header[6],$m);
 print_r($m);
+```
+###[php Pdo连接数据库插入一条数据出现两条的bug](https://segmentfault.com/q/1010000008289695)
+```js
+$dsn    =   sprintf("mysql:host=%s;dbname=%s;charset=utf8", $host, $dbName);
+$_dbHandle    =   new PDO($dsn, $user, $password, $option);
+$sql = "insert into `name` (`age`) values (18)";
+$_dbHandle->exec($sql);
+//这样插入一次数据,但是数据库会存在两条数据;
+由于nginx的 rewrite问题,在location {}模块中,错误的语法导致项目被重复执行了两次,但是由于是同样的执行操作,我们所有的断点调试都无法检出这个问题;
+$sql = "insert into `name` (`age`) values (18)";
+$stmt = $_dbHandle->prepare($sql);
+$stmt->execute();
+echo $stmt->rowCount(); //查询中受影响(改动)的行数,插入失败时为0
+echo $_dbHandle->lastInsertId(); //插入的自增ID,插入失败时为0
+```
+###[实现Excel的效果,类似石墨的表格 ](https://segmentfault.com/q/1010000008164727)
+```js
+从百度图说发现的：handsontable https://handsontable.com/examples.html
+基于Node.js实现的EtherCalchttps://ethercalc.org/gn7851og3d5j
 ```
