@@ -545,7 +545,7 @@ mkdir chat
 cd chat
 npm init 
 npm install socket.io express
-
+https://github.com/nswbmw/N-chat/wiki/%E7%AC%AC%E4%B8%80%E7%AB%A0-socket.io-%E7%AE%80%E4%BB%8B%E5%8F%8A%E4%BD%BF%E7%94%A8 
 index.js
 var express = require('express');
 var app = express();
@@ -569,14 +569,18 @@ io.on('connection', function (socket) {
         console.log('a user left');
     })
 });
+在服务器端区分以下三种情况：
 
+socket.emit() ：向建立该连接的客户端广播
+socket.broadcast.emit() ：向除去建立该连接的客户端的所有客户端广播
+io.sockets.emit() ：向所有客户端广播，等同于上面两个的和
 server.listen(port, function () {
     console.log('server start on port : %d',port);
 });
 
 main.js
 var socket = io();
-
+客户端（这里是浏览器）通过引入 <script src="/socket.io/socket.io.js"></script> 即可使用 socket.io 。var socket = io.connect('http://localhost'); 与 http://localhost 本地服务器建立连接并赋值给 socket 对象，如果是与其他服务器建立连接则只需将 connect() 参数修改为服务器的地址即可，这里 socket.io 客户端和服务器位于同一个服务器上，那么也可以简写为 var socket = io.connect();
 $('button[type=submit]').click(function(){
     socket.emit('chat message', $('#input').val());
     $('#input').val('');
