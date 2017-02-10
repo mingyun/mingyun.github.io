@@ -211,3 +211,39 @@ while (startTime < endTime) {
 arr.push("2018-03")
 console.log(arr)
 ```
+###[php位运算，windows和linux结果为什么不同](https://segmentfault.com/q/1010000008306292)
+```js
+function myHash3($str) {
+
+    $hash = 0;
+    $s    = md5($str);
+    $seed = 5;
+    $len  = 32;
+    for ($i = 0; $i < $len; $i++) {
+
+        //$hash = ($hash << $seed) + $hash + ord($s{$i});
+        $hash = (($hash << $seed) & 0xffffffff) + $hash + ord($s{$i});
+    }
+    return $hash & 0x7FFFFFFF;
+}
+
+$str = "A8A1B1EF-2B31-6572-B364-1E169C943F8E";
+
+
+echo myHash($str);  // window 85222734
+                    // linux 1473101824
+```
+###[IIFE前面最好加上分号;](https://segmentfault.com/q/1010000008302637)
+```js
+;(function(){
+    var First = document.querySelector('.first'),
+        firstBody = document.querySelector('.first_body'),
+        Btn = document.querySelector('.btn'),
+        btnBody = document.querySelector('.btnbody');
+    var myFunc = kim.prototype;
+    myFunc.init(First, firstBody);
+    myFunc.closeWindow(Btn, btnBody);
+})()
+// obj <obj>
+var a = obj(function () {})()
+```
