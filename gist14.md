@@ -392,3 +392,43 @@ var fen_yuan = function(val){
     return ret;
 }
 ```
+###[《你不知道的JavaScript》读书笔记——闭包](http://www.yatessss.com/2016/03/29/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JavaScript%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E9%97%AD%E5%8C%85.html)
+```js
+function foo() {
+     var a = 2;
+     function bar() {
+         console.log( a );
+     }
+     return bar; 
+} 
+var baz = foo();
+baz(); // 2 这就是闭包
+简单讲就是foo函数外面的变量baz要用到foo作用域里面的东西，这就叫baz拥有foo的闭包。
+
+再简单讲就是函数调函数。
+for (var i=1; i<=5; i++) {
+     setTimeout( function timer() {
+         console.log( i );
+     }, i*1000 );
+}
+for (var i=1; i<=5; i++) {
+     (function() {
+         var j = i;
+         setTimeout( function timer() {
+             console.log( j );
+         }, j*1000 );
+     })(); 
+}
+for (var i=1; i<=5; i++) {
+     (function(j) {
+         setTimeout( function timer() {
+             console.log( j );
+         }, j*1000 );
+     })( i );
+}
+for (let i=1; i<=5; i++) {
+     setTimeout( function timer() {
+         console.log( i );
+     }, i*1000 );
+}
+```
