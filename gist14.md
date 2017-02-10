@@ -432,3 +432,110 @@ for (let i=1; i<=5; i++) {
      }, i*1000 );
 }
 ```
+###[ip location](https://github.com/nelsonking/ip_location/blob/master/example/sample.php)
+```js
+require '../src/IpLocation.php';
+$ip = '106.2.157.20';
+$ipObj = new IpLocation();
+$ipMsg = $ipObj->getlocation($ip);
+var_export($ipMsg);
+/**
+ * like
+ *
+ * array ( 'ip' => '106.2.157.20', 'beginip' => '106.2.128.0', 'endip' => '106.2.159.255', 'country' => '辽宁省沈阳市', 'area' => '辽宁神州云信息技术有限公司')
+ */
+```
+###[图片鉴别](https://github.com/vhall/check_picture/blob/master/src/CheckPicture.php)
+```js
+include_once 'aliyun-php-sdk-core/Config.php';
+use Green\Request\V20160308 as Green;
+class CheckPicture
+{
+    private $client;
+    private $request;
+    public function __construct($accessKey, $secretKey)
+    {
+        $iClientProfile = DefaultProfile::getProfile("cn-hangzhou", $accessKey, $secretKey);
+        $this->client = new DefaultAcsClient($iClientProfile);
+        // 图片检测
+        $this->request = new Green\ImageDetectionRequest ();
+    }
+    public function check($url)
+    {
+        //设置参数
+        //设置为同步调用
+        $this->request->setAsync("false");
+        //设置图片链接
+        //同步只支持单张图片
+        $this->request->setImageUrl(json_encode(array($url)));
+        //设置检测的场景
+        //porn: 黄图检测
+        //ocr:  图文识别
+        $this->request->setScene(json_encode(array("porn")));
+        try {
+            $response = $this->client->getAcsResponse($this->request);
+            //print_r($response);
+            //返回状态值成功时进行处理
+            if ("Success" == $response->Code) {
+                $imageResults = $response->ImageResults->ImageResult;
+                foreach ($imageResults as $imageResult) {
+                    //黄图结果处理
+                    $pornResult = $imageResult->PornResult;
+                    return [
+                        'rate' => $pornResult->Rate,
+                        'label' => $pornResult->Label,
+                    ];
+                }
+            }
+        } catch (Exception $e) {
+            print_r($e);
+        }
+    }
+}
+use Illuminate\Contracts\Mail\Mailer;
+$imageUrl = 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=476277235,348';
+$checkObj = new CheckPicture(env('ALI_ACCESS_KEY'),env('ALI_SECRET_KEY'));
+			$result = $checkObj->check($imageUrl);
+if($result && isset($result['rate']) && isset($result['label'])) {
+				$webinarExist = WebinarGreenCheck::where('webinar_id',$webinarId)->first();
+
+				if (!empty($webinarExist)) {
+					// 只记录最坏情况
+					if ($webinarExist['rate'] < $result['rate']) {
+						$webinarExist->update($result);
+					}
+				} else {
+					$result['webinar_id'] = $webinarId;
+					WebinarGreenCheck::create($result);
+				}
+
+				if ($result['label'] == 1) {
+					$content = '发现黄色视频，活动ID为'.$webinarId.' 图片地址为'.$imageUrl;
+
+					// 发送信息到运维
+					// $sms->send($content,'18510248667');
+					$sms->send($content,'1860023269');
+
+					$mailer->send('emails.check', ['msg'=>$content], function($message)
+					{
+						$message->to('ops@test.com');
+					});
+			}            
+```
+###[socket.io-php-emitter](https://github.com/rase-/socket.io-php-emitter)
+```js
+$redis = new \Redis(); // Using the Redis extension provided client
+$redis->connect('127.0.0.1', '6379');
+$emitter = new SocketIO\Emitter($redis);
+$emitter->emit('event', 'payload str');
+自己实现函数msgpack_pack https://github.com/onlinecity/msgpack-php
+发送Socket.io消息.
+$ms=new MessageServer();
+                $ms->sendMessage($webinar->id, 'cmd', ['type'=>'*publishStart']);
+public function sendMessage($room, $event, $obj = [])
+    {
+        return $this->getSIOEmitter($room)
+            ->to($room)
+            ->emit($event, $obj);
+    }                
+```
