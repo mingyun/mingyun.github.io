@@ -632,3 +632,90 @@ var a = [];
     a[6](); // 10
     在 source 里有一个 Snippets，新建一个 snippet，然后将这段代码拷贝进去，设置断点并执行就可以了
 ```
+###[用代码撩妹](https://www.v2ex.com/t/339220)
+```js
+一个男孩给女孩写了一行代码
+
+For(;;) printf(“ I Love You!\n ”);
+
+女孩回了一行代码
+
+For(;;); printf(I Love You Too!\n);
+try{living();} 
+catch(Exception e){faceTogether();} 
+finally{ours.love++;}
+for(int i = 0; ; i++); printf("i love you"); 
+一个分号的误会， 
+令它无任何输出， 
+只有永远的漆黑。 
+虽字里行间有爱， 
+但你永远看不见。
+today=$(date +%m%d) 
+if [ "${today}" = '0214' ]; then 
+today='0215' 
+fi
+s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM) 
+s.bind(('',520)) 
+s.listen(10000) 
+while True: 
+girl,addr=s.accept() 
+girl.send("我喜欢你 约吗?") 
+resp=girl.recv(1024) 
+if not resp: 
+girl.close() 
+else: 
+papapa_with(girl)
+$.ajax{ 
+url;'/your/heart', 
+type:'thinking', 
+data:{' i wanna marry with you'}, 
+dataType:'really', 
+success:function{ 
+put_this_in_my_heart_forever(); 
+} 
+}
+man ： 
+echo -e "\033[1;31mI ♡ You \e[0m 
+female ： 
+echo -e "\0x1b[92mholy shit, your right hand is your lovely\e[0m"
+for everyday in lifetime: 
+loveyou(by_all_means);
+$girlfriend=($cool==true&&$rich==true)?true:false;
+console.log("love you")
+https://github.com/YCF/Christy_gift 
+https://gist.github.com/anonymous/9935ff91f0ad50e34261daf469a38be6 
+```
+###[QQ 最古老版本的那些经典头像](https://www.v2ex.com/t/339523#reply42)
+```js
+import requests 
+import base64 
+# https://laoyur.com/qq-18yr-avatars.html  http://pan.baidu.com/s/1b9dGMM 
+
+r = requests.get("http://wa.qq.com/qq18/avatar.json") 
+data = r.json() 
+date_1 = data['headerImg'] 
+i = 0 
+for pic_str in date_1: 
+imgdata = base64.b64decode(pic_str[22:]) 
+filename = str(i) + ".jpg" 
+i = i+1 
+with open(filename, 'wb') as f: 
+f.write(imgdata)
+```
+###[基于goquery的轻量级爬虫, 图片下载器支持分布式, 可以自定义下载并发量老司机](https://github.com/songtianyi/laosj)
+```js
+go get -u -v github.com/songtianyi/laosj
+go build mzituzp.go
+./mzituzp
+```
+###[简单的视频下载器，支持 youtube 与 B 站](https://www.v2ex.com/t/339114)
+```js
+https://github.com/rg3/youtube-dl
+https://github.com/chriskiehl/Gooey
+备用地址： http://pan.baidu.com/s/1kUVLNBh
+ chrome.google.com/webstore/detail/video-url-parser/ilcdiicigjaccgipndigcenjieedjohj
+ 支持 在线离线。 三个强大的服务器（做雷锋，不用谢我） 
+
+https://chrome.google.com/webstore/detail/video-download-helper/ilcdiicigjaccgipndigcenjieedjohj 
+官网(在线): https://weibomiaopai.com/ 
+```
