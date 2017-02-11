@@ -719,3 +719,135 @@ https://github.com/chriskiehl/Gooey
 https://chrome.google.com/webstore/detail/video-download-helper/ilcdiicigjaccgipndigcenjieedjohj 
 官网(在线): https://weibomiaopai.com/ 
 ```
+###[微信一键自动拜年脚本](https://www.v2ex.com/t/336244)
+```js
+git clone https://github.com/HanSon/vbot.git
+cd vbot
+composer install
+php example/bainian.php
+use Hanson\Vbot\Foundation\Vbot;
+use Hanson\Vbot\Message\Entity\Text;
+
+$robot = new Vbot([
+    'tmp' => __DIR__ . '/./../tmp/',
+    'debug' => true
+]);
+
+$robot->server->setCustomerHandler(function () {
+    $whiteList = ['some remark name...', 'some remark name...'];
+    $blackList = ['some remark name...', 'some remark name...'];
+    contact()->each(function($item, $username) use ($whiteList, $blackList){
+        // 发送白名单https://github.com/HanSon/vbot  https://github.com/vonnyfly/wechat-sendall
+        if($item['RemarkName'] && in_array($item['RemarkName'], $whiteList)){
+            Text::send($username, $item['RemarkName'] . ' 新年快乐');
+        }
+        // 黑名单不发送
+//        if($item['RemarkName'] && !in_array($item['RemarkName'], $blackList)){
+//            Text::send($username, $item['RemarkName'] . ' 新年快乐');
+//        }
+        // 全部人发送
+//        if($item['RemarkName']){
+//            Text::send($username, $item['RemarkName'] . ' 新年快乐');
+//        }
+    });
+    exit;
+});
+
+$robot->server->run();
+
+URL error 60: SSL certificate problem: unable to get local issuer certificate (see http://curl.haxx.se/libcurl/c/libcurl-errors.html)
+
+下载 CA 证书
+
+你可以从 http://curl.haxx.se/ca/cacert.pem 下载 或者 使用微信官方提供的证书中的 CA 证书 rootca.pem 也是同样的效果。
+
+在 php.ini 中配置 CA 证书
+https://easywechat.org/zh-cn/docs/troubleshooting.html
+只需要将上面下载好的 CA 证书放置到您的服务器上某个位置，然后修改 php.ini 的 curl.cainfo 为该路径（绝对路径！），重启 php-fpm 服务即可。
+
+curl.cainfo = /path/to/downloaded/cacert.pem
+
+
+```
+###[一个每日自动commit的小脚本](https://metaquant.org/git.html)
+```js
+import os
+import numpy as np
+import subprocess
+import time
+import sys
+
+if len(sys.argv) == 1:
+    commitNum = np.random.randint(3,11)
+elif len(sys.argv) == 2:
+    commitNum = int(sys.argv[1])
+else:
+    print "the number of optional argument is wrong, must be 0 or 1!"
+
+fileType = ['.txt','.html','.md','.py']
+print 'the program will make %s commits today!' %(commitNum)
+for i in range(commitNum):
+    typeNum = np.random.randint(0,4)
+    fileName = np.random.randint(100,1000)
+    path = str(fileName)+fileType[typeNum]
+    with open(path,'wb') as code:
+        code.close()
+    print str(fileName)+fileType[typeNum]+' have been created!'
+    gitShell = subprocess.Popen('sync.sh',shell=True)
+    print 'the new change is being commited and push, please wait a few seconds!'
+    if gitShell.wait() == 0:
+        os.remove(path)
+        print str(fileName)+fileType[typeNum]+' have been deleted!'
+print 'all changes have been committed!'
+raw_input('press Enter to exit!')
+```
+###[python函数式编程之高阶函数](https://metaquant.org/python-func.html)
+```js
+# Classic "FP-style"
+transformed = map(tranformation,iterator)
+# Comprehension
+transformed = (transformation(x) for x in iterator)
+
+# Classic "FP-style"
+filtered = filter(predicate,iterator)
+# Comprehension
+filtered = (x for x in iterator if predicate(x))
+
+from functools import reduce
+total = reduce(operator.add,it,0)
+#total = sum(it)
+
+>>> add5 = lambda n: n+5
+>>> reduce(lambda l,x: l+[add5(x)],range(10),[])
+[5,6,7,8,9,10,11,12,13,14]
+>>> # simpler: map(add5,range(10)
+>>> isOdd = lambda n: n%2
+>>> reduce(lambda l,x: l+[x]if isOdd(x) else l, range(10),[])
+[1,3,5,7,9]
+>>> # simpler: filter(isOdd,range(10))
+```
+###[Python 中除了 SimpleHTTPServer, json.tool 外，还有哪些内置的模块](https://www.v2ex.com/t/338920)
+```js
+cat file.json | python -m json.tool
+python -m smtpd -n -c DebuggingServer localhost:1025 一句话开启一个 SMTP 服务器测试邮件功能
+python -m zipfile 可以压缩解压缩 zip 文件的，但是无法解压带密码的 zip 
+python -m pydoc 一个查看 python 文档的模块
+python -m timeit '"-".join(str(n) for n in range(100))'
+10000 loops, best of 3: 35.8 usec per loop
+python3 -m http.server
+python -m turtle
+python -m antigravity
+python -m venv 常用 
+python -m pip 这个在 win 下更新 pip 要用到
+python -m zipapp 
+可以用来打包程序
+```
+###[chrome console tricks](http://coolshell.cn/articles/17634.html)
+1.source-snippet可以保存常用的一些脚本，可以在这写demo
+2.console 中， preservelog旁边的top标签可以切换global环境，top是当前页面，然后还有其他插件的页面，调用插件的函数。用来调试serviceworker
+console可以用btoa(‘test:test’)来返回Base64 encoding
+inspect函数可以让你控制台跳到你需要查看的对象上
+copy函数可以把一个变量的值copy到剪贴板上。
+ getEventListeners($("selector")) 来查看某个DOM对象上的事件
+ Copy as cURL  设置你的网络的访问速度来模拟一个网络很慢的情况。
+ document.designMode = "on"直接编辑网页
