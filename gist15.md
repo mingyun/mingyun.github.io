@@ -306,3 +306,131 @@ curl http://www.topit.me/|grep -P "http:[^>]*?(jpg|gif)" -o|xargs wget
 
 这就是一个正则搜索url中以http开头 jpg或gif结尾的字符串，使用wget下载的例子
 ```
+###[JavaScript 面试](https://zhuanlan.zhihu.com/p/25176639)
+```js
+document.addEventListener('DOMContentLoaded', function() {
+  
+  let app = document.getElementById('todo-app');
+  let items = app.getElementsByClassName('item');
+  
+  // attach event listener to each item
+  for (let item of items) {
+    item.addEventListener('click', function() {
+      alert('you clicked on item: ' + item.innerHTML);
+    });
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  let app = document.getElementById('todo-app');
+  
+  // attach event listener to whole container
+  app.addEventListener('click', function(e) {
+    if (e.target && e.target.nodeName === 'LI') {
+      let item = e.target;
+      alert('you clicked on item: ' + item.innerHTML);
+    }
+  });
+});
+const arr = [10, 12, 15, 21];
+for (var i = 0; i < arr.length; i++) {
+  // pass in the variable i so that each function 
+  // has access to the correct index
+  setTimeout(function(i_local) {
+    return function() {
+      console.log('The index of this number is: ' + i_local);
+    }
+  }(i), 3000);
+}
+const arr = [10, 12, 15, 21];
+for (let i = 0; i < arr.length; i++) {
+  // using the ES6 let syntax, it creates a new binding
+  // every single time the function is called
+  // read more here: http://exploringjs.com/es6/ch_variables.html#sec_let-const-loop-heads
+  setTimeout(function() {
+    console.log('The index of this number is: ' + i);
+  }, 3000);
+}
+```
+###[QQ聊天记录数据分析](https://zhuanlan.zhihu.com/p/25171755)
+```js
+#定义数据框和变量
+data <- data.frame(user_name = c(), datetime = c(), text = c())
+user_name <- character()
+datetime <- character()
+text <- character()
+#开始遍历整个文本，取出三列数据
+for(i in 5:length(file_data)){
+dt_pattern <- regexpr('[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]+:[0-9]+:[0-9]+',file_data[i])
+if(dt_pattern == 1) {
+user_begin <- dt_pattern+attr(dt_pattern,'match.length') + 1
+user_end <- nchar(file_data[i])
+user_name <- substring(file_data[i],user_begin,user_end)
+
+dt_begin <- dt_pattern
+dt_end <- dt_pattern+attr(dt_pattern,'match.length')-1
+datetime <- substring(file_data[i],dt_begin,dt_end)
+
+text <- file_data[i+1]
+
+data <- rbind(data, data.frame(Name = user_name,datetime = datetime,text = text))
+}
+}
+#字段类型转换
+data$user_name <- as.character(data$Name)
+data$text <- as.character(data$text)
+data$datetime <- as.POSIXlt(data$datetime)
+#取出时间戳（datetime）的年、月、日、时、分、秒部分
+data <- transform(data,
+year = datetime$year+1900,
+month = datetime$mon+1,
+day = datetime$mday,
+hour = datetime$hour,
+min = datetime$min,
+sec = datetime$sec)
+data$datetime <- as.character(data$datetime)
+```
+###[关于反爬虫](https://zhuanlan.zhihu.com/p/25174337)
+```js
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys    #
+from selenium.webdriver.support.ui import WebDriverWait   # WebDriverWait的作用是等待某个条件的满足之后再往后运行
+from selenium.webdriver import ActionChains
+import time
+import sys
+driver = webdriver.PhantomJS(executable_path='C:\PyCharm 2016.2.3\phantomjs\phantomjs.exe')  # 构造网页驱动
+
+driver.get('https://www.zhihu.com/#signin')       # 打开网页
+driver.find_element_by_xpath('//input[@name="password"]').send_keys('your_password')
+driver.find_element_by_xpath('//input[@name="account"]').send_keys('your_account')
+driver.get_screenshot_as_file('zhihu.jpg')                   # 截取当前页面的图片
+input_solution = input('请输入验证码 :')
+driver.find_element_by_xpath('//input[@name="captcha"]').send_keys(input_solution)
+time.sleep(2)
+
+driver.find_element_by_xpath('//form[@class="zu-side-login-box"]').submit()  # 表单的提交  表单的提交，即可以选择登录按钮然后使用click方法，也可以选择表单然后使用submit方法
+sreach_widonw = driver.current_window_handle     # 用来定位当前页面
+# driver.find_element_by_xpath('//button[@class="sign-button submit"]').click()
+try:
+dr = WebDriverWait(driver,5)
+# dr.until(lambda the_driver: the_driver.find_element_by_xpath('//a[@class="zu-side-login-box"]').is_displayed())
+if driver.find_element_by_xpath('//*[@id="zh-top-link-home"]'):
+print('登录成功')
+except:
+print('登录失败')
+driver.save_screenshot('screen_shoot.jpg')     #截取当前页面的图片
+sys.exit(0)
+driver.quit()   #退出驱动
+
+import requests
+proxies = { "http": "http://10.10.1.10:3128",
+"https": "http://10.10.1.10:1080",}
+p = request.get("http://www.baidu.com", proxies = proxies)
+print(p.content.decode('utf-8'))
+```
+###[R语言如何画个性化词云图](https://zhuanlan.zhihu.com/p/25163990?refer=rshequ)
+```js
+wordcloud2(demoFreq, size = 1,shape='star')
+wordcloud2(demoFreqC, size = 1.55,figPath =log)
+```
