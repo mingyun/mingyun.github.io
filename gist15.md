@@ -146,6 +146,40 @@ plt.hist(x,bins=100,color='green',normed=True)   # bins显示有几个直方,nor
 plt.show()
  
 ```
+###[图文并茂！8 张 Gif 图学会 Flexbox](https://zhuanlan.zhihu.com/p/25152672)
+```js
+#container {
+  display: flex;
+  flex-direction: column;
+}
+```
+###[PHP倒序输出所有日志内容](https://zhuanlan.zhihu.com/p/25128276)
+```js
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content = "5"> 
+</head>
+<body>
+<?php
+$fp = file("out.log");
+if ($fp) {
+for($i = count($fp) - 1;$i >= 0; $i --) 
+echo $fp[$i]."<br>";
+            }
+?>
+</body>
+</html>
+5秒刷新一次网页来查看最新的日志。
+<?php 
+$ph = popen('tail -n 100 out.log','r');
+while($r = fgets($ph)){
+echo $r."<br>";
+            }
+            pclose($ph);
+?>
+ 
+```
 ###[程序员工作](https://www.zhihu.com/question/55582625)
 ```js
  #https://link.zhihu.com/?target=https%3A//github.com/ipreacher/tricks
@@ -434,3 +468,435 @@ print(p.content.decode('utf-8'))
 wordcloud2(demoFreq, size = 1,shape='star')
 wordcloud2(demoFreqC, size = 1.55,figPath =log)
 ```
+###[Python密码学之旅凯撒密码和栅栏密码](https://zhuanlan.zhihu.com/p/25157493)
+```js
+ 
+
+#字符表
+mstr='abcdefghijklmnopqrstuvwxyz'
+#字符表长度
+lengthM=len(mstr)
+
+#strs为输入的明文，shitf为移动的位数
+def caesar(strs,shift):
+    newstrs =''
+    for x in strs:
+            #获取x字符在mstr中的位置
+        numX=mstr.index(x)
+        
+            #新的字符位置加上shift
+        numX=(numX+shift)%lengthM
+        
+        newstrs=newstrs+mstr[numX]
+     
+    return newstrs
+
+if __name__ == '__main__':
+    strs = raw_input("Enter character sequence:")
+    shift = input("Shift Numbers:")
+    C=caesar(strs,shift)
+    print("CiperText:",C)
+    print("PlainText:",caesar(C,int(shift)*(-1)))
+```
+###[add(1)(2)(3);](https://segmentfault.com/q/1010000008323101)
+```js
+function add(x){
+    var num = x;
+    function _add(para){
+        num+=para;
+        return _add;
+    }
+    _add.toString=function(){
+        return num;
+    }
+    return _add;
+}
+
+
+var a = add(1)(2)(3);
+console.log(a);//6
+console.log((a+7));//13
+console.log(a(11));//17
+
+function add(x){
+    var num = x;
+    function _add(para){
+        num+=para;
+        return _add;
+    }
+    _add.log=function(){
+        return num;
+    }
+    return _add;
+}
+
+
+var a = add(1)(2)(3);
+console.log(a);
+a.log()
+
+在执行a+7的时候 会自动调用toString 以下展示了这个情况
+
+var a = function() {return 3}
+a + 7
+// "function () {return 3}7"
+a.toString = function() {return 3}
+a + 7
+// 10
+
+console.log函数需要把变量转换成字符串打印，所以会首先调用变量的toString方法的，你把_add.toString换成_add.log再试试就不会自动打印出结果了，就会是函数了，除非再手动调用log
+```
+###[单点登录](https://segmentfault.com/q/1010000008325474)
+```js
+www.baidu.com （调用者） 
+tieba.baidu.com （调用者） 
+pic.baidu.com （调用者） 
+login.baidu.com （服务者）。
+
+对于各个模块之间应该保持充分的独立性
+单点登陆实现方案吧：
+
+某个项目登陆成功，广播其他注册的项目进行登陆操作[写session的操作]
+某个项目登陆成功，url会携带一个ticket，各个项目通过解析ticket获取uid进行写session操作
+```
+###[微信扫码关注](https://segmentfault.com/q/1010000008321149)
+1、网站里每次都生成一个带参数的公众号二维码（临时）
+2、用户用微信扫码后关注，服务端获取到关注事件以及该用户和参数二维码标识。
+3、服务端返回内容，提示输入Y
+4、网页端根据服务端获取到的事件进行后续处理。
+###[nodejs做一个简易的tcp聊天程序](https://segmentfault.com/q/1010000008293716)
+```js
+var net=require('net');
+
+var count=0, users={};
+
+var server=net.createServer(function(conn){
+    conn.write(
+        '\n\r > welcome to\033[92m node-chat\033[39m !'+
+        '\n\r > '+count+' other people are connected at this time.'+
+        '\n\r > please write your name and press enter: '
+    );
+    count++;
+
+    conn.setEncoding('utf8');
+
+    var nickname;
+
+    function broadcast(msg, exceptMyself){
+        for(var i in users){
+            if(!exceptMyself||i!=nickname){
+                users[i].write(msg);
+            }
+        }
+    }
+
+    var tmp = '';
+
+    conn.on('data',function(data){
+        tmp += data;
+        if (tmp.indexOf('\n') === -1) {
+            return;
+        }
+        data = tmp.replace(/\r|\n/g, '');
+        if(!nickname){
+            if(users[data]){
+                conn.write('\r\n\033[93m> nickname already in use. try again:\033[39m\r\n ');
+                tmp='';
+                return;
+            }else{
+                nickname=data;
+                users[nickname]=conn;
+
+                broadcast('\r\n\033[90m> '+nickname+' joined the room\033[39m\r\n');
+            }
+        }else{
+            broadcast('\r\n\033[96m> '+nickname+':\033[39m '+data+'\r\n');
+        }
+
+        tmp='';
+        
+    });
+
+    conn.on('close',function(){
+        count--;
+        delete users[nickname];
+        broadcast('\r\n\033[096m> '+nickname+' left the room\033[39m \r\n');
+    });
+});
+
+server.listen(3000,function(){
+    console.log('\033[96m server listening on *:3000\033[39m');
+});
+```
+###[下拉刷新出来](https://segmentfault.com/q/1010000008324477)
+```js
+$(window).scroll(function() {
+    if ($(this).scrollTop() > 300) {
+        $('#banner').show();
+    } else {
+        $('#banner').hide();
+    }
+});
+// 滚动控制返回顶部和漂浮栏出现、隐藏
+$(window).scroll(function() {
+    console.log($(this).scrollTop());
+});
+```
+###[mysql数据insert快还是update比较快](https://segmentfault.com/q/1010000008276218)
+```js
+查询： 主键查询最快，索引查询次之，where条件中有函数再次之；扫描行数越少越快。
+插入：根据索引数量，索引越多插入越慢。插入行数越多越慢，因为会导致重建索引。
+删除：行数越多越慢，索引数量越多越慢，因为会导致重建索引
+更新：同删除，因为索引列数据改变会导致重建索引https://segmentfault.com/q/1010000008299383
+
+修改用户余额前，因为怕修改出问题，意外把用户余额改为0什么的。而选择先插入一条记录到用户账务变动表，然后查出账务变动表的数据，来更新用户余额字段。
+// 开始事物
+BEGIN ;
+
+// 取出该用户数据，并锁住，防止其他线程（进程）读取该条记录
+SELECT * FROM users where id = $id FOR UPDATE ;
+
+// 处理业务...计算用户新的余额
+
+// 更新用户余额
+UPDATE users SET money = $new_money;
+
+// 获取影响行数=1,则：{
+  // 提交事物（解锁我们锁定的记录）
+  COMMIT ;
+}else{
+  // 发现不对，撤销我们在事物内做的所有操作
+  ROLLBACK ;
+}
+```
+###[Python的参数里的：](https://segmentfault.com/q/1010000008325027)
+type hinthttps://www.python.org/dev/peps/pep-0484/
+def greeting(name: str) -> str:
+  return 'Hello ' + name
+###[微信红包算法](https://segmentfault.com/q/1010000008324708)
+```js
+        function ranAllo(value, min, max, length) {
+
+            var ran = [], arrId;
+
+            //循环存放数组最小值
+            for(var i = 0; i < length; i++) {
+                
+                ran[i] = min;
+                
+            }
+            
+            //计算剩下的值
+            var spare = value - (min * length);
+            
+            while(spare > 0) {
+                
+                //生成数组随机ID
+                arrId = Math.round(Math.random() * length);
+
+                if(ran[arrId] < max) {
+                    
+                    ran[arrId] += 1;
+                    
+                    spare--;
+                    
+                }
+                
+            }
+            
+            console.log(ran);
+            
+            return ran
+
+        }
+```
+    
+###[Chrome 调试js时，如何避开各种插件js的干扰](https://segmentfault.com/q/1010000008322986)  
+Blackbox Script
+###[mysql for update 如果事务一直没有提交会不会这表数据一直锁在那里](https://segmentfault.com/q/1010000008309121)
+不会。客户端连接断开后，会自动释放锁。
+
+客户端1
+
+set AUTOCOMMIT = 0;
+BEGIN；
+SELECT * FROM articles WHERE id=1 FOR UPDATE ;
+客户端2
+
+set AUTOCOMMIT = 0;
+BEGIN；
+SELECT * FROM articles WHERE id=1 FOR UPDATE ;
+这时，客户端2的查询会卡住。直到客户端1 commit 或 rollback 。但是，如果客户端1直接关闭窗口断开连接，客户端2也能直接拿到锁。说明客户端断开时，会自动释放锁。
+###[标签的id中存在#](https://segmentfault.com/q/1010000008320447)
+用双反斜杠转义，即对于id="foo#bar"，用$('#foo\\#bar')
+###[underscore的_.without函数](https://segmentfault.com/q/1010000008320336)
+function without(arr, obj){
+    arr.splice(arr.indexOf(obj),1)
+}
+let arrObj = [obj1,obj2,obj3,obj4];
+_.without(arrObj,obj1);
+console.log(arrObj);//[obj2,obj3,obj4]
+###[php str_replace替换关键词，如何控制长词优先](https://segmentfault.com/q/1010000008320325)
+```js
+function str_replace_once($needle,$replace,$haystack) {
+    $pattern = '/<img[^>]*>/is';
+    preg_match_all($pattern, $haystack, $matched);
+    if(empty($matched[0])){
+        $pos = strpos($haystack, $needle);
+        if ($pos === false) {
+            return $haystack;
+        }
+        return substr_replace($haystack, $replace, $pos, strlen($needle));
+    } else {
+        $arr = preg_split($pattern, $haystack);
+        $haystack_new = '';
+        $replace_time = 0;
+        foreach($arr as $key => $str){
+                        $pos = strpos($str, $needle);
+            if ($pos === false || $replace_time > 0 || strpos($str, $needle.'</a>') !== false) {
+                $haystack_new .= $str;
+            } else {
+                $haystack_new .= substr_replace($str, $replace, $pos, strlen($needle));
+                $replace_time  = 1;
+            }
+            if(isset($matched[0][$key])) $haystack_new .= $matched[0][$key];
+        }
+        return $haystack_new;
+    }
+}
+
+$str0 = 'php技术 是时下最好用的 php'; // 替换成 'java技术 是时下最好用的 编程技术' 
+$str1 = 'php技术';
+$str2 = 'php'
+// 比较字符串长短，并组合成数组
+function compare(){
+    $vars = func_get_args();
+    $list = array();
+    $len  = array();
+    $rel  = array();
+    
+    // 收集长度 + 对照表
+    foreach ($vars as $k => $v)
+        {
+            $l       = mb_strlen($v);
+            $list[$k] = $l;
+            $len     = $l;
+        }
+    
+    $count = count($len);
+    
+    // 选择排序：对长度进行比较
+    for ($i = 0; $i < $count; ++$i)
+        {
+            $longest = $i;
+            
+            for ($n = $i + 1; $n < $count; ++$n)
+                {
+                    if ($len[$i] < $len[$n]) {
+                        $longest = $n;
+                    }
+                }
+            
+            if ($i !== $longest) {
+                $tmp = $len[$i];
+                $len[$i] = $len[$longest];
+                $len[$longest] = $tmp;
+            }
+        }
+     
+     // 搜集整理
+     foreach ($len as $v)
+         {
+             $rel[$v] = $list[$v];
+         }
+         
+    // 返回最终结果
+    return $rel;
+}
+
+// 队列方式按照长的先替换
+$rel = compare($str1 , $str2);
+$replace = array('java' , '编程技术');
+
+for ($i = 0; $i < count($rel); ++$i)
+    {
+        $str0 = preg_replace($rel[$i] , $replace[$i] , $str0);
+    }
+```
+###[php 如何抓到當前的 TITLE](https://segmentfault.com/q/1010000008319461)
+```js
+document.write(document.title);
+<?php
+ob_start(function($buffer){
+    preg_match('/<title.*>\s*(.*)\s*<\/title>/',$buffer,$str);
+    return $str[1];
+});
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我是一个title</title>
+</head>
+<body>
+</body>
+</html>
+<?php
+
+ob_end_flush();
+$url = "http://bosonnlp.com/account/login";
+$body = (new \GuzzleHttp\Client)->get($url)->getBody()->getContents();
+$title = (new \Symfony\Component\DomCrawler\Crawler($body))->filter('title')->text();
+var_dump($title);
+```
+###[浏览器打开图片要显示不要下载](https://segmentfault.com/q/1010000008315289)
+<a href="http://*****/e90fecec7b38b42a406318e78f961a1a.png" target="_blank">查看</a>
+head中的类型不是图片images/*而是application/octet-stream
+得到的服务端返回的响应头，将Content-Type改成images/*就可以啦
+###[输出变量名及变量类型](https://segmentfault.com/q/1010000008314212https://segmentfault.com/q/1010000008314212)
+```js
+function var_types() {
+    $bt = debug_backtrace()[0];
+    $file = new \SPLFileObject($bt['file']);
+    $file->seek($bt['line'] - 1);
+    $line = $file->current();
+    $matchs = null;
+    preg_match('/var_types\((.*)\)/', $line, $matchs);
+    $param_names = array_map('trim', explode(",", $matchs[1]));
+    $args = func_get_args();
+
+    for ($i = 0; $i < count($args); $i++) {
+        echo $param_names[$i] . ' ' . gettype($args[$i]) . PHP_EOL;
+    }
+}https://3v4l.org/522df
+```
+###[php正则表达式匹配@用户名](https://segmentfault.com/q/1010000008317959)
+```js
+$users = [
+    ['id' => 1, 'name' => '小明'],
+    ['id' => 2, 'name' => '小李'],
+];
+
+$comment = '@小明 你好，@小李 你也好”中的小明，小李提取出';
+
+
+$comment = preg_replace_callback('/(@)(.+?)(\s)/', function ($matches) use ($users) {
+    foreach ($users as $user) {
+        if ($matches[2] === $user['name']) {
+            return "<a href='/user/{$user['id']}'>@$matches[2]</a> ";
+        }
+    }
+    return $matches[0];
+}, $comment);
+
+var_dump($comment);
+
+// string(111) "<a href='/user/1'>@小明</a> 你好，<a href='/user/2'>@小李</a> 你也好”中的小明，小李提取出"
+```
+###[过滤掉他们的script标签的src属性](https://segmentfault.com/q/1010000008300101)
+$context = <<<EOF
+<script src="111"> sss</script><script src="222dd"> ggg</script>
+<script src="222"> fff</script>
+EOF;
+
+echo preg_replace('/\s*src=("[^"]*")|(\'[^\']*\')/', '', $context);
