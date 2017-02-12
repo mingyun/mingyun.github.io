@@ -868,7 +868,18 @@ function var_types() {
     for ($i = 0; $i < count($args); $i++) {
         echo $param_names[$i] . ' ' . gettype($args[$i]) . PHP_EOL;
     }
-}https://3v4l.org/522df
+}
+https://3v4l.org/522df
+define('MY_CONSTANT', 1);
+$string = "STR";
+$num = 123.4;
+
+var_types(MY_CONSTANT, $string, $num, $_GET, $_SERVER['PHP_SELF']);
+MY_CONSTANT integer
+$string string
+$num double
+$_GET array
+$_SERVER['PHP_SELF'] string
 ```
 ###[php正则表达式匹配@用户名](https://segmentfault.com/q/1010000008317959)
 ```js
@@ -900,3 +911,214 @@ $context = <<<EOF
 EOF;
 
 echo preg_replace('/\s*src=("[^"]*")|(\'[^\']*\')/', '', $context);
+###[trimArray](https://segmentfault.com/q/1010000008322002)
+```js
+function trimArray($str, $charArray)
+{
+    foreach ($charArray as $char) {
+        $charLength = strlen($char);
+        if (substr($str, 0, $charLength) === $char) {
+            // 去掉头部
+            $str = substr_replace($str, '', 0, $charLength);
+        }
+        if (substr($str, 0 - $charLength) === $char) {
+            // 去掉尾部
+            $str = substr_replace($str, '', strlen($str) - $charLength, $charLength);
+        }
+    }
+    return $str;
+}
+
+$str = '<br />
+<p>gwgawegwewgaweg</p><p>awe</p><p>gawe</p><p>we</p><p>awe</p><p>eg</p><br />';
+
+var_dump(trimArray($str,['<br />']));
+// string(79) "
+<p>gwgawegwewgaweg</p><p>awe</p><p>gawe</p><p>we<br /></p><p>awe</p><p>eg</p>"
+
+```
+###[安装composer报错，找不到php_pdo_firebird.dll](https://segmentfault.com/q/1010000008254232)
+在PHP7中已经不再支持使用ext/mysql这个扩展了，可以使用mysqli或PDO扩展，详细情况可以看remove deprecated functionality in php7
+第二个扩展的问题，这里有解决办法：PHP Startup: Unable to load dynamic library php_pdo_firebird.dll
+###[Apache的 OpenSSL与PHP的不匹配问题](https://segmentfault.com/q/1010000008288880)
+```js
+$encrypted_all='';
+    $pu_key = openssl_pkey_get_public($this->public_key);
+    foreach ($cutting_data as $key => $value) {
+        $encrypted='';
+        openssl_public_encrypt($value,$encrypted,$pu_key);【这一步报错】
+        $encrypted = base64_encode($encrypted);
+        //echo $encrypted;
+        $encrypted_all=$encrypted_all.$encrypted;
+    }
+    由于OpenSSL版本不一致，所以函数库不一样，导致此问题，同步openssl版本进行解决
+```
+###[算法讲解的注解](https://segmentfault.com/a/1190000005060870)
+```js
+$row_num = 3;
+$rows = [
+    'abcdefghijkl',
+    'bcdefghaijkl',
+    'bcdefghijkla',
+];
+
+$orders = [];
+foreach ($rows as $row) {
+    $orders[] = get_order($row);
+}
+```
+###[Stack Overflow 2016年度 20个最佳Python问题](https://zhuanlan.zhihu.com/p/25020763)
+```js
+https://github.com/mingyun/Coding-Guide/blob/master/Notes/Python/Python%E5%8F%8A%E5%BA%94%E7%94%A8/Python3%E5%8F%8A%E5%BA%94%E7%94%A81-%E5%9F%BA%E7%A1%80.md Python3及应用
+$ python -m timeit -s 'import random;a=range(10000);random.shuffle(a)' 'a.sort();a[-1]'
+1000 loops, best of 3: 239 usec per loop
+$ python -m timeit -s 'import random;a=range(10000);random.shuffle(a)' 'max(a)'        
+1000 loops, best of 3: 342 usec per loop
+ >>> 3*0.1
+0.30000000000000004
+>>> 4*0.1
+0.4
+>>> from decimal import Decimal
+>>> Decimal(3*0.1)
+Decimal('0.3000000000000000444089209850062616169452667236328125')
+>>> Decimal(4*0.1)
+Decimal('0.40000000000000002220446049250313080847263336181640625')
+ >>> (0.1).hex()
+'0x1.999999999999ap-4'
+>>> (0.3).hex()
+'0x1.3333333333333p-2'
+>>> (0.1*3).hex()
+'0x1.3333333333334p-2'
+>>> (0.4).hex()
+'0x1.999999999999ap-2'
+>>> (0.1*4).hex()
+'0x1.999999999999ap-2'
+
+ 
+```
+###[自己搭建 Shadowsocks](https://lufficc.com/blog/vpn)
+sudo apt-get install python-pip
+ssserver -c /path/to/shadowsocks.json
+sudo apt-get install supervisor
+/etc/supervisor/conf.d 文件夹新建文件 shadowsocks.conf :
+
+[program:shadowsocks]
+command = ssserver -c /var/shadowsocks/shadowsocks.json
+user = root
+autostart = true
+autoresart = true
+stderr_logfile = /var/shadowsocks/shadowsocks.stderr.log
+stdout_logfile = /var/shadowsocks/shadowsocks.stdout.log
+然后依次运行即可使 shadowsocks 运行在后台：
+
+sudo supervisorctl reread
+
+sudo supervisorctl update
+
+sudo supervisorctl start shadowsocks
+###[Python干货：表达式 i += x 与 i = i + x 等价吗](http://mp.weixin.qq.com/s/jluii9YIvfhKd_tPecfTaw)
+```js
+>>> l1 = range(3)
+>>> l2 = l1
+>>> l2 += [3]
+>>> l1
+[0, 1, 2, 3]
+>>> l2
+[0, 1, 2, 3]
+>>> l1 = range(3)
+>>> l2 = l1
+>>> l2 = l2 + [3]
+>>> l1
+[0, 1, 2]
+>>> l2
+[0, 1, 2, 3]
+```
+###[MySQL 如何存储长度较大的varchar与blob](https://github.com/zhangyachen/zhangyachen.github.io/issues/96)
+CREATE TABLE `row` (
+  `content` varchar(65532) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+mysql> insert into row(content) select repeat('a',65532);
+Query OK, 1 row affected (0.03 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+###[in or效率](https://github.com/zhangyachen/zhangyachen.github.io/issues/60)
+select * from table where id in (xxx,xxx,xxx...,xxx)
+select * from table where id=xxx or id=xxx or id=xxx ... or id=xxx
+在InnoDB引擎下，in返回的顺序是按照主键排序的，我以前一直以为是按照in列表里排序好的顺序进行排序的：
+###[App接入支付宝](https://segmentfault.com/a/1190000008188574?utm_source=tuicool&utm_medium=referral)
+```js
+https://os.alipayobjects.com/download/secret_key_tools_RSA256_win.zip  下载支付宝提供的工具
+https://openhome.alipay.com/doc/sdkDownload.resource?sdkType=PHP 下载php的sdk
+<?php  
+require_once './aop/AopClient.php';
+require_once './aop/request/AlipayTradeAppPayRequest.php';
+$c = new AopClient;
+$c->gatewayUrl = "https://openapi.alipaydev.com/gateway.do";
+$c->appId = "2016080100138126";
+$c->rsaPrivateKey = '私钥';
+$c->format = "json";
+$c->charset= "utf-8";
+$c->signType= "RSA2";
+$c->alipayrsaPublicKey = '支付宝公钥';
+$request = new AlipayTradeAppPayRequest ();
+$request->setBizContent("{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"0.01\",\"subject\":\"1\",\"body\":\"我是测试数据\",\"out_trade_no\":\"012114575097325\"}");
+echo $c->sdkExecute($request);
+?>
+```
+###[递归](https://segmentfault.com/a/1190000008304428)
+//递归的方法
+function test(n){
+  if(n<2){
+    return 1;
+  }
+  return test(n-1)+test(n-2)
+}
+alert(test(9))
+//迭代的方法
+function test(n){
+  var num1 = 1;
+  var num2 = 2;
+  var num3 = 0;
+  for(var i=0;i<n-2;i++){
+    num3 = num1 + num2;
+    num1 = num2;
+    num2 = num3;
+  }
+}
+alert(test(9))
+###[图片相似度算法算出匹配度](https://segmentfault.com/q/1010000008322029)
+```js
+
+<?php
+/**
+ * Created by PhpStorm.
+ * User: shellus
+ * Date: 2017-02-12
+ * Time: 19:34
+ */
+
+require 'vendor/autoload.php';
+
+use Intervention\Image\ImageManager;
+
+// create an image manager instance with favored driver
+$manager = new ImageManager(array('driver' => 'gd')); // imagick
+
+// to finally create image instances
+$img = $manager->canvas(800, 100, '#fff');
+
+$img->text('蛙蛙脾气', 0, 0, function(\Intervention\Image\AbstractFont $font) {
+    $font->file('src/fonts/msyhbd.ttc');
+    $font->size(100);
+    $font->color('#000');
+    $font->valign('top');
+});
+$img->text('娃娃脾气', 0, 0, function(\Intervention\Image\AbstractFont $font) {
+    $font->file('src/fonts/msyhbd.ttc');
+    $font->size(100);
+    $font->color('#ff0');
+    $font->valign('top');
+});
+
+$img->save('bar.png');
+```
