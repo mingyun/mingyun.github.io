@@ -1272,3 +1272,30 @@ use 只是标明该使用那个命名空间，new 对象才是真真执行自动
 ```
 ###[【Composer】实战操作二：自己创建composer包并提交](http://www.54php.cn/default/181.html)
 https://github.com/apanly/browser-detector 
+###[网页转换为 PDF](https://segmentfault.com/q/1010000008331900)
+```js
+// demo
+const phantom = require('phantom');
+
+(async function() {
+    const instance = await phantom.create();
+    const page = await instance.createPage();
+
+    await page.property('viewportSize', {width: 1024, height: 600});
+    const status = await page.open('https://stackoverflow.com/');
+    console.log(`Page opened with status [${status}].`);
+
+    await page.render('stackoverflow.pdf');
+    console.log(`File created at [./stackoverflow.pdf]`);
+
+    await instance.exit();
+}());
+// demo
+domtoimage.toJpeg(document.getElementById('my-node'))
+    .then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'my-image-name.jpeg';
+        link.href = dataUrl;
+        link.click();
+    });
+```
