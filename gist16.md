@@ -125,3 +125,60 @@ function weibo_get_image_url($pid) {
 	return $url;
 }
 ```
+###[windows上使用pyvenv进行项目隔离](http://www.jianshu.com/p/d01a85c8995e)
+python -m venv test 从python3.4开始，就已经自带了pyvenv，我使用的是python3.5。如果版本低于3.4，可以使用pip安装virtualenv这个库，它们用法基本一致。
+cd test/Scripts
+
+activate
+deactivate
+在A环境中把所有依赖都保存到re.txt中,使用pip freeze:
+
+pip freeze > re.txt
+这时会在当前目录生成re.txt,通过记事本可以直接打开:
+
+notepad re.txt
+可以看到类似内容:
+
+Flask==0.11.1
+Flask-Login==0.3.2
+Flask-SQLAlchemy==2.1
+我们可以修改该文件来改变我们虚拟环境的相关依赖，比如我们不需要Flask,直接删除Flask==0.11.1即可。
+
+这个文件怎么用呢,我们先激活B虚拟环境，然后可以一条命令安装所有依赖:
+
+pip install -r re.txt
+###[使用python+微博进行远程关机](http://www.jianshu.com/p/458a2656ca61)
+```js
+微博爬虫，使用requets+bs+oracle搭建的爬虫框架。包括对微博搜索、微博信息和用户资料的抓取、解析、存储和可视化展示https://github.com/ResolveWang/WeiboSpider
+beautifulsoup我用得最多的是find(attrs={key: value})
+ def get_newest(session, uid):
+    # 获取只含有原创内容的个人主页
+    url = 'http://weibo.com/' + uid + '/profile?profile_ftype=1&is_ori=1#_0'
+    page = session.get(url).text
+    soup = BeautifulSoup(page, 'html.parser')
+    scripts = soup.find_all('script')
+    status = ' '
+    for s in scripts:
+        if 'pl.content.homeFeed.index' in s.string:
+                status = s.string
+    #用正则表达式获取微博原创内容
+    pattern = re.compile(r'FM.view((.*))')
+    rs = pattern.search(status)
+    if rs:
+        cur_status = rs.group(1)
+        html = json.loads(cur_status).get('html')
+        soup = BeautifulSoup(html, 'html.parser')
+        # 获取最新一条微博所有信息
+        newest = soup.find(attrs={'action-type': 'feed_list_item'})
+        # 获取最新发布内容
+        post_cont = newest.find(attrs={'node-type': 'feed_list_content'}).text.strip()
+        # 获取最新发布时间
+        post_stamp = int(newest.find(attrs={'node-type': 'feed_list_item_date'}).get('date')[:-3])
+        post_time = datetime.fromtimestamp(post_stamp)
+        now = datetime.now()
+        # 计算此刻和发布时间的时间差(单位为秒)
+        t = (now - post_time).total_seconds()
+        return post_cont, t
+    else:
+        return None
+```
