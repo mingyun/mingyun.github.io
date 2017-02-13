@@ -54,3 +54,74 @@ POST 参数必须是 b64_data，值为经过 base64 编码后的字符串
 $header [] = "Cookie:$cookie";  
 curl_setopt($ch, CURLOPT_HTTPHEADER, $header );
 ```
+###[python模拟登陆微博](https://github.com/ResolveWang/smart_login/blob/master/sina_login/sina_login_by_selenium.py)
+```js
+import time
+from selenium import webdriver
+import requests
+
+# 该段代码在ubuntu上能成功运行，并没有在windows上面运行过
+# 直接登陆新浪微博
+url = 'http://weibo.com/login.php'
+driver = webdriver.PhantomJS()
+driver.get(url)
+print('开始登陆')
+
+# 定位到账号密码表单
+login_tpye = driver.find_element_by_class_name('info_header').find_element_by_xpath('//a[2]')
+login_tpye.click()
+time.sleep(3)
+
+name_field = driver.find_element_by_id('loginname')
+name_field.clear()
+name_field.send_keys('youraccount')
+
+password_field = driver.find_element_by_class_name('password').find_element_by_name('password')
+password_field.clear()
+password_field.send_keys('yourpassword')
+
+submit = driver.find_element_by_link_text('登录')
+submit.click()
+
+# 等待页面刷新，完成登陆
+time.sleep(5)
+print('登陆完成')
+sina_cookies = driver.get_cookies()
+
+cookie = [item["name"] + "=" + item["value"] for item in sina_cookies]
+cookiestr = '; '.join(item for item in cookie)
+
+# 验证cookie是否有效
+redirect_url = 'http://weibo.com/p/1005051921017243/info?mod=pedit_more'
+headers = {'cookie': cookiestr}
+html = requests.get(redirect_url, headers=headers).text
+print(html)
+
+
+```
+###[调用网页接口实现发微博（PHP实现）](http://andrewyang.cn/post.php?id=1034)
+```js
+//https://github.com/yangyuan/weibo-publisher
+function rsa_encrypt($message, $e, $n) {
+	$exponent = hex2bin($e);
+	$modulus = hex2bin($n);
+	$pkey = rsa_pkey($exponent, $modulus);
+	openssl_public_encrypt($message, $result, $pkey, OPENSSL_PKCS1_PADDING);
+	return $result;
+}
+$message=$servertime."\t".$nonce."\n".$password;
+function weibo_get_image_url($pid) {
+	$zone = 0;
+	$pid_zone = crc32 ($pid);
+	$type = 'large'; //bmiddle
+	if ($pid[9] == 'w') {
+		$zone = ($pid_zone & 3) + 1;
+		$ext = ($pid[21] == 'g') ? 'gif' : 'jpg';
+		$url = 'http://ww'.$zone.'.sinaimg.cn/'.$type.'/'.$pid.'.'.$ext;
+	} else {
+		$zone = (hexdec(substr($pid, -2)) & 0xf) + 1;
+		$url = 'http://ss'.$zone.'.sinaimg.cn/'.$type.'/'.$pid.'&690';
+	}
+	return $url;
+}
+```
