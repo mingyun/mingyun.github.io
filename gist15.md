@@ -1122,3 +1122,24 @@ $img->text('娃娃脾气', 0, 0, function(\Intervention\Image\AbstractFont $font
 
 $img->save('bar.png');
 ```
+###[单页整站导航点击滚动](https://segmentfault.com/q/1010000008328704)
+```js
+<div class='nav-left'>
+    <div data-to='content1'><\div>
+    <div data-to='content2'><\div>
+<\div>
+<div class='content1'>
+<div class='content2'>
+$('.nav-left').on('click','div',function(e){
+            //console.log(e);
+            var target = e.target;
+            var div = $(target).data("to");
+            //console.log(div);
+            
+            $('html,body').animate({scrollTop:$('.'+div).offset().top}, 800);
+        });
+```
+###[hexo搭建个人博客如何设置自定义的页面为主页](https://segmentfault.com/q/1010000008326088)
+首先，我用的hexo 3.2.2版本，要使用自定义页面为主页，就得确保node_modules里没有hexo-generator-index模块，如果有请删除掉；（这个是用来渲染主页的，要自定义就不需要对吧）
+然后，如果细心你会发现themes/your_themes_name/source/这个目录里的文件，在你每次hexo g的时候都会全部复制，所以接下来就简单了，只需要把你的项目放到这个里面就OK了（自定义的index.html得在哈，也就是source目录做你项目的根目录）
+做完上面两步就可以看到自己自定义的主页了
