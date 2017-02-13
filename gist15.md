@@ -1250,3 +1250,25 @@ SHOW VARIABLES LIKE 'sql_mode';
 `created_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间'
 其实从5.6.17这个版本就默认设置了不允许插入 0 日期了，术语是 NO_ZERO_IN_DATE  NO_ZERO_DATE
 sql-mode = "STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+###[larvel env ](https://segmentfault.com/q/1010000008332009)
+https://github.com/vlucas/phpdotenv  
+使用 parse_ini_file 来读取.
+###[命名空间的 use 关键词 和 new ClassName](http://www.54php.cn/default/186.html)
+```js
+function myLoader($classname){
+   $class_file = $classname . '.php';
+   if ( file_exists($class_file) ){
+      require_once($class_file);
+   }else{
+      echo "[ autoload error ]".$class_file." not found";
+      die(0);
+   }
+}
+spl_autoload_register("myLoader");
+require_once("apanly/BrowserDetector/Browser.php");
+use apanly\BrowserDetector\Browser;
+new Browser();
+use 只是标明该使用那个命名空间，new 对象才是真真执行自动加载的触发器。命名空间和自动加载没有半毛钱关系
+```
+###[【Composer】实战操作二：自己创建composer包并提交](http://www.54php.cn/default/181.html)
+https://github.com/apanly/browser-detector 
