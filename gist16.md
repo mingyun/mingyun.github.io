@@ -182,3 +182,120 @@ beautifulsoup我用得最多的是find(attrs={key: value})
     else:
         return None
 ```
+###[一段 Python 监测 HTTP 服务状态的脚本](http://andrewyang.cn/post.php?id=1058)
+```js
+#!/usr/bin/env python
+
+import sys
+import httplib
+import time
+import subprocess
+import logging
+
+def check():
+    connection = httplib.HTTPConnection('127.0.0.1')
+    connection.request('GET', '/')
+    # 这个地方请求的是首页，也可以专门做个页面请求
+    response = connection.getresponse()
+    return response.status
+
+if __name__ == '__main__':
+
+    logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S', filename='daemon.log', level=logging.DEBUG)
+    # 弄个一个日志，备查，参考了nginx的日志格式
+
+    try:
+        counter = 0
+        while True:
+            time.sleep(1)
+            # 查询间隔是1秒
+            status = check()
+            logging.debug(str(status))
+            if status == 200:
+                counter = 0
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                # 注意这个地方需要 flush
+            if status == 502:
+                counter += 1
+                # 这个地方有个计数器，当15次502之后才会进行操作
+                if counter >= 15:
+                    print ''
+                    subprocess.call('service php5-fpm restart', shell=True)
+                    print 'done restart php5-fpm'
+                    logging.info('done restart php5-fpm')
+                    counter = 0
+                else:
+                    sys.stdout.write('*')
+                    sys.stdout.flush()
+    except KeyboardInterrupt:
+        # Ctrl+C
+        print ''
+        pass
+```
+###[配置高并发 UBUNTU、NGINX、PHP、MYSQL](http://andrewyang.cn/post.php?id=1026)
+````js
+文件描述符可以看作是 Linux 的 IO 句柄，默认限制在 1024 个活动描述符。
+echo 'net.core.somaxconn = 65536' >> /etc/sysctl.conf
+echo 'net.core.netdev_max_backlog = 65536' >> /etc/sysctl.conf
+sysctl -p
+
+index index.html index.php;
+location ~ \.php$ {
+	fastcgi_split_path_info ^(.+\.php)(/.+)$;
+	fastcgi_pass unix:/dev/shm/php5-fpm.sock;
+	fastcgi_index index.php;
+	include fastcgi_params;
+}
+```
+###[一个RSA加密的实际数学和编程实现过程](http://andrewyang.cn/post.php?id=1036)
+```js
+echo strlen('xxx')."\r\n";
+echo strlen('xxx'."\0")."\r\n";
+function rsa_encrypt($message, $e, $n) {
+	$exponent = hex2bin($e);
+	$modulus = hex2bin($n);
+	$pkey = rsa_pkey($exponent, $modulus);
+	openssl_public_encrypt($message, $result, $pkey, OPENSSL_PKCS1_PADDING);
+	return $result;
+}
+
+function rsa_encrypt($message, $e, $n) {
+	$exponent = hex2bin($e);
+	$modulus = hex2bin($n);
+	$pkey = rsa_pkey($exponent, $modulus);
+	
+	$length = strlen($modulus);
+	$length_padding = $length - strlen($message) - 2;
+	$padding = "\x00";
+    while (strlen($padding) < $length_padding) {
+        $padding = "\xFF".$padding;
+    }
+	$message = "\0\2".$padding.$message;
+	
+	openssl_public_encrypt($message, $result, $pkey, OPENSSL_NO_PADDING);
+	return $result;
+}
+```
+###[编程生成PEM格式的RSA公钥](http://andrewyang.cn/post.php?id=1037)
+```js
+-----BEGIN PUBLIC KEY-----
+MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgOsqOFaGYYh/oYC921yr1fIce/1ZwJDLLSRah6wl
+MGKIJykpPlUGNQUI5/mqO7d/QzMjFJD5FfbWPFX+LwikmzU/RErTmTyswC23hKu7jkKpsbv/+zi+
+GNeOh6DkG5uPc6ko7gzO4fZzmIS5d35P6eiKG75JWSesSnmbMYHWRCRDAgMBAAE=
+-----END PUBLIC KEY-----
+function rsa_pkey($exponent, $modulus) {
+	$modulus = pack('Ca*a*', 0x02, asn1_length(strlen($modulus)), $modulus);
+    $exponent = pack('Ca*a*', 0x02, asn1_length(strlen($exponent)), $exponent);
+	$oid = pack('H*', '300d06092a864886f70d0101010500'); // MA0GCSqGSIb3DQEBAQUA，这段我也特么不知道是啥
+	
+	$pkey =	$modulus.$exponent;
+	$pkey = pack('Ca*a*', 0x30, asn1_length(strlen($pkey)), $pkey);
+	$pkey = pack('Ca*', 0x00, $pkey);
+	$pkey = pack('Ca*a*', 0x03, asn1_length(strlen($pkey)), $pkey);
+	$pkey = $oid.$pkey;
+	$pkey = pack('Ca*a*', 0x30, asn1_length(strlen($pkey)), $pkey);
+	$pkey = '-----BEGIN PUBLIC KEY-----'."\r\n".chunk_split(base64_encode($pkey)).'-----END PUBLIC KEY-----';
+	return $pkey;
+}
+```
