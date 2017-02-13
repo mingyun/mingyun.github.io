@@ -1143,3 +1143,110 @@ $('.nav-left').on('click','div',function(e){
 首先，我用的hexo 3.2.2版本，要使用自定义页面为主页，就得确保node_modules里没有hexo-generator-index模块，如果有请删除掉；（这个是用来渲染主页的，要自定义就不需要对吧）
 然后，如果细心你会发现themes/your_themes_name/source/这个目录里的文件，在你每次hexo g的时候都会全部复制，所以接下来就简单了，只需要把你的项目放到这个里面就OK了（自定义的index.html得在哈，也就是source目录做你项目的根目录）
 做完上面两步就可以看到自己自定义的主页了
+###[【ipv6惹的祸】curl 超时](http://www.54php.cn/default/185.html)
+```js
+Operation timed out after 0 milliseconds with 0 out of 0 bytes received
+ 
+Resolving timed out after 5514 milliseconds
+wget www.domain.com
+--2016-11-19 22:17:30--  http://www.domain.com/
+Resolving www.domain.com... # 此处停滞约 5 秒
+xxx.xxx.xxx.xxx
+Connecting to www.domain.com|xxx.xxx.xxx.xxx|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+只需要加上下面一句即可解决延迟问题（指定使用IPV4）
+curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+```
+###[权限修饰符的问题](https://segmentfault.com/q/1010000008329419)
+```js
+class count(){
+    public $a = 0;
+    public $b = 0;
+    
+    public function setNumber($a,$b){
+        $this->a = $a;
+        $this->b = $b;
+        echo $this->compute();
+    }
+    
+    private function compute(){
+        return $this->a/$this->b;
+    }
+}
+$obj = new count();
+$obj->setNumber(1,2);
+$obj = new count();
+$obj->compute();
+$obj->setNumber(1,2);
+问题出现了。由于开始我们给变量a和b都设置了值为0，那么除数岂不是出现了0.更加容易出错
+```
+###[CSP -- 运营商内容劫持（广告）的终结者](http://www.54php.cn/default/182.html)
+```js
+setTimeout(function(){
+    $.ajax({
+        url:"/error/ad_log",
+        type:'post',
+        data:{
+            'content': $("html").html(),
+            'url':window.location.href
+        },
+        success:function(){
+ 
+        }
+    });
+},3000);
+<meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+
+Content-Security-Policy:
+script-src 'unsafe-inline' 'unsafe-eval' 'self'  *.vincentguo.cn *.yunetidc.com *.baidu.com *.cnzz.com *.c-cnzz.com *.duoshuo.com *.jiathis.com;report-uri /error/csp
+```
+###[QQ，github，微博第三方社交登录](http://www.54php.cn/default/191.html)
+```js
+https://github.com/apanly/dream/tree/master/common/service/oauth
+ClientService.php   统一第三方登录方法，应用程序的方法入口
+GithubService.php  Github第三方登录相关方法
+QqService.php      QQ第三方登录相关方法 
+WeiboService.php   微博第三方登录相关方法
+CREATE TABLE `user` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户uid',
+  `nickname` varchar(20) NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `unique_name` varchar(60) NOT NULL DEFAULT '' COMMENT '唯一标识',
+  `avatar` varchar(500) NOT NULL DEFAULT '' COMMENT '用户头像',
+  `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '用户手机号码',
+  `updated_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次更新时间',
+  `created_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `idx_name` (`unique_name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='用户表';
+ 
+ 
+CREATE TABLE `oauth_token` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `client_type` varchar(20) NOT NULL DEFAULT '' COMMENT '客户端来源类型',
+  `token` varchar(100) NOT NULL DEFAULT '',
+  `note` varchar(1000) NOT NULL DEFAULT '' COMMENT '备注',
+  `valid_to` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '有效期截止日期',
+  `updated_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '最后一次更新时间',
+  `createdt_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间',
+  PRIMARY KEY (`id`),
+  KEY `client_type_token` (`client_type`,`token`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='oauth token 表';
+ 
+ 
+CREATE TABLE `oauth_bind` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL DEFAULT '0' COMMENT '用户uid',
+  `client_type` varchar(20) NOT NULL DEFAULT '' COMMENT '客户端',
+  `openid` varchar(80) NOT NULL DEFAULT '' COMMENT '第三方id',
+  `extra` text NOT NULL COMMENT '额外字段',
+  `created_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_client_type_opend_id` (`client_type`,`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='第三方登录绑定关系';
+
+```
+###[Invalid default value for 'create_date' timestamp field](http://www.54php.cn/default/195.html)
+SHOW VARIABLES LIKE 'sql_mode';
+`created_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间'
+其实从5.6.17这个版本就默认设置了不允许插入 0 日期了，术语是 NO_ZERO_IN_DATE  NO_ZERO_DATE
+sql-mode = "STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
