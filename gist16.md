@@ -829,3 +829,122 @@ Redis::pipeline(function ($pipe) {
     }
 });
 ```
+###[数据库队列](http://www.mayanlong.com/archives/2016/166.html)
+```js
+php artisan queue:table
+php artisan migrate
+php artisan make:job SendReminderEmail
+<?php
+
+    namespace App\Jobs;
+
+    use App\Jobs\Job;
+    use Illuminate\Queue\SerializesModels;
+    use Illuminate\Queue\InteractsWithQueue;
+    use Illuminate\Contracts\Queue\ShouldQueue;
+    use Mail;
+
+    class SendReminderEmail extends Job implements ShouldQueue
+    {
+        use InteractsWithQueue, SerializesModels;
+
+        protected $email;
+
+        /**
+         * 创建一个新的任务实例
+         *
+         * @param $email
+         */
+        public function __construct($email)
+        {
+            $this->email = $email;
+        }
+
+        /**
+         * 执行任务
+         *
+         * @return void
+         */
+        public function handle()
+        {
+            // 发送邮件
+            Mail::raw('Queue test', function($message) {
+
+                $message->subject('测试邮件，勿回');
+                $message->to($this->email);
+            });
+        }
+    }
+    
+    $this->dispatch(new SendReminderEmail('849291170@qq.com')); 
+    
+     namespace App;
+
+    use App\Jobs\SendReminderEmail;
+    use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Foundation\Bus\DispatchesJobs;
+
+    class Student extends Model
+    {
+        use DispatchesJobs;
+
+        public static function queue()
+        {
+
+            dispatch(new SendReminderEmail('849291170@qq.com'));
+        }
+    }
+    
+    $job = (new SendReminderEmail('849291170@qq.com'))->delay(60);
+$this->dispatch($job);
+
+php artisan queue:listen --tries=3
+php artisan queue:failed-table
+php artisan queue:failed
+```
+###[js判断是否含有emoij表情](https://segmentfault.com/q/1010000008349131)
+```js
+function isEmojiCharacter(substring) {  
+
+  for ( var i = 0; i < substring.length; i++) {  
+    var hs = substring.charCodeAt(i);  
+    if (0xd800 <= hs && hs <= 0xdbff) {  
+        if (substring.length > 1) {  
+            var ls = substring.charCodeAt(i + 1);  
+            var uc = ((hs - 0xd800) * 0x400) + (ls - 0xdc00) + 0x10000;  
+            if (0x1d000 <= uc && uc <= 0x1f77f) {  
+                return true;  
+            }  
+        }  
+    } else if (substring.length > 1) {  
+        var ls = substring.charCodeAt(i + 1);  
+        if (ls == 0x20e3) {  
+            return true;  
+        }  
+    } else {  
+        if (0x2100 <= hs && hs <= 0x27ff) {  
+            return true;  
+        } else if (0x2B05 <= hs && hs <= 0x2b07) {  
+            return true;  
+        } else if (0x2934 <= hs && hs <= 0x2935) {  
+            return true;  
+        } else if (0x3297 <= hs && hs <= 0x3299) {  
+            return true;  
+        } else if (hs == 0xa9 || hs == 0xae || hs == 0x303d || hs == 0x3030  
+                || hs == 0x2b55 || hs == 0x2b1c || hs == 0x2b1b  
+                || hs == 0x2b50) {  
+            return true;  
+        }  
+    }  
+}  
+} 
+function filteremoji(){
+var ranges = [
+    '\ud83c[\udf00-\udfff]', 
+    '\ud83d[\udc00-\ude4f]', 
+    '\ud83d[\ude80-\udeff]'
+];
+var emojireg = $("#emoji_input").val();
+emojireg = emojireg .replace(new RegExp(ranges.join('|'), 'g'), ''));
+}
+```
