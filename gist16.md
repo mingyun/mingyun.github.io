@@ -453,3 +453,73 @@ var counter = {
 r = requests.get('http://www.hkex.com.hk/chi/stat/smstat/dayquot/d170202c.htm')
 r.encoding = 'big5'
 ```
+###[python for]()
+```js
+>>> dir(range)
+['__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__',   
+'__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__iter__',   
+'__le__', '__len__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__',   
+'__repr__', '__reversed__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__',   
+'count', 'index', 'start', 'step', 'stop']  
+
+>>> dir(str)
+['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__',   
+'__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__gt__',   
+'__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', 
+'__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', 
+'__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 
+'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map',
+ 'index', 'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 
+'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 
+'lstrip', 'maketrans', 'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 
+'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title',
+ 'translate', 'upper', 'zfill']
+
+查看这两个的共有属性
+我们关注__iter__属性，他们两个都有这个函数，如果你查看其他可以使用for循环迭代的对象，你都可以发现这个特殊方法。
+>>> set(dir(range)) & set(dir(str))
+{'__hash__', '__eq__', '__contains__', '__iter__', '__getitem__', 'count', '__lt__', 
+'__dir__', '__le__', '__subclasshook__', '__ge__', '__sizeof__', '__format__', '__len__', 
+'__ne__', '__getattribute__', '__delattr__', '__reduce_ex__', '__gt__', '__reduce__', 
+'__setattr__', '__doc__', '__class__', '__new__', '__repr__', '__init__', 'index', '__str__'}
+
+>>> iter([1, 2])
+<list_iterator object at 0x000001A1141E0668>
+>>> iter(range(0, 10))
+<range_iterator object at 0x000001A1124C6BB0>
+>>> iter("abc")
+<str_iterator object at 0x000001A1141E0CF8>
+>>>
+iter函数返回的对象我们称之为iterator，iterator只需要做一件事，那就是调用next(iterator)方法，返回下一个元素。
+
+>>> t = iter("abc")
+>>> next(t)
+'a'
+>>> next(t)
+'b'
+>>> next(t)
+'c'
+>>> next(t)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+>>> t = iter(range(90, 0, -1))
+>>> t
+<range_iterator object at 0x000001A1124C6BB0>
+>>> next(t)
+90
+>>> next(t)
+89
+>>> next(t)
+88
+```
+###[PHP-CRUD-API](https://segmentfault.com/q/1010000008335958)
+```js
+https://github.com/mevdschee/php-crud-api 
+$api = new PHP_CRUD_API(array(
+    'username'=>'xxx',
+    'password'=>'xxx',
+    'database'=>'xxx',
+));
+$api->executeCommand();
+```
