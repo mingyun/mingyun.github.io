@@ -633,3 +633,44 @@ VALUES('Mary Doe', 1, 50000),
 SET 
     salary = salary + salary * percentage;
 ```
+###[子域名爆破枚举脚本](https://github.com/We5ter/Scanners-Box/blob/master/README_CN.md)
+```js
+pip install dnspython
+python subDomainsBrute.py baidu.com
+
+www.zhidao.baidu.com          180.149.131.33
+t.yuedu.baidu.com             10.57.7.153
+t.zhidao.baidu.com            10.81.211.227
+login.br.baidu.com            180.149.131.82
+stat.br.baidu.com             220.181.164.79
+update.br.baidu.com           180.149.131.130
+beta.zhidao.baidu.com         180.149.132.173
+dl.br.baidu.com               220.181.163.235
+crm.t.baidu.com               220.181.163.82
+static.zhidao.baidu.com       220.181.111.64
+passport.client.baidu.com     10.92.134.13
+img04.client.baidu.com        42.81.93.46
+monitor.client.baidu.com      10.94.49.33
+img03.client.baidu.com        42.81.93.46
+img02.client.baidu.com        42.81.93.46
+ftp.client.baidu.com          10.48.28.49
+login.client.baidu.com        180.149.131.82
+wiki.client.baidu.com         10.48.28.49
+bbs.client.baidu.com          10.48.28.49
+dl.client.baidu.com           180.149.132.77, 220.181.164.26
+feedback.client.baidu.com     220.181.112.5
+stat.client.baidu.com         220.181.164.79
+update.client.baidu.com       180.149.131.130
+
+```
+###[订单逻辑](https://segmentfault.com/q/1010000008334556)
+当订单生成的时候，立即扣除库存
+订单超过24小时，未付款，自动取消订单，恢复库存。
+没有库存的时候，不能生成订单。
+###[在flash中如何调用JavaScript代码](https://segmentfault.com/q/1010000008123420)
+<param name="allowScriptAccess" value="always" />
+###[php7: php-fpm seems busy提示](https://segmentfault.com/q/1010000008153367)
+cat /proc/sys/net/core/somaxconn
+改动的话可以
+
+echo 1000 >/proc/sys/net/core/somaxconn
