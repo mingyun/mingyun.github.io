@@ -299,3 +299,157 @@ function rsa_pkey($exponent, $modulus) {
 	return $pkey;
 }
 ```
+###[PHP 性能追踪及分析工具（XHPROF）配置问题xhprof.output_dir='' ](https://segmentfault.com/q/1010000008342162)
+//源码安装
+cd /usr/local/src
+wget http://pecl.php.net/get/xhprof-0.9.4.tgz
+tar zxvf xhprof-0.9.4.tgz
+cd xhprof-0.9.4/extension/
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config
+make
+make install
+
+//在 php.ini 末尾新增
+[xhprof]
+
+extension = xhprof.so
+
+xhprof.output_dir = 自定义文件夹(/tmp/xhprof_log)
+// /tmp/xhprof_log 必须存在且有写入权限
+
+//重启环境
+//代码中查看 phpinfo 是否包含 xhprof。
+//一切顺利的话，那么 xhprof 安装成功。
+
+###[表增加索引而不影响使用](https://segmentfault.com/q/1010000008339569)
+```js
+这个需要看你用的mysql版本以及使用的存储引擎是否是innodb
+mysql的5.1如果使用innodb插件或者是5.5版本使用innodb引擎有InnoDB Fast Index Creation，对于新建或者删除二级索引，不用复制表，效率有很大提高，但是只允许读操作，不允许修改操作。
+
+而5.6版本中引入的innodb-online-ddl，在新建或者删除二级索引的时候可以并发执行DML语句，除了建索引操作会消耗硬件资源，不影响表的正常使用。
+
+具体方案需要你根据数据库和存储引擎的情况来选择，如果版本满足，使用online ddl特性可以满足需求
+```
+###[python urlretrieve第二个参数是文件名，文件名里面是不允许有斜杠的](https://segmentfault.com/q/1010000008340234)
+```js
+FileNotFoundError: [Errno 2] No such file or directory:
+download_link=['http://gnondgnoqnioandiofnas_swn_ssy_mhtng.jpg','http://asnoqenconvoqenripetn_swn_ssy_mhtng.jpg','http://asdnioqnoqwrqwenoqwr/12345/123/1256.gif']
+for item in download_link:
+    urllib.request.urlretrieve(item,folder_path + item[-19:])
+    urllib.request.urlretrieve(item,folder_path + item.split('/')[-1])
+    time.sleep(2)
+    print('Done')
+```
+###[jQuery JSONP跨域原理](https://segmentfault.com/q/1010000008341945)
+```js
+script标签是不受同源限制的、只要能get到的资源文件就可以加载、所以JSONP是get方法用回调请求JSON
+var eleScript= document.createElement("script"); 
+eleScript.type = "text/javascript"; 
+eleScript.src = "http://example2.com/getinfo.php"; 
+document.getElementsByTagName("HEAD")[0].appendChild(eleScript); 
+https://segmentfault.com/q/1010000000483131
+ jQuery(document).ready(function(){ 
+        $.ajax({
+             type: "get",
+             async: false,
+             url: "http://flightQuery.com/jsonp/flightResult.aspx?code=CA1998",
+             dataType: "jsonp",
+             jsonp: "callback",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+             jsonpCallback:"flightHandler",//自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名，也可以写"?"，jQuery会自动为你处理数据
+             success: function(json){
+                 alert('您查询到航班信息：票价： ' + json.price + ' 元，余票： ' + json.tickets + ' 张。');
+             },
+             error: function(){
+                 alert('fail');
+             }
+         });
+     });
+```     
+###[swoole中的websocket的如何发给指定人消息.](https://segmentfault.com/q/1010000008243298)
+foreach($ws->connections as $fd) {
+        //发送信息
+        $ws->push($fd, $msg);
+    }
+    //当用户进入A直播间
+$redis->sadd('RoomA', $fd);
+//获取所有属于A直播间下的用户的fd
+$clients = $redis->smembers('RoomA');
+foreach($clients as $key => $fd) {
+    $ws->push($fd, $msg);
+}
+###[对象属性](https://segmentfault.com/q/1010000008340167)
+```js
+> var a = {A: "test", B: "what"}
+undefined
+> var A = 'B'
+undefined
+> a.A
+'test'
+> a[A]
+'what'
+如果你用点“.”访问，访问的属性是dictionary.$1，即$1为字符串，而当以[]访问时，是将$1内存的值作为变量的属性
+var str = "今天{tianqi}很好,我的{xinqing}很糟,因为明天是{qingren}节!";
+     var dictionary = {
+        "tianqi":"天气",
+        "xingqing":"心情",
+        "qingren":"情人"
+     }
+     str = str.replace(/{(\w+)}/g,function(match,$1){
+        console.log($1);
+        return dictionary.$1;
+     });
+     alert(str);
+     
+       var str = "今天{tianqi}很好,我的{xinqing}很糟,因为明天是{qingren}节!";
+     var dictionary = {
+        "tianqi":"天气",
+        "xingqing":"心情",
+        "qingren":"情人"
+     }
+     str = str.replace(/{(\w+)}/g,function(match,$1){
+        console.log($1);
+        return dictionary[$1];
+     });
+     alert(str);
+```
+###[js匿名自执行函数的问题](https://segmentfault.com/q/1010000008342519)
+```js
+//第一种
+var counter = (function(){
+    var i = 0;
+    return {
+        get: function(){
+            return i;
+        },
+        set: function(val){
+            i = val;
+        },
+        increment: function(){
+            return ++i;
+        }
+    }
+}());
+var counter = {
+    i: 0,
+    get: function(){
+            return this.i;
+    },
+    set: function(val){
+            this.i = val;
+    },
+    increment: function(){
+            return ++this.i;
+    }
+}
+```
+###[python 使用requests 访问 繁体字网站会出现乱码](https://segmentfault.com/q/1010000008341385)
+```js
+<html>
+<head>
+<meta name='MS.LOCALE' content='ZH-TW'>
+<title>Hong Kong Exchanges and Clearing Limited</title>
+<meta http-equiv='Content-Type' content='text/html; charset=big5'>
+r = requests.get('http://www.hkex.com.hk/chi/stat/smstat/dayquot/d170202c.htm')
+r.encoding = 'big5'
+```
