@@ -523,3 +523,73 @@ $api = new PHP_CRUD_API(array(
 ));
 $api->executeCommand();
 ```
+###[PHP在类的定义中访问属性，为什么属性名有时要加"$"，有时却不用](https://segmentfault.com/q/1010000008344200)
+```js
+<?php
+  class Test
+  {
+    private $property;
+
+    function __destruct()
+    {
+        echo "Destroying ".$this->$property."<br />";
+    }
+    function __set($name,$value)
+    {
+        $this->$name = $value;
+    }
+  }
+  $a = new Test();
+  $a->property = 5;
+?>
+在__set()方法中，你设置__set("a", 1),$name作为局部变量，会转化为"a", $this->$name等价于$this->a,
+在__destruct()中, 局部变量$property未定义，会有一个默认值""，属性值不能为空字符串，所以报错。
+```
+###[mysql InnoDB是没有直接保存表的数据总数的](https://segmentfault.com/q/1010000008343582)
+```js
+select count(*) from emp;要扫一遍索引，反复查当然要耗CPU。
+
+我的测试表有两千万数据，没缓存时count(*)要15秒，有缓存后也要3秒
+mysql> show table status where name='users'\G
+*************************** 1. row ***************************
+           Name: users
+         Engine: InnoDB
+        Version: 10
+     Row_format: Compact
+           Rows: 665
+ Avg_row_length: 295
+    Data_length: 196608
+Max_data_length: 0
+   Index_length: 245760
+      Data_free: 14680064
+ Auto_increment: 982
+    Create_time: 2016-12-07 11:07:37
+    Update_time: NULL
+     Check_time: NULL
+      Collation: utf8_unicode_ci
+       Checksum: NULL
+ Create_options:
+        Comment: 用户信息表, 包括主账号和子账号的用户数据都在这个表里
+可以区分两者。
+1 row in set (0.10 sec)
+```
+###[程序错误后 再执行一次](https://segmentfault.com/q/1010000008332753)
+```js
+function add($number = 1)
+{ 
+   
+   $name = '';
+   for ($i=0; $i < 10; $i++) { 
+      $name .= mt_rand(0,9);   
+   }     
+   //$sql = "insert into user ('name') values($name)";
+    $PDO->exet($sql);   
+    if(!$res){
+        // 第一次调用add方法 生成rand 失败则再调用一下自身
+        // 第二次失败的话 就返回FALSE
+        if($number == 1) $this->add(2);
+        else return FALSE;
+        
+    } 
+}
+```
