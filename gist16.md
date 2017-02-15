@@ -1013,3 +1013,113 @@ http://mc-zone.me/App/IDValidator/
 ```
 ###[一个php的ngrok客户端](https://github.com/dosgo/ngrok-php)
 python版本，https://github.com/hauntek/python-ngrok
+###[千行代码入门Python](https://zhuanlan.zhihu.com/p/22909144?refer=pythoner)
+```js
+https://link.zhihu.com/?target=https%3A//github.com/xianhu/LearnPython
+
+
+```
+###[阿里智能图片鉴黄API](https://help.aliyun.com/document_detail/50186.html?spm=5176.doc28432.2.2.f0RypD)
+###[PHP处理微信中带Emoji表情的消息发送和接收(Unicode字符转码编码)](http://blog.mc-zone.me/article/322)
+```js
+emoji unicode编码数据表，可以与 github.com/iamcal/php-emoji 的样式表和图片相结合
+使用 json_encode($str) 将其进行JSON编码，此时消息中的表情、中文等字符将会被转为unicode编码显示
+ “你好  hello 123″ 将被编码为” \u4f60\u597d \ue415 hello 123 “
+ 字符中的\ue415就是一个emoji表情，此时我们就可以对字符进行正则判断来筛选出哪些是emoji表情了。我的做法是把emoji的unicode字符串反斜杠转义，然后再将字符json_decode还原，这样就可以将除了emoji之外的字符还原（不会影响到中文等其他字符），只留下emoji的unicode码。
+ $str = preg_replace("#(\\\ue[0-9a-f]{3})#ie","addslashes('\\1')",$str); 选择了 ue000 – uefff 之间的字符视为emoji
+ $text = "你好  hello 123"; //可以为收到的微信消息，可能包含二进制emoji表情字符串
+$tmpStr = json_encode($text); //暴露出unicode
+$tmpStr = preg_replace("#(\\\ue[0-9a-f]{3})#ie","addslashes('\\1')",$tmpStr); //将emoji的unicode留下，其他不动
+$text = json_decode($tmpStr);
+ 
+echo $text;//你好 \ue415 hello 123
+
+$text = "你好 \ue415 hello 123"; //可以为将要发送的微信消息，包含emoji表情unicode字符串，需要转为utf8二进制字符串
+$text = preg_replace("#\\\u([0-9a-f]+)#ie","iconv('UCS-2','UTF-8', pack('H4', '\\1'))",$text); //对emoji unicode进行二进制pack并转utf8
+ 
+echo $text;//你好  hello 123
+
+https://github.com/mc-zone/emoji-code
+```
+###[PHP cURL遇到SSL CA验证问题，本地正常，部署总是返回FALSE](http://blog.mc-zone.me/article/270)
+```js
+$curl = curl_init(); // 启动一个cURL会话
+ curl_setopt($curl, CURLOPT_URL, $url); // 要访问的地址
+ curl_setopt($curl, CURLOPT_HEADER, 0); //返回header部分
+ curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
+ curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //返回字符串，而非直接输出
+ curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
+ curl_setopt($curl, CURLOPT_POST, 1); // 发送一个常规的Post请求
+ curl_setopt($curl, CURLOPT_POSTFIELDS, $data); // Post提交的数据包
+ curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
+ $info = curl_exec($curl); // 执行操作并返回数据
+ curl_close($curl); // 关闭cURL会话
+ $error = curl_error ($curl);//需放在curl_close($curl)执行之前
+var_dump($error);
+SSL certificate problem, verify that the CA cert is OK
+
+curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+```
+###[PHP Uploadify+jQuery.imgAreaSelect插件+AJAX 实现图片上传裁剪 仿微博头像上传功能](http://blog.mc-zone.me/article/226)
+https://github.com/mc-zone/demo_imageCrop  demo http://mc-zone.me/App/demo_imageCrop/
+###[使用PHPExcel读取xls/xlsx或csv表格文件数据](http://blog.mc-zone.me/article/310)
+https://github.com/PHPOffice/PHPExcel
+###[php curl post json 百度人脸识别服务](http://apistore.baidu.com/apiworks/servicedetail/464.html)
+```js
+<?php
+    $ch = curl_init();
+    $url = 'http://apis.baidu.com/idl_baidu/faceverifyservice/face_deleteuser';
+    $header = array(
+        'Content-Type:application/x-www-form-urlencoded',
+        'apikey: 您自己的apikey',
+    );
+    $data = "{
+"params": [
+    {
+      "username":"test",
+      "cmdid":"1000",
+      "logid": "12345",
+      "appid": "您的apikey",
+      "clientip":"10.23.34.5",
+      "type":"st_groupverify",
+      "groupid": "0",
+      "versionnum": "1.0.0.1",
+    }
+  ],
+  "jsonrpc": "2.0",
+  "method": "Delete",
+  "id":12
+}";
+    // 添加apikey到header
+    curl_setopt($ch, CURLOPT_HTTPHEADER  , $header);
+    // 添加参数
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // 执行HTTP请求
+    curl_setopt($ch , CURLOPT_URL , $url);
+    $res = curl_exec($ch);
+
+    var_dump(json_decode($res));
+?>
+
+curl 'http://apis.baidu.com/idl_baidu/faceverifyservice/face_deleteuser' --data '{
+"params": [
+    {
+      "username":"test",
+      "cmdid":"1000",
+      "logid": "12345",
+      "appid": "您的apikey",
+      "clientip":"10.23.34.5",
+      "type":"st_groupverify",
+      "groupid": "0",
+      "versionnum": "1.0.0.1",
+    }
+  ],
+  "jsonrpc": "2.0",
+  "method": "Delete",
+  "id":12
+}' -H 'apikey:您自己的apikey'
+```
+###[开放易用的深度学习平台](http://www.paddlepaddle.org/cn/index.html)
+http://www.paddlepaddle.org/doc_cn/  https://github.com/paddlepaddle/book
