@@ -948,3 +948,68 @@ var emojireg = $("#emoji_input").val();
 emojireg = emojireg .replace(new RegExp(ranges.join('|'), 'g'), ''));
 }
 ```
+###[react php](https://github.com/reactphp/react)
+```js
+require 'vendor/autoload.php';
+
+$i = 0;
+
+$app = function ($request, $response) use (&$i) {
+    $i++;
+
+    $text = "This is request number $i.\n";
+    $headers = array('Content-Type' => 'text/plain');
+
+    $response->writeHead(200, $headers);
+    $response->end($text);
+};
+
+$loop = React\EventLoop\Factory::create();
+$socket = new React\Socket\Server($loop);
+$http = new React\Http\Server($socket);
+
+$http->on('request', $app);
+
+$socket->listen(1337);
+$loop->run();
+```
+###[一分钟学会制作动态二维码](https://mp.weixin.qq.com/s?__biz=MzI3MTE2NzkxNg==&mid=2648629802&idx=1&sn=0ab1b6b1e2d04c07247332f585bde103&chksm=f2efbae9c59833ff66bb026e51ce2ee2eddaa5ee2b43845dc3686acdfce1d0837aac0cb35718&mpshare=1&scene=1&srcid=1017kEHlVxEJXe6461VkLlaC&pass_ticket=cqj%2FqOG0FXFzgrFUmohWaYq2PfrhHZJ8vVb9wysj1NLDHtq2zyJr81CBjP4Qbja6#rd)
+草料二维码：http://cli.im/
+▶二维工坊：http://visual.2weima.com/
+###[本地开发接口](https://github.com/typicode/json-server)
+```js
+{
+  "posts": [
+    { "id": 1, "title": "json-server", "author": "typicode" }
+  ],
+  "comments": [
+    { "id": 1, "body": "some comment", "postId": 1 }
+  ],
+  "profile": { "name": "typicode" }
+}
+$ npm install -g json-server
+$ json-server --watch db.json
+ go to http://localhost:3000/posts/1, you'll get
+
+{ "id": 1, "title": "json-server", "author": "typicode" }
+GET /posts?title=json-server&author=typicode
+GET /posts?id=1&id=2
+GET /comments?author.name=typicode
+```
+###[中国大陆个人身份证号验证](https://github.com/mc-zone/IDValidator)
+```js
+http://mc-zone.me/App/IDValidator/
+<script type="text/javascript" src="path/to/IDValidator/IDValidator.min.js" charset="utf-8" ></script>
+<script type="text/javascript" src="path/to/IDValidator/GB2260.min.js" charset="utf-8" ></script>
+<script type="text/javascript">
+
+    //新建普通实例
+    var Validator = new IDValidator();
+
+    //或使用带地址码实例,需要引入GB2260
+    var Validator = new IDValidator( GB2260 );
+
+</script>
+```
+###[一个php的ngrok客户端](https://github.com/dosgo/ngrok-php)
+python版本，https://github.com/hauntek/python-ngrok
