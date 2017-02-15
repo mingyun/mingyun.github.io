@@ -1022,6 +1022,7 @@ https://link.zhihu.com/?target=https%3A//github.com/xianhu/LearnPython
 ###[阿里智能图片鉴黄API](https://help.aliyun.com/document_detail/50186.html?spm=5176.doc28432.2.2.f0RypD)
 ###[PHP处理微信中带Emoji表情的消息发送和接收(Unicode字符转码编码)](http://blog.mc-zone.me/article/322)
 ```js
+https://github.com/iamcal/php-emoji https://github.com/mc-zone/emoji-code  Emoji表情的各种编码
 emoji unicode编码数据表，可以与 github.com/iamcal/php-emoji 的样式表和图片相结合
 使用 json_encode($str) 将其进行JSON编码，此时消息中的表情、中文等字符将会被转为unicode编码显示
  “你好  hello 123″ 将被编码为” \u4f60\u597d \ue415 hello 123 “
@@ -1029,7 +1030,8 @@ emoji unicode编码数据表，可以与 github.com/iamcal/php-emoji 的样式�
  $str = preg_replace("#(\\\ue[0-9a-f]{3})#ie","addslashes('\\1')",$str); 选择了 ue000 – uefff 之间的字符视为emoji
  $text = "你好  hello 123"; //可以为收到的微信消息，可能包含二进制emoji表情字符串
 $tmpStr = json_encode($text); //暴露出unicode
-$tmpStr = preg_replace("#(\\\ue[0-9a-f]{3})#ie","addslashes('\\1')",$tmpStr); //将emoji的unicode留下，其他不动
+//$tmpStr = preg_replace("#(\\\ue[0-9a-f]{3})#ie","addslashes('\\1')",$tmpStr); //将emoji的unicode留下，其他不动
+$tmpStr = preg_replace_callback("#(\\\ue[0-9a-f]{3})#i",function($m){return addslashes($m[1]);},$tmpStr);
 $text = json_decode($tmpStr);
  
 echo $text;//你好 \ue415 hello 123
@@ -1040,6 +1042,162 @@ $text = preg_replace("#\\\u([0-9a-f]+)#ie","iconv('UCS-2','UTF-8', pack('H4', '\
 echo $text;//你好  hello 123
 
 https://github.com/mc-zone/emoji-code
+```
+###[php新版本废弃 preg_replace /e 修饰符](http://blog.csdn.net/ebw123/article/details/41958789)
+```js
+preg_replace("/([A-Z])/e", "'_' . strtolower('\\1')", $str)  
+preg_replace("/([A-Z])/",'gwyy', $str);  
+function gwyy($match） {  
+    return  '_'.strtolower($match[1]);  
+}  
+修改后 /([A-Z])/e  最后一个  e   一定要去掉 不然就出错了 
+preg_replace_callback('/([A-Z])/',  
+                      function ($matches) {  
+                        return '_' . strtolower($matches[0]);  
+                      },  
+                      $str)  
+class a {  
+  
+    private $joinStr = "__AAAAA__";  
+  
+    public function __construct() {  
+        $this->joinStr = preg_replace_callback("/__([A-Z_-]+)__/sU",array($this,'gwyy'),$this->joinStr);  
+        echo  $this->joinStr;  
+    }  
+  
+    public  function  gwyy($match) {  
+        print_r($match);  
+        return 'aaa';  
+    }  
+  
+}  
+$a = new a();       
+```
+###[PHP快速读取CSV大文件](http://blog.csdn.net/ebw123/article/details/46651499)
+```js
+$csv_file = 'path/bigfile.csv';
+$spl_object = new SplFileObject($csv_file, 'rb');
+$spl_object->seek(filesize($csv_file));
+echo $spl_object->key();
+```
+###[urlencode() 或者 rawurlencode](http://blog.csdn.net/ebw123/article/details/11236535)
+```js
+$str='博 客';
+echo urlencode($str);
+echo "<br>";
+echo rawurlencode($str);
+%B2%A9+%BF%CD
+%B2%A9%20%BF%CD
+function cn_urlencode($url){
+     $pregstr = "/[\x{4e00}-\x{9fa5}]+/u";//UTF-8中文正则
+    if(preg_match_all($pregstr,$url,$matchArray)){//匹配中文，返回数组
+        foreach($matchArray[0] as $key=>$val){
+            $url=str_replace($val, urlencode($val), $url);//将转译替换中文
+        }
+        if(strpos($url,' ')){//若存在空格
+            $url=str_replace(' ','%20',$url);
+        }
+    }
+    return $url;
+}
+```
+###[php的反射](http://blog.csdn.net/ebw123/article/details/8570617)
+```js
+//获取源码  
+function getClassSource(ReflectionClass $class) {  
+    $path = $class->getFileName();  //获取文件的绝对路径  
+    $lines = @file($path);    //以数组方式打开  
+    $from = $class->getStartLine();   //类的起始行  
+    $to = $class->getEndLine();  //类的结束行  
+    $len = $to-$from+1;    //获取类的长度  
+    return array_slice($lines,$from-1,$len); //从数组里截取  
+}  
+  
+/*获取类源码 
+$r = new ReflectionClass('a'); 
+var_dump(  getClassSource($r) ); 
+
+//获取源码  
+function getClassSource(ReflectionClass $class) {  
+    $path = $class->getFileName();  //获取文件的绝对路径  
+    $lines = @file($path);    //以数组方式打开  
+    $from = $class->getStartLine();   //类的起始行  
+    $to = $class->getEndLine();  //类的结束行  
+    $len = $to-$from+1;    //获取类的长度  
+    return array_slice($lines,$from-1,$len); //从数组里截取  
+}  
+  
+/*获取类源码 
+$r = new ReflectionClass('a'); 
+var_dump(  getClassSource($r) ); 
+//获取源码  
+function getClassSource(ReflectionClass $class) {  
+    $path = $class->getFileName();  //获取文件的绝对路径  
+    $lines = @file($path);    //以数组方式打开  
+    $from = $class->getStartLine();   //类的起始行  
+    $to = $class->getEndLine();  //类的结束行  
+    $len = $to-$from+1;    //获取类的长度  
+    return array_slice($lines,$from-1,$len); //从数组里截取  
+}  
+  
+/*获取类源码 
+$r = new ReflectionClass('a'); 
+var_dump(  getClassSource($r) ); 
+```
+###[session丢失的问题](http://blog.csdn.net/ebw123/article/details/8898770)
+```js
+// 重塑Session (必须位于session_start()之前)  
+if (isset($_POST['PHPSESSID'])) {  
+    session_id($_POST['PHPSESSID']);  
+}  
+session_start();  
+```
+###[php位运算的应用-权限控制](http://blog.csdn.net/ebw123/article/details/10623731)
+```js
+// 赋予权限值–>删除：8、上传：4、写入：2、只读：1
+define(“mDELETE”,8);
+define(“mUPLOAD”,4);
+define(“mWRITE”,2);
+define(“mREAD”,1);
+//vvvvvvvvvvvvv使用说明vvvvvvvvvvvvv
+//部门经理的权限为(假设它拥有此部门的所有权限)，| 是位或运行符，不熟悉的就查查资料
+echo mDELETE|mUPLOAD|mWRITE|mREAD ,”
+“;// 相当于是把上面的权限值加起来：8+4+2+1=15
+// 设我只有 upload 和 read 权限，则
+echo mUPLOAD|mREAD ,”
+“;//相当于是把上传、只读的权限值分别相加：4+1=5
+/*
+*赋予它多个权限就分别取得权限值相加，又比如某位员工拥有除了删除外的权限其余都拥有，那它的权限值是多少?
+*应该是：4+2+1＝7
+```
+###[PHP中获取文件扩展名的N种方法](http://blog.csdn.net/ebw123/article/details/8160844)
+```js
+第1种方法： 
+function get_extension($file) 
+{ 
+substr(strrchr($file, '.'), 1); 
+} 
+第2种方法： 
+function get_extension($file) 
+{ 
+return substr($file, strrpos($file, '.')+1); 
+} 
+第3种方法： 
+function get_extension($file) 
+{ 
+return end(explode('.', $file)); 
+} 
+第4种方法： 
+function get_extension($file) 
+{ 
+$info = pathinfo($file); 
+return $info['extension']; 
+} 
+第5种方法： 
+function get_extension($file) 
+{ 
+return pathinfo($file, PATHINFO_EXTENSION); 
+} 
 ```
 ###[PHP cURL遇到SSL CA验证问题，本地正常，部署总是返回FALSE](http://blog.mc-zone.me/article/270)
 ```js
