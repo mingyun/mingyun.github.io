@@ -163,6 +163,7 @@ select id,status from t2 force index(c1) where c1>='b' order by status;
 ```
 ###[mysql中，需要通过selct count 统计表记录数目时，使用count(*)或count(1)就好](http://www.cnblogs.com/cchust/p/3264147.html)
 ###[mysql大小写敏感与校对规则 ](http://www.cnblogs.com/cchust/p/3952821.html)
+```js
 select * from test where c1 like 'ab%'; 
  +-----+ 
  | c1 | 
@@ -180,6 +181,7 @@ select * from test where binary c1 like 'ab%';
  +-----+ 
  | abc | 
  +-----+
+ ```
  ###[深度解析mysql登录原理 ](http://www.cnblogs.com/cchust/p/5025880.html)
  ```js
  Unix socket方式登陆与TCP方式登陆有什么区别和联系？
@@ -188,10 +190,10 @@ Unix socket是实现进程间通信的一种方式，mysql支持利用Unix socke
 
 mysql  -h127.0.0.1 –P3306 –uxxx –pxxx  [TCP通讯方式]
 mysql  -uxxx –pxxx –S/usr/mysql/mysql.sock  [unix socket通信方式]
-
- ```
+```
  ###[mysql执行计划 ](http://www.cnblogs.com/cchust/p/3426927.html)
- explain  select ......
+```js
+explain  select ......
  id相同，执行顺序从上到下，下面的执行计划表示，先操作t1表，然后操作t2表，最后操作t3表。
  若存在子查询，则子查询（内层查询）id大于父查询(外层查询)，先执行子查询。id越大，优先级越高。
  a.Using index,表示使用了索引
@@ -204,6 +206,7 @@ d.Using filesort，表示无法使用索引排序，需要文件排序
 rows
 
 含义：MySQL根据表统计信息及索引选用情况，估算的找到所需的记录所需要读取的行数,这个值是不准确的，只有参考意义。
+```
 ###[mysql insert execute failed due to >>> Incorrect string value: '\xA1;offl...' for column 'biz_info' at row 1 ](http://www.cnblogs.com/cchust/p/4601536.html)
 ```js
 CREATE TABLE `ggg` (
