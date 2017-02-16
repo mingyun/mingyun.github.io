@@ -280,3 +280,223 @@ select count(*) from (se
 ```
 ###[单点登录 Ucenter 分析](http://blog.csdn.net/ebw123/article/details/9417231)
 其实UC的原理很简单 就是某个应用登陆后 然后后台轮询发送给同步登陆的应用的回调文件 回调文件接收到用户ID之后 生成cookie或者session然后进入登陆模式。
+###[ php str_replace 替换指定次数方法](http://blog.csdn.net/fdipzone/article/details/45854413#)
+```js
+$str = 'abcdefgh';  
+echo str_replace('abc', '123', $str); // 123defgh  
+  
+$str = '123456';  
+$search = array(1, 2, 3, 4, 5, 6);  
+$replace = array('a', 'b', 'c', 'd', 'f', 'g');  
+echo str_replace($search, $replace, $str); // abcdefg  
+  
+$arr = array('abc','bac','cba');  
+$result = str_replace('b', 'B', $arr, $count);  
+print_r($result); // Array ( [0] => aBc [1] => Bac [2] => cBa )  
+echo $count;      // 3 共替换了3次
+/** 
+ * 对字符串执行指定次数替换 
+ * @param  Mixed $search   查找目标值 
+ * @param  Mixed $replace  替换值 
+ * @param  Mixed $subject  执行替换的字符串／数组 
+ * @param  Int   $limit    允许替换的次数，默认为-1，不限次数 
+ * @return Mixed 
+ */  
+function str_replace_limit($search, $replace, $subject, $limit=-1){  
+    if(is_array($search)){  
+        foreach($search as $k=>$v){  
+            $search[$k] = '`'. preg_quote($search[$k], '`'). '`';  
+        }  
+    }else{  
+        $search = '`'. preg_quote($search, '`'). '`';  
+    }  
+    return preg_replace($search, $replace, $subject, $limit);  
+}  
+$str = 'user_order_list';  
+echo str_replace_limit('_', '/', $str, 1); // user/order_list  
+  
+$arr = array('abbc','bbac','cbba');  
+$result = str_replace_limit('b', 'B', $arr, 1);  
+print_r($result); // Array ( [0] => aBbc [1] => Bbac [2] => cBba )  
+```
+###[php 文件与16进制相互转换](http://blog.csdn.net/fdipzone/article/details/54427275)
+```js
+/**
+ * 将文件内容转为16进制输出
+ * @param  String $file 文件路径
+ * @return String
+ */
+function fileToHex($file){
+    if(file_exists($file)){
+        $data = file_get_contents($file);
+        return bin2hex($data);
+    }
+    return '';
+}
+
+/**
+ * 将16进制内容转为文件
+ * @param String $hexstr 16进制内容
+ * @param String $file   保存的文件路径
+ */
+function hexToFile($hexstr, $file){
+    if($hexstr){
+        $data = pack('H*', $hexstr);
+        file_put_contents($file, $data, true);
+    }
+}
+
+// 演示
+$file = 'test.doc';
+
+// 文件转16进制
+$hexstr = fileToHex($file);
+echo '文件转16进制<br>';
+echo $hexstr.'<br><br>';
+
+// 16进制转文件
+$newfile = 'new.doc';
+hexToFile($hexstr, $newfile);
+
+echo '16进制转文件<br>';
+var_dump(file_exists($newfile));
+```
+###[php 计算多个集合的笛卡尔积](http://blog.csdn.net/fdipzone/article/details/54312186)
+```js
+假设集合A={a,b}，集合B={0,1,2}，则两个集合的笛卡尔积为{(a,0),(a,1),(a,2),(b,0),(b,1),(b,2)} 
+思路：先计算第一个集合和第二个集合的笛卡尔积，把结果保存为一个新集合。 
+然后再用新集合与下一个集合计算笛卡尔积，依此循环直到与最后一个集合计算笛卡尔积。 
+/**
+ * 计算多个集合的笛卡尔积
+ * @param  Array $sets 集合数组
+ * @return Array
+ */
+function CartesianProduct($sets){
+
+    // 保存结果
+    $result = array();
+
+    // 循环遍历集合数据
+    for($i=0,$count=count($sets); $i<$count-1; $i++){
+
+        // 初始化
+        if($i==0){
+            $result = $sets[$i];
+        }
+
+        // 保存临时数据
+        $tmp = array();
+
+        // 结果与下一个集合计算笛卡尔积
+        foreach($result as $res){
+            foreach($sets[$i+1] as $set){
+                $tmp[] = $res.$set;
+            }
+        }
+
+        // 将笛卡尔积写入结果
+        $result = $tmp;
+
+    }
+
+    return $result;
+
+}
+
+// 定义集合
+$sets = array(
+    array('白色','黑色','红色'),
+    array('透气','防滑'),
+    array('37码','38码','39码'),
+    array('男款','女款')
+);
+
+$result = CartesianProduct($sets);
+print_r($result);
+Array
+(
+    [0] => 白色透气37码男款
+    [1] => 白色透气37码女款
+    [2] => 白色透气38码男款
+    [3] => 白色透气38码女款
+    [4] => 白色透气39码男款
+    [5] => 白色透气39码女款
+    [6] => 白色防滑37码男款
+    [7] => 白色防滑37码女款
+    [8] => 白色防滑38码男款
+    [9] => 白色防滑38码女款
+    [10] => 白色防滑39码男款
+    [11] => 白色防滑39码女款
+    [12] => 黑色透气37码男款
+    [13] => 黑色透气37码女款
+    [14] => 黑色透气38码男款
+    [15] => 黑色透气38码女款
+    [16] => 黑色透气39码男款
+    [17] => 黑色透气39码女款
+    [18] => 黑色防滑37码男款
+    [19] => 黑色防滑37码女款
+    [20] => 黑色防滑38码男款
+    [21] => 黑色防滑38码女款
+    [22] => 黑色防滑39码男款
+    [23] => 黑色防滑39码女款
+    [24] => 红色透气37码男款
+    [25] => 红色透气37码女款
+    [26] => 红色透气38码男款
+    [27] => 红色透气38码女款
+    [28] => 红色透气39码男款
+    [29] => 红色透气39码女款
+    [30] => 红色防滑37码男款
+    [31] => 红色防滑37码女款
+    [32] => 红色防滑38码男款
+    [33] => 红色防滑38码女款
+    [34] => 红色防滑39码男款
+    [35] => 红色防滑39码女款
+)
+
+```
+###[ajax跨域访问cookie丢失的解决方法](http://blog.csdn.net/fdipzone/article/details/54576626)
+```js
+
+$name = isset($_POST['name'])? $_POST['name'] : '';
+
+$ret = array(
+    'success' => true,
+    'name' => $name,
+    'cookie' => isset($_COOKIE['data'])? $_COOKIE['data'] : ''
+);
+服务端header设置Access-Control-Allow-Credentials:true后，Access-Control-Allow-Origin不可以设为*，必须设置为一个域名，否则回返回错误。
+// 指定允许其他域名访问
+header('Access-Control-Allow-Origin:http://a.fdipzone.com');
+
+// 响应类型
+header('Access-Control-Allow-Methods:POST');  
+
+// 响应头设置
+header('Access-Control-Allow-Headers:x-requested-with,content-type');
+
+// 是否允许请求带有验证信息
+header('Access-Control-Allow-Credentials:true');
+
+header('content-type:application/json');
+echo json_encode($ret);
+
+ <script type="text/javascript">
+    $(function(){
+
+        $.ajax({
+            url: 'http://b.fdipzone.com/server.php', // 跨域
+            xhrFields:{withCredentials: true}, // 发送凭据
+            dataType: 'json',
+            type: 'post',
+            data: {'name':'fdipzone'},
+            success:function(ret){
+                if(ret['success']==true){
+                    alert('cookie:' + ret['cookie']);
+                }
+            }
+        });
+
+    })
+    </script>
+    
+```
