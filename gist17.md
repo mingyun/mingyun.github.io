@@ -181,8 +181,8 @@ select * from test where binary c1 like 'ab%';
  +-----+ 
  | abc | 
  +-----+
- ```
- ###[深度解析mysql登录原理 ](http://www.cnblogs.com/cchust/p/5025880.html)
+```
+###[深度解析mysql登录原理 ](http://www.cnblogs.com/cchust/p/5025880.html)
  ```js
  Unix socket方式登陆与TCP方式登陆有什么区别和联系？
 
@@ -191,7 +191,7 @@ Unix socket是实现进程间通信的一种方式，mysql支持利用Unix socke
 mysql  -h127.0.0.1 –P3306 –uxxx –pxxx  [TCP通讯方式]
 mysql  -uxxx –pxxx –S/usr/mysql/mysql.sock  [unix socket通信方式]
 ```
- ###[mysql执行计划 ](http://www.cnblogs.com/cchust/p/3426927.html)
+###[mysql执行计划 ](http://www.cnblogs.com/cchust/p/3426927.html)
 ```js
 explain  select ......
  id相同，执行顺序从上到下，下面的执行计划表示，先操作t1表，然后操作t2表，最后操作t3表。
