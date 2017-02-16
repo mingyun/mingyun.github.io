@@ -1281,3 +1281,117 @@ curl 'http://apis.baidu.com/idl_baidu/faceverifyservice/face_deleteuser' --data 
 ```
 ###[开放易用的深度学习平台](http://www.paddlepaddle.org/cn/index.html)
 http://www.paddlepaddle.org/doc_cn/  https://github.com/paddlepaddle/book
+###[selenium-python demo](http://selenium-python.readthedocs.io/getting-started.html#simple-usage)
+```js
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Firefox()
+driver.get("http://www.python.org")
+assert "Python" in driver.title
+elem = driver.find_element_by_name("q")
+elem.clear()
+elem.send_keys("pycon")
+elem.send_keys(Keys.RETURN)#回车搜索
+assert "No results found." not in driver.page_source#源代码
+driver.close()
+
+<input type="text" name="passwd" id="passwd-id" />
+element = driver.find_element_by_id("passwd-id")
+element = driver.find_element_by_name("passwd")
+element = driver.find_element_by_xpath("//input[@id='passwd-id']")
+element.send_keys(" and some", Keys.ARROW_DOWN)
+element.clear()
+element.submit()
+
+<a href="somewhere.html" target="windowName">Click here to open a new window</a>
+driver.switch_to_window("windowName")
+driver.switch_to_frame("frameName")
+alert = driver.switch_to_alert()
+driver.forward()
+driver.back()
+driver.get("http://www.example.com")
+
+# Now set the cookie. This one's valid for the entire domain
+cookie = {‘name’ : ‘foo’, ‘value’ : ‘bar’}
+driver.add_cookie(cookie)
+
+# And now output all the available cookies for the current URL
+driver.get_cookies()
+element = driver.find_element_by_xpath("//select[@name='name']")
+all_options = element.find_elements_by_tag_name("option")
+for option in all_options:
+    print("Value is: %s" % option.get_attribute("value"))
+    option.click()
+<html>
+ <body>
+  <form id="loginForm">
+   <input name="username" type="text" />
+   <input name="password" type="password" />
+   <input name="continue" type="submit" value="Login" />
+   <input name="continue" type="button" value="Clear" class="content"/>
+   <a href="continue.html">Continue</a>
+    <p class="content">Site content goes here.</p>
+  </form>
+</body>
+<html>
+username = driver.find_element_by_name('username')
+login_form = driver.find_element_by_xpath("/html/body/form[1]")
+login_form = driver.find_element_by_xpath("//form[1]")
+login_form = driver.find_element_by_xpath("//form[@id='loginForm']")
+username = driver.find_element_by_xpath("//form[input/@name='username']")
+username = driver.find_element_by_xpath("//form[@id='loginForm']/input[1]")
+username = driver.find_element_by_xpath("//input[@name='username']")
+continue_link = driver.find_element_by_link_text('Continue')
+heading1 = driver.find_element_by_tag_name('form')
+content = driver.find_element_by_class_name('content')
+content = driver.find_element_by_css_selector('p.content')
+driver.implicitly_wait(10) # 等待10秒
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+driver.save_screenshot('screenshot.png')#截图
+curl -I URL | grep "Content-Type"
+import requests
+content_type = requests.head('http://www.python.org').headers['content-type']
+print(content_type)
+
+driver.current_url
+file_input = driver.find_element_by_name('profilePic')
+file_input.send_keys("path/to/profilepic.gif")
+```
+###php递归数组
+```js
+$arr=[1,[2,[3,[4,[5]]]]];
+function recursion($arr,&$res=[]){
+	foreach ($arr as $key => $value) {
+		if (is_array($value)) {
+			recursion($value,$res);
+		}else{
+			$res[]=$value;
+		}
+	}
+}
+function recursion2($arr){
+	static $res= [];
+	foreach ($arr as $key => $value) {
+		if (is_array($value)) {
+			return recursion2($value);
+		}else{
+			$res[]=$value;
+		}
+	}
+	return $res;
+}
+$res=[];
+recursion($arr,$res);
+print_r($res);
+$res=recursion2($arr);
+print_r($res);
+Array
+(
+    [0] => 1
+    [1] => 2
+    [2] => 3
+    [3] => 4
+    [4] => 5
+)
+```
