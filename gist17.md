@@ -503,3 +503,197 @@ echo json_encode($ret);
     </script>
     
 ```
+###[php 整洁之道](https://gold.xitu.io/entry/58a549a161ff4b006c41f9f2?from=singlemessage&isappinstalled=0#table-of-contents)
+```js
+https://github.com/yangweijie/clean-code-php
+使用有意义且可拼写的变量名
+
+Bad:
+
+$ymdstr = $moment->format('y-m-d');
+Good:
+
+$currentDate = $moment->format('y-m-d');
+Bad:
+
+// What the heck is 86400 for?
+addExpireAt(86400);
+Good:
+
+// Declare them as capitalized `const` globals.
+interface DateGlobal {
+  const SECONDS_IN_A_DAY = 86400;
+}
+
+addExpireAt(DateGlobal::SECONDS_IN_A_DAY);
+使用参数默认值代替短路或条件语句。
+
+Bad:
+
+function createMicrobrewery($name = null) {
+  $breweryName = $name ?: 'Hipster Brew Co.';
+  // ...
+}
+Good:
+
+function createMicrobrewery($breweryName = 'Hipster Brew Co.') {
+  // ...
+}
+函数参数最好少于2个
+Bad:
+
+function createMenu($title, $body, $buttonText, $cancellable) {
+  // ...
+}
+Good:
+
+class menuConfig() {
+  public $title;
+  public $body;
+  public $buttonText;
+  public $cancellable = false;
+}
+
+$config = new MenuConfig();
+$config->title = 'Foo';
+$config->body = 'Bar';
+$config->buttonText = 'Baz';
+$config->cancellable = true;
+
+function createMenu(MenuConfig $config) {
+  // ...
+}
+通过对象赋值设置默认值
+
+Bad:
+
+$menuConfig = [
+  'title'       => null,
+  'body'        => 'Bar',
+  'buttonText'  => null,
+  'cancellable' => true,
+];
+
+function createMenu(&$config) {
+  $config['title']       = $config['title'] ?: 'Foo';
+  $config['body']        = $config['body'] ?: 'Bar';
+  $config['buttonText']  = $config['buttonText'] ?: 'Baz';
+  $config['cancellable'] = $config['cancellable'] ?: true;
+}
+
+createMenu($menuConfig);
+Good:
+
+$menuConfig = [
+  'title'       => 'Order',
+  // User did not include 'body' key
+  'buttonText'  => 'Send',
+  'cancellable' => true,
+];
+
+function createMenu(&$config) {
+  $config = array_merge([
+    'title'       => 'Foo',
+    'body'        => 'Bar',
+    'buttonText'  => 'Baz',
+    'cancellable' => true,
+  ], $config);
+
+  // config now equals: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
+  // ...
+}
+
+createMenu($menuConfig);
+避免类型检查 (part 2)
+Bad:
+
+function combine($val1, $val2) {
+  if (is_numeric($val1) && is_numeric(val2)) {
+    return val1 + val2;
+  }
+
+  throw new \Exception('Must be of type Number');
+}
+Good:
+
+function combine(int $val1, int $val2) {
+  return $val1 + $val2;
+}
+封装条件语句
+
+Bad:
+
+if ($fsm->state === 'fetching' && is_empty($listNode)) {
+  // ...
+}
+Good:
+
+function shouldShowSpinner($fsm, $listNode) {
+  return $fsm->state === 'fetching' && is_empty(listNode);
+}
+
+if (shouldShowSpinner($fsmInstance, $listNodeInstance)) {
+  // ...
+}
+Bad:
+不要写全局函数
+function config() {
+  return  [
+    'foo': 'bar',
+  ]
+};
+Good:
+
+class Configuration {
+  private static $instance;
+  private function __construct($configuration) {/* */}
+  public static function getInstance() {
+     if(self::$instance === null) {
+         self::$instance = new Configuration();
+     }
+     return self::$instance;
+ }
+ public function get($key) {/* */}
+ public function getAll() {/* */}
+}
+
+$singleton = Configuration::getInstance();
+```
+###[做最好的 PHP 中文分詞](https://github.com/fukuball/jieba-php)
+```js
+ini_set('memory_limit', '1024M');
+
+require_once "/path/to/your/vendor/multi-array/MultiArray.php";
+require_once "/path/to/your/vendor/multi-array/Factory/MultiArrayFactory.php";
+require_once "/path/to/your/class/Jieba.php";
+require_once "/path/to/your/class/Finalseg.php";
+use Fukuball\Jieba\Jieba;
+use Fukuball\Jieba\Finalseg;
+Jieba::init();
+Finalseg::init();
+
+$seg_list = Jieba::cut("怜香惜玉也得要看对象啊！");
+var_dump($seg_list);
+
+$seg_list = Jieba::cut("我来到北京清华大学", true);
+var_dump($seg_list); #全模式
+
+$seg_list = Jieba::cut("我来到北京清华大学", false);
+var_dump($seg_list); #默認精確模式
+
+$seg_list = Jieba::cut("他来到了网易杭研大厦");
+var_dump($seg_list);
+
+$seg_list = Jieba::cutForSearch("小明硕士毕业于中国科学院计算所，后在日本京都大学深造"); #搜索引擎模式
+var_dump($seg_list);
+```
+###[Eruda 是一个专为手机网页前端设计的调试面板，类似 DevTools 的迷你版](https://github.com/liriliri/eruda/blob/master/doc/README_CH.md)
+npm install eruda --save
+var el = document.createElement('div');
+document.body.appendChild(el);
+
+eruda.init({
+    container: el,
+    tool: ['console', 'elements']
+});
+###[Fiddler|Fiddler安装与配置](https://zhuanlan.zhihu.com/p/22992759?refer=xmucpp)
