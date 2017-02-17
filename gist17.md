@@ -697,3 +697,81 @@ eruda.init({
     tool: ['console', 'elements']
 });
 ###[Fiddler|Fiddler安装与配置](https://zhuanlan.zhihu.com/p/22992759?refer=xmucpp)
+###[Go语言极速入门手册](http://blog.coderzh.com/2015/09/28/go-tips/)
+###[Python天天美味(30) - python数据结构与算法之快速排序](http://www.cnblogs.com/coderzh/archive/2008/09/20/1294947.html)
+```js
+冒泡排序
+def bubblesort(data):
+    for i in range(len(data) - 1, 0, -1):
+        for j in range(0, i):
+            if data[j] > data[j + 1]:
+                data[j], data[j + 1] = data[j + 1], data[j]
+import random
+import datetime
+import copy
+
+def sort_perfmon(sortfunc, data):
+    sort_data = copy.deepcopy(data)
+    t1 = datetime.datetime.now()
+    sortfunc(sort_data)
+    t2 = datetime.datetime.now()
+    print sortfunc.__name__, t2 - t1
+    #print sort_data
+
+data = [random.randint(0, 65536) for i in range(2000)]
+#print data
+sort_perfmon(quicksort, data)
+sort_perfmon(bubblesort, data)
+```
+###[XSS绕过小练习](https://www.waitalone.cn/xss-bypass-little-practice.html)
+```js
+<script>alert(/waitalone.cn/);</script>
+body {
+background:black;
+xss:expression(alert(/waitalone.cn/));/*IE6下测试*/
+}
+javascript:alert(/waitalone.cn/);
+" onerror=alert(/waitalone.cn/); var a="1
+<img src=# onclick=alert(/waitalone.cn/);>
+<script>eval(String.fromCharCode(97,108,101,114,116,40,47,119,97,105,116,97,108,111,110,101,46,99,110,47,41,59));</script>
+https://www.waitalone.cn/xss-advanced-combat-tutorial.html  http://edu.pkav.net/ 
+```
+###[Linux下PHP网站安全加固方案](https://www.waitalone.cn/php-web-security-for-linux.html)
+```js
+确保运行php的用户为一般用户，如www
+php.ini参数设置
+disable_functions = passthru,exec,system,chroot,chgrp,chown,shell_exec,proc_open,proc_get_status,ini_alter,ini_restore,dl,openlog,syslog,readlink,symlink,popepassthru,stream_socket_server,fsocket,phpinfo #禁用的函数
+expose_php = off            #避免暴露PHP信息
+display_errors = off        #关闭错误信息提示
+register_globals = off      #关闭全局变量
+enable_dl = off             #不允许调用dl
+allow_url_include = off     #避免远程调用文件
+session.cookie_httponly = 1 #http only开启
+upload_tmp_dir = /tmp       #明确定义upload目录
+open_basedir = ./:/tmp:/home/wwwroot/ #限制用户访问的目录
+开启mysql二进制日志，在误删除数据的情况下，可以通过二进制日志恢复到某个时间点
+vi /etc/my.cnf
+log_bin = mysql-bin
+expire_logs_days = 7
+在数据库只需供本机使用的情况下，使用–skip-networking参数禁止监听网络 。
+确保运行MySQL的用户为一般用户，如mysql，注意存放数据目录权限为mysql
+vi /etc/my.cnf
+user = mysql
+禁止root账号从网络访问数据库，root账号只允许来自本地主机的登陆。
+mysql>grant all privileges on *.* to root @localhost identified by 'password' with grant option;
+mysql>flush priveleges;
+删除匿名账号和空口令账号
+mysql>USE mysql;
+mysql>delete from user where User=;
+mysql>delete from user where Password=;
+mysql>delete from db where User=;
+确保运行Nginx或者Apache的用户为一般用户，如www，注意存放数据目录权限为www
+php木马快速查找命令
+grep -r --include=*.php '[^a-z]eval($_POST' /home/wwwroot/
+
+grep -r --include=*.php 'file_put_contents(.*$_POST\[.*\]);' /home/wwwroot/
+find -type f -name \*.php -exec chomd 644 {} \;
+find -type d -exec chmod 755 {} \;
+chown -R www.www /home/wwwroot/www.waitalone.cn
+find -mtime -2 -type f -name \*.php
+```
