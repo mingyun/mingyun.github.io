@@ -826,10 +826,61 @@ mysql> select char_length('中中');
 1 row in set (0.01 sec)
 ```
 ###[一种直观记录表结构变更历史的方法](http://seanlook.com/2016/11/28/mysql-schema-gather-structure/)
-	
+```js
 # Puppet Name: collect_DBschema
 5 5 * * * /opt/DBschema/collect_tableMeta.sh >> /tmp/collect_DBschema.log 2>&1
 https://github.com/seanlook/DBschema_gather
 sudo pip install mysql-python influxdb
+```
 ###[一个实时抓取MySQL慢查询现场的程序](http://seanlook.com/2016/09/27/python-mysql-querykill/)
 github 项目地址：https://github.com/seanlook/myquerykill qq 1104138797
+###[mysql使用utf8mb4经验吐血总结](http://seanlook.com/2016/10/23/mysql-utf8mb4/)
+```js
+ut8mb4对应的排序字符集常用的有 utf8mb4_unicode_ci、utf8mb4_general_ci
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET utf8mb4;
+连接的时候需要使用set names utf8mb4便可以插入四字节字符。（如果依然使用 utf8 连接，只要不出现四字节字符则完全没问题）。
+一旦你决定使用utf8mb4，强烈建议你要修改服务端 character-set-server=utf8mb4
+InnoDB有单个索引最大字节数 768 的限制，而字段定义的是能存储的字符数，比如 VARCHAR(200) 代表能够存200个汉字，索引定义是字符集类型最大长度算的，即 utf8 maxbytes=3, utf8mb4 maxbytes=4，算下来utf8和utf8mb4两种情况的索引长度分别为600 bytes和800bytes，后者超过了768，导致出错：Error 1071: Specified key was too long; max key length is 767 bytes。
+MySQL表字段字符集不同导致的索引失效问题 http://mp.weixin.qq.com/s/ns9eRxjXZfUPNSpfgGA7UA  索引失效发生在utf8mb4列 在条件左边
+mysql> desc select * from t2 left join t1 on t1.code = t2.code where t2.name = 'dddd'\G
+mysql> show warnings;
+
+| Level | Code | Message |
+| Note | 1003 | /* select#1 */ select `testdb`.`t2`.`id` AS `id`,`testdb`.`t2`.`name` AS `name`,`testdb`.`t2`.`code` AS `code`,`testdb`.`t1`.`id` AS `id`,`testdb`.`t1`.`name` AS `name`,`testdb`.`t1`.`code` AS `code` from `testdb`.`t2` left join `testdb`.`t1` on((convert(`testdb`.`t1`.`code` using utf8mb4) = `testdb`.`t2`.`code`)) where (`testdb`.`t2`.`name` = 'dddd') |
+
+1 row in set (0.00 sec)
+
+（1）首先t2 left join t1决定了t2是驱动表，这一步相当于执行了select * from t2 where t2.name = ‘dddd’，取出code字段的值，这里为’8a77a32a7e0825f7c8634226105c42e5’;
+
+（2）然后拿t2查到的code的值根据join条件去t1里面查找，这一步就相当于执行了select * from t1 where t1.code = ‘8a77a32a7e0825f7c8634226105c42e5’;
+
+（3）但是由于第（1）步里面t2表取出的code字段是utf8mb4字符集，而t1表里面的code是utf8字符集，这里需要做字符集转换，字符集转换遵循由小到大的原则，因为utf8mb4是utf8的超集，所以这里把utf8转换成utf8mb4，即把t1.code转换成utf8mb4字符集，转换了之后，由于t1.code上面的索引仍然是utf8字符集，所以这个索引就被执行计划忽略了，然后t1表只能选择全表扫描。更糟糕的是，如果t2筛选出来的记录不止1条，那么t1就会被全表扫描多次，性能之差可想而知。
+alter table t1 convert to charset utf8mb4, lock=shared;
+```
+###[让mysqldump变成并发导出导入的魔法](http://seanlook.com/2016/11/17/python-mysqldump-out-in-concurrency-magic/)
+```js
+项目地址：https://github.com/seanlook/mypumpkin
+## 导出源库所有db到visit_dumpdir2目录 （不包括information_schema和performance_schema）
+$ ./mypumpkin.py mysqldump -h dbhost_name -utest_user -pyourpassword -P3306 \
+ --single-transaction --opt -A --dump-dir visit_dumpdir2
+ 
+ mysql> select * from t_account;
++-----+-----------+-------------+
+| fid | fname     | fpassword   |
++-----+-----------+-------------+
+|   1 | xiaoming  | p_xiaoming  |
+|   2 | xiaoming1 | p_xiaoming1 |
++-----+-----------+-------------+
+假如应用前端没有WAF防护，那么下面的sql很容易注入：
+mysql> select * from t_account where fname='A' ;
+fname传入  A' OR 1='1  
+mysql> select * from t_account where fname='A' OR 1='1';
+mysql> select * from t_account where fname='A'+'B' and fpassword='ccc'+0;
++-----+-----------+-------------+
+| fid | fname     | fpassword   |
++-----+-----------+-------------+
+|   1 | xiaoming  | p_xiaoming  |
+|   2 | xiaoming1 | p_xiaoming1 |
++-----+-----------+-------------+
+2 rows in set, 7 warnings (0.00 sec)
+```
