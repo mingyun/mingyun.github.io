@@ -543,7 +543,49 @@ public function sendMessage($room, $event, $obj = [])
         return $this->getSIOEmitter($room)
             ->to($room)
             ->emit($event, $obj);
-    }                
+    }     
+Socket.IO 订阅 Redis Channel http://www.tuicool.com/articles/26ny6r6     
+ npm install Socket.IO redis --save
+ var server = require('http').createServer();
+var io = require('Socket.IO')(server);
+io
+    .of('/notification')
+    .on('connection', socket => {
+        console.log('user connected to notification');
+        socket.on('disconnect', () => console.log('user disconnected'));
+    });
+
+io
+    .of('/chatting')
+    .on('connection', socket => console.log('user connected to message'));
+
+server.listen(3001, () => console.log('Socket.IO listen to port 3001'));
+ 
+ var redis = require('redis');
+var redisClient = redis.createClient();
+var NOTIFICATION_CHANNEL = 'notification_channel', CHATTING_CHANNEL = 'chatting_channel';
+
+redisClient.on('message', function(channel, message) {
+    switch (channle){
+        case NOTIFICATION_CHANNEL:
+            console.log('notification received:', message);
+            io.of('/notification').emit('message', message);
+            break;
+        case CHATTING_CHANNEL:
+            console.log('chatting received:', message);
+            io.of('/chatting').emit('message', message);
+            break;
+    }
+});
+redisClient.subscribe(NOTIFICATION_CHANNEL);
+redisClient.subscribe(CHATTING_CHANNEL);
+
+$ node app.js
+Socket.IO listen to port 3001
+在命令行（Bash、Zsh…）中打开 redis-cli ，并发布一条消息：
+
+$ redis-cli
+127.0.0.1:6379> publish notification "fuck you!"
 ```
 ###[简易socket.io demo](https://segmentfault.com/a/1190000002665449)
 ```js
