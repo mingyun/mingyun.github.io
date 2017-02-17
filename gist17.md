@@ -775,3 +775,61 @@ find -type d -exec chmod 755 {} \;
 chown -R www.www /home/wwwroot/www.waitalone.cn
 find -mtime -2 -type f -name \*.php
 ```
+###[MySQL字符数据类型char与varchar的区别](http://seanlook.com/2016/04/28/mysql-char-varchar-set/)
+```js
+http://dev.mysql.com/doc/refman/5.6/en/char.html
+
+char类型是使用固定长度空间进行存储，范围0-255。比如CHAR(30)能放30个字符，存放abcd时，尾部会以空格补齐，实际占用空间 30 * 3bytes (utf8)。检索它的时候尾部空格会被去除。
+
+varchar类型保存可变长度字符串，范围0-65535（但受到单行最大64kb的限制）。比如用 varchar(30) 去存放abcd，实际使用5个字节，因为还需要使用额外1个字节来标识字串长度（0-255使用1个字节，超过255需要2个字节）。
+
+create table tc_utf8(c1 int primary key auto_increment, c2 char(30), c3 varchar(N)) charset=utf8; 为例：
+
+字符集为utf8，于是中文每个字符占3个字节，英文还是1个字节，所以N最大为 (65535-1-2-4-30*3)/3 = 21812，即最多能存放21812个英文、数字、汉字。其中65535是单行最大限制，减1是NULL标识位，减2的是头部的2个字节标识长度，减30*3的原因是char(30)占用90个字节，最后除以3还是因为utf8最长用3个字节表示一个字符。
+mysql也是以这种方式来确保行最大 65535 bytes 限制：数据行只要出现一个ascii字符（如英文字母、数字），就永远达不到65535，数据行全中文则刚好满。
+mysql> select @@sql_mode;
++------------------------+
+| @@sql_mode             |
++------------------------+
+| NO_ENGINE_SUBSTITUTION |
++------------------------+
+1 rows in set (0.13 sec)
+mysql> create table tc_utf8_21812(c1 int primary key auto_increment, c2 char(30), c3 varchar(21812)) charset=utf8;
+Query OK, 0 rows affected (0.10 sec)
+mysql> create table tc_utf8_21813(c1 int primary key auto_increment, c2 char(30), c3 varchar(21845)) charset=utf8;
+Row size too large. The maximum row size for the used table type, not counting BLOBs, is 65535. This includes storage overhead, check the manual. You have to change some columns to TEXT or BLOBs
+mysql> create table tc_utf8_21846(c1 int primary key auto_increment, c2 char(30), c3 varchar(21846)) charset=utf8;
+Query OK, 0 rows affected, 1 warnings (0.10 sec)
+mysql> show warnings;
++-------+------+---------------------------------------------+
+| Level | Code | Message                                     |
++-------+------+---------------------------------------------+
+| Note  | 1246 | Converting column 'c3' from VARCHAR to TEXT |
++-------+------+---------------------------------------------+
+1 rows in set (0.14 sec)
+
+即在非严格模式下，因为N=21813 > 21812，所以报 Row size too large 错误。但N=21846 > (65535/3)时，只是出现warnings，varchar自动变成了mediumtext 类型。
+mysql> select length('中中');
++----------------+
+| length('中中') |
++----------------+
+|              4 |
++----------------+
+1 row in set (0.07 sec)
+
+mysql> select char_length('中中');
++---------------------+
+| char_length('中中') |
++---------------------+
+|                   2 |
++---------------------+
+1 row in set (0.01 sec)
+```
+###[一种直观记录表结构变更历史的方法](http://seanlook.com/2016/11/28/mysql-schema-gather-structure/)
+	
+# Puppet Name: collect_DBschema
+5 5 * * * /opt/DBschema/collect_tableMeta.sh >> /tmp/collect_DBschema.log 2>&1
+https://github.com/seanlook/DBschema_gather
+sudo pip install mysql-python influxdb
+###[一个实时抓取MySQL慢查询现场的程序](http://seanlook.com/2016/09/27/python-mysql-querykill/)
+github 项目地址：https://github.com/seanlook/myquerykill qq 1104138797
