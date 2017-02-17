@@ -526,8 +526,14 @@ if($result && isset($result['rate']) && isset($result['label'])) {
 ```js
 $redis = new \Redis(); // Using the Redis extension provided client
 $redis->connect('127.0.0.1', '6379');
-$emitter = new SocketIO\Emitter($redis);
-$emitter->emit('event', 'payload str');
+$emitter = new SocketIO\Emitter($redis,['key'=>'redis']);#默认为socket.io
+$emitter->emit('redis', 'payload str');
+$emitter->broadcast->to('redis')->emit('redis', 'such data');
+命令行执行 subscribe redis#emitter，接收消息：
+1) "message"
+2) "redis#emitter"
+3) "\x92\x83\xa4type\x02\xa4data\x92\xa3lsp\xabpayload str\xa3nsp\xa1/\x82\xa5ro
+oms\x90\xa5flags\x90"
 自己实现函数msgpack_pack https://github.com/onlinecity/msgpack-php
 发送Socket.io消息.
 $ms=new MessageServer();
