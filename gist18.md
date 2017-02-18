@@ -98,3 +98,308 @@ o._value = val;
 });
 ```
 ###[Ostagram：一款强大的图片艺术滤镜工具](https://link.zhihu.com/?target=http%3A//ostagram.ru/)
+###[利用TensorFlow搞定知乎验证码之《让你找中文倒转汉字》](https://zhuanlan.zhihu.com/p/25297378)
+```js
+python生成汉字的代码
+
+# -*- coding: utf-8 -*-
+from PIL import Image,ImageDraw,ImageFont
+import random
+import math, string
+import logging
+# logger = logging.Logger(name='gen verification')
+
+class RandomChar():
+    @staticmethod
+    def Unicode():
+        val = random.randint(0x4E00, 0x9FBF)
+        return unichr(val)    
+
+    @staticmethod
+    def GB2312():
+        head = random.randint(0xB0, 0xCF)
+        body = random.randint(0xA, 0xF)
+        tail = random.randint(0, 0xF)
+        val = ( head << 8 ) | (body << 4) | tail
+        str = "%x" % val
+        return str.decode('hex').decode('gb2312')    
+
+class ImageChar():
+    def __init__(self, fontColor = (0, 0, 0),
+    size = (100, 40),
+    fontPath = '/Library/Fonts/Arial Unicode.ttf',
+    bgColor = (255, 255, 255),
+    fontSize = 20):
+        self.size = size
+        self.fontPath = fontPath
+        self.bgColor = bgColor
+        self.fontSize = fontSize
+        self.fontColor = fontColor
+        self.font = ImageFont.truetype(self.fontPath, self.fontSize)
+        self.image = Image.new('RGB', size, bgColor)
+
+    def drawText(self, pos, txt, fill):
+        draw = ImageDraw.Draw(self.image)
+        draw.text(pos, txt, font=self.font, fill=fill)
+        del draw    
+
+    def drawTextV2(self, pos, txt, fill, angle=180):
+        image=Image.new('RGB', (25,25), (255,255,255))
+        draw = ImageDraw.Draw(image)
+        draw.text( (0, -3), txt,  font=self.font, fill=fill)
+        w=image.rotate(angle,  expand=1)
+        self.image.paste(w, box=pos)
+        del draw
+
+    def randRGB(self):
+        return (0,0,0)
+
+    def randChinese(self, num, num_flip):
+        gap = 1
+        start = 0
+        num_flip_list = random.sample(range(num), num_flip)
+        # logger.info('num flip list:{0}'.format(num_flip_list))
+        print 'num flip list:{0}'.format(num_flip_list)
+        char_list = []
+        for i in range(0, num):
+            char = RandomChar().GB2312()
+            char_list.append(char)
+            x = start + self.fontSize * i + gap + gap * i
+            if i in num_flip_list:
+                self.drawTextV2((x, 6), char, self.randRGB())
+            else:
+                self.drawText((x, 0), char, self.randRGB())
+        return char_list, num_flip_list
+    def save(self, path):
+        self.image.save(path)
+
+
+
+err_num = 0
+for i in range(10):
+    try:
+        ic = ImageChar(fontColor=(100,211, 90), size=(280,28), fontSize = 25)
+        num_flip = random.randint(3,6)
+        char_list, num_flip_list = ic.randChinese(10, num_flip)
+        ic.save(''.join(char_list)+'_'+''.join(str(i) for i in num_flip_list)+".jpeg")
+    except:
+        err_num += 1
+        continue
+
+http://link.zhihu.com/?target=https%3A//github.com/burness/tensorflow-101/tree/master/zhihu_code/src
+```
+###[通过微博 API 和 Pushbullet 准实时关注你的心上人](https://zhuanlan.zhihu.com/p/25297732)
+https://link.zhihu.com/?target=https%3A//www.pushbullet.com/
+https://link.zhihu.com/?target=https%3A//gist.github.com/xlzd/01b8b8e1909ae0f601c85e142f2bd15b
+###[把 Markdown 文件转化为 PDF](https://www.zhihu.com/question/20849824)
+如果你的md文件使用chrome预览，就比较简单了。
+点打印，目标，选本地另存为pdf，即可
+pandoc README -o example13.pdf  https://link.zhihu.com/?target=http%3A//www.reportlab.com/  http://pandoc.org/installing.html 
+$pandoc -N -s --toc --smart --latex-engine=xelatex -V CJKmainfont='PingFang SC' -V mainfont='Monaco' -V geometry:margin=1in 1.md 2.md 3.md ... xx.md  -o output.pdf
+
+Atom有一个Markdown Preview的插件，Markdown文件下按ctrl+shit+m就可以预览Markdown，然后右键生成的预览文件可以保存为html文件，再用chrome打开这个html文件，右键Print里面转换成pdf。  http://www.markdowntopdf.com/ 
+ https://github.com/fraserxu/electron-pdf   $ electron-pdf index.html ~/Desktop/index.pdf
+选择reportlab以及基于reportlab的chrisglass/xhtml2pdf https://github.com/xhtml2pdf/xhtml2pdf ，这样你就可以简单的pandoc转为html，再由html轻松地转为pdf啦
+xhtml2pdf不能识别汉字，需要在html文件中通过CSS的方式嵌入code2000字体，代码是这样的：html { 
+font-family: code2000; 
+}
+###[Python练习第四题，批量修改图片分辨率](https://zhuanlan.zhihu.com/p/25232848)
+```js
+http://pillow-cn.readthedocs.io/zh_CN/latest/index.html  
+>>> from PIL import Image
+>>> im=Image.open(r'F:\1.jpg')
+>>> print(im.format,im.size,im.mode)
+import os
+import glob
+from PIL import Image
+
+def thumbnail_pic(path):
+    a = glob.glob(r'*.jpg')
+    for x in a:
+        name = os.path.join(path, x)
+        im = Image.open(name)
+        im.thumbnail((1136, 640))
+        print(im.format, im.size, im.mode)
+        im.save(name, 'JPEG')
+    print('Done!')
+
+if __name__ == '__main__':
+    path = '.'
+    thumbnail_pic(path)
+作者：崔斯特
+链接：https://zhuanlan.zhihu.com/p/25232848
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+from PIL import Image
+
+def change_resolution(picPath, reslution):
+    img = Image.open(picPath)
+    x, y = img.size
+    print x, y
+    changex = float(x) / reslution[0]
+    changey = float(y) / reslution[1]
+
+    # 判断分辨率是否满足
+    if changex > 1 or changey > 1:
+        change = changex if changex > changey else changey
+        print change
+        print int(reslution[0] / change), int(reslution[1] / change)
+        img.resize((int(x / change), int(y / change))).save('result.jpg')
+
+if __name__ == '__main__':
+    change_resolution('pictest.jpg', (1136, 640))
+```
+###[Python爬取百度图片及py文件转换exe](https://zhuanlan.zhihu.com/p/24854051?refer=linjichu)
+```js
+作者：崔斯特
+链接：https://zhuanlan.zhihu.com/p/24854051
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+#coding:utf-8
+import requests
+import os
+import re
+import json
+import itertools
+import urllib
+import sys
+
+str_table = {
+    '_z2C$q': ':',
+    '_z&e3B': '.',
+    'AzdH3F': '/'
+}
+
+char_table = {
+    'w': 'a',
+    'k': 'b',
+    'v': 'c',
+    '1': 'd',
+    'j': 'e',
+    'u': 'f',
+    '2': 'g',
+    'i': 'h',
+    't': 'i',
+    '3': 'j',
+    'h': 'k',
+    's': 'l',
+    '4': 'm',
+    'g': 'n',
+    '5': 'o',
+    'r': 'p',
+    'q': 'q',
+    '6': 'r',
+    'f': 's',
+    'p': 't',
+    '7': 'u',
+    'e': 'v',
+    'o': 'w',
+    '8': '1',
+    'd': '2',
+    'n': '3',
+    '9': '4',
+    'c': '5',
+    'm': '6',
+    '0': '7',
+    'b': '8',
+    'l': '9',
+    'a': '0'
+}
+char_table = {ord(key): ord(value) for key, value in char_table.items()}
+
+def decode(url):
+	for key,value in str_table.items():
+		url = url.replace(key,value)
+	return url.translate(char_table)
+
+def buildUrls(word):
+    word = urllib.parse.quote(word)
+    url = r"http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&fp=result&queryWord={word}&cl=2&lm=-1&ie=utf-8&oe=utf-8&st=-1&ic=0&word={word}&face=0&istype=2nc=1&pn={pn}&rn=60"
+    urls = (url.format(word=word, pn=x) for x in itertools.count(start=0, step=60))
+    return urls
+
+re_url = re.compile(r'"objURL":"(.*?)"')
+def resolveImgUrl(html):
+	imgUrls = [decode(x) for x in re_url.findall(html)]
+	return imgUrls
+
+def downImg(imgUrl,dirpath,imgName):
+	filename = os.path.join(dirpath,imgName)
+	try:
+		res = requests.get(imgUrl,timeout=15)
+		if str(res.status_code)[0] == '4':
+			print(str(res.status_code),":",imgUrl)
+			return False
+	except Exception as e:
+		print('抛出异常:',imgUrl)
+		print(e)
+		return False
+	with open(filename+'.jpg','wb') as f:
+		f.write(res.content)
+	return True
+def mkDir(dirName):
+    dirpath = os.path.join(sys.path[0], dirName)
+    if not os.path.exists(dirpath):
+        os.mkdir(dirpath)
+    return dirpath
+
+if __name__ == '__main__':
+    print("欢迎使用百度图片下载脚本！\n目前仅支持单个关键词。")
+    print("下载结果保存在脚本目录下的img文件夹中。")
+    print("=" * 50)
+    word = input("请输入你要下载的图片关键词：\n")
+
+    dirpath = mkDir("img")
+
+    urls = buildUrls(word)
+    index = 0
+    for url in urls:
+        print("正在请求：", url)
+        html = requests.get(url, timeout=10).content.decode('utf-8')
+        imgUrls = resolveImgUrl(html)
+        if len(imgUrls) == 0:  # 没有图片则结束
+            break
+        for url in imgUrls:
+            if downImg(url, dirpath, str(index) + ".jpg"):
+                index += 1
+                print("已下载 %s 张" % index)
+                
+pip install pyinstaller
+pyinstaller -F baiduimg.py
+目录下，dist文件下就有baiduimg.exe文件了，双击即可
+```
+###[生成激活码](https://zhuanlan.zhihu.com/p/25169905?refer=linjichu)
+```js
+
+import uuid
+
+uuids = []
+for i in range(200):
+	uuids.append(uuid.uuid1())
+print uuids
+```
+###[在图片上加入数字](https://zhuanlan.zhihu.com/p/25147821?refer=linjichu)
+```js
+
+from PIL import Image, ImageDraw, ImageFont
+
+img = Image.open('girl.jpg')
+draw = ImageDraw.Draw(img)
+myfont = ImageFont.truetype('C:/windows/fonts/Arial.ttf', size=80)
+fillcolor = "#ff0000"
+width, height = img.size
+draw.text((40,40),'hello', font=myfont, fill=fillcolor)
+img.save('result.jpg','jpeg')
+
+ https://github.com/zhangslob/Image  python3下用方正字迹 ，能显示出中文
+ 
+ photo_url = "http://p3.pstatp.com/large/159f00010b30d6736512"
+photo_name = photo_url.rsplit('/', 1)[-1] + '.jpg'
+
+with request.urlopen(photo_url) as res, open(photo_name, 'wb') as f:
+    f.write(res.read())
+
+ 
+```
