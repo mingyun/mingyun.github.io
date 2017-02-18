@@ -743,3 +743,239 @@ driver.execute_script("JS代码")
 driver.save_screenshot('保存的文件路径及文件名')
 ```
 https://github.com/inconshreveable/ngrok  
+###[50 行代码实现微信股价提示](https://zhuanlan.zhihu.com/p/25247206)
+```js
+作者：ipreacher
+链接：https://zhuanlan.zhihu.com/p/25247206
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+__author__ = 'ipreacher'
+
+
+import time
+import itchat
+import datetime
+import tushare as ts
+
+
+stock_symbol = input('请输入股票代码 \n>  ')
+price_low = input('请输入最低预警价格 \n>  ')
+price_high = input('请输入最高预警价格 \n>  ')
+
+
+# 登陆微信
+def login():
+    itchat.auto_login()
+
+
+# 获取股价并发送提醒
+def stock():
+    time = datetime.datetime.now()    # 获取当前时间
+    now = time.strftime('%H:%M:%S') 
+    data = ts.get_realtime_quotes(stock_symbol)    # 获取股票信息
+    r1 = float(data['price'])
+    r2 = str(stock_symbol) + ' 的当前价格为 ' + str(r1)
+    content = now + '\n' + r2
+    itchat.send(content, toUserName='filehelper')
+    print(content)
+    # 设置预警价格并发送预警信息
+    if r1 <= float(price_low):
+        itchat.send('低于最低预警价格', toUserName='filehelper')
+        print('低于最低预警价格')
+    elif r1 >= float(price_high):
+        itchat.send('高于最高预警价格', toUserName='filehelper')
+        print('高于最高预警价格')
+    else:
+        itchat.send('价格正常', toUserName='filehelper')
+        print('价格正常')
+
+
+# 每 3 秒循环执行
+if __name__ == '__main__':
+    login()
+    while True:   
+        try:   
+            stock()
+            time.sleep(3)
+        except KeyboardInterrupt:
+            itchat.send('Stock_WeChat 已执行完毕！\n'
+                '更多有意思的小玩意，请戳---->\n'
+                '[https://github.com/ipreacher/tricks]', 
+                toUserName='filehelper')
+            print('Stock_WeChat 已执行完毕！\n'
+                '更多有意思的小玩意，请戳---->\n'
+                '[https://github.com/ipreacher/tricks]')
+            break
+```
+###[爬虫程序扒下知乎某个回答所有点赞用户名单](https://www.zhihu.com/question/36338520)
+```js
+from zhihu import ZhihuClient
+
+client = ZhihuClient('cookies.json')
+
+url = 'http://www.zhihu.com/question/36338520/answer/67029821'
+answer = client.answer(url)
+
+print('问题：{0}'.format(answer.question.title))
+print('答主：{0}'.format(answer.author.name))
+print('此答案共有{0}人点赞：\n'.format(answer.upvote_num))
+
+for upvoter in answer.upvoters:
+    print(upvoter.name, upvoter.url)
+ZhihuClient().create_cookies('cookies.json')
+
+作者：路人甲
+链接：https://www.zhihu.com/question/36338520/answer/142481574
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+#encoding=utf8
+import time,requests
+from bs4 import BeautifulSoup
+
+headers = {'X-Requested-With': 'XMLHttpRequest',
+                  'Referer': 'http://www.zhihu.com',
+                  'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; '
+                                'rv:39.0) Gecko/20100101 Firefox/39.0',
+                  'Host': 'www.zhihu.com'}
+s = requests.session()
+BASE_URL = 'https://www.zhihu.com'
+PHONE_LOGIN = BASE_URL + '/login/phone_num'
+
+def login():
+    '''登录知乎'''
+    username = ''#你自己的帐号密码
+    password = ''
+    data = {"phone_num":username,"password":password,"captcha":'HHHH'}
+    r = s.post(PHONE_LOGIN,headers = headers,data= data)
+    print (r.json())
+
+def zan(ans_id):
+    user_list = []
+    zanBaseURL = 'http://www.zhihu.com/answer/{}/voters_profile?&offset={}'
+    page = 0
+    count = 0
+    while 1:
+        zanURL = zanBaseURL.format(ans_id,str(page))
+        page += 10
+        zanREQ = s.get(zanURL, headers=headers)
+        zanData = zanREQ.json()['payload']
+        if not zanData:
+            break
+        for item in zanData:
+            # print item
+            zanSoup = BeautifulSoup(item, "html.parser")
+            zanInfo = zanSoup.find('a', {'target': "_blank", 'class': 'zg-link'})
+            if zanInfo:
+                user_id = zanInfo.get('href').split('/')[-1]
+                print('userId:', user_id)
+                user_list.append(user_id)
+                #print 'person_url:', zanInfo.get('href')
+            else:
+                anonymous = zanSoup.find(
+                    'img', {'title': True, 'class': "zm-item-img-avatar"})
+                print(anonymous.get('title'))
+            count += 1
+        print(count)
+
+    return user_list
+
+def get_data_id(answer_list):
+    id_list = []
+    for answer_url in answer_list:
+        soup = BeautifulSoup(s.get(answer_url, headers=headers).content, "html.parser")
+        temp_id = soup.find('div',{'tabindex':'-1','itemtype':'http://schema.org/Answer'})
+        id_list.append(temp_id['data-aid'])
+    return id_list
+
+def find_her():
+    #下面填上你要查询的那个回答的url，随便放多少个
+    ans_id_list  = get_data_id(['https://www.zhihu.com/question/31427895/answer/140473534',
+                                'https://www.zhihu.com/question/50015995/answer/140826031',
+                                'https://www.zhihu.com/question/54714393/answer/140950904'])
+    llist = []
+    for x in ans_id_list:
+        llist.extend(zan(x))
+
+    print('\n-----你要找的她就在这里：-----')
+
+    for x in set(llist):
+        if llist.count(x) == len(ans_id_list):
+            print(x)
+
+login()
+find_her()
+```
+###[JavaScript 如何找到字符串中缺失的括号](https://zhuanlan.zhihu.com/p/25236822)
+```js
+function checkParanthesis(str){
+  var depth = 0;
+  for(var i in str){
+    if(str[i]=="("||str[i]=="{"||str[i]=="[")
+      depth++;
+    else if(str[i]==")"||str[i]=="}"||str[i]=="]")
+      depth--;
+  }
+  if(depth !=0) return false;
+  return true;
+}
+console.log(checkParanthesis("() test"));
+ 
+```
+###[php文件上传漏洞](https://zhuanlan.zhihu.com/p/25220150)
+作者：Hope
+链接：https://zhuanlan.zhihu.com/p/25220150
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+if($_FILES['userfile']['type'] != "image/gif")  
+#这里对上传的文件类型进行判断，如果不是image/gif类型便返回错误。
+                {   
+                 echo "Sorry, we only allow uploading GIF images";
+                 exit;
+                 }
+         $uploaddir = 'uploads/';
+         $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
+         if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
+             {
+                 echo "File is valid, and was successfully uploaded.\n";
+                } else {
+                     echo "File uploading failed.\n";
+    }
+    GIF89a<?php phpinfo(); ?>
+###[ppt online](https://www.zhihu.com/question/20204473)
+###[史上最全的CSS自适应布局总结](https://zhuanlan.zhihu.com/p/25220324)
+###[Ubuntu 有什么奇技淫巧](https://www.zhihu.com/question/27764060)
+sudo apt-get install figlet
+sudo apt-get install toilet
+试一下这两个小命令，生成艺术字
+figlet some text
+toilet some other text
+打开终端输入telnet towel.blinkenlights.nl 按下Ctrl+]后输入quit退出
+#安装小工具
+sudo apt install fortune
+sudo apt install fortune-zh
+sudo apt install cowsay
+sudo apt install lolcat
+
+#小牛讲道理
+for i in {1..5};do echo `fortune`|cowsay;done
+
+#加个颜色
+for i in {1..5};do echo `fortune`|cowsay|lolcat;done
+
+ ###[python 12306 余票](https://zhuanlan.zhihu.com/p/24606846)
+ 
+ import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+req_url = 'https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2017-01-11&leftTicketDTO.from_station=SHH&leftTicketDTO.to_station=BJP&purpose_codes=ADULT'
+resp = urllib2.urlopen(req_url)
+resp_info = resp.read()
+print resp_info
+###[pickle 来直接序列化 requests.的 session.cookies](https://www.v2ex.com/t/341375#reply5)
+sess=requests.session()
+resp=sess.get('http://www.so.com')
+f=open('cookiefile','wb')
+pickle.dump(resp.cookies,f)  #为什么很多代码都不是这样,而是使用 cookielib 的 LWPCookieJar?
+f.close()
