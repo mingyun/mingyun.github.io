@@ -77,7 +77,23 @@ print sys.getfilesystemencoding() #文件系统编码
 print locale.getdefaultlocale()   #系统当前编码
 print sys.stdin.encoding          #终端输入编码
 print sys.stdout.encoding         #终端输出编码
- 
+ 将unicode格式的字符串存入到文件时，python内部会默认将其先转换为Str格式的系统编码，然后再执行存入步骤
+ #! -*- coding:utf-8 -*-
+a=u"中文"
+f=open("test.txt","w")
+f.write(a)
+import sys
+reload(sys)
+sys.setdefaultencoding('gbk')
+
+#! -*- coding:utf-8 -*-
+a='你好'
+b=a.decode("utf-8").encode("gbk")
+print b
+f=codecs.open("test.txt", encoding='gbk').read()
+a="\\u8fdd\\u6cd5\\u8fdd\\u89c4" # unicode转化为中文
+b=a.decode('unicode-escape')
+print b
 ```
 ###[PHP 就碰到 PDO 扩展的一个大坑](https://www.v2ex.com/t/339840#reply74)
 PDO 的参数绑定 bindParam 方法第二个参数是传递一个引用类型，而不是值
@@ -403,3 +419,327 @@ with request.urlopen(photo_url) as res, open(photo_name, 'wb') as f:
 
  
 ```
+###[python爬虫学习资源整理](https://zhuanlan.zhihu.com/p/25250739)
+###[php ecshop修饰符preg_replace/e不安全的几处改动](http://www.epooll.com/archives/841/)
+```js
+主要集中在 upload/includes/cls_template.php 文件中：
+
+1：line 300 ：
+
+原语句：
+
+return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
+
+修改为：
+
+return preg_replace_callback("/{([^\}\{\n]*)}/", function($r) { return $this->select($r[1]); }, $source);
+
+2：line 495：
+
+原语句：
+
+$out = "<?php \n" . '$k = ' . preg_replace("/(\'\\$[^,]+)/e" , "stripslashes(trim('\\1','\''));", var_export($t, true)) . ";\n";
+
+修改为：
+
+$replacement = preg_replace_callback("/(\'\\$[^,]+)/" ,
+
+function($matcher){
+
+return stripslashes(trim($matcher[1],'\''));
+
+},
+
+var_export($t, true));
+
+$out = "<?php \n" . '$k = ' . $replacement . ";\n";
+
+3：line 554： //zuimoban.com 转载不带网址，木JJ
+
+原语句：
+
+$val = preg_replace("/\[([^\[\]]*)\]/eis", "'.'.str_replace('$','\$','\\1')", $val);
+
+修改为：
+
+$val = preg_replace_callback("/\[([^\[\]]*)\]/is",
+
+function ($matcher) {
+
+return '.'.str_replace('$','\$',$matcher[1]);
+
+},
+
+$val);
+
+4：line 1071：
+
+原语句：
+
+$replacement = "'{include file='.strtolower('\\1'). '}'";
+
+$source = preg_replace($pattern, $replacement, $source);
+
+修改为：
+
+$source = preg_replace_callback($pattern,
+
+function ($matcher) {
+
+return '{include file=' . strtolower($matcher[1]). '}';
+
+},
+
+$source);
+```
+###[用PHP蜘蛛做旅游数据分析 ](http://www.epooll.com/archives/843/)
+https://github.com/owner888/phpspider  马蜂窝
+###[PHP DOMDocument保存xml时中文出现乱码](http://www.epooll.com/archives/842/)
+```js
+$doc = new DOMDocument();
+$doc->loadHTML('<?xml encoding="UTF-8">' . $html);
+foreach ($doc->childNodes as $item)
+{
+    if ($item->nodeType == XML_PI_NODE)
+    {
+        $doc->removeChild($item); // remove hack
+    }
+}
+$doc->encoding = 'UTF-8'; // insert proper
+echo iconv("UTF-8", "GB18030//TRANSLIT", $dom->saveXML($n) );
+```
+###[Android 窃取手机中微信聊天记录](http://icodeyou.com/2015/06/05/2015-06-05-%20%E8%8E%B7%E5%8F%96%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95/)
+###[手把手教你搭建ngrok服务－轻松外网调试本机站点](https://aotu.io/notes/2016/02/19/ngrok/?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
+###[CSRF实战：借刀杀人之全民助我投诉吧主](https://zhuanlan.zhihu.com/p/24411110?refer=codes)
+###[laravel 翻译](https://github.com/cw1997/laravel-Simplified-Chinese)
+###[QQ好友列表数据获取](https://zhuanlan.zhihu.com/p/24580113?refer=codes)
+https://h5.qzone.qq.com/proxy/domain/r.qzone.qq.com/cgi-bin/tfriend/friend_show_qqfriends.cgi?uin=123&follow_flag=1&groupface_flag=0&fupdate=1&g_tk=1742568391
+###[Python爬虫实战入门六：提高爬虫效率—并发爬取智联招聘](https://zhuanlan.zhihu.com/p/24930071)
+```js
+
+
+# coding:utf-8
+
+import requests
+from bs4 import BeautifulSoup
+from multiprocessing import Pool
+
+def get_zhaopin(page):
+    url = 'http://sou.zhaopin.com/jobs/searchresult.ashx?jl=全国&kw=python&p={0}&kt=3'.format(page)
+    print("第{0}页".format(page))
+    wbdata = requests.get(url).content
+    soup = BeautifulSoup(wbdata,'lxml')
+
+    job_name = soup.select("table.newlist > tr > td.zwmc > div > a")
+    salarys = soup.select("table.newlist > tr > td.zwyx")
+    locations = soup.select("table.newlist > tr > td.gzdd")
+    times = soup.select("table.newlist > tr > td.gxsj > span")
+
+    for name, salary, location, time in zip(job_name, salarys, locations, times):
+        data = {
+            'name': name.get_text(),
+            'salary': salary.get_text(),
+            'location': location.get_text(),
+            'time': time.get_text(),
+        }
+        print(data)
+
+if __name__ == '__main__':
+    pool = Pool(processes=2)
+    pool.map_async(get_zhaopin,range(1,pages+1))
+    pool.close()
+    pool.join()
+```
+###[Python爬虫实战入门四：使用Cookie模拟登录——获取电子书下载链接](https://zhuanlan.zhihu.com/p/24786095)
+```js
+ 
+
+# coding:utf-8
+import requests
+from bs4 import BeautifulSoup
+
+cookie = '''cisession=19dfd70a27ec0eecf1fe3fc2e48b7f91c7c83c60;CNZZDATA1000201968=1815846425-1478580135-https%253A%252F%252Fwww.baidu.com%252F%7C1483922031;Hm_lvt_f805f7762a9a237a0deac37015e9f6d9=1482722012,1483926313;Hm_lpvt_f805f7762a9a237a0deac37015e9f6d9=1483926368'''
+
+header = {    
+'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36',    
+'Connection': 'keep-alive',       
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',  
+'Cookie': cookie}
+
+url = 'https://kankandou.com/book/view/22353.html'
+wbdata = requests.get(url,headers=header).text
+soup = BeautifulSoup(wbdata,'lxml')
+print(soup)
+
+
+ 
+# coding:utf-8
+import requests
+from bs4 import BeautifulSoup
+
+cookie = {
+"cisession":"19dfd70a27ec0eecf1fe3fc2e48b7f91c7c83c60",          
+"CNZZDATA100020196":"1815846425-1478580135-https%253A%252F%252Fwww.baidu.com%252F%7C1483922031",          
+"Hm_lvt_f805f7762a9a237a0deac37015e9f6d9":"1482722012,1483926313",          
+"Hm_lpvt_f805f7762a9a237a0deac37015e9f6d9":"1483926368"
+}
+
+url = 'https://kankandou.com/book/view/22353.html'
+wbdata = requests.get(url,cookies=cookie).text
+soup = BeautifulSoup(wbdata,'lxml')
+print(soup)
+```
+###[爬取了20万淘宝店铺信息](https://zhuanlan.zhihu.com/p/24389378)
+```js
+def get_taobao_cate():
+    url = 'https://shopsearch.taobao.com/search?app=shopsearch'
+    driver = webdriver.PhantomJS(executable_path="F:\\phantomjs.exe")
+    driver.get(url)
+    driver.implicitly_wait(3)
+    page = driver.page_source
+    soup = BeautifulSoup(page,'lxml')
+    cate_name = re.findall(r"q=(.*?)&amp;tracelog=shopsearchnoqcat",str(soup))
+    for c in cate_name:
+        cname = urllib.parse.unquote(c,encoding='gb2312')
+        cate_list.append(c)
+        print(cname)
+    print(cate_list)
+
+作者：Lerther
+链接：https://zhuanlan.zhihu.com/p/24389378
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+def get_taobao_seller(keywords):
+    # 爬取指定数量的店铺信息
+    def get_seller_from_num(nums):
+        url = "https://shopsearch.taobao.com/search?data-key=s&data-value={0}&ajax=true&_ksTS=1481770098290_1972&callback=jsonp602&app=shopsearch&q={1}&js=1&isb=0".format(nums,keywords)
+        # url = "https://shopsearch.taobao.com/search?data-key=s&data-value={0}&ajax=true&callback=jsonp602&app=shopsearch&q={1}".format(nums,keywords)
+        wbdata = requests.get(url).text[11:-2]
+        data = json.loads(wbdata)
+        shop_list = data['mods']['shoplist']['data']['shopItems']
+        for s in shop_list:
+            name = s['title'] # 店铺名
+            nick = s['nick'] # 卖家昵称
+            nid = s['nid'] # 店铺ID
+            provcity = s['provcity'] # 店铺区域
+            shopUrl = s['shopUrl'] # 店铺链接
+            totalsold = s['totalsold'] # 店铺宝贝数量
+            procnt = s['procnt'] # 店铺销量
+            startFee = s['startFee'] # 未知
+            mainAuction = s['mainAuction'] # 店铺关键词
+            userRateUrl = s['userRateUrl'] # 用户评分链接
+            dsr = json.loads(s['dsrInfo']['dsrStr'])
+            goodratePercent = dsr['sgr']  # 店铺好评率
+            srn = dsr['srn'] # 店铺等级
+            category = dsr['ind'] # 店铺分类
+            mas = dsr['mas'] # 描述相符
+            sas = dsr['sas']  # 服务态度
+            cas = dsr['cas']  # 物流速度
+            data = {
+                'name':name,
+                'nick':nick,
+                'nid':nid,
+                'provcity':provcity,
+                'shopUrl':shopUrl,
+                'totalsold':totalsold,
+                'procnt':procnt,
+                'startFee':startFee,
+                'goodratePercent':goodratePercent,
+                # 'mainAuction':mainAuction,
+                'userRateUrl':userRateUrl,
+                'srn':srn,
+                'category':category,
+                'mas':mas,
+                'sas':sas,
+                'cas':cas
+            }
+            print(data)
+            seller_info.insert_one(data)
+            print("插入数据成功")
+	    if __name__ == '__main__':
+    pool = Pool(processes=4)
+    pool.map_async(get_taobao_seller,cate_list)
+    pool.close()
+    pool.join()
+ 
+```
+###[一个获取 QQ 好友名单（号码、名称、头像、等级）的方法](https://www.v2ex.com/t/330033)
+1. 登录 “我的 QQ 中心”： http://id.qq.com/ 
+2. 来到 “资料-我的等级” 这页： http://id.qq.com/index.html#mylevel 
+3. 打开 Chrome 的 Network 监视（或任意浏览器的监视功能、或抓包工具，都行） 
+4. 筛选监视列表中的 qqlevel_rank 页面 
+5. 这个页面本身就是个 json 格式的列表
+项目地址：https://github.com/abosexy/QFriends
+https://h5.qzone.qq.com/proxy/domain/r.qzone.qq.com/cgi-bin/tfriend/friend_show_qqfriends.cgi?uin=QQ 号码&follow_flag=1&groupface_flag=0&fupdate=1&g_tk=替换 GTK 
+###[Python爬虫入门实战七：使用Selenium--以抓取QQ空间好友说说为例](https://zhuanlan.zhihu.com/p/25006226)
+```js
+
+
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import time
+
+#使用selenium
+driver = webdriver.PhantomJS(executable_path="D:\\phantomjs.exe")
+driver.maximize_window()
+#登录QQ空间
+def get_shuoshuo(qq):
+    driver.get('http://user.qzone.qq.com/{}/311'.format(qq))
+    time.sleep(5)
+    try:
+        driver.find_element_by_id('login_div')
+        a = True
+    except:
+        a = False
+    if a == True:
+        driver.switch_to.frame('login_frame')
+        driver.find_element_by_id('switcher_plogin').click()
+        driver.find_element_by_id('u').clear()#选择用户名框
+        driver.find_element_by_id('u').send_keys('QQ号')
+        driver.find_element_by_id('p').clear()
+        driver.find_element_by_id('p').send_keys('QQ密码')
+        driver.find_element_by_id('login_button').click()
+        time.sleep(3)
+    driver.implicitly_wait(3)
+    try:
+        driver.find_element_by_id('QM_OwnerInfo_Icon')
+        b = True
+    except:
+        b = False
+    if b == True:
+        driver.switch_to.frame('app_canvas_frame')
+        content = driver.find_elements_by_css_selector('.content')
+        stime = driver.find_elements_by_css_selector('.c_tx.c_tx3.goDetail')
+        for con,sti in zip(content,stime):
+            data = {
+                'time':sti.text,
+                'shuos':con.text
+            }
+            print(data)
+        pages = driver.page_source
+        soup = BeautifulSoup(pages,'lxml')
+
+    cookie = driver.get_cookies()
+    cookie_dict = []
+    for c in cookie:
+        ck = "{0}={1};".format(c['name'],c['value'])
+        cookie_dict.append(ck)
+    i = ''
+    for c in cookie_dict:
+        i += c
+    print('Cookies:',i)
+    print("==========完成================")
+
+    driver.close()
+    driver.quit()
+
+if __name__ == '__main__':
+    get_shuoshuo('好友QQ号')
+    
+  pages = driver.page_source
+soup = BeautifulSoup(pages,'lxml')
+driver.execute_script("JS代码")
+driver.save_screenshot('保存的文件路径及文件名')
+```
+https://github.com/inconshreveable/ngrok  
