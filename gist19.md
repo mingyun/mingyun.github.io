@@ -981,3 +981,12 @@ $("input").on("input", function(){
  ###[Python list转换成字符串](https://segmentfault.com/q/1010000008350777)
  str([[[1, 2], [1, 2]], [[3, 4], [3, 4]]])
  ###[PHP关于递归和无限级分类](https://segmentfault.com/q/1010000008352829)
+Chrome DevTools —JS调试https://segmentfault.com/a/1190000008396389
+面试感悟----一名3年工作经验的程序员应该具备的技能http://www.cnblogs.com/xrq730/p/5260294.html 
+你真的了解如何将Nginx配置为Web服务器吗http://mp.weixin.qq.com/s/jYd9WkLOAvv6RfxfSa_PYg
+中国行政区划 JSON 数据（从国家统计局抓取）：【省份、城市、区县、乡镇】四级联动https://cnodejs.org/topic/57ff628a487e1e4578afb4b7  https://github.com/modood/Administrative-divisions-of-China
+NumPy v1.11手册http://python.usyiyi.cn/translate/NumPy_v111/index.html
+猫的前端回忆https://github.com/Wscats/Good-text-Share
+PHP实现微信开放平台扫码登录源码https://dev.21ds.cn/article/36.html
+从0到1学习node系列总索引https://www.xiabingbao.com/node/2017/01/08/node-list.html
+Python微信智能回复http://lafree317.github.io/2017/02/16/%E5%BE%AE%E4%BF%A1%E6%99%BA%E8%83%BD%E5%9B%9E%E5%A4%8D/
