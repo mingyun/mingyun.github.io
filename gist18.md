@@ -924,10 +924,6 @@ console.log(checkParanthesis("() test"));
  
 ```
 ###[php文件上传漏洞](https://zhuanlan.zhihu.com/p/25220150)
-作者：Hope
-链接：https://zhuanlan.zhihu.com/p/25220150
-来源：知乎
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 if($_FILES['userfile']['type'] != "image/gif")  
 #这里对上传的文件类型进行判断，如果不是image/gif类型便返回错误。
@@ -965,8 +961,8 @@ for i in {1..5};do echo `fortune`|cowsay;done
 #加个颜色
 for i in {1..5};do echo `fortune`|cowsay|lolcat;done
 
- ###[python 12306 余票](https://zhuanlan.zhihu.com/p/24606846)
- 
+###[python 12306 余票](https://zhuanlan.zhihu.com/p/24606846)
+```js
  import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 req_url = 'https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2017-01-11&leftTicketDTO.from_station=SHH&leftTicketDTO.to_station=BJP&purpose_codes=ADULT'
@@ -979,3 +975,249 @@ resp=sess.get('http://www.so.com')
 f=open('cookiefile','wb')
 pickle.dump(resp.cookies,f)  #为什么很多代码都不是这样,而是使用 cookielib 的 LWPCookieJar?
 f.close()
+```
+###[从MySQL binlog解析出你要的SQL](https://github.com/danfengcao/binlog2sql)
+shell> git clone https://github.com/danfengcao/binlog2sql.git && cd binlog2sql
+shell> pip install -r requirements.txt
+MySQL server必须设置以下参数:
+
+[mysqld]
+server_id = 1
+log_bin = /var/log/mysql/mysql-bin.log
+max_binlog_size = 100M
+binlog_format = row
+user需要的最小权限集合：
+
+select, super/replication client, replication slave
+
+建议授权
+GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 
+shell> python binlog2sql.py -h127.0.0.1 -P3306 -uadmin -p'admin' -dtest -t test3 test4 --start-file='mysql-bin.000002'
+误删数据回滚 
+shell> python binlog2sql/binlog2sql.py -h127.0.0.1 -P3306 -uadmin -p'admin' -dtest -ttbl --start-file='mysql-bin.000052' --start-position=3346 --stop-position=3556 -B > rollback.sql | cat
+shell> mysql -h127.0.0.1 -P3306 -uadmin -p'admin' < rollback.sql
+
+###[Laravel 使用 env 读取环境变量为 null 的问题](https://laravel-china.org/topics/3362)
+如果执行 php aritisan config:cache 命令，Laravel 将会把 app/config 目录下的所有配置文件“编译”整合成一个缓存配置文件到 bootstrap/cache/config.php，每个配置文件都可以通过 env 函数读取环境变量，这里是可以读取的。但是一旦有了这个缓存配置文件，在其他地方使用 env 函数是读取不到环境变量的，所以返回 null.
+
+在配置文件即 app/config 目录下的其他地方，读取配置不要使用 env 函数去读环境变量，这样你一旦执行 php artisan config:cache 之后，env 函数就不起作用了。所有要用到的环境变量，在 app/config 目录的配置文件中通过 env 读取，其他地方要用到环境变量的都统一读配置文件而不是使用 env 函数读取。
+###[一个php技术栈后端猿的知识储备大纲](https://github.com/TIGERB/easy-tips)
+###[一种记录生产环境数据库表结构变更历史的方法](https://www.v2ex.com/t/325614)
+https://github.com/seanlook/DBschema_gather/tree/master/schema_structure
+###[PHP写文件加锁](https://blog.tanteng.me/2016/11/flock-write/)
+```js
+public function handle()
+{
+    $testTxt = storage_path('test2.txt');
+    $handle = fopen($testTxt, 'wr');
+    flock($handle, LOCK_EX | LOCK_NB);
+    for ($i = 0; $i < 100000; $i++) {
+        $this->comment('writing...');
+        fwrite($handle, 'wo shi tanteng.' . PHP_EOL);
+    }
+    flock($handle, LOCK_UN);
+    fclose($handle);
+    $this->comment('time:' . round(microtime(true) - LARAVEL_START, 2));
+}
+public function handle()
+{
+    $testTxt = storage_path('test.txt');
+    for ($i = 0; $i < 100000; $i++) {
+        $this->comment('writing...');
+        file_put_contents($testTxt, 'wo shi tanteng.' . PHP_EOL, FILE_APPEND);
+    }
+    $this->comment('time:' . round(microtime(true) - LARAVEL_START, 2));
+}
+```
+###[error: cannot open .git/FETCH_HEAD: Permission denied](https://blog.tanteng.me/2017/02/git-fetch-permission-denied/)
+发现 FETCH_HEAD 的用户和组都是 root 权限，而发布系统的运行进程是 nobody 用户，所以没有权限执行这个 git 命令：git fetch -q –all
+cd /data/vhosts/project  && git checkout -q master && git fetch -q –all && git/bin/git clean -fd && git/bin/git reset -q –hard origin/master
+###[PHP捕捉异常中断](https://blog.tanteng.me/2016/09/register-shutdown-function/)
+```js
+class IndexController extends Controller
+{
+    /**
+     * 脚本执行是否完成
+     * @var bool
+     */
+    protected $complete = false;
+ 
+    public function __construct()
+    {
+        register_shutdown_function([$this, 'shutdown']);
+    }
+ 
+    /**
+     * 异常处理
+     */
+    public function shutdown()
+    {
+        if ($this->complete === false) {
+            dump('www.tanteng.me'); //此处应该输出日志并进行异常处理操作
+        }
+    }
+}
+设置一个属性为 false，在执行完成时设为 true，最后通过 register_shutdown_function 函数指定的方法进行判断，并做进一步异常处理
+调用条件：
+1、当页面被用户强制停止时
+2、当程序代码运行超时时
+3、当ＰＨＰ代码执行完成时
+```
+###[Laravel 报错: Declaration of XXX](https://blog.tanteng.me/2016/09/laravel-declaration-sessionguard/)
+将 clear-compiled 替换，具体修改如下：
+"post-install-cmd": [
+-       "php artisan clear-compiled",
++       "Illuminate\\Foundation\\ComposerScripts::postInstall",
+        "php artisan optimize"
+],
+"post-update-cmd": [
+-        "php artisan clear-compiled",
++        "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+         "php artisan optimize"
+]
+再次执行 sudo composer update 之后，再执行一次 sudo composer dump-autoload 就恢复正常了
+###[MySQL大表加字段思路](https://blog.tanteng.me/2017/01/mysql-alter-table-big-data/)
+给 MySQL 大表加字段的思路如下：
+
+① 创建一个临时的新表，首先复制旧表的结构（包含索引）
+
+create table new_table like old_table;
+
+② 给新表加上新增的字段
+
+③ 把旧表的数据复制过来
+
+insert into new_table(filed1,filed2…) select filed1,filed2,… from old_table
+
+④ 删除旧表，重命名新表的名字为旧表的名字
+###[PHP数组同值稳定排序](https://blog.tanteng.me/2016/11/php-array-sort-order/)
+```js
+如何保证 PHP 数组同值元素排序后顺序保持不变呢？
+function stable_uasort(&$array, $cmp_function) {
+    if(count($array) < 2) {
+        return;
+    }
+    $halfway = count($array) / 2;
+    $array1 = array_slice($array, 0, $halfway, TRUE);
+    $array2 = array_slice($array, $halfway, NULL, TRUE);
+ 
+    stable_uasort($array1, $cmp_function);
+    stable_uasort($array2, $cmp_function);
+    if(call_user_func($cmp_function, end($array1), reset($array2)) < 1) {
+        $array = $array1 + $array2;
+        return;
+    }
+    $array = array();
+    reset($array1);
+    reset($array2);
+    while(current($array1) && current($array2)) {
+        if(call_user_func($cmp_function, current($array1), current($array2)) < 1) {
+            $array[key($array1)] = current($array1);
+            next($array1);
+        } else {
+            $array[key($array2)] = current($array2);
+            next($array2);
+        }
+    }
+    while(current($array1)) {
+        $array[key($array1)] = current($array1);
+        next($array1);
+    }
+    while(current($array2)) {
+        $array[key($array2)] = current($array2);
+        next($array2);
+    }
+    return;
+}
+ 
+function cmp($a, $b) {
+    if($a['n'] == $b['n']) {
+        return 0;
+    }
+    return ($a['n'] > $b['n']) ? -1 : 1;
+}
+ 
+$a = $b = array(
+    'a' => array("l" => "A", "n" => 1),
+    'b' => array("l" => "B", "n" => 2),
+    'c' => array("l" => "C", "n" => 1),
+    'd' => array("l" => "D", "n" => 2),
+    'e' => array("l" => "E", "n" => 2),
+);
+ 
+uasort($a, 'cmp');
+print_r($a);
+ 
+stable_uasort($b, 'cmp');
+print_r($b);
+也可以使用 PHP 扩展包，这里有一个扩展包 vanderlee/php-stable-sort-functions 就是专门解决这个问题的
+```
+###[PHP二进制封包](https://blog.tanteng.me/2017/01/php-pack/)
+ /**
+     * 包头二进制封包
+     * @param $length
+     * @return string
+     */
+    private function getHeaderPack($length)
+    {
+        $header = [
+            'version'     => 1,
+            'seq'         => time(),
+            'body_length' => $length,
+        ];
+        $headerPack = pack('L3', $header['version'], $header['seq'], $header['body_length']);
+        //$this->unPackHeader($headerPack);
+        return $headerPack;
+    }
+这种封包的方式本身也是一种数据加密的方式，你必须知道每个字段的类型和顺序，才能解析数据，所以这个协议的定义也要保密。
+###[SSO单点登录系统接入](https://blog.tanteng.me/2016/09/sso-access/)
+```js
+SSO 登录请求接口往往是接口加上一个回调地址，访问这个地址会跳转到回调地址并带上一个 ticket 参数，拿着这个 ticket 参数再请求接口可以获取到用户信息，如果存在用户则自动登录，不存在就新增用户并登录。
+interface SSOLogin
+{
+    /**
+     * 获取登录用户信息
+     * @param $ticket
+     * @return mixed
+     */
+    public function getInfoFromTicket($ticket);
+ 
+    /**
+     * 单点登录授权地址
+     * @return mixed
+     */
+    public function getAuthUrl();
+}
+/**
+ * 检测是否单点登录
+ * @return bool|string
+ */
+public function actionCheck()
+{
+    $ticket = Yii::$app->getRequest()->get('ticket');
+    if (!$ticket) {
+        return $this->renderAuthError('请先授权', sprintf('<a href="%s">点击登录单点登录系统</a>', SSOlogin::getInstance()->getAuthUrl()));
+    }
+    $userInfo = SSOlogin::getInstance()->getInfoFromTicket($ticket);
+    if (empty($userInfo['username'])) {
+        return $this->renderAuthError('请先授权', sprintf('<a href="%s">点击登录单点登录系统</a>', SSOlogin::getInstance()->getAuthUrl()));
+    }
+ 
+    $username = $this->getUserName($userInfo['username']);
+    $user = User::find()->canLogin()->username($username)->one();
+    if (!$user) {
+        $newUser = [];
+        $newUser['username'] = $userInfo['username'];
+        $newUser['email'] = $this->getUserName($userInfo['username']);
+        $newUser['role'] = User::ROLE_DEV;
+        $newUser['is_email_verified'] = 1;
+        $newUser['realname'] = $userInfo['truename'];
+        $user = $this->addUser($newUser);
+    }
+    $isLogin = Yii::$app->user->login($user, 3600 * 24 * 30);
+    if ($isLogin) {
+        $this->redirect('/task/index');
+    }
+    return true;
+}
+```
