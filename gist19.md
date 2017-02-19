@@ -148,10 +148,7 @@ webshot('google.com', 'google.png', function(err) {
 composer require barryvdh/laravel-dompdf:^0.6.0
 ###[如何用爬虫抓取京东商品评价](https://www.zhihu.com/question/28981353)
 ```js
-作者：路人甲
-链接：https://www.zhihu.com/question/28981353/answer/144155391
-来源：知乎
-著作权归作者所有，转载请联系作者获得授权。
+ 
 
 #endocing:utf-8
 from bs4 import BeautifulSoup
@@ -222,7 +219,203 @@ https://api.prprpr.me/weibo/negative/3306934123
 使用方法及介绍：
 
 https://www.anotherhome.net/2920
+###[老司机教你下载tumblr上视频和图片的正确姿势](https://zhuanlan.zhihu.com/p/24945262)
+https://link.zhihu.com/?target=https%3A//github.com/xuanhun/tumblr-crawler 
+###[Python时间处理完全手册](http://mp.weixin.qq.com/s/MnUpQcf-nHPJw9V9HOp5rQ)
+```js
+print time.strftime('%Y-%m-%d %H:%M:%S')
+# 获取当前日期
+today = datetime.date.today()
+print today.strftime('%Y-%m-%d')
+# Out: '2016-12-01'  # 获取当前日期
 
+now = datetime.datetime.now()
+print now.strftime('%Y-%m-%d %H:%M:%S')
+# Out: '2016-12-01 16:14:22' # 获取当前日期时间
+struct_time = time.strptime('161201 16:14:22', '%y%m%d %H:%M:%S')
+# struct_time 为一个时间元组对象
+print time.strftime('%Y-%m-%d %H:%M:%S', struct_time)
+# Out: '2016-12-01 16:14:22'
+dt = datetime.datetime.strptime('161201 16:14:22', '%y%m%d %H:%M:%S')
+# dt 为 datetime.datetime对象  # 通过调用 timetuple()方法将datetime.datetime对象转化为时间元组
+print dt.strftime('%Y-%m-%d %H:%M:%S')
+# Out: '2016-12-01 16:14:22'
+
+```
 ###[ Python 把微博数据绘制成一颗“心”](https://www.v2ex.com/t/341280)
-
+```js
+scipy‑0.18.1‑cp35‑cp35m‑win32.whl 
 完整代码：https://github.com/lzjun567
+# -*- coding:utf-8 -*-
+import codecs
+import csv
+import re
+
+import jieba.analyse
+import matplotlib.pyplot as plt
+import requests
+from scipy.misc import imread
+from wordcloud import WordCloud
+
+__author__ = 'liuzhijun'
+
+cookies = {
+    "ALF": "xxxx",
+    "SCF": "xxxxxx.",
+    "SUBP": "xxxxx",
+    "SUB": "xxxx",
+    "SUHB": "xxx-", "xx": "xx", "_T_WM": "xxx",
+    "gsScrollPos": "", "H5_INDEX": "0_my", "H5_INDEX_TITLE": "xxx",
+    "M_WEIBOCN_PARAMS": "xxxx"
+}
+
+
+def fetch_weibo():
+    api = "http://m.weibo.cn/index/my?format=cards&page=%s"
+    for i in range(1, 102):
+        response = requests.get(url=api % i, headers={"cookie":"SINAGLOBAL=4399434400256.724.1393582057383; wb_g_upvideo_2717930601=1; wb_publish_fist100_2717930601=1; YF-Ugrow-G0=b02489d329584fca03ad6347fc915997; SCF=ApAKLlfvcDWRTxdyp6K-ECZnIoyDl2tiNXrWLqQNaUqgjgZpc5-t01qsJ4cWHdnJtKnjRSCkq7EuiPfDHNLWsKo.; SUB=_2A251rJsTDeRxGeRJ6lUY8y7Kyz2IHXVW24vbrDV8PUJbmtBeLRmlkW8tlGcpiAe2Gd2hZyD50yuINbe0jA..; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WW1cajqHaL9UWbevdkzPrX95JpX5o2p5NHD95QES02N1Ke7So5pWs4Dqcj.i--RiKyFiKysi--NiK.XiKLsi--Xi-zRiKy2i--ciKn0iK.p; SUHB=079ivAWVI-aQRs; ALF=1519001259; SSOLoginState=1487465283; YF-V5-G0=a9b587b1791ab233f24db4e09dad383c; _s_tentry=login.sina.com.cn; UOR=,,login.sina.com.cn; Apache=6104702277251.093.1487465331053; ULV=1487465331062:420:8:1:6104702277251.093.1487465331053:1487376124957; YF-Page-G0=23b9d9eac864b0d725a27007679967df; tips_2717930601=1"})
+        data = response.json()[0]
+        groups = data.get("card_group") or []
+        for group in groups:
+            text = group.get("mblog").get("text")
+            text = text.encode("utf-8")
+
+            def cleanring(content):
+                """
+                去掉无用字符
+                """
+                pattern = "<a .*?/a>|<i .*?/i>|转发微博|//:|Repost|，|？|。|、|分享图片"
+                content = re.sub(pattern, "", content)
+                return content
+
+            text = cleanring(text).strip()
+            if text:
+                yield text
+
+
+def write_csv(texts):
+    with codecs.open('./weibo2.csv', 'w') as f:
+        writer = csv.DictWriter(f, fieldnames=["text"])
+        writer.writeheader()
+        for text in texts:
+            writer.writerow({"text": text})
+
+
+def read_csv():
+    with codecs.open('./weibo2.csv', 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            yield row['text']
+
+
+def word_segment(texts):
+    jieba.analyse.set_stop_words("./stopwords.txt")
+    for text in texts:
+        tags = jieba.analyse.extract_tags(text, topK=20)
+        yield " ".join(tags)
+
+
+def generate_img(texts):
+    data = " ".join(text for text in texts)
+
+    mask_img = imread('./heart-mask2.jpg', flatten=True)
+    wordcloud = WordCloud(
+        font_path='msyh.ttc',
+        background_color='white',
+        mask=mask_img
+    ).generate(data)
+    plt.imshow(wordcloud)
+    plt.axis('off')
+    plt.savefig('./heart2.jpg', dpi=600)
+
+
+if __name__ == '__main__':
+    texts = fetch_weibo()
+    write_csv(texts)
+    generate_img(word_segment(read_csv()))
+
+```
+###[Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf/tree/master/pdf)
+
+pip install requests
+pip install beautifulsoup4
+pip install pdfkit
+$ sudo apt-get install wkhtmltopdf  # ubuntu
+$ sudo yum intsall wkhtmltopdf      # centos
+python crawler.py
+###[下载各种编程语言文档的网站](https://www.v2ex.com/t/340798#reply12)
+http://devdocs.io/  看云的广场里面有很多技术文档 http://www.kancloud.cn/explore
+###[开源书籍 《 Python 数据结构》](https://www.v2ex.com/t/340583#reply100)
+
+github 地址: https://github.com/facert/python-data-structure-cn
+gitbook 在线浏览: https://facert.gitbooks.io/python-data-structure-cn
+###[PHP Compsoer 使用以及常用的一些 Package](https://www.v2ex.com/t/340204#reply6)
+###[开源一个爬虫代理框架](https://www.v2ex.com/t/340272#reply43)
+github 地址： https://github.com/awolfly9/IPProxyTool
+###[通过测试公众号模版消息推送，能够实时获知服务器的状态](https://github.com/iakisey/ServerMsgPush)
+###[谁成就了微博段子手杜蕾斯](https://www.v2ex.com/t/340095#reply3)
+数据展示用 ECharts 做的： 
+http://res.crossincode.com/code/weibo/durex.html https://github.com/zx576/Crossin-practices/tree/master/weibo 
+###[用 Vue 实现了 strml.net 的效果](https://www.v2ex.com/t/339958#reply55)
+https://jirengu-inc.github.io/animating-resume/dist/  源码： https://github.com/jirengu-inc/animating-resume 饥人谷出品：一个会动的简历
+strml.net 抄的这个 http://codepen.io/jakealbaugh/full/JoVrdw/
+###[2016 年你所在的行业发生了哪些变化分析器](https://www.v2ex.com/t/339380#reply4)
+直接围观： https://labs.getweapp.com/
+###[微信一键自动拜年脚本](https://www.v2ex.com/t/336244#reply21)
+git clone https://github.com/HanSon/vbot.git
+cd vbot
+composer install
+php example/bainian.php
+https://github.com/vonnyfly/wechat-sendall
+网址收藏应用： http://mybookmark.cn/
+###[简单的视频下载器，支持 youtube 与 B 站](https://www.v2ex.com/t/339114#reply56)
+GitHub releases ： https://github.com/sorrowise/viedo_downloader/releases
+https://github.com/rg3/youtube-dl 
+###[加密的内容是 jquery](https://www.v2ex.com/t/338725#reply13)
+```js
+$uid = 13922; 
+
+$url = 'http://api.expoon.com/XmlKrpano/getCrptyXml/uid/' . $uid; 
+
+$data = file_get_contents($url); 
+
+$data = substr($data, 2, -2); //去掉不需要的内容 
+
+$key = $uid % 10; //得到 key 
+
+$data = str_replace('$', $key, $data); //进行替换 
+
+$data = base64_decode($data); // base64 解码 
+
+var_dump($data);//输出内容
+```
+###[markdown 的所见即所得编辑器](https://www.v2ex.com/t/338391#reply119)
+[Artizen.cc]一个独立作品收集站点
+在浏览器端无需插件即可多人视频的站https://www.v2ex.com/t/337390#reply25
+输入房间名创建房间后只需要将 URL 发给朋友，一键即可加入
+比如: https://lawsroom.com/room/ROOM_NAME
+GitHub:https://github.com/HFO4/HideByPixel
+
+Demo:https://hide.aoaoao.me/
+[把文字写进像素里] 基于像素微调实现的文字隐写术https://www.v2ex.com/t/337138#reply63
+ PHP 写的一个文字直播，协作编辑的工具https://www.v2ex.com/t/336102#reply19 
+ http://pad.laravel.band/pad/home
+ 
+GitBook《十大经典排序算法》JavaScript 实现https://www.v2ex.com/t/335773#reply16
+https://github.com/hustcc/JS-Sorting-Algorithm GitHook 在线阅读地址：https://sort.hust.cc/
+Javascript - 一个支持中文的摩斯密码转换库开源地址在这里：https://github.com/hustcc/xmorse
+
+demo 地址：http://git.hust.cc/xmorse
+https://www.v2ex.com/t/334965#reply2
+Python requests SSL: CERTIFICATE_VERIFY_FAILED 错误https://www.v2ex.com/t/334435#reply20
+requests.packages.urllib3.disable_warnings()
+Medoo 中文文档地址：http://lonewolf.oschina.io/medoo/  https://www.v2ex.com/t/333158#reply20
+ markdown 转换为类似于下面的 html 页面https://www.v2ex.com/t/333132#reply1
+ 微信命令行版本终端 github 地址： https://github.com/liushuchun/wechatcmd
+ https://github.com/lbbniu/WebWechat https://github.com/Urinx/WeixinBot 
+ pip install git+https://github.com/dabeaz/curio.git
+ http://res.crossincode.com/other/heart.html https://www.v2ex.com/t/333050#reply88
+ http://zichi.date/2015/love-on-20150214/ 
+ 程序员怎样用自己的专业技能给女朋友惊喜https://www.v2ex.com/t/333050#reply88
+  fork 简历的小工具https://www.v2ex.com/t/333153#reply2 https://github.com/remrain/fork-this-resume
+  python whl http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy
