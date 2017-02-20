@@ -390,6 +390,7 @@ $data = base64_decode($data); // base64 解码
 var_dump($data);//输出内容
 ```
 ###[markdown 的所见即所得编辑器](https://www.v2ex.com/t/338391#reply119)
+```js
 [Artizen.cc]一个独立作品收集站点
 在浏览器端无需插件即可多人视频的站https://www.v2ex.com/t/337390#reply25
 输入房间名创建房间后只需要将 URL 发给朋友，一键即可加入
@@ -419,9 +420,10 @@ Medoo 中文文档地址：http://lonewolf.oschina.io/medoo/  https://www.v2ex.c
  程序员怎样用自己的专业技能给女朋友惊喜https://www.v2ex.com/t/333050#reply88
   fork 简历的小工具https://www.v2ex.com/t/333153#reply2 https://github.com/remrain/fork-this-resume
   python whl http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy
-  ###[最省心的Python版本和第三方库管理——初探Anaconda](https://zhuanlan.zhihu.com/p/25198543)
+###[最省心的Python版本和第三方库管理——初探Anaconda](https://zhuanlan.zhihu.com/p/25198543)
   
   不过很少有以anaconda入门的教程，给人一种先学Python再学numpy scipy的感觉。其实从一开始就用anaconda能少很多事，不论是版本和库的管理，还是iPython交互的命令行、spyder编辑器，当然我现在最常用的还是jupyter notebook。
+```
 ###[Python爬虫|Python爬虫入门（四）：储存](https://zhuanlan.zhihu.com/p/21452812)
   ```js
   #Python列表or元组与csv的转换
@@ -493,7 +495,7 @@ r3.raw.read()   #读取文件
 ###[Python对微信好友进行简单统计分析](https://zhuanlan.zhihu.com/p/21967333?refer=passer)
 https://www.zhihu.com/question/36132174/answer/145997723?group_id=814232716034871296
 ###[爬虫带你逛知乎](https://zhuanlan.zhihu.com/p/25133425)
-#下载图片 
+```js
 def downloadimage(urllist):
     for url in urllist:
         ir = s.get(url,headers=HEADERS)
@@ -501,6 +503,7 @@ def downloadimage(urllist):
             open('images\%s' %(url.split(r'/')[-1]), 'wb').write(ir.content)
 
  https://link.zhihu.com/?target=https%3A//github.com/kimg1234/pachong/
+```
 ###[Shapecollage：超好用的拼图工具](https://zhuanlan.zhihu.com/p/25151315)
 ###[天猫商品评论 ](http://www.yunya.pw/?post=18)
 GitHub https://github.com/cooperxiong/py-crawlers  http://www.yunya.pw/?post=5
@@ -659,6 +662,7 @@ print (nr / 50)
 
 ```
 ###[JavaScript闭包的经典面试题有点不懂](https://segmentfault.com/q/1010000008395390)
+```js
 for (var i = 0; i < 10; ++i) {
     setTimeout(function () {console.log(i)}, 0);
 }
@@ -670,8 +674,9 @@ for (var i = 0; i < 10; ++i) {
         setTimeout(function () {console.log(i)}, i * 100);
     })(i)
 }
+```
 ###[js 函数中属性定义的疑问](https://segmentfault.com/q/1010000008392972)
-
+```js
 function a()
             {
                 this.showMsg = function()
@@ -708,8 +713,9 @@ a.showMsg = function()
 
     var b = new a(); //调用了a的构造函数,给b添加了showMsg属性
     b.showMsg();     //"haha" 调用成功,b是a的实例
-    
+```
 ###[合并相同值的键的实现方法](https://segmentfault.com/q/1010000008399710)
+```js
 >>> a = [1,2,3,4,5,6]
 >>> b = [7,7,9,8,8,8]
 >>> d={}
@@ -728,6 +734,7 @@ dica = dict([reduce(lambda v, e: (int(str(v[0])+str(e[0])), k), g) for k, g in
 groupby(dic_a.items(), lambda v: v[1])])
 >>> dica
 >>> {3: 9, 12: 7, 456: 8}
+```
 ###[ajax使用post方法传递数据](https://segmentfault.com/q/1010000008400321)
 xhr.open('get','m.php?date='+cdate,true);  //cdate是获取的日期值
 xhr.send();
@@ -746,7 +753,7 @@ select '*' from admin和select * from admin是不同的。
 xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded"); 
 xhr.send('date='+cdate); //cdate是获取的日期值
 ###[php中break 2 和 continue 2](https://segmentfault.com/q/1010000008396915)
-
+```js
 foreach($arr1 as $value1)
     {
         foreach($value1 as $value2)
@@ -760,7 +767,9 @@ foreach($arr1 as $value1)
         }
     
     }
-###[往后1个月的时间戳](https://segmentfault.com/q/1010000008391749)
+```
+###[php往后1个月的时间戳](https://segmentfault.com/q/1010000008391749)
+```js
 ALTER TABLE tablename CONVERT TO CHARSET utf8; （输入这句命令后，可以插入含中文的记录）
 ALTER TABLE tablename DEFAULT CHARSET utf8; （然而输入完这句，再插入含中文的记录时，会报错）
 $date = new DateTime('2019-11-23');
@@ -784,7 +793,9 @@ function xufei($add_num)
 }
 
 echo date('Y-m-d', xufei(5)); 
+```
 ###[spl_autoload_register()](https://segmentfault.com/q/1010000008393605)
+```js
 function auto($class){
     if（file_exists("./class/".$class.".php")) {
         require("./class/".$class.".php");
@@ -797,6 +808,7 @@ function aa($class){
 }
 spl_autoload_register("auto");
 spl_autoload_register("aa");
+```
 ###[laravel在执行php artisan出现内容不足](https://segmentfault.com/q/1010000008393245)
 sudo vim /etc/php/7.1/fpm/php.ini 把 memory_limit设定为 -1，即不对php的memory做限制。
 
@@ -805,6 +817,7 @@ memory_limit = -1
 
 Model created successfully.
 ###[php 静态方式调用非静态方法](https://segmentfault.com/q/1010000008391485)
+```js
 <?php
 class A
 {
@@ -854,8 +867,9 @@ class B {
 
 (new B)->callNonStaticMethodOfA();
 ?>
+```
 ###[通过for循环创建对象型数组](https://segmentfault.com/q/1010000008392011)
-
+```js
 var arr=[]
 var k={}
 k.num=0
@@ -878,6 +892,7 @@ for(i = 0; i < 4; i++)
         name: b[i]
     })
 }
+```
 ###[python如何让减价乘除变成变量之后再变回来](https://segmentfault.com/q/1010000008389427)
 a = 1
 b = 2
@@ -890,6 +905,7 @@ for opt in ["+", "-", "*", "/"]:
 ###[React和Vue的初学demo](https://segmentfault.com/q/1010000008374402)
 https://github.com/SimonZhangITer/VueDemo_Sell_Eleme
 ###[login_log表转换成last_login表](https://segmentfault.com/q/1010000008382051)
+```js
 把这张表转换成一张名为last_login的表，它只记录每个用户最近一次登录事件
 INSERT 
 INTO 
@@ -912,12 +928,14 @@ FROM
 WHERE
     log.user_id= last_log.user_id
 AND log.login_time= last_log.last_login_time;
+```
 ###[Linux 中php读写文件时，是Linux中的哪个用户在读写的](https://segmentfault.com/q/1010000008384308)
 ps -ef |grep php-fpm
 显示如下： www 38216 38215 0 Feb13 ? 00:00:02 nginx: worker process
 
 这个www 用户 在.conf 里面user 可以配置
 ###[Python request 上传文件](https://segmentfault.com/q/1010000008378921)
+```js
 curl --form file=@/home/test/sample.png --form username=test@noreply.com --form password=test --insecure --form lang[0]=cn --form lang[1]=jp --form langs[2]=en https://www.example.com/api
 
 files = {'file': open('test.png', 'rb')}
@@ -929,6 +947,7 @@ with open('filename1', 'rb') as f1, open('filename2', 'rb') as f2:
     }
     
     response = requests.post(url, files=files_to_upload)
+```
 ###[python如何根据关键字查询进程](https://segmentfault.com/q/1010000008380240)
 import os
 
@@ -940,6 +959,7 @@ session默认是个会话文件, 存在服务器端的, sessid就是会话文件
 那既然用sessid可以标识会话的唯一性, 那你能拿到它，自然也就可以登录别人的网站了. 你自己可以做个实验验证一下, 把segmentfault网站的cookie中的phpsessid拷贝到另一个浏览器上, 你会发现另一个浏览器也登录了
 ###[GitHub 支持的 emoji ](http://www.webpagefx.com/tools/emoji-cheat-sheet/)
 ###[laravel多表查询](https://segmentfault.com/q/1010000008016729)
+```js
 通过user表里的用户id查询order表里订单的详细信息，然后通过order里的aid查询account账号的账号信息
 //在模型中设置关联
 class Order extends Model
@@ -966,6 +986,7 @@ function fibonacci(n){
 }
 checkout . 放弃修改，可是发现新建的文件夹和文件夹内的内容并没有被删除掉
 因为新建的文件夹和文件是 ‘Untracked files’ ，想放弃他们可以用 git clean -fd 
+```
 ###[禁止手机键盘上的表emoji情输入](https://segmentfault.com/q/1010000008357920)
 // 输入时删除emoji字符
 $("input").on("input", function(){
@@ -977,10 +998,11 @@ $("input").on("input", function(){
 ###[php-cgi和php-fpm有什么关系?](https://segmentfault.com/q/1010000008356979)
 ###[php中preg_replace匹配问题](https://segmentfault.com/q/1010000008356679)
  \11将会使preg_replace() 不能理解你希望的是一个\1后向引用紧跟一个原文1，还是 一个\11后向引用后面不跟任何东西。 这种情况下解决方案是使用${1}1
- ###[背包算法PHP或Javascript实现方案](https://segmentfault.com/q/1010000008357070)
- ###[Python list转换成字符串](https://segmentfault.com/q/1010000008350777)
- str([[[1, 2], [1, 2]], [[3, 4], [3, 4]]])
- ###[PHP关于递归和无限级分类](https://segmentfault.com/q/1010000008352829)
+###[背包算法PHP或Javascript实现方案](https://segmentfault.com/q/1010000008357070)
+###[Python list转换成字符串](https://segmentfault.com/q/1010000008350777)
+str([[[1, 2], [1, 2]], [[3, 4], [3, 4]]])
+###[PHP关于递归和无限级分类](https://segmentfault.com/q/1010000008352829)
+```js
 Chrome DevTools —JS调试https://segmentfault.com/a/1190000008396389
 面试感悟----一名3年工作经验的程序员应该具备的技能http://www.cnblogs.com/xrq730/p/5260294.html 
 你真的了解如何将Nginx配置为Web服务器吗http://mp.weixin.qq.com/s/jYd9WkLOAvv6RfxfSa_PYg
@@ -990,3 +1012,5 @@ NumPy v1.11手册http://python.usyiyi.cn/translate/NumPy_v111/index.html
 PHP实现微信开放平台扫码登录源码https://dev.21ds.cn/article/36.html
 从0到1学习node系列总索引https://www.xiabingbao.com/node/2017/01/08/node-list.html
 Python微信智能回复http://lafree317.github.io/2017/02/16/%E5%BE%AE%E4%BF%A1%E6%99%BA%E8%83%BD%E5%9B%9E%E5%A4%8D/
+图片处理 支持中文http://www.shapecollage.com/help  http://ostagram.ru/queue_images/new?locale=cn 
+```
