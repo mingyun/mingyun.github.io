@@ -1014,3 +1014,112 @@ PHP实现微信开放平台扫码登录源码https://dev.21ds.cn/article/36.html
 Python微信智能回复http://lafree317.github.io/2017/02/16/%E5%BE%AE%E4%BF%A1%E6%99%BA%E8%83%BD%E5%9B%9E%E5%A4%8D/
 图片处理 支持中文http://www.shapecollage.com/help  http://ostagram.ru/queue_images/new?locale=cn 
 ```
+###[php坑](https://github.com/TIGERB/easy-tips/blob/master/pit.md#%E8%AE%B0%E4%B8%80%E4%BA%9B%E5%9D%91)
+```js
+/**
+ * 超级调试
+ *
+ * 调试非本地环境或分布式环境，通过Log查看变量传递
+ * 写入变量值到\var\log\php_super_debug.log
+ * @param  mixed  $data     日志数据
+ * @param  string $log_path 日志路径
+ * @param  string $log_name 日志名称
+ * @return void       
+ */
+function super_debug($data, $log_path='\var\log\', $log_name='debug')
+{
+  error_log(json_encode($data, JSON_UNESCAPED_UNICODE)."\n", 3, $log_path.$log_name);
+}
+// php实现下载图片
+
+header('Content-type: image/jpeg');
+header('Content-Disposition: attachment; filename=download_name.jpg');
+readfile($yourFilePath);
+// php5.6开始干掉了@语法，php上传图片兼容版本写法
+
+if (class_exists('\CURLFile')) {
+    curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
+    $data = array('file' => new \CURLFile(realpath($destination)));//5.5+
+} else {
+    if (defined('CURLOPT_SAFE_UPLOAD')) {
+        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, false);
+    }
+    $data = array('file' => '@' . realpath($destination));//<=5.5
+}
+```
+###[redis订阅](https://github.com/TIGERB/easy-tips/blob/master/redis/subscribe-publish/subscribe.php)
+```js
+// ini_set(‘default_socket_timeout’, -1);
+  $redis = new \Redis();
+  $redis->pconnect('127.0.0.1', 6379);
+  //订阅
+  echo "订阅msg这个频道，等待消息推送... \n";
+  $redis->subscribe(['msg'], 'callfun');
+  function callfun($redis, $channel, $msg)
+  {
+   print_r([
+     'redis'   => $redis,
+     'channel' => $channel,
+     'msg'     => $msg
+   ]);
+  }
+  
+   //发布
+  $redis = new \Redis();
+  $redis->connect('127.0.0.1', 6379);
+  $redis->publish('msg', '来自msg频道的推送');
+  echo "msg频道消息推送成功～ \n";
+  $redis->close();
+  
+  // 监视 count 值
+$redis->watch('count');
+// 开启事务
+$redis->multi();
+// 操作count
+$time = time();
+$redis->set('count', $time);
+//-------------------------------
+/**
+ * 模拟并发下其他进程进行set count操作 请执行下面操作
+ *
+ * redis-cli 执行 $redis->set('count', 'is simulate'); 模拟其他终端
+ */
+sleep(10);
+//-------------------------------
+// 提交事务
+$res = $redis->exec();
+if ($res) {
+  // 成功...
+  echo 'success:' . $time;
+  return;
+}
+// 失败...
+echo 'fail:' . $time;
+
+```
+###[php排序算法](https://github.com/TIGERB/easy-tips/blob/master/algorithm/sort/quick.php)
+```js
+/**
+  * 选择排序.
+  *
+  * @param  array $value 待排序数组
+  *
+  * @return array
+  */
+  function select_sort(&$value=[])
+  {
+    $length = count($value)-1;
+    for ($i=0; $i < $length; $i++) {
+      $point = $i;// 最小值索引
+      for ($j=$i+1; $j <= $length; $j++) {
+        if ($value[$point] > $value[$j]) {
+          $point = $j;
+        }
+      }
+      $tmp = $value[$i];
+      $value[$i] = $value[$point];
+      $value[$point] = $tmp;
+    }
+    return $value;
+  }
+```
