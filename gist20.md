@@ -135,3 +135,52 @@ python PyCmd.py -u http://192.168.10.149:8080/Test/1.jsp -p test [--proxy]
 https://github.com/tengzhangchao/InForMation 
 information.exe -i start -L start -s start  运行所有功能
 information.exe -i start  运行收集系统信息功能
+###[算法分析](https://github.com/facert/python-data-structure-cn/tree/master/2.%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/2.2.%E4%BB%80%E4%B9%88%E6%98%AF%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90)
+```js
+import time
+
+def sumOfN2(n):
+    start = time.time()
+
+    theSum = 0
+    for i in range(1,n+1):
+        theSum = theSum + i
+
+    end = time.time()
+
+    return theSum, end-start
+    
+    def sumOfN3(n):
+   return (n*(n+1))/2
+
+print(sumOfN3(10))
+```
+###[根据ip获取地理位置](https://github.com/maxmind/GeoIP2-php)
+```js
+php composer.phar require geoip2/geoip2:~2.0
+
+require_once 'vendor/autoload.php';
+use GeoIp2\Database\Reader;
+
+// This creates the Reader object, which should be reused across
+// lookups.
+$reader = new Reader('/usr/local/share/GeoIP/GeoIP2-City.mmdb');
+
+// Replace "city" with the appropriate method for your database, e.g.,
+// "country".
+$record = $reader->city('128.101.101.101');
+
+print($record->country->isoCode . "\n"); // 'US'
+print($record->country->name . "\n"); // 'United States'
+print($record->country->names['zh-CN'] . "\n"); // '美国'
+
+print($record->mostSpecificSubdivision->name . "\n"); // 'Minnesota'
+print($record->mostSpecificSubdivision->isoCode . "\n"); // 'MN'
+
+print($record->city->name . "\n"); // 'Minneapolis'
+
+print($record->postal->code . "\n"); // '55455'
+
+print($record->location->latitude . "\n"); // 44.9733
+print($record->location->longitude . "\n"); // -93.2323
+```
