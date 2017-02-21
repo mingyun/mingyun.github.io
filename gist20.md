@@ -40,15 +40,95 @@ print b
 
 https://github.com/tengzhangchao/PyShell/
 ###[基于Python的WebServer](http://thief.one/2016/09/14/%E5%9F%BA%E4%BA%8EPython%E7%9A%84WebServer/)
+```js
 https://github.com/tengzhangchao/PyWebServer 
 python PyWebServer.py -h
 python PyWebServer.py -i 10.0.0.1 -p 8888   ##指定ip与端口,默认为8888
 PyWebServer.exe -h  
 PyWebServer.exe -p 8888      ##指定端口,默认为8888
+[*Tag]  Http Server is runing on 172.16.11.179:8888
+#!coding=utf-8
+import sys
+import socket
+import argparse
+import BaseHTTPServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
 
+
+def run(ip,port):
+	Handler = SimpleHTTPRequestHandler
+	Server = BaseHTTPServer.HTTPServer
+	Protocol = "HTTP/1.0"	
+	server_address = (ip, port)
+	Handler.protocol_version = Protocol
+	try:
+		httpd = Server(server_address, Handler)
+		print "[*Tag]	Http Server is runing on %s:%s" % (ip,port)
+
+	except:
+		print "[*Tag]	%s PORT Employ or IP Address Error" % str(port)
+
+	try:
+		httpd.serve_forever()
+	except:
+		sys.exit()
+
+
+def get_ip():
+	try:
+		myname=socket.getfqdn(socket.gethostname())
+		myaddr=socket.gethostbyname(myname)
+	except:
+		print "[*Error]	Get IP address Faile"
+	return myaddr
+
+
+if __name__=="__main__":
+
+	parser=argparse.ArgumentParser()
+	parser.add_argument("-p","--port",help="Server Port ,Default:8888",default=8888,type=int)
+	parser.add_argument("-i","--ip",help="Server IP Address",default="")
+	args=parser.parse_args()
+
+	port=args.port
+	ip=args.ip
+	
+	if ip=="":
+		ip=get_ip()          #自动获取本机ip地址
+
+	run(ip,port)         #运行主函数
+	php获取本机ip echo gethostbyname('');
+	function get_local_ip() {  
+    $preg = "/\A((([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\.){3}(([0-9]?[0-9])|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\Z/";  
+//获取操作系统为win2000/xp、win7的本机IP真实地址  
+    exec("ipconfig", $out, $stats);  
+    if (!empty($out)) {  
+        foreach ($out AS $row) {  
+            if (strstr($row, "IP") && strstr($row, ":") && !strstr($row, "IPv6")) {  
+                $tmpIp = explode(":", $row);  
+                if (preg_match($preg, trim($tmpIp[1]))) {  
+                    return trim($tmpIp[1]);  
+                }  
+            }  
+        }  
+    }  
+//获取操作系统为linux类型的本机IP真实地址  
+    exec("ifconfig", $out, $stats);  
+    if (!empty($out)) {  
+        if (isset($out[1]) && strstr($out[1], 'addr:')) {  
+            $tmpArray = explode(":", $out[1]);  
+            $tmpIp = explode(" ", $tmpArray[1]);  
+            if (preg_match($preg, trim($tmpIp[0]))) {  
+                return trim($tmpIp[0]);  
+            }  
+        }  
+    }  
+    return '127.0.0.1';  
+}  
+```
 ###[PyCmd 加密隐形木马](http://thief.one/2016/09/18/PyCmd-%E5%8A%A0%E5%AF%86%E9%9A%90%E5%BD%A2%E6%9C%A8%E9%A9%AC/)
 
-	https://github.com/tengzhangchao/PyCmd
+https://github.com/tengzhangchao/PyCmd
 python PyCmd.py -u http://10.0.3.13/test/p.php -p test [--proxy]
 python PyCmd.py -u http://192.168.10.149:8080/Test/1.jsp -p test [--proxy]
 ###[windows服务器信息收集工具](http://thief.one/2016/09/04/windows%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%B7%A5%E5%85%B7/)
