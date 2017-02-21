@@ -184,3 +184,74 @@ print($record->postal->code . "\n"); // '55455'
 print($record->location->latitude . "\n"); // 44.9733
 print($record->location->longitude . "\n"); // -93.2323
 ```
+###[简单轻量的HTTP 客户端工具库](https://github.com/toohamster/ws-http/)
+```js
+composer require toohamster/ws-http
+$httpRequest = \Ws\Http\Request::create();
+$headers = array('Accept' => 'application/json');
+$query = array('foo' => 'hello', 'bar' => 'world');
+
+$response = $httpRequest->post('http://mockbin.com/request', $headers, $query);
+
+$response->code;        // 请求响应码(HTTP Status code)
+$response->curl_info;   // curl信息(HTTP Curl info)
+$response->headers;     // 响应头(Headers)
+$response->body;        // 处理后的响应消息体(Parsed body), 默认为 false
+$response->raw_body;    // 原始响应消息体(Unparsed body)
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "http://mockbin.com/request?foo=bar&foo=baz",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\"foo\": \"bar\"}",
+  CURLOPT_COOKIE => "foo=bar; bar=baz",
+  CURLOPT_HTTPHEADER => array(
+    "accept: application/json",
+    "content-type: application/json",
+    "x-pretty-print: 2"
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}
+import requests
+
+url = "http://mockbin.com/request"
+
+querystring = {"foo":["bar","baz"]}
+
+payload = "{\"foo\": \"bar\"}"
+headers = {
+    'cookie': "foo=bar; bar=baz",
+    'accept': "application/json",
+    'content-type': "application/json",
+    'x-pretty-print': "2"
+    }
+
+response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
+
+print(response.text)
+curl --request POST \
+  --url 'http://mockbin.com/request?foo=bar&foo=baz' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'x-pretty-print: 2' \
+  --cookie 'foo=bar; bar=baz' \
+  --data '{"foo": "bar"}'
+```
+###[python煎蛋妹子图下载](https://github.com/picasso250/jiandan)
+https://www.zhihu.com/question/28485416 
