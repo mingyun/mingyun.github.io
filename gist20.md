@@ -36,3 +36,22 @@ a="\\u8fdd\\u6cd5\\u8fdd\\u89c4" # unicode转化为中文
 b=a.decode('unicode-escape')
 print b
 ```
+###[PyShell 木马后门](http://thief.one/2016/09/05/PyShell-%E6%9C%A8%E9%A9%AC%E5%90%8E%E9%97%A8/)
+
+https://github.com/tengzhangchao/PyShell/
+###[基于Python的WebServer](http://thief.one/2016/09/14/%E5%9F%BA%E4%BA%8EPython%E7%9A%84WebServer/)
+https://github.com/tengzhangchao/PyWebServer 
+python PyWebServer.py -h
+python PyWebServer.py -i 10.0.0.1 -p 8888   ##指定ip与端口,默认为8888
+PyWebServer.exe -h  
+PyWebServer.exe -p 8888      ##指定端口,默认为8888
+
+###[PyCmd 加密隐形木马](http://thief.one/2016/09/18/PyCmd-%E5%8A%A0%E5%AF%86%E9%9A%90%E5%BD%A2%E6%9C%A8%E9%A9%AC/)
+
+	https://github.com/tengzhangchao/PyCmd
+python PyCmd.py -u http://10.0.3.13/test/p.php -p test [--proxy]
+python PyCmd.py -u http://192.168.10.149:8080/Test/1.jsp -p test [--proxy]
+###[windows服务器信息收集工具](http://thief.one/2016/09/04/windows%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%B7%A5%E5%85%B7/)
+https://github.com/tengzhangchao/InForMation 
+information.exe -i start -L start -s start  运行所有功能
+information.exe -i start  运行收集系统信息功能
