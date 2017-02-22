@@ -522,3 +522,65 @@ if __name__ == "__main__":
     path = "."  
     classifyPictures(path)  
 ```
+###[Python使用过程中常见问题汇总](http://lanbing510.info/2014/11/14/Python-Problems.html)
+数据库SQLite3使用时中文编码问题
+Python连接数据时进行如下设置：
+
+db=sqlite3.connection("...")
+db.text_factory=str
+改变Python输出流的编码方式f=codecs.open('out.html','w','utf-8')
+import codecs, sys
+old=sys.stdout
+sys.stdout = codecs.lookup('iso8859-1')[-1]( sys.stdout)
+###[正则表达式及在Python中的使用](http://lanbing510.info/2014/09/20/Regular-Expression.html)
+```js
+管道符号（|）表示的或操作  匹配任意一个单个字符串（.）
+从字符串开头或结尾或单词边界开始匹配（^, $, \b, \B）
+
+使用方括号（[]）的表达式，会匹配方括号内的任何一个字符b[aeiu]t  #可匹配bat, bet, bit, but
+指定范围（-）和否定（^）
+z.[r-u]  #匹配z符号后面跟任意一个字符，然后再跟一个r, s, t, u中的任意一个字符的字符串
+[^aeiou]  #匹配一个非元音字符
+使用闭包操作符（*, +, ?, {}）实现多次出现/重复匹配
+
+星号（*）表示匹配它左边的正则表达模式零次或以上
+
+加号（+）表示匹配它左边的正则表达模式一次或以上
+
+问号（?）表示匹配他左边的正则表达模式零次或一次
+
+花边符号（{}），里面可以是单个数，也可以是一对值，如{N}表示匹配N次，{M,N}表示匹配M次到N次。
+
+a*b+c?[0-9]{11,15}  #匹配开始为零个或以上，后面跟一个以上的b和最多一个c和11到15个数字的字符串
+\d+(\.\d*)?  #匹配简单浮点数，同时，如果有小数点后，会将其存入子组。
+>>> m=re.match('(\w\w\w)-(\d\d\d)','abc-123')
+>>> m.group()
+'abc-123'
+>>> m.group(1)
+'abc'
+>>> m.groups()
+('abc','123')
+>>> re.findall('car','carry the barcardi to the car')
+['car','car','car']
+>>> re.sub('[ae]','X','abcdef')
+'XbcdXf'
+我们想截获末尾数字的字段
+
+>>> patt = '.+(\d+-\d+-\d+)'
+>>> re.match(patt,'Thu Feb 15 uzifzf@dpyivihw.gov::1171590364-6-8').group(1) #str是上述字符串
+'4-6-8'
+正则表达式本事模式的是贪心匹配，也就是从左到右尽量抓取最长的字符串 可以使用“非贪婪”操作符“?”来解决问题。
+
+>>> patt='.+?(\d+-\d+-\d+)'
+>>> re.match(patt,str).group(1)
+1171590364-6-8
+>>> s='abcde'
+>>> for i in [None]+range(-1,-len(s),-1): #使用None作为索引值来实现s[:-1]打印出abcde
+...     print s[:i]
+... 
+abcde
+abcd
+abc
+ab
+a
+```
