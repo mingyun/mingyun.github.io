@@ -255,3 +255,270 @@ curl --request POST \
 ```
 ###[python煎蛋妹子图下载](https://github.com/picasso250/jiandan)
 https://www.zhihu.com/question/28485416 
+###[Python获取Chrome浏览器已保存的所有账号密码](http://www.lijiejie.com/python-get-chrome-all-saved-passwords/)
+```js
+#https://github.com/lijiejie/chromePass
+import os, sys
+import shutil
+import sqlite3
+import win32crypt
+
+outFile_path = os.path.join(os.path.dirname(sys.executable),
+                            'ChromePass.txt') 
+if os.path.exists(outFile_path):
+    os.remove(outFile_path)
+
+
+db_file_path = os.path.join(os.environ['LOCALAPPDATA'],
+                            r'Google\Chrome\User Data\Default\Login Data')
+tmp_file = os.path.join(os.path.dirname(sys.executable), 'tmp_tmp_tmp')
+if os.path.exists(tmp_file):
+    os.remove(tmp_file)
+shutil.copyfile(db_file_path, tmp_file)    # In case file locked
+conn = sqlite3.connect(tmp_file)
+for row in conn.execute('select username_value, password_value, signon_realm from logins'):
+    pwdHash = str(row[1])
+    try:
+        ret =  win32crypt.CryptUnprotectData(pwdHash, None, None, None, 0)
+    except:
+        print 'Fail to decrypt chrome passwords'
+        sys.exit(-1)
+    with open(outFile_path, 'a+') as outFile:
+        outFile.write('UserName: {0:<20} Password: {1:<20} Site: {2} \n\n'.format(
+            row[0].encode('gbk'), ret[1].encode('gbk'), row[2].encode('gbk')) )
+conn.close()
+print 'All Chrome passwords saved to:\n' +  outFile_path
+os.remove(tmp_file)    # Remove temp file
+```
+###[程序员有哪些平时自己开发的小工具来简便工作](https://www.zhihu.com/question/28485416)
+爬豆瓣找好书工具https://link.zhihu.com/?target=https%3A//github.com/lanbing510/DouBanSpider 
+```js
+#-*- coding: UTF-8 -*-
+
+import sys
+import time
+import urllib
+import urllib2
+import requests
+import numpy as np
+from bs4 import BeautifulSoup
+from openpyxl import Workbook
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+
+
+#Some User Agents
+hds=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'},\
+{'User-Agent':'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11'},\
+{'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
+
+
+def book_spider(book_tag):
+    page_num=0;
+    book_list=[]
+    try_times=0
+    
+    while(1):
+        #url='http://www.douban.com/tag/%E5%B0%8F%E8%AF%B4/book?start=0' # For Test
+        url='http://www.douban.com/tag/'+urllib.quote(book_tag)+'/book?start='+str(page_num*15)
+        time.sleep(np.random.rand()*5)
+        
+        #Last Version
+        try:
+            req = urllib2.Request(url, headers=hds[page_num%len(hds)])
+            source_code = urllib2.urlopen(req).read()
+            plain_text=str(source_code)   
+        except (urllib2.HTTPError, urllib2.URLError), e:
+            print e
+            continue
+  
+        ##Previous Version, IP is easy to be Forbidden
+        #source_code = requests.get(url) 
+        #plain_text = source_code.text  
+        
+        soup = BeautifulSoup(plain_text)
+        list_soup = soup.find('div', {'class': 'mod book-list'})
+        
+        try_times+=1;
+        if list_soup==None and try_times<200:
+            continue
+        elif list_soup==None or len(list_soup)<=1:
+            break # Break when no informatoin got after 200 times requesting
+        
+        for book_info in list_soup.findAll('dd'):
+            title = book_info.find('a', {'class':'title'}).string.strip()
+            desc = book_info.find('div', {'class':'desc'}).string.strip()
+            desc_list = desc.split('/')
+            book_url = book_info.find('a', {'class':'title'}).get('href')
+            
+            try:
+                author_info = '作者/译者： ' + '/'.join(desc_list[0:-3])
+            except:
+                author_info ='作者/译者： 暂无'
+            try:
+                pub_info = '出版信息： ' + '/'.join(desc_list[-3:])
+            except:
+                pub_info = '出版信息： 暂无'
+            try:
+                rating = book_info.find('span', {'class':'rating_nums'}).string.strip()
+            except:
+                rating='0.0'
+            try:
+                #people_num = book_info.findAll('span')[2].string.strip()
+                people_num = get_people_num(book_url)
+                people_num = people_num.strip('人评价')
+            except:
+                people_num ='0'
+            
+            book_list.append([title,rating,people_num,author_info,pub_info])
+            try_times=0 #set 0 when got valid information
+        page_num+=1
+        print 'Downloading Information From Page %d' % page_num
+    return book_list
+
+
+def get_people_num(url):
+    #url='http://book.douban.com/subject/6082808/?from=tag_all' # For Test
+    try:
+        req = urllib2.Request(url, headers=hds[np.random.randint(0,len(hds))])
+        source_code = urllib2.urlopen(req).read()
+        plain_text=str(source_code)   
+    except (urllib2.HTTPError, urllib2.URLError), e:
+        print e
+    soup = BeautifulSoup(plain_text)
+    people_num=soup.find('div',{'class':'rating_sum'}).findAll('span')[1].string.strip()
+    return people_num
+
+
+def do_spider(book_tag_lists):
+    book_lists=[]
+    for book_tag in book_tag_lists:
+        book_list=book_spider(book_tag)
+        book_list=sorted(book_list,key=lambda x:x[1],reverse=True)
+        book_lists.append(book_list)
+    return book_lists
+
+
+def print_book_lists_excel(book_lists,book_tag_lists):
+    wb=Workbook(optimized_write=True)
+    ws=[]
+    for i in range(len(book_tag_lists)):
+        ws.append(wb.create_sheet(title=book_tag_lists[i].decode())) #utf8->unicode
+    for i in range(len(book_tag_lists)): 
+        ws[i].append(['序号','书名','评分','评价人数','作者','出版社'])
+        count=1
+        for bl in book_lists[i]:
+            ws[i].append([count,bl[0],float(bl[1]),int(bl[2]),bl[3],bl[4]])
+            count+=1
+    save_path='book_list'
+    for i in range(len(book_tag_lists)):
+        save_path+=('-'+book_tag_lists[i].decode())
+    save_path+='.xlsx'
+    wb.save(save_path)
+
+
+
+
+if __name__=='__main__':
+    #book_tag_lists = ['心理','判断与决策','算法','数据结构','经济','历史']
+    #book_tag_lists = ['传记','哲学','编程','创业','理财','社会学','佛教']
+    #book_tag_lists = ['思想','科技','科学','web','股票','爱情','两性']
+    #book_tag_lists = ['计算机','机器学习','linux','android','数据库','互联网']
+    #book_tag_lists = ['数学']
+    #book_tag_lists = ['摄影','设计','音乐','旅行','教育','成长','情感','育儿','健康','养生']
+    #book_tag_lists = ['商业','理财','管理']  
+    #book_tag_lists = ['名著']
+    #book_tag_lists = ['科普','经典','生活','心灵','文学']
+    #book_tag_lists = ['科幻','思维','金融']
+    book_tag_lists = ['个人管理','时间管理','投资','文化','宗教']
+    book_lists=do_spider(book_tag_lists)
+    print_book_lists_excel(book_lists,book_tag_lists)
+```
+###[八阿哥bug管理工具｜简单、够用、免费](https://link.zhihu.com/?target=http%3A//www.bugclose.com)
+###[链家爬虫](http://lanbing510.info/2016/03/15/Lianjia-Spider.html)
+###[ProGit-读书简记](http://lanbing510.info/2016/12/07/ProGit.html)
+###[知乎上赞同数最高的999个回答](http://lanbing510.info/2016/04/14/ZhiHu-Good-Answers.html)
+###[使用Wget下载整个网站](http://lanbing510.info/2015/12/11/Wget.html)
+```js
+wget --recursive --no-clobber --page-requisites --html-extension --convert-links --restrict-file-names=windows --domains lampweb.org --no-parent www.lampweb.org/linux/
+--recursive 递归下载整个站点
+
+--no-clobber 不要覆盖已有文件(以防下载被中断而重新开始)
+
+--domains lampweb.org 不要下载lampweb.org以外的链接地址
+
+--no-parent 不要下载org/linux/目录之外的内容
+
+--page-requisites 下载所有页面需要的元素(图像、CSS等等)
+
+--html-extention 只下载html相关的文件
+
+--convert-links 转换链接地址，从而本地离线可以正常访问
+
+--restrict-file-names=windows 修改文件名以使文件也可以在windows下访问(某些情况文件名在Linux下合法而在windows下非法)。
+```
+###[按拍摄日期一键归类照片 Python](http://lanbing510.info/2015/09/21/ClassifyPictures.html)
+```js
+# -*- coding: gbk -*-  
+
+""" 
+功能：对照片按照拍摄时间进行归类 
+使用方法：将脚本和照片放于同一目录，双击运行脚本即可 
+作者：冰蓝 一键归类所有的照片，按照拍摄日期归类到年月相应的文件夹
+"""  
+
+import shutil  
+import os  
+import time  
+import exifread  
+
+
+class ReadFailException(Exception):  
+    pass  
+
+def getOriginalDate(filename):  
+    try:  
+        fd = open(filename, 'rb')  
+    except:  
+        raise ReadFailException, "unopen file[%s]\n" % filename  
+    data = exifread.process_file( fd )  
+    if data:  
+        try:  
+            t = data['EXIF DateTimeOriginal']  
+            return str(t).replace(":",".")[:7]  
+        except:  
+            pass  
+    state = os.stat(filename)  
+    return time.strftime("%Y.%m", time.localtime(state[-2]))  
+
+
+def classifyPictures(path):  
+    for root,dirs,files in os.walk(path,True):  
+        dirs[:] = []  
+        for filename in files:  
+            filename = os.path.join(root, filename)  
+            f,e = os.path.splitext(filename)  
+            if e.lower() not in ('.jpg','.png','.mp4'):  
+                continue  
+            info = "文件名: " + filename + " "  
+            t=""  
+            try:  
+                t = getOriginalDate( filename )  
+            except Exception,e:  
+                print e  
+                continue  
+            info = info + "拍摄时间：" + t + " "  
+            pwd = root +'\\'+ t  
+            dst = pwd + '\\' + filename  
+            if not os.path.exists(pwd ):  
+                os.mkdir(pwd)  
+            print info, dst  
+            shutil.copy2( filename, dst )  
+            os.remove( filename )  
+
+if __name__ == "__main__":  
+    path = "."  
+    classifyPictures(path)  
+```
