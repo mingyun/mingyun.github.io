@@ -828,3 +828,76 @@ https://www.secpulse.com/archives/category/vul
 可以看到并没有使用MySQL预处理的方式，而是进行的转义。所以使用预处理方式需要将PDO::ATTR_EMULATE_PREPARES设置为false。
 ![img](http://www.secpulse.com/wp-content/uploads/2016/09/phpsec8.jpg)
 ###[用python DIY一个图片转pdf工具并打包成exe ](http://www.cnblogs.com/MrLJC/p/4261339.html)
+###[laravel核心理解 ServiceProvider(服务提供者) Container(容器) Facades(门面)](http://elickzhao.github.io/2017/01/laravel%E6%A0%B8%E5%BF%83%E7%90%86%E8%A7%A3%20ServiceProvider(%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85)%20Container(%E5%AE%B9%E5%99%A8)%20Facades(%E9%97%A8%E9%9D%A2)/)
+```js
+服务提供者: 是绑定服务到容器的工具.
+
+容器: 是laravel装载服务提供者提供的服务实例的集合或对象
+
+门面: 使用这些服务的快捷方式.也就是静态方法.
+在一个服务提供者中，可以通过 $this->app 变量访问容器，然后使用 bind 方法注册一个绑定，该方法需要两个参数，第一个参数是我们想要注册的类名或接口名称，第二个参数是返回类的实例的闭包
+namespace App\Providers;
+use Riak\Connection;
+use Illuminate\Support\ServiceProvider;
+class RiakServiceProvider extends ServiceProvider
+{
+    /**
+     * 在容器中注册绑定。
+     *
+     * @return void
+     */
+    public function register()
+    {   //这是5.3写法
+        $this->app->singleton(Connection::class, function ($app) {
+            return new Connection(config('riak'));
+        });
+        //5.2以前这么写 $this->app->singleton('Riak\Contracts\Connection', function ($app){...}
+        // Connection::class 返回的就是命名空间字符串(可以看另一个我的文章),所以跟5.2是一样的.  
+        //这里千万注意'Riak\Contracts\Connection'是个字符串,相当于在容器中定义了一个名字并把实例赋值给了这个名字.
+        //并没有其他更高深的含义
+        //所以只要在 config/app 下的provider数组里 注册一下就可以使用了
+    }
+}
+服务容器的一个非常强大的特性是其绑定接口到实现的能力。我们假设有一个 EventPusher 接口及其 RedisEventPusher 实现，编写完该接口的 RedisEventPusher 实现后，就可以将其注册到服务容器：
+当想要换掉EventPusher,很方便你不需要改别的地方的代码只要在provider把绑定类换掉就可以了,换成另一个实现了 EventPusher 类就ok了. 当然还有更强大一个接口绑定多个实现,然后根据条件选择使用的类
+use App\Contracts\EventPusher;
+/**
+ * 创建一个新的类实例
+ *
+ * @param  EventPusher  $pusher
+ * @return void
+ */
+public function __construct(EventPusher $pusher){
+    $this->pusher = $pusher;
+}
+绑定到容器后,就是注册到Provider,让 laravel 可以自动加载
+
+这次很简单 就是添加到 config/app.php 下的 Provider数组里
+use App\Contracts\EventPusher;
+/**
+ * 创建一个新的类实例
+ *
+ * @param  EventPusher  $pusher
+ * @return void
+ */
+public function __construct(EventPusher $pusher){
+    $this->pusher = $pusher;
+}
+public function test(){
+    //当然还可以手动调用 
+    $fooBar = $this->app->make('FooBar');
+    //其次，你可以以数组方式访问容器，因为其实现了 PHP 的 ArrayAccess 接口：
+    $fooBar = $this->app['FooBar'];
+}
+
+```
+###[vue.js 中国好教程](http://elickzhao.github.io/2016/10/vue.js%20%E4%B8%AD%E5%9B%BD%E5%A5%BD%E6%95%99%E7%A8%8B/)
+###[laravel插件记录](http://elickzhao.github.io/2016/06/laravel%E6%8F%92%E4%BB%B6%E8%AE%B0%E5%BD%95/)
+###[SQLSTATE[HY000] [2002] No such file or directory 报错处理](http://elickzhao.github.io/2016/11/SQLSTATE[HY000]%20[2002]%20No%20such%20file%20or%20directory%20%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/)
+打开 php.ini 添加 /var/lib/mysql/mysqld.sock 默认为空
+// mysql.default_socket =  // php7里已经没有了这个
+pdo_mysql.default_socket=/var/lib/mysql/mysqld.sock // 默认是空的,这个就是新添加的地址
+mysqli.default_socket =/var/lib/mysql/mysqld.sock
+php7 以后就不实用mysql这个驱动了 而使用mysqlnd 所以你在phpinfo()里不会再看到mysql项
+重启php-fpm 需要用 ps aux|grep php 命令查看 php-fpm 的 pid,然后 kill pid.这里注意啊 要是多个php-fpm一定要看配置文件位置,不要删错了.
+###[]()
