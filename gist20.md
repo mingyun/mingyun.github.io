@@ -791,5 +791,40 @@ if __name__ == '__main__':
   
   获取网页源码 driver.execute_script("return document.documentElement.innerHTML")
   WebDriverWait(self.driver, timeout=10).until(has_page_load) 直到网页加载完成
-    
+ 
+ 
+>>> vhall='http://xxxx.com/auth/login'
+>>> s=requests.Session()
+>>> s.post(vhall,{"account":"admin","password":"111111","_token":"mbjAjsn7XLl
+yOgsy0XLDRzAqQHdFgntfJKvH4yNJ"})
+<Response [200]>
+>>> s.cookies
+<<class 'requests.cookies.RequestsCookieJar'>[Cookie(version=0, name='laravel_se
+ssion', value='eyJpdiI6IlJJdlZYR0h2dmR0TEN3XC9yNUVIYSt3PT0iLCJ2YWx1ZSI6IkxkU2FCV
+Et0UlFqV3o2ODZxSlh0UnlsV1wvY2Y1bTZwVGFwYVRNUnlWRkhXUDhNUzVEWm94a0V6eTR0RkFxcyt5T
+lFweTMzamtaVUdmYVB4ZlhiRG9MQT09IiwibWFjIjoiNGZlNGJiZWE2YmE4OTM5YWE0MmFiZGMyZjExY
+TI5NTU0ZGEzZjMzOTAxZDU1OWFhM2JkODFlOTA1MTA0NWRjYiJ9', port=None, port_specified=
+False, domain='t.e.vhall.com', domain_specified=False, domain_initial_dot=False,
+ path='/', path_specified=True, secure=False, expires=None, discard=True, commen
+t=None, comment_url=None, rest={'HttpOnly': None}, rfc2109=False)]>
+>>> s.post('http://xxx.com/json').json()
+>>> requests.post('http://xxx.com/json',cookies=s.cookies
+).json()
+>>> res=requests.get(vhall).content
+>>> re.findall(r'_token',res)
+['_token', '_token']
+>>> re.findall(r'_token" value="(.*)"',res)
+['NcqhZ8oSRxHqj1TGRtZVYdOKLrtddwKOk3pRmD3S', 'NcqhZ8oSRxHqj1TGRtZVYdOKLrtddwKOk3
+pRmD3S']
 ```
+###[php漏洞FineCMS后台getshell ](http://0day5.com/archives/4150)
+https://www.secpulse.com/archives/category/vul 
+###[浅谈PHP安全开发](https://www.secpulse.com/archives/51987.html)
+
+预处理过程中，程序会将SQL执行分为两次发送给MySQL，第一次发送预声明SQL语句,形如select *from users where username = ?第二次发送执行绑定的参数值
+由于是将SQL语句和值分开发送的，再由MySQL内部执行，这样就不会出现执行非预期的SQL语句情况。预处理可以说是最简单有效的防止SQL注入的方式。
+
+不过使用预处理方式也是有条件的，PDO中有一个属性PDO::ATTR_EMULATE_PREPARES，默认是true，它将强制PDO总是模拟预处理语句。
+可以看到并没有使用MySQL预处理的方式，而是进行的转义。所以使用预处理方式需要将PDO::ATTR_EMULATE_PREPARES设置为false。
+![img](http://www.secpulse.com/wp-content/uploads/2016/09/phpsec8.jpg)
+###[用python DIY一个图片转pdf工具并打包成exe ](http://www.cnblogs.com/MrLJC/p/4261339.html)
