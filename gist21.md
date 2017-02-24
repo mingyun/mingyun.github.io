@@ -514,3 +514,90 @@ do
    curl -X POST -v -d 'programid=367' http://m.kaolafm.com/meizuapi/act/program/like?_=1444888956034
 done
 ```
+###拼接sql
+```js
+$array = array(
+      "name" => "John",
+      "surname" => "Doe",
+      "email" => "j.doe@intelligence.gov"
+   );
+
+   // build query...
+   $sql  = "INSERT INTO table";
+
+   // implode keys of $array...
+   $sql .= " (`".implode("`, `", array_keys($array))."`)";
+
+   // implode values of $array...
+  // echo $sql .= " VALUES ('".implode("', '", $array)."') ";
+  echo $sql .= " VALUES ('".implode("', '", $array)."') ";
+  INSERT INTO table (`name`, `surname`, `email`) VALUES ('John', 'Doe', 'j.doe@intelligence.gov')
+  
+  $num = array(1,200,4,5);
+echo $ids = implode('","', $num);
+echo $sql = 'select id from test where user_id in ("'.$ids.'") ';//where user_id in ("1","200","4","5")
+```
+###json_decode无法识别十六进制的ASCII字
+```js
+$response = '{"retcode":"0","retmsg":"OK","cre_id_enc":"","cre_type":"","fee_type":"1","listid":"1221085301201410240000001024","out_trade_no":"201410246763831","partner":"1221085301","pay_fee":"0","sign":"PTamau\x2BjkynA00cASKJ6Nd3QwFSBP44TKSqmmdCd\x2F\x2B0o8ViSt3fp5vQr0Fc73U42NhtImfnHzbynoUjURiNLW5O4hI61xkG\x2F97JRPRE0nHuvtAumqXfbVCsLveugE52HRZsJvm3EG7pL6GlhYf8ng6qxiUrDyn89PFVZ04Wd8Gk\x3D","total_fee":"1000000","unfreeze_fee":"1000000","user_name_enc":""}';
+//json中包含十六进制的ASCII字符，所以json_decode无法识别，返回NULL。http://www.yunxiu.org/wenda/39/json_decode-%E8%BF%94%E5%9B%9Enull%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F
+print_r( json_decode($response,true));//null
+$response = iconv('ASCII', 'UTF-8//IGNORE', $response);
+$response = str_ireplace( '\x', '\\\\x', $response );
+print_r( json_decode($response,true));
+```
+###call_user_func
+```js
+function foobar($arg, $arg2) {
+    echo __FUNCTION__, " got $arg and $arg2\n";
+}
+class foo {
+    function bar($arg, $arg2) {
+        echo __METHOD__, " got $arg and $arg2\n";
+    }
+}
+// Call the foobar() function with 2 arguments
+call_user_func_array("foobar", array("one", "two"));
+// Call the $foo->bar() method with 2 arguments
+$foo = new foo;
+call_user_func_array(array($foo, "bar"), array("three", "four"));
+```
+###unicode转中文
+```js
+function unicode2utf8_2($str){	//关于unicode编码转化的第二个函数，用于显示emoji表情
+        $str = '{"result_str":"'.$str.'"}';	//组合成json格式
+	$strarray = json_decode($str,true);	//json转换为数组，利用 JSON 对 \uXXXX 的支持来把转义符恢复为 Unicode 字符（by 梁海）
+	return $strarray['result_str'];
+    }
+ 
+echo unicode2utf8_2("\u4E2D");//中
+```
+###ip2long负数
+```js
+// 在32位的机子上，echo ip2long('192.168.1.38');由于超过32位的最大数，导致输出负数-1062731482。有两种方法更新为正数
+// 一种方法是是修改PHP程序，使存入数据库的肯定存入正数
+echo $ip_long = bindec(decbin(ip2long('192.168.1.38')));
+echo $ip_long  = sprintf("%u", ip2long('192.168.1.38'));
+// 另一种是将mysql的这个字段使用int，非UNSIGNED，使其可以存入负数。  
+/*mysql存储这个值是字段需要用int UNSIGNED。不用UNSIGNED的话，128以上的IP段就存储不了了。传统的方法，创建varchar(15)，需要占用15个字节，而改时使用int只需要4字节，可以省一些字节。
+http://gblog.hbcf.net/index.php/archives/739
+php存入时：$ip = ip2long($ip);   
+php取出时:$ip = long2ip($ip);   
+mysql取出时：SELECT INET_ATON(ip) FROM table ... */
+function chk_ip($ip){ 
+   if(ip2long($ip)=="-1" ||  ip2long($ip)  ===  FALSE ) { 
+      return false; 
+   } 
+   return true; 
+} 
+var_export(chk_ip("10.111.149.42")); //true
+var_export(chk_ip("10.111.256.42")); //false
+```
+###浮点数显示
+```js
+$f = 12132435556776658;
+echo $f; echo '<br>';
+printf('%.0f',$f);echo '<br>';
+echo number_format($f,0,'','');
+echo '<br>';
+```
