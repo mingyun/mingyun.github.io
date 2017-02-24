@@ -635,7 +635,7 @@ pattern = re.compile(r';var newsList=([\s\S]*)')
 使用zRangeByScore作定时发布
 最近工作上有个需求，需要在文章发布的时候做一些动作，正常发布没有什么问题，但是定时发布的时候无法监控动作，后来想到了一个解决方案，使用Redis的有序集合，score设置为时间戳，每隔一段时间定时取出Redis中小于等于当前时间戳的值，然后zRemove。
 ###[一道算法题，取出数组中出现次数为奇数的元素](https://iwww.me/551.html)
-
+```js
 result = []
 for x in L:
     tmp_sum = 0
@@ -653,6 +653,7 @@ for x in L:
         tmp[x] = 1
 	
 	第一种时间复杂度是O(n2），第二种是O(n)
+```
 ###[PHP header下载文件中文名乱码](https://iwww.me/315.html)
 header("Content-Type: application/x-bittorrent");
 header("Content-Disposition: attachment; filename=" . "$torrentnameprefix." . rawurlencode($row["save_as"] .".torrent") . ";filename*=". "$torrentnameprefix." . rawurlencode($row["save_as"] .".torrent"));
@@ -664,3 +665,84 @@ print(benc($dict));
 #mv /etc/my.cnf /etc/my.cnf 
 #mv /etc/mysql/my.cnf /etc/mysql/my.cnf.bak                       //如果存在这个文件
 #service mysql restart
+###[Linux下sendmail启动及发送邮件很慢的问题&解决](https://iwww.me/74.html)
+```js
+原来sendmail只认网络主机名，还要在主机名后面加上.localdomain（或者直接写成网站域名）,下面放出我使用的服务器的配置文件 /etc/hosts 1
+ 
+ 
+127.0.0.1 localhost www.uulm.net
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 www.uulm.net
+10.90.22.100 www.uulm.net
+/etc/sysconfig/network 1
+ 
+NETWORKING=yes
+HOSTNAME=uulm.net
+NETWORKING_IPV6=no
+PEERNTP=no
+GATEWAY=58.96.171.247
+然后重启sendmail服务，很快启动了，测试一下
+mail -s title email@domain < mail.txt
+```
+###[Jquery.post回调函数不执行原因&解决](https://iwww.me/67.html)
+```js
+$.post(handle_url,{username:username.val(),content:content.val()},function(data){
+	alert(data);
+},'json');
+$.ajax({url:handle_url,type:"POST",data:{name:"shit"},dataType:"html",timeout:1000,
+	error:function(XMLHttpRequest, textStatus, errorThrown) {
+        alert(XMLHttpRequest.status);
+        alert(XMLHttpRequest.readyState);
+        alert(textStatus);},
+	success:function(data){
+	alert(data);
+	}
+});
+
+JS弹出框的错误信息分别是200、4、parseerror，前两个状态正常，最后一个说明是语法错误，看了一下服务端的php页面，php页面返回的是html，但是$.post接收的却是json格式，所以，将之改为html或者为空（智能判断）即可。$.ajax和$.post功能基本一致，$.ajax可以执行，$.post也不会有问题。Jquery.post回调函数不执行的原因可能不止这一种
+```
+###[Nginx因日志问题无法启动](https://iwww.me/113.html)
+```js
+#vim /usr/local/nginx/logs/error.log
+2014/09/01 11:50:43 [emerg] 1630#0: duplicate "log_format" name "ad.xuulm.com" in /usr/local/nginx/conf/vhost/default.conf:3
+大概意思就是日志文件重复，根据提示， 1
+#vim /usr/local/nginx/conf/vhost/default.conf
+因为ad.xuulm.com.conf已经配置,所以讲之替换为default，保存之后重新启动Nginx，发现还是有问题，重新打开日志查看错误信息： 1
+unknown log format "tz.xuulm.com" in /usr/local/nginx/conf/vhost/default.conf:30
+查看了一下虚拟主机，没有发现tz.xuulm.com，于是打开配置文件 1
+#vim /usr/local/nginx/conf/vhost/default.conf
+```
+###[PHP一个函数BUG——strtotime()](https://iwww.me/313.html)
+```
+if (get_user_class() < $commanage_class) {
+			if (strtotime($CURUSER['last_comment']) > (TIMENOW - 10))
+			{
+				$secs = 10 - (TIMENOW - strtotime($CURUSER['last_comment']));
+				stderr($lang_comment['std_error'],$lang_comment['std_comment_flooding_denied']."$secs".$lang_comment['std_before_posting_another']);
+			}
+		}
+		
+		这个函数计算时间的时候是按每个月30天算的，这个月是12月，有31天，所以就出现了问题
+```
+###[Python变量的赋值、引用传递、值传递](https://iwww.me/500.html)
+```js
+>>> a = {'name': 'killer', 'age':24}
+>>> b = a
+>>> del a['name']
+>>> b
+>>> {'age': 24}
+a = 1
+print(id(a))
+b = a
+print(id(b))
+a = 2
+print(id(a))
+print(id(b))
+
+>>> import copy
+>>> a = {'name': 'killer', 'age':24}
+>>> b = copy.copy(a)
+>>> del a['name']
+>>> b
+>>> {'name': 'killer', 'age':24}
+```
+###[MySql启动出现The server quit without updating PID file错误解决过程](https://iwww.me/240.html)
