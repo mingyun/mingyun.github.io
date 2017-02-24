@@ -601,3 +601,66 @@ printf('%.0f',$f);echo '<br>';
 echo number_format($f,0,'','');
 echo '<br>';
 ```
+###[MySQL在order by的字段值相同的情况下排序的依据](https://iwww.me/647.html)
+遇到了一个MySQL的比较奇怪的现象，两个查询语句，其中一个where比另外一个多了一个条件，筛掉一个结果，但是其他的查询结果顺序全乱了，说起来不太容易听懂，直接看sql和结果：
+
+![img](http://iwww.me/uploads/thumbs/20170217/11762542609409365_720x350.png)
+这个基本无解，因为排序条件就不确定，同样的sql，如果排序条件不确定可能在不同的MySQL版本、服务器环境、配置都会返回不同的结果，只有一个办法，就是让排序一定要明确，比如在order by最后添加id desc。
+
+参考链接：http://stackoverflow.com/questions/6662837/how-mysql-order-the-rows-with-same-values
+###[系统时间不正确导致composer update失败](https://iwww.me/646.html)
+
+SSL operation failed with code 1. OpenSSL Error messages: 
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+看描述是SSL错误，但是检查了一下，本地的OpenSSL是没问题的，弄了半天，突然想起前两天系统时间有点不对，然后date查看了一下时间，竟然慢了7天左右，估计是因为系统时间导致SSL证书认证失败，然后设置时间，时区设置正确之后还是不行，相差7天，弄了半天，重启了Docker，好了，再次更新，成功
+###[Nginx遇到的一个坑](https://iwww.me/640.html)
+
+location /jijin {
+    return 404;
+}
+http://domain.com/jijinx/jijin/2016-08/9342772.html
+/jijinx匹配到了/jijin，所以返回了404，要写成/jijin/才行。
+###[Python正则表达式匹配.*遇到换行符](https://iwww.me/639.html)
+import urllib
+import re
+import json
+
+url = 'http://news.163.com/special/00014RJU/nationalnews-json-data.js'
+result = urllib.urlopen(url).read().strip()
+pattern = re.compile(r';var newsList=(.*)')
+matchs = pattern.match(result)
+print(matchs.group())
+
+pattern = re.compile(r';var newsList=([\s\S]*)')
+使用zRangeByScore作定时发布
+最近工作上有个需求，需要在文章发布的时候做一些动作，正常发布没有什么问题，但是定时发布的时候无法监控动作，后来想到了一个解决方案，使用Redis的有序集合，score设置为时间戳，每隔一段时间定时取出Redis中小于等于当前时间戳的值，然后zRemove。
+###[一道算法题，取出数组中出现次数为奇数的元素](https://iwww.me/551.html)
+
+result = []
+for x in L:
+    tmp_sum = 0
+    for y in L:
+        if x == y:
+            tmp_sum += 1
+    if tmp_sum % 2 == 1 and x not in result:
+        result.append(x)
+	
+	tmp = {}
+for x in L:
+    if x in tmp:
+        del tmp[x]
+    else:
+        tmp[x] = 1
+	
+	第一种时间复杂度是O(n2），第二种是O(n)
+###[PHP header下载文件中文名乱码](https://iwww.me/315.html)
+header("Content-Type: application/x-bittorrent");
+header("Content-Disposition: attachment; filename=" . "$torrentnameprefix." . rawurlencode($row["save_as"] .".torrent") . ";filename*=". "$torrentnameprefix." . rawurlencode($row["save_as"] .".torrent"));
+print(benc($dict));
+###[MySQL Restart&Start Failed : The server quit without updating PID file](https://iwww.me/242.html)
+#ps aux | grep mysql
+#kill -9 2987
+#service mysql restart
+#mv /etc/my.cnf /etc/my.cnf 
+#mv /etc/mysql/my.cnf /etc/mysql/my.cnf.bak                       //如果存在这个文件
+#service mysql restart
