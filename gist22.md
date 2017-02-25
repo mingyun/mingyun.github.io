@@ -336,3 +336,160 @@ gradeUrl = 'http://jwxt.sdu.edu.cn:7890/pls/wwwbks/bkscjcx.curscopre'
 result = opener.open(gradeUrl)
 print result.read()
 ```
+###[前端开发面试题](https://github.com/markyun/My-blog/tree/master/Front-end-Developer-Questions)
+
+###[《The Way to Go》中文译本，中文正式名《Go入门指南》](https://github.com/sushengbuhuo/the-way-to-go_ZH_CN)
+###[文件下载服务](https://github.com/LyricTian/snail)
+$ go get -u github.com/LyricTian/snail
+$ cd github.com/LyricTian/snail
+$ go build -o snail
+$ ./snail
+在浏览器中打开http://localhost:8099
+###[PHP接入微信退款接口](https://segmentfault.com/a/1190000006561282)
+https://github.com/helei112g/payment 
+###[微信的三种支付方式接入：APP支付、公众号支付、扫码支付](https://helei112g.github.io/2016/08/10/微信的三种支付方式接入：APP支付、公众号支付、扫码支付/)
+
+三种支付方式返回值因为处理方式不同，微信方面返回了不同的类型。
+
+app支付返回了需要调用的数组。调用客户端的方式 查看微信文档
+扫码支付返回了一个地址。可生成一个二维码，完成支付。
+公众号支付，返回的是一个json数据。可直接放入微信的sdk完成jsapi调用。
+```js
+use Payment\ChargeContext;
+use Payment\Config;
+use Payment\Common\PayException;
+
+// 微信支付，必须设置时区，否则发生错误
+date_default_timezone_set('Asia/Shanghai');
+
+//  生成订单号 便于测试
+function createPayid()
+{
+    return date('Ymdhis', time()).substr(floor(microtime()*1000),0,1).rand(0,9);
+}
+
+// 订单信息
+$payData = [
+    "order_no"	=> createPayid(),
+    "amount"	=> '0.01',// 单位为元 ,最小为0.01
+    "client_ip"	=> '127.0.0.1',
+    "subject"	=> '测试支付',
+    "body"	=> '支付接口测试',
+    "extra_param"	=> '',
+];
+
+// 微信扫码支付，需要设置的参数
+$payData['product_id']  = '123456';
+
+// 微信公众号支付，需要的参数
+$payData['openid'] = 'otijfvr2oMz3tXnaQdKKbQeeBmhM';// 需要通过微信提供的api获取该openid
+
+/**
+ * 包含客户的配置文件
+ * 本次 2.0 版本，主要的改变是将配置文件独立出来，便于客户多个账号的情况
+ * 已经使用不同方式读取配置文件，如：db  file   cache等
+ */
+$wxconfig = [
+    'app_id'    => 'wxxxx',  // 公众账号ID
+    'mch_id'    => 'xxxx',// 商户id
+    'md5_key'   => 'xxxxxx',// md5 秘钥
+
+    'notify_url'    => 'http://test.helei.com/pay-notify.html',
+    'time_expire'	=> '14',
+
+    // 涉及资金流动时，需要提供该文件
+    'cert_path' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'wx' . DIRECTORY_SEPARATOR . 'apiclient_cert.pem',
+    'key_path'  => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'wx' . DIRECTORY_SEPARATOR . 'apiclient_key.pem',
+];
+
+/**
+ * 实例化支付环境类，进行支付创建
+ */
+$charge = new ChargeContext();
+
+try {
+
+    // 微信 扫码支付
+    $type = Config::WX_CHANNEL_QR;
+
+    // 微信 APP支付
+    //$type = Config::WX_CHANNEL_APP;
+
+    // 微信 公众号支付
+    //$type = Config::WX_CHANNEL_PUB;
+    $charge->initCharge($type, $wxconfig);
+    $ret = $charge->charge($payData);
+} catch (PayException $e) {
+    echo $e->errorMessage();exit;
+}
+
+if ($type === Config::WX_CHANNEL_QR) {
+    $url = urlencode($ret);
+    echo "<img alt='扫码支付' src='http://paysdk.weixin.qq.com/example/qrcode.php?data={$url}' style='width:150px;height:150px;'/>";
+} elseif ($type === Config::WX_CHANNEL_PUB) {
+    $json = $ret;
+    var_dump($json);exit;
+} elseif (stripos($type, 'wx') !== false) {
+    var_dump($ret);
+}
+```
+###[vagrant系列五：Vagrant使用中遇到的坑](https://helei112g.github.io/2016/10/30/vagrant系列五：Vagrant使用中遇到的坑/)
+###[PHP中浮点数位数截取性能大比拼](https://helei112g.github.io/2017/02/16/PHP中浮点数位数截取性能大比拼/)
+```js
+$data = array_fill(0, 1, range(1, 100000, 1.1))[0];
+
+$start = microtime(true);
+foreach ($data as $num) {
+    number_format(10000, 2, '.', '');
+}
+$end = microtime(true);
+$need = $end - $start;
+print("number_format time: {$need}" . PHP_EOL);
+
+$start = microtime(true);
+foreach ($data as $num) {
+    bcadd($num, 0, 2);
+}
+$end = microtime(true);
+$need = $end - $start;
+print("bcadd time: {$need}" . PHP_EOL);
+
+$start = microtime(true);
+foreach ($data as $num) {
+    sprintf('.2%f', $num);
+}
+$end = microtime(true);
+$need = $end - $start;
+print("sprintf time: {$need}" . PHP_EOL);
+number_format time: 0.086385011672974
+bcadd time: 0.098035097122192
+sprintf time: 0.069508075714111
+```
+###[APP后端开发系列：登陆系统设计中的注意问题](https://helei112g.github.io/2016/07/12/1-APP后端开发系列：登陆系统设计中的注意问题/)
+
+验证通过后，把用户uid+username+salt等md5后，作为token返回到客户端。
+对token加入时间戳，过期后客户端重新提交username + pwd验证后再发一个token到客户端
+服务端生成一个token后下发到客户端，客户端按照约定的规则加密后请求服务端。
+
+，参考oauth2.0，我现在采用以下方案：
+
+用户提交username + pwd后，服务端返回以下信息：
+{
+    "access_token":"2YotnFZFEjr1zCsicMWpAA",
+    "expires_in":3600,
+    "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA"
+}
+access_token 是用来进行访问的接口的，expires_in 是他的过期时间，到达过期时间后，需要用 refresh_token 来请求服务端刷新 access_token。
+
+这里几个重点是：refresh_token 仅能使用一次，使用一次后，将被废弃。另外这个 access_token 只在 expires_in 有效期内有效。
+访问频率控制 就把 access_token 与这些关联起来。这里需要用到redis。当用户A进来访问了 a接口 那么设置这个token 5s内不能再次访问。
+if ($redis->get($key)) {
+    // 无法访问，还未到时间
+    
+    return ;
+}
+
+// 设置频率控制key
+$redis->setex($key, $expires, $value);
+
+// 访问接口
