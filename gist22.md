@@ -130,9 +130,84 @@ http://link.zhihu.com/?target=http%3A//affinelayer.com/pixsrv/
 
 已经不是填色那么简单了，它可以将灵魂画手的线稿变成逼真的实物图。
 
+###[【Git操作系列】Git由浅入深之安装与配置](https://zhuanlan.zhihu.com/p/25348278?refer=dreawer)
+###[领导让你去扒网站 ](https://www.zhihu.com/question/56238870)
+wget -p -H -e robots=off https://www.baidu.com
+###[装修的你还在为油烟机选择发愁吗？---抓取老板和方太数据](https://zhuanlan.zhihu.com/p/25397997)
 
+```js
+作者：Python爱好者
+链接：https://zhuanlan.zhihu.com/p/25397997
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
 
+#价格是单独获取的 在network的js中
+import json
+def Price(url):
+    newurl1=url.split('/')[-1].strip('.html')
+    newurl2='http://pas.suning.com/nspcsale_0_000000000'
+    newurl3='_000000000'
+    newurl4='_0000000000_110_551_5510101_20358_1000002_9001_10008_Z001__.html?'
+    newurl=newurl2+newurl1+newurl3+newurl1+newurl4
+    res2=requests.get(newurl)
+    res2.encoding='utf-8'
+    res2=json.loads(res2.text.lstrip("pcData(").rstrip(")\n"))
+return res2['data']['price']['saleInfo'][0]['netPrice']
 
+#获取商品参数的keys
+def Getparam(url):
+    res1=requests.get(url)
+    res1.encoding='utf-8'
+    soup1=BeautifulSoup(res1.text,'html.parser')
+    a=soup1.select('#itemParameter')[0].text
+    a=a.split('\n\n\n')
+    a.remove('\n\n主体')
+    b=['价格']
+for each1 in range(len(a)):
+if each1%2==0:
+            b.append(a[each1])
+return b[:-1]
+
+#获取商品参数的values
+def Getparam1(url):
+    res1=requests.get(url)
+    res1.encoding='utf-8'
+    soup1=BeautifulSoup(res1.text,'html.parser')
+    a=soup1.select('#itemParameter')[0].text
+    a=a.split('\n\n\n')
+    a.remove('\n\n主体')
+    b=[Price(url)]
+for each1 in range(len(a)):
+if each1%2==1:
+            b.append(a[each1])
+return b
+
+#生成字典 目的是用字典生成dataframe
+def Getgroup(url):
+return dict(zip(Getparam(url),Getparam1(url)))
+```
+###[自动化IT工具ansible使用指南](https://zhuanlan.zhihu.com/p/25387801)
+###[7 款 Python 数据图表工具的比较](https://zhuanlan.zhihu.com/p/25390965)
+###[如何用一个循环语句输出九九乘法表？](https://www.zhihu.com/question/55768263)
+```js
+t = """1*1=1
+2*1=2 2*2=4
+3*1=3 3*2=6 3*3=9
+4*1=4 4*2=8 4*3=12 4*4=16
+5*1=5 5*2=10 5*3=15 5*4=20 5*5=25
+6*1=6 6*2=12 6*3=18 6*4=24 6*5=30 6*6=36
+7*1=7 7*2=14 7*3=21 7*4=28 7*5=35 7*6=42 7*7=49
+8*1=8 8*2=16 8*3=24 8*4=32 8*5=40 8*6=48 8*7=56 8*8=64
+9*1=9 9*2=18 9*3=27 9*4=36 9*5=45 9*6=54 9*7=63 9*8=72 9*9=81
+"""
+
+for i in [0]:
+    print(t)
+
+ 
+```
+###[不能翻墙的情况下，如何更新chrome？](https://www.zhihu.com/question/34931031)
+https://link.zhihu.com/?target=http%3A//chrome.wbdacdn.com/  chrome更新工具。
 
 
 
