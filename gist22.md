@@ -136,10 +136,7 @@ wget -p -H -e robots=off https://www.baidu.com
 ###[装修的你还在为油烟机选择发愁吗？---抓取老板和方太数据](https://zhuanlan.zhihu.com/p/25397997)
 
 ```js
-作者：Python爱好者
-链接：https://zhuanlan.zhihu.com/p/25397997
-来源：知乎
-著作权归作者所有，转载请联系作者获得授权。
+ 
 
 #价格是单独获取的 在network的js中
 import json
@@ -208,6 +205,134 @@ for i in [0]:
 ```
 ###[不能翻墙的情况下，如何更新chrome？](https://www.zhihu.com/question/34931031)
 https://link.zhihu.com/?target=http%3A//chrome.wbdacdn.com/  chrome更新工具。
+###[一个页面中嵌套了几个iframe，怎么获取iframe中的元素?](https://www.zhihu.com/question/46161155)
+document.querySelector('iframe').contentDocument.querySelectorAll('*')
+###[这个前端面试在搞事！](https://zhuanlan.zhihu.com/p/25407758)
+```js
+for (var i = 0; i < 5; i++) {
+  console.log(i);
+}
+for (var i = 0; i < 5; i++) {
+  setTimeout(function() {
+    console.log(i);
+  }, 1000 * i);
+}
+for (var i = 0; i < 5; i++) {
+  (function(i) {
+    setTimeout(function() {
+      console.log(i);
+    }, i * 1000);
+  })(i);
+}
+for (var i = 0; i < 5; i++) {
+  (function() {
+    setTimeout(function() {
+      console.log(i);
+    }, i * 1000);
+  })(i);
+}
+for (var i = 0; i < 5; i++) {
+  setTimeout((function(i) {
+    console.log(i);
+  })(i), i * 1000);
+}
+```
+###[13个不可忽视的优秀 Python 库](https://zhuanlan.zhihu.com/p/25368640)
+Gooey
 
+简介： 一条命令，将命令行程序变成一个 GUI 程序。
+Python-docx
 
+简介：以编程方式创建和操纵 Microsoft Word .docx 文件。
+cat >test.py <<EOF
+import requests
+EOF
+###[这些小众但有趣的网站](https://zhuanlan.zhihu.com/p/25358895)
+局域网下同步文字与图片-Simple.Savr
+https://link.zhihu.com/?target=https%3A//www.ssavr.com/
+###[Python网络编程的入门之路](https://zhuanlan.zhihu.com/p/25354747)
+```js
+python3 -m http.server 8000
+Serving HTTP on 0.0.0.0 port 8000 ...
 
+在命令行用tcpdump来监听本地网卡的tcp连接，
+
+tcpdump -i lo0 port 8000
+或者你也可以用-w参数把信息写出到文件，再通过wireshark来观察结果：
+
+tcpdump -i lo0 port 8000 -w test.cap
+现在执行程序：
+
+bash-3.2$ python test.py
+
+ import socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('127.0.0.1', 8000))
+sock.send(b'GET / HTTP/1.1\r\nHost: 127.0.0.1:8000\r\n\r\n')
+data = sock.recv(4096)
+print(data)
+sock.close()
+ import socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(('127.0.0.1', 8000))
+sock.listen(5)
+while 1:
+    cli_sock, cli_addr = sock.accept()
+    req = cli_sock.recv(4096)
+    cli_sock.send(b'hello world')
+    cli_sock.close()
+
+ 
+```
+###[PHP: 运算符优先级](https://www.zhihu.com/question/56093849)
+```js
+跟运算符优先级有关,逻辑或(||)优先级比赋值运算符(=)高.
+if条件 $a = 5 || $b = 7 相当于 $a = (5 || $b = 7)
+逻辑或运算 (5 || $b = 7) 判断到左边的5为true,就不再执行右边的逻辑(所以$b的值仍是5),整个表达式返回值是true,于是$a的值为true,$a++后$a的值为1,$b++后$b的值为6.
+
+其实我也有困惑,为什么当$a的值为true时,$a++后$a的值为1,而不是像(true+1)为2.
+
+如果要按预期,赋值时前后最好加上括号:
+if( ($a = 5) || ($b = 7) ) {}
+
+if( ($stmt = $db->prepare($sql)) && $stmt->execute(array($id)) ) {
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else { 
+	return false;
+}
+
+ 
+```
+###[躺着也中枪，我是如何任意重置你密码的~](https://zhuanlan.zhihu.com/p/25322731)
+非安全技术爱好者请勿加入！ 。。。暗号是: 知乎 群号 517927936
+###[Python 实战计划：7天上线苹果官网](https://zhuanlan.zhihu.com/p/25315677)
+http://study.163.com/course/introduction.htm?courseId=1003245017#/courseDetail
+###[利用cookie模拟网站登录](https://zhuanlan.zhihu.com/p/25332701)
+```js
+ #创建一个带有cookie的opener，在访问登录的URL时，将登录后的cookie保存下来，然后利用这个cookie来访问其他网址。
+
+import urllib
+import urllib2
+import cookielib
+
+filename = 'cookie.txt'
+#声明一个MozillaCookieJar对象实例来保存cookie，之后写入文件
+cookie = cookielib.MozillaCookieJar(filename)
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+postdata = urllib.urlencode({
+'stuid':'201200131012',
+'pwd':'23342321'
+		})
+#登录教务系统的URL
+loginUrl = 'http://jwxt.sdu.edu.cn:7890/pls/wwwbks/bks_login2.login'
+#模拟登录，并把cookie保存到变量
+result = opener.open(loginUrl,postdata)
+#保存cookie到cookie.txt中
+cookie.save(ignore_discard=True, ignore_expires=True)
+#利用cookie请求访问另一个网址，此网址是成绩查询网址
+gradeUrl = 'http://jwxt.sdu.edu.cn:7890/pls/wwwbks/bkscjcx.curscopre'
+#请求访问成绩查询网址
+result = opener.open(gradeUrl)
+print result.read()
+```
