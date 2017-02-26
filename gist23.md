@@ -506,3 +506,85 @@ class QQHelper
 ```
 https://httpstatuses.com/ 
 ###[程序员如何写好简历 && 一份优秀的程序员简历是什么样的?](https://zhuanlan.zhihu.com/p/25220298)
+###[优化 centos 服务器](https://www.v2ex.com/t/343252#reply22)
+
+```js
+Linux 内存不是用的越少越好， Centos7 版本以前，通常看到的内存 used 比较多是因为包含了 buffer 和 cache 占用 
+Centos7 版本以后，内存 used 显示数值不包含 buffer 和 cache 
+
+Linux 中内存不用白不用，会尽可能的 cache 和 buffer 一些数据，以方便下次使用。 
+但实际上这些内存大部分也是在应用需要的时候可以释放出来供应用使用。 
+
+大部分人在对 linux 做内存优化，都是简单的关闭不使用的服务，调整自己应用的参数来减少内存的占用 
+因此我也仅通过最简单的方式来介绍下如何调整 
+
+关闭服务 
+======= 
+Centos7 版本以前可以通过 chkconfig --list 来查看服务列表 
+找到当前 runlevel 下自启动的服务名，然后通过 chkconfig --level 3 service_name off 关闭指定 RUNLEVEL 下自启动服务 
+重启后生效或者通过 /etc/init.d/servicce_name stop 的方式来实时生效。 
+
+Centos7 以后的版本需要通过 systemctl list-unit-files --type=service --state=enabled 查看自启动服务 
+通过 systemctl disable service_name 关闭启动 
+通过 systemctl stop service_name 停止服务运行 
+
+调整应用参数 
+========== 
+这个部分需要了解自己启动的服务软件简单的工作原理和配置方法 
+VPS 中安装的 LNMP 环境主要包含三个套件： Nginx, MySQL, php 
+
+Nginx 
+====== 
+工作进程数量直接决定了 Nginx 对内存的占用，平均一个工作进程占用 10~40m 不等 
+可通过配置文件中 worker_processes 指定 
+
+MySQL 
+====== 
+MySQL 比较复杂，大致可以从全局共享内存使用和线程独享内存使用两个方向入手 
+
+全局共享内存可理解为 MySQL 启动的时候就需要分配的全局内存使用 
+比较明显的是可以调整以下几个参数（但不完全就是以下几个） 
+key_buffer_size 
+innodb_buffer_pool_size 
+innodb_additional_memory_pool_size 
+innodb_log_buffer_size 
+query_cache_size 
+
+线程独享内存使用可以理解为每个到 MySQL 的链接都会分配一部分内存 
+read_buffer_size 
+sort_buffer_size 
+read_rnd_buffer_size 
+tmp_table_size 
+
+除此之外 MySQL 还有灰常多的参数可以调整影响到内存的使用，可以参考官方文档了 
+
+以上列出的参数，也并不是调整了就有效果，因为 MySQL 还有一个重要的东西就是存储引擎 
+常用的比如 InnoDB ， MyISAM 很多参数都是针对存储引擎的，比如你只使用 InnoDB,却调整了 MyISAM 的参数 
+那也是没有效果的 
+
+php 
+==== 
+由于本人没有搞过 php 所以具体也不清楚详细的调整 
+php 没有运行在 nginx 下的 module ，所以大部分通过 php-fpm 的方式启动 
+php-fpm 提供 fastcgi 的协议访问， nginx 再通过 fastcgi 反代到 php-fpm 
+
+所以这里的 php-fpm 也是一个多进程应用，也可以通过调整 php-fpm 的启动进程数量来达到控制内存占用的效果 
+
+
+以上这些都是从简单的方面来优化的，但还是那句话，一切看你时机的使用情况，这些参数不是越低越好 
+比如 nginx 只给 1 个进程。 php-fpm 只给一个进程，在你狂刷浏览器时就会发现你经常会遇到 502 ， 503 错误 
+
+鉴于在题主是在放在 vps 中的小博客，实在不需要搞到太深度的调优。如果想了解仍可去搜索一些相关的资料: 
+linux 内核参数调优 
+linux io 队列调优 
+nginx 如何通过编译安装精简模块 
+php 编译安装 精简不必要模块 
+mysql 编译安装精简存储引擎
+```
+###[GitBook 使用教程](https://www.v2ex.com/t/343338)
+http://gitbook.zhangjikai.com/ 
+###[pjax 的简单应用](https://www.v2ex.com/t/343325#reply2)
+###[服务器抓包 HTTP 的工具](https://www.v2ex.com/t/343223)
+Github: https://github.com/six-ddc/httpflow
+###[ cURL 然后在这个网站能直接转换为 requests 格式](https://www.v2ex.com/t/343342#reply4)
+https://curl.trillworks.com/ 
