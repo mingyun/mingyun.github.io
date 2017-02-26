@@ -947,5 +947,149 @@ ipconfig /all 可以查看电脑网卡信息，包括mac地址、DNS地址、本
 打开资源监视器：resmon
 打开性能监视器：perfmon
 打开计算机管理：compmgmt
+###[Scrapy爬虫爬取腾讯的职位招聘信息](https://www.zhihu.com/question/20899988/answer/147907213?group_id=818155025275699200)
+https://link.zhihu.com/?target=https%3A//github.com/maxliaops/scrapy-itzhaopin 
+###[JavaScript 面试中常见算法问题详解](https://zhuanlan.zhihu.com/p/25308541)
+```js
+0 == false; // true
+0 === false; // false
 
+2 == '2'; // true
+2 === '2'; // false
+判断是否为 2 的指数值
+function isPowerOfTwoZeroCase(number) {
+  return (number !== 0) && ((number & (number - 1)) === 0);
+}
  
+
+二进制转换
+
+通过某个递归函数将输入的数字转化为二进制字符串：
+
+decimalToBinary(3); // 11
+decimalToBinary(8); // 1000
+decimalToBinary(1000); // 1111101000
+
+function decimalToBinary(digit) {
+  if(digit >= 1) {
+    // If digit is not divisible by 2 then recursively return proceeding
+    // binary of the digit minus 1, 1 is added for the leftover 1 digit
+    if (digit % 2) {
+      return decimalToBinary((digit - 1) / 2) + 1;
+    } else {
+      // Recursively return proceeding binary digits
+      return decimalToBinary(digit / 2) + 0;
+    }
+  } else {
+    // Exit condition
+    return '';
+  }
+}
+
+判断某个字符串是否为回文字符串，譬如racecar与race car都是回文字符串：
+
+isPalindrome("racecar"); // true
+isPalindrome("race Car"); // true
+
+function isPalindrome(word) {
+  // Replace all non-letter chars with "" and change to lowercase
+  var lettersOnly = word.toLowerCase().replace(/\s/g, "");
+
+  // Compare the string with the reversed version of the string
+  return lettersOnly === lettersOnly.split("").reverse().join("");
+}
+乱序同字母字符串
+
+给定两个字符串，判断是否颠倒字母而成的字符串，譬如Mary与Army就是同字母而顺序颠倒：
+
+var firstWord = "Mary";
+var secondWord = "Army";
+
+isAnagram(firstWord, secondWord); // true
+
+function isAnagram(first, second) {
+  // For case insensitivity, change both words to lowercase.
+  var a = first.toLowerCase();
+  var b = second.toLowerCase();
+
+  // Sort the strings, and join the resulting array to a string. Compare the results
+  a = a.split("").sort().join("");
+  b = b.split("").sort().join("");
+
+  return a === b;
+}
+ function reverseBySeparator(string, separator) {
+  return string.split(separator).reverse().join(separator);
+}
+作者：王下邀月熊
+链接：https://zhuanlan.zhihu.com/p/25308541
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+给定两个数组，要求求出两个数组的交集，注意，交集中的元素应该是唯一的。
+
+var firstArray = [2, 2, 4, 1];
+var secondArray = [1, 2, 0, 2];
+
+intersection(firstArray, secondArray); // [2, 1]
+
+function intersection(firstArray, secondArray) {
+  // The logic here is to create a hashmap with the elements of the firstArray as the keys.
+  // After that, you can use the hashmap's O(1) look up time to check if the element exists in the hash
+  // If it does exist, add that element to the new array.
+
+  var hashmap = {};
+  var intersectionArray = [];
+
+  firstArray.forEach(function(element) {
+    hashmap[element] = 1;
+  });
+
+  // Since we only want to push unique elements in our case... we can implement a counter to keep track of what we already added
+  secondArray.forEach(function(element) {
+    if (hashmap[element] === 1) {
+      intersectionArray.push(element);
+      hashmap[element]++;
+    }
+  });
+
+  return intersectionArray;
+
+  // Time complexity O(n), Space complexity O(n)
+}
+作者：王下邀月熊
+链接：https://zhuanlan.zhihu.com/p/25308541
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+给定某无序数组，要求去除数组中的重复数字并且返回新的无重复数组。
+
+// ES6 Implementation
+var array = [1, 2, 3, 5, 1, 5, 9, 1, 2, 8];
+
+Array.from(new Set(array)); // [1, 2, 3, 5, 9, 8]
+
+
+// ES5 Implementation
+var array = [1, 2, 3, 5, 1, 5, 9, 1, 2, 8];
+
+uniqueArray(array); // [1, 2, 3, 5, 9, 8]
+
+function uniqueArray(array) {
+  var hashmap = {};
+  var unique = [];
+  for(var i = 0; i < array.length; i++) {
+    // If key returns null (unique), it is evaluated as false.
+    if(!hashmap.hasOwnProperty([array[i]])) {
+      hashmap[array[i]] = 1;
+      unique.push(array[i]);
+    }
+  }
+  return unique;
+}
+```
+###[利用爬虫技术能做到哪些很酷很有趣很有用的事情](https://www.zhihu.com/question/27621722/answer/147321442?group_id=817093550150918145)
+phpcrawl爬取，MySQL储存https://link.zhihu.com/?target=https%3A//github.com/guyueyingmu/avbook.git 
+叮叮叮叮--旅客们。开往东京方向去的PGD-844次列车已经开始检票了。请乘坐PGD-844次列车去往东京方向的旅客，请您整理好自己携带的行李物品，关注微信公众号:guyueyingmu 检票进站。检票进站的时候请大家不要慌忙拥挤。注意安全。文明用语。进站以后请回复PGD-844上车。为了方便旅客交流,本次列车另外开设了一节专用车厢供旅客使用,有需要的旅客请到第317599191节(Q)车(Q)厢(qun)报道,车厢名额有限,请抓紧时间上车。
+
+不要删除 D:\guyueyingmu\phpStudy\WWW\avbook\resources\javbus\mask.js这个文件，如果删除这个文件导致高斯模糊滤镜失效，进而看到了有害身体健康的内容
