@@ -493,3 +493,245 @@ if ($redis->get($key)) {
 $redis->setex($key, $expires, $value);
 
 // 访问接口
+###[想模拟登录本网站v2ex](https://www.v2ex.com/t/341686#reply13)
+```js
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import requests
+from bs4 import BeautifulSoup
+
+login_url=r'https://www.v2ex.com/signin'
+headers = { 
+	"content-type":"application/x-www-form-urlencoded",
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+    'Origin': 'https://www.v2ex.com',
+    'Referer': 'https://www.v2ex.com/signin'    
+}  
+userName='pive'
+password='******'
+s=requests.Session()
+res=s.get(login_url,headers=headers)
+soup=BeautifulSoup(res.content,"html.parser") 
+form=soup.find("form",action="/signin") 
+once=form.find("input",{"name":"once"})["value"] 
+formUserName=form.find("input",type="text")["name"] 
+#formUserName=soup.find("input",placeholder="用户名或电子邮箱地址")["name"]
+formPassword=soup.find("input",type="password")["name"]
+print(once+"\n"+userName+"\n"+password)
+post_data={
+	formUserName:userName,
+	formPassword:password,
+	"once":once,
+	"next":"/settings"
+}
+s.post(login_url,post_data,headers=headers)
+f = s.get('https://www.v2ex.com/settings',headers=headers)
+with open('v2ex.html',"wb") as v2ex:
+	v2ex.write(f.content)
+	
+	
+#-*- coding=utf-8 -*- 
+import requests 
+import re 
+from lxml import etree 
+
+signin='https://v2ex.com/signin' 
+home='https://v2ex.com' 
+url='https://v2ex.com/mission/daily' 
+headers = { 
+'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36', 
+'Origin': 'https://www.v2ex.com', 
+'Referer': 'https://www.v2ex.com/signin', 
+'Host': 'www.v2ex.com', 
+} 
+data={} 
+
+def sign(username,passwd): 
+	session=requests.Session() 
+	session.headers=headers 
+	loginhtm=session.get(signin,verify=False).content 
+	page=etree.HTML(loginhtm) 
+	x=page.xpath("//input[@class='sl']/@name") 
+	usernameform=x[0] 
+	passwdform=x[1] 
+	onceform=page.xpath("//input[@name='once']/@value")[0] 
+	data[usernameform]=username 
+	data[passwdform]=passwd 
+	data['once']=onceform 
+	data['next']='/' 
+	loginp=session.post(signin,data=data,verify=False) 
+	sign=session.get(url).content.decode('UTF-8') 
+	qiandao=re.findall("location.href = '(.*?)'",sign)[0] 
+	if (qiandao == '/balance'): 
+		print ("已经签过了") 
+		else: 
+	session.get(home+qiandao,verify=False) 
+		print ('签到成功') 
+
+if __name__=='__main__': 
+	username='siloong' 
+	passwd='123456' 
+	requests.packages.urllib3.disable_warnings() 
+	sign(username,passwd) 
+```
+###[github push 超过 100M pdf 文件提示错误，.gitignore 无法忽视*.pdf ][(https://www.v2ex.com/t/342845#reply7)
+gitignore 不会忽略已经添加到版本管理里的文件 删除仓库里的文件后 gitignore 才会生效
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch path/to/your/file.pdf' HEAD
+###[安卓微信浏览器location.reload()刷新无效 ，但iOS版微信可以刷新](https://www.v2ex.com/t/342451#reply19)
+https://segmentfault.com/a/1190000006753455
+http://debugtbs.qq.com 
+在微信 /QQ 中打开可以调试
+window.location.href=window.location.href
+```js
+function updateUrl(url,key){
+        var key= (key || 't') +'=';  //默认是"t"
+        var reg=new RegExp(key+'\\d+');  //正则：t=1472286066028
+        var timestamp=+new Date();
+        if(url.indexOf(key)>-1){ //有时间戳，直接更新
+            return url.replace(reg,key+timestamp);
+        }else{  //没有时间戳，加上时间戳
+            if(url.indexOf('\?')>-1){
+                var urlArr=url.split('\?');
+                if(urlArr[1]){
+                    return urlArr[0]+'?'+key+timestamp+'&'+urlArr[1];
+                }else{
+                    return urlArr[0]+'?'+key+timestamp;
+                }
+            }else{
+                if(url.indexOf('#')>-1){
+                    return url.split('#')[0]+'?'+key+timestamp+location.hash;
+                }else{
+                    return url+'?'+key+timestamp;
+                }
+            }
+        }
+    }
+    window.location.href=updateUrl(window.location.href); //不传参，默认是“t”
+window.location.href=updateUrl(window.location.href,'v'); //传入自定义的变量名
+```
+###[网易云音乐单首歌曲加密算法](https://www.v2ex.com/t/341662#reply18)
+https://github.com/darknessomi/musicbox/blob/master/NEMbox/api.py#LC81  http://projects.qiyichao.cn/netease-music-parse/
+```js
+import hashlib
+import base64
+import random
+
+def encrypted_id(id):
+    magic = bytearray('3go8&$8*3*3h0k(2)2', 'u8')
+    song_id = bytearray(id, 'u8')
+    magic_len = len(magic)
+    for i, sid in enumerate(song_id):
+        song_id[i] = sid ^ magic[i % magic_len]
+    m = hashlib.md5(song_id)
+    result = m.digest()
+    result = base64.b64encode(result)
+    result = result.replace(b'/', b'_')
+    result = result.replace(b'+', b'-')
+    return result.decode('utf-8')
+    
+    song_dfsId = str(3435973841155597)
+enc_id = encrypted_id(song_dfsId)
+url = 'http://m%d.music.126.net/%s/%s.mp3' % (random.randrange(1, 3), enc_id, song_dfsId)
+print url# http://m2.music.126.net/RMJR7wDullRqppBk8dhLow==/3435973841155597.mp3
+var httpurl = "http://music.163.com/api/song/detail?id=" + music_id + "&ids=[" + music_id + "]"; 
+https://github.com/ss098/qiyichao.cn/blob/master/projects/netease-music-parse.html 
+```
+###[百度前端技术学院 ](https://www.qiyichao.cn/#/paper/百度前端技术学院 2017 热身任务攻略)
+http://ife.baidu.com/  atob($(".text-panel").text())
+###[一个简单的视频下载器，支持 youtube 与 B 站 python gui](https://www.v2ex.com/t/339114#reply56)
+https://github.com/chriskiehl/Gooey 
+###[我是如何获取到你真实上网地址的 附POC](https://zhuanlan.zhihu.com/p/25118463)
+用生成图片马的方式,把1.php和1.jpg合体
+
+copy 1.jpg+1.php 2.jpg
+```js
+test.php
+function get_addr($_ip) { 
+        $_ip=array("X-Forwarded-For:{$_ip}");
+            //初始化curl模块 
+        $curl = curl_init();
+        //需要获取的URL地址也可以在 curl_init() 函数中设置。
+        curl_setopt($curl, CURLOPT_URL, 'http://ip.zishuo.net/');
+        //在启用 CURLOPT_RETURNTRANSFER 的时候返回原生的Raw输出。
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //设置"User-Agent: "头
+        curl_setopt($curl, CURLOPT_USERAGENT  , 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $_ip);
+        //执行cURL
+        curl_exec($curl); 
+        //关闭cURL资源并且释放系统资源 
+        $retn=curl_exec($curl); 
+        curl_close($curl);
+        return json_decode($retn);
+    } 
+    $_addr=get_addr($_GET['ip']);
+    if ($_addr->code=='200') {
+        echo $_addr->desc.'->'.$_addr->position;
+    }elseif($_addr->code=='404'){
+        echo $_addr->message;
+    }else{
+        echo '异常!';
+    }
+    1.php
+    $_ip=$_SERVER['REMOTE_ADDR']; 
+$_ip_addr=file_get_contents('http://127.0.0.1/test.php?ip='.$_ip); 
+$fh = fopen('ip.txt', 'a'); 
+fwrite($fh, 'IP:'.$_ip.' Time:'.date("Y-m-d H:i",time()+28800).' Address:'.$_ip_addr."\r\n"); fclose($fh); 
+$im = imagecreatefromjpeg("n00b.png"); 
+header('Content-Type: image/jpeg'); 
+imagejpeg($im); 
+imagedestroy($im); 
+ AddType application/x-httpd-php .jpg
+```
+###[十万个日式冷笑话](https://www.v2ex.com/t/339054)
+ http://www.iguooo.cn/ 
+ ###[Linux 磁盘已满，删除文件后可使用的空间还是为零](https://www.v2ex.com/t/340096#reply23)
+ lsof | grep delete
+ ###[一个小众的短网址小网站](https://www.v2ex.com/t/340717#reply0)
+ Github 地址： https://github.com/Blacate/Portal 
+ ###[微信公众号文章采集](https://zhuanlan.zhihu.com/p/25238068)
+ ###[PHP 的面试题吧](https://www.v2ex.com/t/341873#reply65)
+ 我在数据库中存了很多到题目，然后管理员又有权限出比赛，可以把题目拉到比赛里，一个题目可以对应多个比赛，怎么做？这就问道了数据库多对多的实现。 
+每场比赛有很多人参加，每个人都能看到自己参加的比赛提交记录，但是要把每场比赛和外面题库的提交记录分开，怎么做？这就问道了账号权限处理。 
+每场比赛还有一个根据做出题的数量和罚时相关的实时更新的排名表，如果不是实时更新怎么处理，如果是实时更新怎么做最快？这就问了排序（静态）和二分（动态）。 
+如果提交者交上来的是 sql 代码或者 js 代码怎么办？这就问道了 web 安全。 
+假设提交者提交上来的是一个程序调用危险的系统调用怎么处理？这就问了系统安全。
+低级：描述一下最近印象最深的解决的问题？ 
+中级：让你主导项目你会选什么框架？ 
+高级：如何提高团队整体的编码质量？
+考语言特性的话，可以问下 class 中，$this 、 self 、 static 的区别。
+$arr = [1,2,3]; 
+foreach($arr as &$v) { 
+//nothing todo. 
+} 
+foreach($arr as $v) { 
+//nothing todo. 
+} 
+print_r($arr);
+1.说一说什么是静态后期绑定 
+2.接口 Interface 的作用 
+3.封装继承抽象是什么意思,php 如何表现 
+4.影响 php 性能的几个方面 
+5.说说对 php gc 的理解 
+6.如何改变匿名函数 Closure 的作用域 
+7.php7 了解多少 以及你对哪个新特性最感兴趣 
+8.cookie/session 的生命周期 
+9.什么情况下设置 header 头会失效 
+10.ob_start 系列的作用,以及在项目中都怎么用过 
+11.如果给 yii/tp/加上一个注释 Annotation 路由你该如何实现 
+12 !empty($varable)和 isset($varable)的区别 
+13 请说出几种接受外部变量的方式 
+14.说说从 nginx 接受请求到 php 输出内容，期间都经过了什么
+
+如何防止 SQL 注入 
+如何防止 XSS 注入 
+如何防止 CRSF
+搜 PHP Certification 题库 
+能解决那些稀奇古怪的题目，并不代表日常的代码水准就高 
+另外可以扩展一下，考校一些 Git 、 Linux 的常用命令
+聊聊 http 模型， fastcgi 处理模型，确定基本问题知道在哪，常用的 MYSQL 大坑是否了解，比如 LIMIT 很大数字会慢这种常识，细节见镇长 
+
+然后，聊聊各种数据安全问题，防止泄露的处理，常见业务大坑比如支付网关返回只验证订单号成功不验证金额的这种事儿怎么看之类 
+
+然后，针对 PHP ，问问 5.X 到 5.6 有啥主要变化，新特性简单了解即可，日常能用到的会出现不兼容问题的为重点，然后是 5.6 到 7 有啥重点需要注意的地方之类，重点在代码题 输入过滤，对于系统内约定的传进来 int ，有没有随手 intval 一下的习惯，对于用户数据（比如 cookies ）是否有随手 intval 的习惯等等 
