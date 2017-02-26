@@ -197,11 +197,12 @@ t = """1*1=1
 8*1=8 8*2=16 8*3=24 8*4=32 8*5=40 8*6=48 8*7=56 8*8=64
 9*1=9 9*2=18 9*3=27 9*4=36 9*5=45 9*6=54 9*7=63 9*8=72 9*9=81
 """
-
+seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR, i*NR, i==NR?"\n":"\t")}'
 for i in [0]:
     print(t)
 
- 
+ excel https://www.zhihu.com/question/55768263/answer/148334879?group_id=818696197811343360
+ =IF(B$1<=$A2,B$1&"×"&$A2&"＝"&B$1*$A2,"")
 ```
 ###[不能翻墙的情况下，如何更新chrome？](https://www.zhihu.com/question/34931031)
 https://link.zhihu.com/?target=http%3A//chrome.wbdacdn.com/  chrome更新工具。
@@ -735,3 +736,60 @@ print_r($arr);
 然后，聊聊各种数据安全问题，防止泄露的处理，常见业务大坑比如支付网关返回只验证订单号成功不验证金额的这种事儿怎么看之类 
 
 然后，针对 PHP ，问问 5.X 到 5.6 有啥主要变化，新特性简单了解即可，日常能用到的会出现不兼容问题的为重点，然后是 5.6 到 7 有啥重点需要注意的地方之类，重点在代码题 输入过滤，对于系统内约定的传进来 int ，有没有随手 intval 一下的习惯，对于用户数据（比如 cookies ）是否有随手 intval 的习惯等等 
+###[app api接口开发](https://www.v2ex.com/t/337850#reply27)
+
+加密方式： MD5 、 RC4 、 RSA ，根据我们业务场景选择。 
+关于 app 版本
+关于 json 规范
+请求方式 get:选则 get 一般是把一些验证信息放到 http 请求的 head 中的 post:post 可以发送大量数据， php 的 post_max_size 默认值一般是 8MB,这时候验证信息可以放到 post 数据里面 5.开发文档 文档是服务器开发与客户端开发人员接口交流的重要途径
+微信 /支付宝 /支付 友盟统计 消息推送（单人推送，群发，按标签推送，按版本推送等，有时候运营要知道到达率等等） 
+渠道统计，广告统计，针对单用户的各种统计。 
+包括客户端服务端异常监控等。 app 版本是 1.0 的，在请求服务器接口时 head 中加入 App-Version: 1.0 
+jwt.io
+ errorCode 错误码比较棒。 
+最近刚用的: 
+0-没错误 
+1-9 服务器错误 
+10-99 前端参数错误 
+100-用户输入错误～～
+https://www.v2ex.com/t/340066#reply58
+1.基础数据层:提供各种最底层的数据,最基础的获取,不会有任何逻辑 
+2.数据逻辑层:这个也是服务端做,就是之前争论的 api 做还是客户端做的那些操作,全部放到这一层,向上从基础数据层获取数据,向下对客户端提供数据. 
+3.最后才是客户端
+###[一个心形符号“❤”导致保存失败](https://www.v2ex.com/t/342724#reply9)
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2764' in position 9870: illegal multibyte sequence
+
+'\u2764'我转了编码后发现是❤ 不要转成国标码，直接存 UTF-8
+utf8mb4 ，还可以保存 emoji 表情，微信的昵称
+###[管理 API 文档](https://www.v2ex.com/t/340795)
+Swagger 
+Confluence 
+showdoc 
+口头传述 
+gitlab 传 md.... 
+天啦，还有 API 文档,没听说过 
+raml 
+wiki 
+gogs 
+apidoc 
+quip 
+意念传输 
+postman 
+RAP
+SBDoc = 可视化的文档编写工具
+###[锤子便签可能是史上最漂亮的便签应用](http://www.smartisan.com/apps/notes  )
+它不仅可以输入文字,还支持插入图片,进行图文混排。你还可以随时随地将便签内容生成精美的长微博并分享。
+markdown www.zybuluo.com/mdeditor 
+###[推荐几款好用的截图工具](https://zhuanlan.zhihu.com/p/25364170)
+FScapture全名为 FastStone Capture  将图像转换为 PDF 文件
+图片可以直接转为PDF
+官方主页：http://www.faststone.org/ 官方主页：www.picpick.org/
+发送到 PowerPoint，Word，FTP Snipaste=Snip + Paste =截图 + 贴图
+###[7个堪称神器的网站](https://zhuanlan.zhihu.com/p/25394126)
+网站地址：Smallpdf.com – 您所有PDF问题的免费解决方案
+网站地址：iLovePDF | 为PDF爱好者提供的PDF文件在线转换工具
+网站地址：百度脑图 - 便捷的思维工具
+网站地址：石墨 - 可多人实时协作的云端文档和表格
+网站地址：WPS云文档 协作在云端
+网站地址：平面设计,简单,快速,轻松完成平面设计,2016最好的在线平面设计工具-创客贴
+网站地址：花瓣网_陪你做生活的设计师（发现、采集你喜欢的灵感、家居、穿搭、婚礼、美食、旅行、美图、商品等）
