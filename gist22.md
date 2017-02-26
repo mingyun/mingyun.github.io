@@ -1093,3 +1093,173 @@ phpcrawl爬取，MySQL储存https://link.zhihu.com/?target=https%3A//github.com/
 叮叮叮叮--旅客们。开往东京方向去的PGD-844次列车已经开始检票了。请乘坐PGD-844次列车去往东京方向的旅客，请您整理好自己携带的行李物品，关注微信公众号:guyueyingmu 检票进站。检票进站的时候请大家不要慌忙拥挤。注意安全。文明用语。进站以后请回复PGD-844上车。为了方便旅客交流,本次列车另外开设了一节专用车厢供旅客使用,有需要的旅客请到第317599191节(Q)车(Q)厢(qun)报道,车厢名额有限,请抓紧时间上车。
 
 不要删除 D:\guyueyingmu\phpStudy\WWW\avbook\resources\javbus\mask.js这个文件，如果删除这个文件导致高斯模糊滤镜失效，进而看到了有害身体健康的内容
+###[laravel_slide](https://milkmeowo.github.io/laravel_slide/#/7)
+###[Laravel 5.4 运行 `PHP artisan optimize` 不再生成编译文件](https://laravel-china.org/topics/3832)
+开始忘记 optimize 命令吧，请使用字节码缓存 OPcache 替代 
+5.1的代码中php artisan optimize只是对composer dump-autoload --optimize的一个封装
+
+主要目的是为了生成vendor/composer下的一系列文件，
+
+所以我一直执行的composer dump-autoload --optimize，bootstrap 的cache文件也从未生成，也没看出什么问题:smile: 。
+###[快速导出 Laravel 的查询语句](https://laravel-china.org/articles/3705)
+User::where('name', 'Eric')->with('posts')->first();  posts 在初始加载时没有包含 User Eloquent，所以需要为每一条记录再执行一次查询，以取出关联的 User  本地开发环境启用 [Laravel Debugbar](https://laravel-china.org/topics/2531) 或者 [Laravel database profiler](https://github.com/dmitry-ivanov/laravel-db-profiler) 这两个重型工具，它们会打印所有的查询语句，并且在超出控制时给你提醒。
+ AppServiceProvider.php 的 boot 方法中添加如下内容
+ ```js
+ use DB;
+use Event;
+
+//..
+
+public function boot()
+{
+    if (env('APP_ENV') === 'local') {
+        DB::connection()->enableQueryLog();
+        Event::listen('kernel.handled', function ($request, $response) {
+            if ( $request->has('sql-debug') ) {
+                $queries = DB::getQueryLog();
+                dd($queries);
+            }
+        });
+    }
+}
+监听 QueryExecuted 这个事件
+
+'Illuminate\Database\Events\QueryExecuted' => [
+            'App\Listeners\QueryListener',
+        ],
+class QueryListener
+{
+    public function handle(QueryExecuted $query)
+    {
+        if (config('app.env', 'production') !== 'production') {
+            $log = '';
+            $sql = $query->sql;
+            $bindings = $query->bindings;
+
+            foreach (explode('?', $sql) as $key => $s) {
+                if (isset($bindings[$key])) {
+                    if (is_numeric($bindings[$key])) {
+                        $log .= $s . $bindings[$key];
+                    } else {
+                        $log .= $s . "'" . $bindings[$key] . "'";
+                    }
+                } else {
+                    $log .= $s;
+                }
+            }
+
+            Log::info('[' . $query->time . ']: ' . $log);
+        }
+    }
+}
+ ```
+ ###[Laravel-admin ](https://laravel-china.org/articles/3926)
+ https://github.com/z-song/laravel-admin 数据库命令行在线执行   Laravel artisan命令的web迁移，能在web界面上运行artisan命令 
+ 
+ ###[利用 [微信公众号通知] 给你的网站加上异常提醒吧](https://laravel-china.org/articles/3854)
+ App\Exceptions\Handler 的 report  http://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login
+ ```js
+ public function report(Exception $exception)
+{
+    // 你也可以选择短信通知，土豪随意
+    Sms::send($phone, [$exception]);
+    // 比较传统的通知方式
+    Mail::to($request->user())->send(new ExceptionNotify($exception));
+    return parent::report($exception);
+}
+{{first.DATA}} 
+异常类型：{{keyword1.DATA}} 
+异常链接：{{keyword2.DATA}} 
+访问IP：{{keyword3.DATA}} 
+{{remark.DATA}}
+public function report(Exception $exception)
+{
+    app('wechat')->notice->to($userOpenId)->uses($templateId)->andUrl($url)->data($data)->send();
+    return parent::report($exception);
+}
+compooser require hanson/wechat-notice
+
+添加 Hanson\WechatNotice\NoticeServiceProvider::class 到 app.php 的 providers 中
+config/services.php 中定义一个数组 wechat
+open id是微信用户ID，你关注测试号后会看见自己的ID，template ID是模板的ID，添加模板后也是能看到的 
+return [
+    // ...
+    'wechat' => [
+        'app_id' => 'your app id',
+        'secret' => 'your secret'
+    ]
+]
+public function report(Exception $exception)
+{
+    \WechatNotice::send($openId, $templateId, [
+        'first' => '系统异常',
+        'keyword1' => get_class($this),
+        'keyword2' => url()->current(),
+        'keyword2' => $_SERVER['REMOTE_ADDR'],
+        'remark' => '请及时处理'
+    ]);
+}
+ ```
+ ###[Laravel 做 API 服务端，VueJS+iView 做 SPA，给新手一个 Demo](https://laravel-china.org/topics/3904)
+ git地址：https://github.com/Qsnh/CloudBookMark-SPA 
+ ###[Laravel 使用 rutorika-sortable 和 jQuery Sortable 实现拖拽更改列表顺序](https://laravel-china.org/articles/3741)
+ jQuery Sortable http://johnny.github.io/jquery-sortable/
+Laravel rutorika-sortable 扩展：https://github.com/boxfrommars/rutorika-sortable
+###[iView 发布 1.0 正式版，43 个 UI 组件助力中后台业务开发](https://laravel-china.org/articles/3886)
+GitHub 地址：https://github.com/iview/iview
+###[环信及时通讯 Laravel 扩展包](https://laravel-china.org/topics/3892)
+https://github.com/link1st/laravel-easemob  php artisan vendor:publish
+
+设置环信的参数 config/easemob.php
+$users = [
+    ['username'=>'xiaoming2','password'=>1],
+    ['username'=>'xiaoming3','password'=>1],
+];
+$user = \Easemob::authorizationRegistrations($users);
+###[PHP 如何严格获取真实用户 IP](https://laravel-china.org/topics/3905)
+```js
+ 客户端可以伪造的参数必须过滤和验证！很多人以为$_SERVER变量里的东西都是可信的，其实并不不然，$_SERVER['HTTP_CLIENT_IP']和$_SERVER['HTTP_X_FORWARDED_FOR']都来自客户端请求的header里面
+ $ip = filter_var($originIp, FILTER_VALIDATE_IP)
+ 依次获取和过滤，$_SERVER['HTTP_CLIENT_IP']，$_SERVER['HTTP_X_FORWARDED_FOR']的第一个ip，$_SERVER['REMOTE_ADDR']，谁先有值先用谁
+ 存IP到数据库的时候可以使用ip2long()把ip地址转换成数字，搜索和排序可以更快。要显示到前端的时候再long2ip()转换回来
+```
+
+###[跟我一起学 Laravel-数据库操作和查询构造器](https://laravel-china.org/articles/3816)
+```js
+$results = DB::select('select * from users where id = ?', [1]);
+$results = DB::select('select * from users where id = :id', ['id' => 1]);
+$query = DB::table('users')->select('name');
+$users = $query->addSelect('age')->get();
+$first = DB::table('users')
+            ->whereNull('first_name');
+
+$users = DB::table('users')
+            ->whereNull('last_name')
+            ->union($first)
+            ->get();
+	    $users = DB::table('users')->where([
+    ['status','1'],
+    ['subscribed','<>','1'],
+])->get();
+$users = DB::table('orders')
+      ->select('department', DB::raw('SUM(price) as total_sales'))
+      ->groupBy('department')
+      ->havingRaw('SUM(price) > 2500')
+      ->get();
+      DB::statement('drop table users');
+      DB::listen(function($sql, $bindings, $time)
+{
+    // $query->sql
+    // $query->bindings
+    // $query->time
+
+});$users = DB::connection('foo')->select(...);
+DB::reconnect('foo');
+DB::disconnect('foo')
+把对象转化成数组吧，可以使用下面这种方式
+
+$res = array_map(function($item) {
+    return get_object_vars($item);
+}, $object_arr);
+DB::table('xxx')->insert($res);
+```
