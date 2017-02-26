@@ -793,3 +793,159 @@ FScapture全名为 FastStone Capture  将图像转换为 PDF 文件
 网站地址：WPS云文档 协作在云端
 网站地址：平面设计,简单,快速,轻松完成平面设计,2016最好的在线平面设计工具-创客贴
 网站地址：花瓣网_陪你做生活的设计师（发现、采集你喜欢的灵感、家居、穿搭、婚礼、美食、旅行、美图、商品等）
+###[小白进阶之Scrapy第一篇](https://zhuanlan.zhihu.com/p/25354987)
+###[TensorFlow搞定“倒字验证码”](https://www.zhihu.com/question/46495381/answer/147826276?group_id=817709112065421312)
+
+```js
+ 
+
+# -*- coding: utf-8 -*-
+from PIL import Image,ImageDraw,ImageFont
+import random
+import math, string
+import logging
+# logger = logging.Logger(name='gen verification')
+
+class RandomChar():
+    @staticmethod
+    def Unicode():
+        val = random.randint(0x4E00, 0x9FBF)
+        return unichr(val)    
+
+    @staticmethod
+    def GB2312():
+        head = random.randint(0xB0, 0xCF)
+        body = random.randint(0xA, 0xF)
+        tail = random.randint(0, 0xF)
+        val = ( head << 8 ) | (body << 4) | tail
+        str = "%x" % val
+        return str.decode('hex').decode('gb2312')    
+
+class ImageChar():
+    def __init__(self, fontColor = (0, 0, 0),
+    size = (100, 40),
+    fontPath = '/Library/Fonts/Arial Unicode.ttf',
+    bgColor = (255, 255, 255),
+    fontSize = 20):
+        self.size = size
+        self.fontPath = fontPath
+        self.bgColor = bgColor
+        self.fontSize = fontSize
+        self.fontColor = fontColor
+        self.font = ImageFont.truetype(self.fontPath, self.fontSize)
+        self.image = Image.new('RGB', size, bgColor)
+
+    def drawText(self, pos, txt, fill):
+        draw = ImageDraw.Draw(self.image)
+        draw.text(pos, txt, font=self.font, fill=fill)
+        del draw    
+
+    def drawTextV2(self, pos, txt, fill, angle=180):
+        image=Image.new('RGB', (25,25), (255,255,255))
+        draw = ImageDraw.Draw(image)
+        draw.text( (0, -3), txt,  font=self.font, fill=fill)
+        w=image.rotate(angle,  expand=1)
+        self.image.paste(w, box=pos)
+        del draw
+
+    def randRGB(self):
+        return (0,0,0)
+
+    def randChinese(self, num, num_flip):
+        gap = 1
+        start = 0
+        num_flip_list = random.sample(range(num), num_flip)
+        # logger.info('num flip list:{0}'.format(num_flip_list))
+        print 'num flip list:{0}'.format(num_flip_list)
+        char_list = []
+        for i in range(0, num):
+            char = RandomChar().GB2312()
+            char_list.append(char)
+            x = start + self.fontSize * i + gap + gap * i
+            if i in num_flip_list:
+                self.drawTextV2((x, 6), char, self.randRGB())
+            else:
+                self.drawText((x, 0), char, self.randRGB())
+        return char_list, num_flip_list
+    def save(self, path):
+        self.image.save(path)
+
+
+
+err_num = 0
+for i in range(10):
+    try:
+        ic = ImageChar(fontColor=(100,211, 90), size=(280,28), fontSize = 25)
+        num_flip = random.randint(3,6)
+        char_list, num_flip_list = ic.randChinese(10, num_flip)
+        ic.save(''.join(char_list)+'_'+''.join(str(i) for i in num_flip_list)+".jpeg")
+    except:
+        err_num += 1
+        continue
+	
+	https://github.com/burness/tensorflow-101/tree/master/zhihu_code/src
+```
+
+###[那些程序员深信不疑的谣言github   ](https://github.com/kdeldycke/awesome-falsehood)
+###[用漫画告诉你什么是DDoS](https://zhuanlan.zhihu.com/p/25317153)
+###[有5个海盗抢了100个金币](https://www.zhihu.com/question/51316439/answer/147036827?group_id=816485318114041856)
+
+（1）抽签决定各人的号码为1，2，3，4，5
+
+（2）由1号提出金币的分配方案，然后五个人开始表决，如果方案超过半数同意就被通过，否则1号就被扔进大海喂鲨鱼。
+
+（3）1号死后，由2号提方案，四人表决，当且仅当超过半数同意时方案通过，否则2号同样被扔进大海。
+
+（4）一直到找到一个每个人都接受的方案。
+
+假设每个海盗都是完全理性人，都能很理智的判断得失。做出选择。
+
+那么，如何你是这五人中的一个，抽到了1号，你该如何提出分配方案，才能使自己受益最大化？
+
+其中简直充满了套路。
+
+因为需要保证自己不被丢进大海的同时，还需要利益最大化。
+
+可能你会觉得抽到1号时，是最倒霉的。因为会觉得即便你1个金币都不要，全都分给另外4个人，也不一定能得到其他4人赞同。
+
+
+为什么说这道题套路很深，也是因为最后的答案远远出乎你的意料。
+
+最后的分配方案[97，0，1，2，0]或[97，0，1，0，2]
+
+也就是说自己拿97个金币，给3号1个，4号2个，2号和5号一个都不给。
+
+或者自己拿97个，给3号1个，5号1个，2号和4号一个都不给
+
+###[简单而实用的CMD命令](https://zhuanlan.zhihu.com/p/25194940)
+tree命令能够以分支的形式显示指定目录下的全部子目录和文件
+tree C:\Users\Desktop /f  tree 指定目录 /f >1.txt
+arp -a 可以查看同一网络下的设备的物理地址，可以用来查看是否有人蹭网
+taskkill /f /im notepad.exe
+也可以输入 tasklist 查看所有的进程，查看进程对应的PID码
+从而使用 taskkill /pid 4708 来关闭进程
+ipconfig /all 可以查看电脑网卡信息，包括mac地址、DNS地址、本地IP地址等。
+打开cmd.exe：Win+R，输入cmd，回车。
+打开计算器：calc
+打开画图：mspaint
+打开放大镜：magnify
+打开屏幕键盘：osk
+打开记事本、写字板：notepad、write
+打开字符映射表：charmap
+打开造字程序（专用字符编辑程序）：eudcedit
+打开远程桌面连接：mstsc
+
+打开服务：services.msc
+打开设备管理器：devmgmt
+打开磁盘管理：diskmgmt
+打开系统信息：msinfo32
+打开系统配置：msconfig
+打开DirectX诊断工具：dxdiag
+打开事件查看器：eventvwr
+打开我的电脑：explorer
+打开注册表编辑器：regedt32
+打开资源监视器：resmon
+打开性能监视器：perfmon
+打开计算机管理：compmgmt
+
+ 
