@@ -504,3 +504,5 @@ class QQHelper
 
 }
 ```
+https://httpstatuses.com/ 
+###[程序员如何写好简历 && 一份优秀的程序员简历是什么样的?](https://zhuanlan.zhihu.com/p/25220298)
