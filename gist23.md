@@ -1354,3 +1354,402 @@ mysql> flush privileges;
 2017-02-15T14:31:05.449058Z 1 [Note] A temporary password is generated for root@localhost: 3NeI3PuNwa%j
 [root@YFPUNzLr ~]# mysql -uroot -p
 ```
+###[php使用curl下载https资源文件](https://segmentfault.com/q/1010000008502236)
+```js
+$url = 'https://www.xxx.com/xxx.mp3';
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+
+$url = 'https://www.baidu.com/';
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+$output = curl_exec($ch);
+if (!$output) {
+    echo curl_error($ch);
+} else {
+    var_dump($output);
+}
+curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, false);
+```
+###[PHP内置的DateTime对象](https://segmentfault.com/q/1010000008503835)
+```js
+$date = new \DateTime("2016-11-25 09:53:58");
+$date->add(new \DateInterval('PT10S'));
+// 输出为 2016-11-25 09:54:08
+echo $date->format('Y-m-d H:i:s');
+```
+###[js数组扁平化,可以降维多层](https://segmentfault.com/q/1010000008504467)
+```js
+function steamroller(arr) {
+  // I'm a steamroller, baby
+var newArr = [];
+console.log("steam"+arr)  //这里为什么第一次结果是对的？
+  for (var i = 0; i < arr.length; i++) {
+    if (Array.isArray(arr[i])) {
+    //console.log(arr[i])
+      steamroller(arr[i]);
+    } else {
+      newArr = newArr.concat(arr[i]);
+    }
+  }
+//console.log(newArr)
+  return newArr 
+}
+
+steamroller([1, [2], [3, [[4]]]]);
+function steamroller(arr) {
+    var newArr = [];
+
+    for (var i = 0; i < arr.length; i++) {
+        if (Array.isArray(arr[i])) {
+            // 如果是数组，调用(递归)steamroller 将其扁平化
+            // 然后再 push 到 newArr 中
+            newArr.push.apply(newArr, steamroller(arr[i]));
+        } else {
+            // 不是数组直接 push 到 newArr 中
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+
+var source = [1, [2], [3, [[4]]]];
+var r = steamroller(source);
+console.log(source);
+console.log(r);
+```
+###[git如何查出文件修改记录，已知代码和文件名](https://segmentfault.com/q/1010000008401178)
+```js
+git blame filepath | grep 'code'
+or
+git blame filepath | grep 'lineNO)'
+```
+###[warning：LF will be replaced by CRLF in](https://segmentfault.com/q/1010000008451846)
+```js
+$ git config --global core.autocrlf true
+```
+###[重排后的数组，相同值不能连续出现三次](https://segmentfault.com/q/1010000008499487)
+```js
+<?php
+$arr = array(1,1,1,2,2,2,3,3,3,3,4,5,6,6,6);
+
+function fsort($ss){
+    $result = array($ss[0]);
+    $overage = array();
+    $num = 1;
+    for($i=1, $len=count($ss); $i<$len; $i++){
+        if( $ss[$i]==$ss[$i-1] ){
+            if( $num<2 ){
+                $result[] = $ss[$i];
+                $num++;
+            }else{
+                $overage[] = $ss[$i];
+            }
+        }else{
+            $result[] = $ss[$i];
+            $num=1;
+        }
+    }
+    return array_merge($result, $overage);
+}
+
+
+echo "<pre>";
+print_r( fsort($arr) );
+
+        <?php
+        $arr    = array(1,1,1,2,2,2,3,3,3,3,4,5,6,6,6);
+        $result = array();
+        
+        foreach($arr as $key => $value) {
+            if(isset($result[$value]) && count($result[$value]) >= 3) {
+                unset($arr[$key]);
+                continue;
+            }
+            $result[$value][] = $value;
+        }
+        
+        var_dump($arr);die;
+        //反选
+$('[name=items]:checkbox').prop('checked', function(idx, val){ return !val; })
+function mb_str_split( $string ) { 
+    # Split at all position not after the start: ^ 
+    # and not before the end: $ 
+    return preg_split('/(?<!^)(?!$)/u', $string ); 
+} 
+```
+###[nginx服务器URL无法自动添加index.php](https://segmentfault.com/q/1010000008482083)
+```js
+server {
+        listen       88;
+        server_name  test.test.com;
+
+        charset utf-8;
+
+        index index.php # 全局
+```
+###[当配置中有多个域名是，请使用 $_SERVER['HTTP_HOST'] 获得当前使用的域名](https://segmentfault.com/q/1010000008479253)
+```js
+$_SERVER['SERVER_NAME'] 获取的是web服务器中配置的域名
+$_SERVER['HTTP_HOST'] 获取的是，用户访问时的域名
+队列https://github.com/pda/pheanstalk
+```
+###[用php或nodejs异步通知](https://segmentfault.com/q/1010000008428011)
+nodejs+socket.io+php完全能实现！
+
+node监听在一个端口上，客户端访问页面，通过websocket接收消息。像聊天室一样
+do {
+    $data = []; // 读取Excel代码，读取完之后是个数组没问题吧
+    curl();// 使用CURL将数据传输到异步通知地址
+    sleep(3600);// 休眠一小时
+} while(true);
+###[PHP正则姓名如何加*号](https://segmentfault.com/q/1010000008470641)
+```js
+mb_regex_encoding("utf-8");
+echo mb_ereg_replace_callback("^(\w{1})(\w{1})(\w*)$",function($matches){return $matches[1]."*".$matches[3];},"王小明");
+```
+###[app版本自动更新](https://segmentfault.com/q/1010000008458182)
+服务器提供一个拉取当前最新版本的app信息接口,该接口拉取的数据至少需要
+    1)版本号
+    2)该版本下载地址
+更多的时候还要包括
+    3)渠道类型
+    4)升级说明
+
+app端通过某种机制(如用户主动点击检查更新按钮、定时检查是否有新版本)，请求上面的那个接口，根据拉取的信息，与本地的版本号(或其他的信息)对比，如果拉取的版本号更高，则通过下载地址下载新的版本，否则什么都不做，等待下一次拉取。
+
+以上
+###[$fp = fsockopen($host, $port, $errno, $errstr, 3)](https://segmentfault.com/q/1010000008452849)
+提示说的“怎么找到打开的文件” 说的是实体文件吧？ 你这是打开的socket描述符是没有实体文件的，在内存中吧。 如果在linux上查看一个进程打开的哪些文件资源，可以使用 lsof -p PID 命令。该命名可以显示出进程打开的文件文件句柄、网络句柄还有一个库文件。
+这里的$fp指的是一个网络文件（资源）
+###[三维数组重组](https://segmentfault.com/q/1010000008465727)
+```js
+    <?php
+        $arr = array("photo" => array(
+            "name" => array(
+              0 =>  "221.png",
+              1 =>  "2211.png",
+              2 =>  "545843ec763cf.jpg",
+            ),
+            "type" => array(
+              0 => "image/png",
+              1 => "image/png",
+              2 => "image/jpeg",
+            ),
+            "tmp_name" => array(
+              0 => "C:\Windows\Temp\php55FF.tmp",
+              1 => "C:\Windows\Temp\php5600.tmp",
+              2 => "C:\Windows\Temp\php5601.tmp",
+            ),
+            "error" => array(
+              0 => 0,
+              1 => 0,
+              2 => 0,
+            ),
+            "size" => array(
+              0 => 8353,
+              1 => 8194,
+              2 => 527569,
+            )
+          ));
+        
+        $result = array();
+        foreach (current($arr) as $key => $value) {
+          foreach ($value as $k => $val) {
+            $result[$k][$key] = $val;
+          }
+        }
+        
+        var_dump($result);die;
+        
+        
+        $files = [];
+for($i=0;i<count($photo['name']);$i++)
+{
+    $files[] = [
+        'name'=>$photo['name'],
+        'type'=>$photo['type'],
+        'tmp_name'=>$photo['tmp_name'],
+        'error'=>$photo['error'],
+        'size'=>$photo['size']
+    ];
+}
+```
+###[引用传值，函数内的参数与传入参数执行同一个变量的引用](https://segmentfault.com/q/1010000008451377)
+```js
+<?php
+function begin(&$start) {
+    $tmp = gettimeofday();
+    $start = $tmp[usec];
+}
+ 
+function report($start) {
+    $tmp = gettimeofday();
+    $now = $tmp[usec];
+    echo "time consuming: ";
+    echo $now - $start;
+    echo "<br>";
+}
+ 
+function getRandNum($length = 8) {
+    $salt = substr(uniqid(rand()), -$length);
+    return $salt;
+}
+ 
+$start = 0;
+begin($start);
+$str="";
+while (strlen($str)< 10000)
+{
+    $str.=getRandNum(1);
+}
+report($start);
+```
+###[修改php.ini后重启nginx也不生效](https://segmentfault.com/q/1010000008452832)
+sudo kill -USR2 $(pgrep php-fpm)
+###[如何计算中奖概率问题](https://segmentfault.com/q/1010000008444119)
+```js
+/**
+ * 抽奖函数
+ *
+ * $i：传中奖概率过来，也就是百分比中的分子
+ * return 1|0
+ */
+function choujiang($i) 
+{
+    $group = array_fill(0, $i, 1) + array_fill(0, 100, 0);
+    $num = mt_rand(0, 99);
+
+    shuffle($group);
+    return $group[$num];
+}
+
+echo choujiang(65) ? '中奖了' : '没中奖';
+直接mt_rand(1, 100) <= $prob不就得了
+```
+###[php中的 static ](https://segmentfault.com/q/1010000008441782)
+```js
+
+class father {
+    static public function fatherF(){
+        echo "我在父类中哦";
+    }
+}
+class oneself extends father{
+    public function start(){
+    //    return self::fatherF();
+        return static::fatherF();
+    //    return self::oneselfF();
+    }
+    static public function oneselfF(){
+        echo "我在儿子类中哦";
+    }
+}
+echo PHP_VERSION; // 版本
+$c = new oneself;
+$c->start();
+
+/* 
++----------------------------------------------------------------------
+| 5.6.29 我在父类中哦
++----------------------------------------------------------------------
+*/
+
+```
+###[滴滴打车上面的手机号加密](https://segmentfault.com/q/1010000008434031)
+```js
+这个问题看起来简单，其实涉及的东西很多，不单单是程序方面，还有运营商落地和规则。
+我们说的电话号码看起来只是一串数字，但这些数字并不是你想怎么显示就怎么显示的。早期运营商为了业绩，可以开通透传功能，然后通过某些通信系统可以修改主叫号码来达到更改显示号码的情况，但这也是要在运营商规定的范围内（比如你接的联通的运营商，你可以把你的主叫显示成任意的联通号码，但如果你显示成移动的号码就不能呼出了）。
+滴滴的号码不是把你的手机号码加密，而是司机呼叫你的时候，其实是先呼叫到虚拟运营商那里，虚拟运营商在转接给你达成的。
+PS：我就是做VOIP的，所以我做过类似的玩意。
+```
+###[PHPExcel输入到Z列就只会读A列的内容](https://segmentfault.com/q/1010000008434882)
+```js
+static function reader($file) {
+
+        if (self::_getExt($file) == 'xls') {
+            import("Tools.Excel.PHPExcel.Reader.Excel5");
+            $PHPReader = new \PHPExcel_Reader_Excel5();
+        } elseif (self::_getExt($file) == 'xlsx') {
+            import("Tools.Excel.PHPExcel.Reader.Excel2007");
+            $PHPReader = new \PHPExcel_Reader_Excel2007();
+        } else {
+            return '路径出错';
+        }
+
+        $PHPExcel     = $PHPReader->load($file);
+        $currentSheet = $PHPExcel->getSheet(0);
+        $allColumn    = $currentSheet->getHighestColumn();
+        $allRow       = $currentSheet->getHighestRow();
+        $allColumn++;
+        //$allRow变量是有多少行
+        for($b = 1;$b < $allRow; $b++){
+            //$allColumn变量是有多少列
+            for($i='A'; $i!=$allColumn; $i++){
+                $address = $i.$b;
+                $arr[$b][$i] = $currentSheet->getCell($address)->getValue();
+            }
+        }
+        return $arr;
+    }
+```
+###[php脚本编码规范的工具](https://segmentfault.com/q/1010000008409484)
+https://github.com/squizlabs/PHP_CodeSniffer https://segmentfault.com/a/1190000004162229
+https://segmentfault.com/q/1010000008408776  https://segmentfault.com/q/1010000008308957 
+https://segmentfault.com/q/1010000008424035  https://segmentfault.com/q/1010000008410829 
+https://segmentfault.com/q/1010000008425937 https://segmentfault.com/q/1010000008412879
+https://segmentfault.com/q/1010000008416813 
+###[短网址的生成原理](https://segmentfault.com/q/1010000008424002)
+0-9 a-z A-Z 你看看主流的短连接是几位的 每一位随机取 基本不会重复 保险起见数据库查一遍是否重复，然后key和url存入数据库，前期量小的话 很简单 直接根据key取url然后重定向，后期访问压力大了，基本就是读压力，前端档一个缓存就好了
+```js
+function get_last_number() {
+     $db_result = mysql_query("SELECT last_number FROM ".DB_PREFIX."settings") or db_die(__FILE__, __LINE__, mysql_error());
+     $db_row = mysql_fetch_row($db_result);
+
+     return $db_row[0];
+}
+
+function increase_last_number() {
+     mysql_query("UPDATE ".DB_PREFIX."settings SET last_number = (last_number + 1)") or db_die(__FILE__, __LINE__, mysql_error());
+
+    return (mysql_affected_rows() > 0) ? true : false;
+}
+
+function generate_code($number) {
+    $out = "";
+    $codes = "abcdefghjkmnpqrstuvwxyz23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+
+    while ($number > 53) {
+      $key = $number % 54;
+      $number = floor($number / 54) - 1;
+      $out = $codes{$key}.$out;
+ }
+
+    return $codes{$number}.$out;
+}
+
+function insert_url($url, $code) {
+    mysql_query("INSERT INTO ".DB_PREFIX."urls (url, code, date_added) VALUES ('$url', '$code', NOW()") or db_die(__FILE__, __LINE__, mysql_error());
+
+    return mysql_insert_id();
+}
+```
+###[关于函数`mt_getrandmax`](https://segmentfault.com/q/1010000008429547)
+系统一般会有最大能产生的随机数值LIMIT_RAND_MAX，比如2^31-1,而mt_getrandmax()返回的就是系统默认的这个值。使用情境应该是这样的：
+
+1、使用mt_getrandmax()函数获取系统能产生的最大随机数值LIMIT_RAND_MAX
+2、根据LIMIT_RAND_MAX来判定自己所需的随机数是否在这个范围
+3、使用mt_rand()产生随机数
+
+总的来说，mt_getrandmax()仅仅是用来做范围衡量作用
