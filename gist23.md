@@ -588,3 +588,212 @@ http://gitbook.zhangjikai.com/
 Github: https://github.com/six-ddc/httpflow
 ###[ cURL 然后在这个网站能直接转换为 requests 格式](https://www.v2ex.com/t/343342#reply4)
 https://curl.trillworks.com/ 
+###[php str_replace替换关键词，如何控制长词优先](https://segmentfault.com/q/1010000008320325)
+```js
+$str0 = 'php技术 是时下最好用的 php'; // 替换成 'java技术 是时下最好用的 编程技术' 
+$str1 = 'php技术';
+$str2 = 'php'
+// 比较字符串长短，并组合成数组
+function compare(){
+    $vars = func_get_args();
+    $list = array();
+    $len  = array();
+    $rel  = array();
+    
+    // 收集长度 + 对照表
+    foreach ($vars as $k => $v)
+        {
+            $l        = mb_strlen($v);
+            $list[$k] = $l;
+            $len[]    = $l;
+        }
+    
+    $count = count($len);
+    
+    // 选择排序：对长度进行比较
+    for ($i = 0; $i < $count; ++$i)
+        {
+            $longest = $i;
+            
+            for ($n = $i + 1; $n < $count; ++$n)
+                {
+                    if ($len[$i] < $len[$n]) {
+                        $longest = $n;
+                    }
+                }
+            
+            if ($i !== $longest) {
+                $tmp = $len[$i];
+                $len[$i] = $len[$longest];
+                $len[$longest] = $tmp;
+            }
+        }
+     
+     // 搜集整理
+     foreach ($len as $v)
+         {
+             $rel[$v] = $list[$v];
+         }
+         
+    // 返回最终结果
+    return $rel;
+}
+
+// 队列方式按照长的先替换
+$rel = compare($str1 , $str2);
+$replace = array('java' , '编程技术');
+
+for ($i = 0; $i < count($rel); ++$i)
+    {
+        $str0 = preg_replace($rel[$i] , $replace[$i] , $str0);
+    }
+```
+###[Laravel Passport在前后端分离](https://segmentfault.com/q/1010000008481512)
+```js
+通过事件监听来清理token的方法：
+将事件注册到 EventServiceProvider 中，代码如下：
+
+protected $listen = [
+    'App\Events\SomeEvent' => [
+        'App\Listeners\EventListener',
+    ],
+    'Laravel\Passport\Events\AccessTokenCreated' => [
+        'App\Listeners\Auth\RevokeOldTokens',
+    ],
+    'Laravel\Passport\Events\RefreshTokenCreated' => [
+        'App\Listeners\Auth\PruneOldTokens',
+    ],
+];
+
+```
+###[闭包原理](https://segmentfault.com/q/1010000008491951)
+```js
+var a = [];
+for (var i = 0; i < 10; i++) {
+  a[i] = (function(index){
+    return function(){console.log(index)}
+  })(i)
+}
+a[6](); // 6
+```
+###[链式调用](https://segmentfault.com/q/1010000008491351)
+```js
+umber.prototype.add=function(num){return Number(this + num)}
+Number(10).add(20).add(30)
+Number.prototype.add=function(num){return this+num}
+(10).add(20)
+```
+###[javascript模仿重载](https://segmentfault.com/q/1010000008491969)
+```js
+function a(){
+  if(arguments.length===1){
+    //执行某些代码
+  }else if(arguments.length===2){
+    //执行另一些代码
+  }
+
+}
+```
+###[如何屏蔽页面上所有a标签的跳转](https://segmentfault.com/q/1010000008491960)
+document.querySelectorAll('a').forEach(a => {a.onclick=(e) => {e.preventDefault()}}) 
+###[mysql根据某个字段已存在的值排序](https://segmentfault.com/q/1010000008471094)
+```js
+CREATE FUNCTION `sort_col`(`input` VARCHAR(50))
+    RETURNS VARCHAR(50)
+    LANGUAGE SQL
+    NOT DETERMINISTIC
+    NO SQL
+    SQL SECURITY DEFINER
+    COMMENT ''
+BEGIN
+
+declare a int;
+declare b int;
+declare c int;
+
+set a = cast(substr(input, 3, 3) as int);
+set b = cast(substr(input, 9, 3) as int);
+set c = cast(substr(input, 15, 3) as int);
+
+if (a <= b && b <= c) then
+  return concat('["', a, '","', b , '","', c , '"]');
+elseif (b <= a && a <= c) then
+ return concat('["', b, '","', a , '","', c , '"]');
+elseif (c <= a && a <= b) then
+ return concat('["', c, '","', a , '","', b , '"]');
+elseif (c <= b && b <= a) then
+ return concat('["', c, '","', b , '","', a , '"]');
+elseif (a <= c && c <= b) then
+ return concat('["', a, '","', c , '","', b , '"]');
+elseif(b <= c && c <= a) then
+ return concat('["', b, '","', c , '","', a , '"]');
+end if;
+END
+update table_name set values = sort_col(values);
+```
+###[有一个函数名（字符串形式），如何能够调用这个函数？](https://segmentfault.com/q/1010000008491531)
+```js
+
+import sys
+def afunc():
+    return 0
+s= "afunc"
+get_afunc = getattr(sys.modules[__name__], s)
+print get_afunc()
+```
+###[微博第三方登录，授权回掉页面如何获取code？](https://segmentfault.com/q/1010000008407752)
+授权回调页 :必须设置为自己网站的地址，这样就可以接收到了。
+###[如何让浏览器文本排版和记事本排版效果一样](https://segmentfault.com/q/1010000008490153)
+放 pre 里，然后使用 monospace 字体。
+###[批量替换超大量的html文本](https://segmentfault.com/q/1010000008479762)
+```js
+#!/bin/bash
+A=($(find . -name '*.html'))
+for((i=0;i<${#A[@]};i+=10000))
+do
+    sed -i 's@xxxx@oooo@g' ${A[@]:$i:10000} &
+done
+wait
+find    ./   -name  "*.html"  -exec  grep "1234" {} \; -exec sed -i 's/1234/5678/g' {} \;
+```
+###[python 利用subprocess库调用mplayer](https://segmentfault.com/q/1010000008482564)
+```js
+import subprocess
+ 
+p = subprocess.Popen(["mplayer", "-slave", "-quiet", "/home/pi/Music/爱的翅膀.mp3"], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = False)
+ 
+p.stdin.write('\n') 
+print p.stdout.read() //此处
+p.stdin.write('get_time_pos\n')
+print p.stdout.read()
+mplayer播放时会向stout输入大量字符，超过了4096造成死锁，输出信息不在我的需求之中，因此决定修改stdout=open("/dev/null","w")
+```
+###[Laravel 5.1 如何 migrate 某一个指定的迁移文件](https://segmentfault.com/q/1010000008485186)
+在 database/migrations/ 目录下创建一个新的目录，比如 single/
+将你要 migrate 的那个文件移到上一步创建的 single/ 目录
+命令行执行下面的命令：
+php artisan migrate --path=/database/migrations/single
+###[touchmove e.preventDefault() 不生效](https://segmentfault.com/q/1010000008484849)
+chrome,或者说再webkit核浏览器里，当你浏览器在一个滚动的状态时，touchmove的cancelable属性被默认置为false，所以preventDefault是不会生效的。
+
+所以要么你在start的时候就阻止，要么就换一种方式去达到你的需求
+###[前端预览图片，用Base64和objectURL哪个更好](https://segmentfault.com/q/1010000008228165)
+```js
+input.onchange = function(e) {
+    [...this.files].map(file => {
+        const img = new Image();
+
+        // 方案1 ObjectURL
+        img.src = window.URL.createObjectURL(new Blob([file], {type: file.type}));
+        document.body.appendChild(img);
+
+        // 方案2 Base64
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            document.body.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    });
+}
+```
