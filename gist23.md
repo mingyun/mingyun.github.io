@@ -797,3 +797,31 @@ input.onchange = function(e) {
     });
 }
 ```
+###[H5页面在手机端如何实现复制粘贴板功能](https://segmentfault.com/q/1010000008464484)
+```js
+<div id="copy" data-clipboard-text="Copy Me!">Click to copy</div> 
+<script src="ZeroClipboard.js"></script> <script> var clip = new
+ZeroClipboard( document.getElementById('copy') ); </script>
+
+If you need non-flash support for iOS you just add a fall-back:clip.on( 'noflash', function ( client, args ) {
+
+$("#copy").click(function(){            
+    var txt = $(this).attr('data-clipboard-text');
+    prompt ("Copy link, then click OK.", txt);
+}); });   
+```
+###[POST提交为什么比Get提交数据量大](https://segmentfault.com/q/1010000008487254)
+浏览器及 HTTP 服务器的实现限制了 URL 的长度，从而限制了 GET 能够提交的数据量。
+
+或者你想问同样的数据，你使用 POST 提交会比 GET 提交消耗掉更多的流量？
+
+是会多出那么一点点。你把两种方法的全文写出来就知道啦。多了 Content-Length 和 Content-Type 头
+###求数组2个值的和为6
+```js
+$arr=[1,5,8,11,44];
+for ($i=0;$i<count($arr);$i++){
+  for ($j=0;$j<count($arr);$j++){
+   if($arr[$i]+$arr[$j]==6){echo $arr[$i],$arr[$j];echo '<br>';}//5 1
+}
+}
+```
