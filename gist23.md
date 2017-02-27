@@ -825,3 +825,532 @@ for ($i=0;$i<count($arr);$i++){
 }
 }
 ```
+###[根据数据库表接口自动生成restfull 接口](https://segmentfault.com/q/1010000008335958)
+https://github.com/mevdschee/php-crud-api 
+###[php创建文件碰到点问题](https://segmentfault.com/q/1010000008474086)
+```js
+    /**
+     * 生成文件  不支持纯数字目录名称
+     * @param string $path
+     * @param array $files
+     * eg: $fileArr = array('dir1'=>'1.html','dir2'=>array('subdir1'=>'2.html','subdir2'=>'3.html','4.html'))
+     * 生成的文件路径层级如下
+     * --dir1--1.html
+     *   |
+     *   dir2--subdir1--2.html
+     *       |
+     *        -subdir2--3.html
+     *       |
+     *        -4.html
+     */
+    public static function create($path,array $files)
+    {
+        //1. 数字键值,字符串文件名  array('config')
+        //2. 数字键值,字符串文件目录 array('test.html')
+        //3. 字符串键值,字符串文件名  array('test'=>'test.txt')
+        //4. 字符串键值,字符串文件目录 array('test'=>'test1')
+        //5. 字符串键值,数组文件目录 array('test'=>array('test1'));
+        $path = str_replace('\\','/',$path);   //替换斜杠
+        if(strrpos($path,'/')!=strlen($path)-1)
+        {  //检查$path,是否有末尾的'/',若没有则自动添加
+            $path .= '/';
+        }
+
+        foreach ($files as $key=>$item)
+        {
+            $temp = $path;
+            if(!is_numeric($key))
+            {
+                $path .= $key;
+                mkdir($path);
+            }
+            if(is_string($item))
+            {
+                $file = $path.'/'.$item;
+                if(self::hasExt($item))
+                {
+                    fopen($file,'wb');
+                }else{
+                    mkdir($file);
+                }
+            }
+            if(is_array($item))
+            {
+                self::create($path,$item);
+            }
+            $path = $temp;
+        }
+    }
+
+    /**
+     * 判断文件名称是否有后缀
+     * @param string $file
+     * @return bool 有后缀返回true,否则返回false.
+     */
+    public static function hasExt($file)
+    {
+        if(!is_string($file)) return false;
+        return is_bool(strpos($file,'.'))? false : true;
+    }
+```
+###[session对象会自动帮你处理Cookie](https://segmentfault.com/q/1010000008483756)
+```js
+import requests
+
+url = ""
+headers = {}
+with requests.Session() as s:
+    s.headers.update(headers)
+    s.get(url)
+    s.post(login_url)
+
+```
+###[php 预处理stmt语句问题](https://segmentfault.com/q/1010000008485409)
+```js
+$stmt = $db->prepare('SELECT id, title, content FROM posts WHERE id = ?');
+$stmt->bind_param('i', $id);
+$stmt->execute();
+//如果能用get_result,一句就能返回
+return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+//如果不能用get_result,那就得改成下面
+$stmt->bind_result($id, $title, $content);
+$stmt->store_result();
+$rows = array();
+$i = 0;
+while ($stmt->fetch()) {
+    $rows[$i]['id'] = $id;
+    $rows[$i]['post_title'] = $title;
+    $rows[$i]['post_content'] = $content;
+    $i++;
+}
+$stmt->free_result();
+$stmt->close();
+return $rows;
+```
+###[用Python+Selenium获取淘宝商品]()
+```js
+def getValueUsingPhantomJS(url,cssSelector):
+
+    from selenium import webdriver
+    from time import sleep
+
+    driver = webdriver.PhantomJS(executable_path=r'D:\phantomjs-2.1.1-windows\bin\phantomjs.exe')
+    driver.get(url)
+
+    sleep(5)
+    driver.get_screenshot_as_file('test3.png')
+    element1 = driver.find_element_by_css_selector(cssSelector)
+
+    print(element1.text)
+    return element1.text
+
+
+# sellCounter = getValueUsingPhantomJS("https://detail.tmall.com/item.htm?id=535551057548&ns=1&abbucket=0","#J_DetailMeta li.tm-ind-item.tm-ind-sellCount > div > span.tm-count")
+sellCounter = getValueUsingPhantomJS("https://item.taobao.com/item.htm?id=543877898669&ns=1&abbucket=0#detail","#J_SellCounter")
+print( sellCounter )
+也许是lazyload?
+加上这句，driver.maximize_window()在最前面  一般都是为了提高网页加载速度，在需要时再加载，最大化时你才能看到那个数字（开始加载），在之前只是一个占位符(I guess)
+```
+###[python怎么在字符串中标记子字符串的位置](https://segmentfault.com/q/1010000008502287)
+```js
+s1='AATTCCCCCGGGGGAATTAATTAATTAATTAATTGGGGAATTGGGGAATTGGGGAATT's2='AATT'
+import re
+for i in re.finditer('AATT', s1):
+    print(i.span())
+```
+###[python中怎么对列表以区间进行统计](https://segmentfault.com/q/1010000008502734)
+```js
+# coding: utf-8
+
+lst = [1, 1, 1, 2, 3, 4, 4, 5, 5, 6, 7, 7, 7, 7, 8, 9, 9, 9, 10, 99, 99, 99, 100, 100]
+intervals = {'{0}-{1}'.format(10 * x + 1, 10 * (x + 1)): 0 for x in range(10)}
+for _ in lst:
+    for interval in intervals:
+        start, end = tuple(interval.split('-'))
+        if int(start) <= _ <= int(end):
+            intervals[interval] += 1
+print intervals
+
+```
+###[python 如何执行mysql单个参数过滤](https://segmentfault.com/q/1010000008492988)
+```js
+name = "AAA'A"
+cursor.execute('select * from tb where name=%s',name)
+cursor.execute('select * from tb where name=%s',(name))
+...
+def execute(self, query, args=None):
+    """
+    ...
+    args -- optional sequence or mapping, parameters to use with query.
+    ...
+    """
+    if args is not None:
+        # 首先判断args是否为字典类型
+        if isinstance(args, dict):
+            # 以k-v形式填入查询语句中。
+            query = query % dict((key, db.literal(item))
+                                 for key, item in args.iteritems())
+        # 当args为非字典类型时
+        else:
+            # 遍历args, 最后生成一个元组填入查询语句中。
+            query = query % tuple([db.literal(item) for item in args])
+    ...
+
+```
+###[REPL其实就是编程语言可交互的shell](https://segmentfault.com/q/1010000008491475)
+```js
+php -a 进入Interactive shell
+php > $中国 = '中华人民共和国';
+php > echo $中国;
+php > echo mb_strlen($中国, 'UTF-8'); //输出7,正确.
+php > echo strlen($中国); //输出21,错误.
+一般Linux终端编码采用的是UTF-8,执行locale或echo $LANG可见本地语言环境.
+
+https://github.com/borisrepl/boris 
+```
+###[已知外汇牌价折算汇率](https://segmentfault.com/q/1010000008437613)
+```js
+for k from 1 to rows(A)
+    for i from 1 to rows(A)
+        for j from 1 to rows(A)
+            if A[i][j] = 0 then
+               // 货币 i, j 通过货币 k 折算
+               A[i][j] <- A[i][k] * A[k][j] 
+            end if
+```
+###[Python+Selenium+PhantomJs爬虫,如何取得新打开页面的源码](https://segmentfault.com/q/1010000008452638)
+```js
+for handle in driver.window_handles:
+    driver.switch_to_window(handle)
+    from selenium.webdriver.support.ui import WebDriverWait
+# 等待新页面生成
+WebDriverWait(self.browser, 5).until(
+    expected_conditions.presence_of_element_located((By.ID, "username")
+    )
+```
+###[python发送get请求是否可以只获取状态码而不下载页面内容](https://segmentfault.com/q/1010000008480145)
+```js
+heads=requests.head(url)
+记得使用 requests.Session，这样对同一服务器的访问可以加速一倍以上。
+```
+###[python爬取页面时，一个URL无法访问导致报错](https://segmentfault.com/q/1010000008481715)
+curl里面有个可以设置返回header的，如果取到的数据非200状态，直接跳过处理就好了。 
+###[urllib2.HTTPError: HTTP Error 400: Bad Request ](https://segmentfault.com/q/1010000008473868)
+```js
+url = 'https://xueqiu.com/stock/f10/finmainindex.json'
+user_agent = 'Mozilla/5.0'  
+values = {'symbol' : 'SZ000001',  'page' : '1','size' : '1' }  
+headers = { 'User-Agent' : user_agent }  
+data = urllib.urlencode(values)  
+print data
+request = urllib2.Request(url, data, headers)  
+print request
+response = urllib2.urlopen(request)  
+page = response.read() 
+print page 
+
+
+# coding: utf-8
+
+import requests
+
+session = requests.Session()
+session.headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
+}
+session.get('https://xueqiu.com')
+r = session.get('https://xueqiu.com/stock/f10/finmainindex.json?symbol=SZ000001&page=1&size=1')
+print r.text
+在访问https://xueqiu.com时需要先获取到相应的cookie信息，后面的页面都需要用到相关的cookie
+```
+###[python获取环境变量问题](https://segmentfault.com/q/1010000008478326)
+```js
+
+
+$ aaa="test_aaa"
+$ export bbb="test_bbb"
+$ echo $aaa
+test_aaa
+$ echo $bbb
+test_bbb
+$ python
+Python 2.7.10 (default, Jul 30 2016, 19:40:32)
+[GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> os.getenv("aaa")
+>>> os.getenv("bbb")
+'test_bbb'
+>>> print os.getenv("aaa")
+None
+>>> print os.getenv("bbb")
+test_bbb
+```
+###[python字符串用十六进制表示](https://segmentfault.com/q/1010000008454820)
+```js
+>>> '\x61\x62\x63\x64' == 'abcd'
+True
+>>> ord('a')
+97
+>>> chr(97)
+'a'
+不知道这样可不可以满足你的要求
+
+>>> [hex(ord(x)) for x in 'abcd']
+['0x61', '0x62', '0x63', '0x64']
+import binascii
+print(binascii.b2a_hex(b'abcd'))
+# b'61626364'
+或者 py3.5 直接这样写
+
+print(b'abcd'.hex())
+# 61626364
+>>> print(''.join((r'\x%2x'%ord(c)for c in 'abcd')))
+\x61\x62\x63\x64
+>>> print(''.join((r'\x%2x'%c for c in bytes('abcd','l1'))))
+\x61\x62\x63\x64
+>>> print(''.join((r'\x%2x'%c for c in b'abcd')))
+\x61\x62\x63\x64
+```
+###[Python新建csv文件](https://segmentfault.com/q/1010000008447981)
+```js
+import csv
+csvfile = open('csvtest.csv', 'wb')#csvfile = open('csvtest.csv', 'w')
+writer = csv.writer(csvfile)
+writer.writerow(['id', 'url', 'keywords'])
+data = [
+  ('1', 'http://www.xiaoheiseo.com/', '小黑'),
+  ('2', 'http://www.baidu.com/', '百度'),
+  ('3', 'http://www.jd.com/', '京东')
+]
+writer.writerows(data)
+csvfile.close()
+```
+###[python2.x的unicode编码优雅输出](https://segmentfault.com/q/1010000008408287)
+```js
+>>> d = {u'subType': u'\u5f55\u97f3\u5ba4\u7248',
+         u'name': u'\u5468\u6770\u4f26\u7684\u5e8a\u8fb9\u6545\u4e8b'}
+>>> print d
+{u'subType': u'\u5f55\u97f3\u5ba4\u7248',
+u'name': u'\u5468\u6770\u4f26\u7684\u5e8a\u8fb9\u6545\u4e8b'}
+
+>>> for i in d:
+...     print i
+... 
+subType
+name
+
+import json
+d = {u'subType': u'\u5f55\u97f3\u5ba4\u7248',
+         u'name': u'\u5468\u6770\u4f26\u7684\u5e8a\u8fb9\u6545\u4e8b'}
+print(json.dumps(d,ensure_ascii=False,indent=1,encoding="UTF-8"))
+```
+###[python ImportError: No module named '***'](https://segmentfault.com/q/1010000008425727)
+```js
+>>> import numpy as np
+>>> import tensorflow as tf
+>>>     
+sudo python demo.py和python demo.py不一样，sudo一般代表系统默认的python环境
+
+[~]$ which python
+/usr/local/bin/python
+[~]$ sudo which python
+/usr/bin/python
+```
+###[for计算斐波那契数列](https://segmentfault.com/q/1010000008403879)
+```js
+fibs = [0,1]
+for i in range(8):
+    fibs.append(fibs[-2] + fibs[-1])
+    print(fibs)
+    如果给定一个list或tuple，我们可以通过for循环来遍历这个list或tuple，这种遍历我们称为迭代。迭代是通过 for ... in 来完成的。range（8）是一个list[0, 1, 2, 3, 4, 5, 6, 7]，i是个变量，每一轮从ragne(8)里面取出一个数参与后面的操作，这个循环一共取数八轮（0~7）8个数。
+```
+###[soup.select 返回的是符合条件的列表(list)](https://segmentfault.com/q/1010000008421015)
+```js
+deal_way = list(soup.select('div.biaoqian_li').stripped_strings)
+
+#
+
+deal_ways = soup.select('div.biaoqian_li')
+for deal_way in deal_ways:
+    x = list(deal_way.stripped_strings)
+    soup.select 返回的是符合条件的列表(list)，列表当然没有那个属性(因为那个属性是bs4 Tag对象上的属性)
+而下面可以是因为列表里面的元素就是Tag对象
+list(soup.select('div.biaoqian_li')[0].stripped_strings) 
+```
+###[python中遍历列表的合并问题](https://segmentfault.com/q/1010000008409760)
+```js
+print dict([(i,count_times.count(i)) for i in set(count_times)])
+In [1]: b, a = {}, [1, 2, 3, 4, 5, 6]
+
+In [2]: [b.update({key: b[key] + 1}) if key in b.keys() else b.update({key: 1})  for key in a]
+Out[2]: [None, None, None, None, None, None]
+
+In [3]: b
+Out[3]: {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1}
+```
+###[Laravel 如何获取路由名称](https://segmentfault.com/q/1010000008441811)
+Route::resource('photo', 'PhotoController');
+
+//GET           /photos                    index
+//GET           /photos/create            create
+//POST          /photos                    store
+//GET            /photos/{photo}            show
+//GET            /photos/{photo}/edit    edit
+//PUT/PATCH        /photos/{photo}            update
+//DELETE        /photos/{photo}            destroy
+Route::currentRouteName()
+###[laravel里面一个controller中的方法要调用另一个controller](https://segmentfault.com/q/1010000008406353)
+$ctrl = \App::make(\App\Http\Controllers\AaaController::class);
+\App::call([$ctrl, "aaa"]);
+###[laravel的“门面”和“契约”的问题](https://segmentfault.com/q/1010000008406422)
+外观（你说的门面）是外观模式的实现。
+协议（你说的契约）是工厂方法模式或抽象工厂模式的实现。
+
+阅读一下设计模式，你能收货不少。
+###[laravel5.2 多个条件模糊查询+多个orWhere语句](https://segmentfault.com/q/1010000008384076)
+```js
+A::where(function ($query) {
+    $query->where('a', 1)->where('b', 'like', '%123%');
+})->orWhere(function ($query) {
+    $query->where('a', 1)->where('b', 'like', '%456%');
+})->get();
+```
+###[laravel什么时候要把写的东西放到服务提供者里面去](https://segmentfault.com/q/1010000008399239)
+在服务提供者把服务放进服务容器。 https://segmentfault.com/q/1010000008397464 
+###[laravel 使用 表单和HTML扩展包有什么好处 ](https://segmentfault.com/q/1010000008492621)
+代替你处理一部分内容,例如防止跨站的token
+
+<input name="_token" type="hidden" value="4P37rt36ym3IyCdTJgqE850iBofqxxZChjtBPeJb">
+###[MySQL 联合查询并更新到另一个表](https://segmentfault.com/q/1010000008497433)
+insert into account(uid,balance) (select uid, balance from wp_accountinfo) on duplicate key update balance=column(blance);
+###[求解一个mysql查询问题](https://segmentfault.com/q/1010000008437012)
+select catid,title from table2 where FIND_IN_SET(catid, select arrchildid from table1 where catid = 6)
+###[mysql中查询条件的先后顺序问题](https://segmentfault.com/q/1010000008429400)
+```js
+CREATE TABLE `user_customer` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID号',
+  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '人员ID号',
+  `cid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '客户ID号',
+  PRIMARY KEY (`id`),
+  KEY `uid_cid` (`uid`,`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=18227 DEFAULT CHARSET=utf8
+select count(1) from user_customer where uid > 1500 and cid > 1000000;
+select count(1) from user_customer where cid > 1000000 and uid > 1500;
+```
+###[如何解决where name like '%%' 当name 为null时，查询不到数据](https://segmentfault.com/q/1010000008413478)
+###[千万级数据表如何有效的变更字段](https://segmentfault.com/q/1010000008444360)
+目前采用的方法如下：
+1、将A表的数据导出到一个临时文件中tmp.unl
+2、新建一张临时表Atmp，最好是无日志类型的
+3、将tmp.unl中的数据导入到Atmp表中
+4、删除表A
+5、将Atmp表更名为A
+6、将表A设置为标准表，同时为Atmp增加索引
+###[mysql group by 优化的问题](https://segmentfault.com/q/1010000008445575)
+把表A(8千万行)复制一个表结构，产生一张空表B；
+对B的ciphertext列做唯一索引；
+遍历表A的每一行，插入到表B，可以用REPLACE或INSERT INTO ... ON DUPLICATE KEY UPDATE ...
+校验表B的数据，如果结果正确，则删除表A，把表B重命名为表A。
+###[数据库JOIN查询](https://segmentfault.com/q/1010000008447610)
+```js
+
+
+drop table if exists article;
+drop table if exists category;
+drop table if exists r_ac;
+
+create table article(
+id serial not null,
+title varchar(100),
+expire timestamp,
+primary key(id)
+);
+
+create table category(
+id serial not null,
+name varchar(50),
+primary key(id)
+);
+
+create table r_ac(
+article int not null,
+category int not null,
+primary key(article, category)
+);
+
+
+
+insert into article(title, expire) values ('a', '2017-05-20'),('b', null),('c', '2017-03-04'),('d', '2017-02-23'),('e', '2017-04-23'),('f', '2016-09-15'),('g', '2017-06-09');
+insert into category(name) values ('c1'),('c2'),('c3'),('c4'),('c5'),('c6'),('c7');
+insert into r_ac (article, category) values
+(1, 1), (1, 2), (1, 5), (1, 7),
+(2, 1), (2, 6),
+(3, 5),
+(4, 1), (4, 4),
+(7, 1), (7, 7);
+
+
+
+select category, c.name, count(1) as c from r_ac as ac
+inner join (
+select id, title, expire from article where expire is null or expire>now()
+) as z on ac.article=z.id
+left join category as c on ac.category=c.id
+group by category, c.name;
+
+
+
+
+
+
+```
+###[一次性的update MYSQL](https://segmentfault.com/q/1010000008475543)
+```js
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method='post'>
+<?php
+//假设这是一个从数据库获取的用户ID集合
+$user_list = [
+    ['id'=>1],
+    ['id'=>2],
+    ['id'=>3],
+    ['id'=>4],
+];
+//将表单循环显示出来
+foreach($user_list as $key => $val){
+    $id = $val['id'];
+?>
+    <!-- 注意这里的name属性 -->
+    <input name='user[]' type='text' value='<?php echo $id; ?>' />
+<?php
+}
+?>
+<!-- 提交按钮 -->
+<input name='submit' type='submit' value='提交'>
+<?php
+//这里是接收到post请求是处理的过程
+if (isset($_POST['submit'])) {
+    $user_list = $_POST['user']; //这里的表单名，但是不需要中括号'[]'
+    var_dump($user_list);
+}
+?>
+</form>
+```
+###[mysql安装密码](https://segmentfault.com/q/1010000008365669)
+```js
+vim /etc/my.cnf
+# 添加下面的字段
+skip-grant-tables 
+mysql> update user set mysql>authentication_string=PASSWORD('123456') where User='root';
+mysql>flush privileges;  
+
+vim /etc/my.cnf
+# 添加下面的字段
+skip-grant-tables 
+mysql> use mysql;
+mysql> update user set password=PASSWORD("password") where User='root';  
+mysql> flush privileges;  
+[root@YFPUNzLr ~]# grep 'temporary password' /var/log/mysqld.log
+2017-02-15T14:31:05.449058Z 1 [Note] A temporary password is generated for root@localhost: 3NeI3PuNwa%j
+[root@YFPUNzLr ~]# mysql -uroot -p
+```
