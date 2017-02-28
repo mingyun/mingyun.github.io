@@ -74,3 +74,111 @@ C.name,
 ) as rent_count 
 from community as C;
 ```
+###[php使用curl下载https资源文件](https://segmentfault.com/q/1010000008502236)
+```js
+<?php
+$urls = [
+    "https://cdn.pixabay.com/photo/2017/01/28/21/48/lion-2016620__340.jpg 1x, https://cdn.pixabay.com/photo/2017/01/28/21/48/lion-2016620__480.jpg",
+    "https://cdn.pixabay.com/photo/2017/02/20/19/29/architecture-2083687__340.jpg 1x, https://cdn.pixabay.com/photo/2017/02/20/19/29/architecture-2083687__480.jpg",
+    "https://cdn.pixabay.com/photo/2017/02/06/12/34/reptile-2042906__340.jpg 1x, https://cdn.pixabay.com/photo/2017/02/06/12/34/reptile-2042906__480.jpg"
+];
+
+foreach ($urls as $k => $v) {
+     if (!empty($v) && preg_match("~^http~i", $v)) {
+        $nurl[$k] = trim(str_replace(' ', "%20", $v));
+        $curl[$k] = curl_init($nurl[$k]);
+        curl_setopt($curl[$k], CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($curl[$k], CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl[$k], CURLOPT_HEADER, 0);
+        curl_setopt($curl[$k], CURLOPT_CONNECTTIMEOUT, 20);
+        curl_setopt($curl[$k], CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl[$k], CURLOPT_SSL_VERIFYHOST, false);        
+        if (!isset($handle)) {
+           $handle = curl_multi_init();
+        }
+        curl_multi_add_handle($handle, $curl[$k]);
+      }
+      continue;
+}
+$active = null;
+do {
+   $mrc = @curl_multi_exec($handle, $active);
+} while ($mrc == CURLM_CALL_MULTI_PERFORM);
+   while ($active && $mrc == CURLM_OK) {
+       if (curl_multi_select($handle) != -1) {
+          do {
+             $mrc = curl_multi_exec($handle, $active);
+          } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+       }
+   }
+
+foreach ($curl as $k => $v) {
+   var_dump(curl_error($curl[$k]));
+}
+SSL: CA certificate set, but certificate verification is disabled
+curl_setopt($curl[$k], CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+改成：
+
+curl_setopt($curl[$k], CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V6);
+```
+###数组转换
+```js
+$arr = array("photo" => array(
+            "name" => array(
+              0 =>  "221.png",
+              1 =>  "2211.png",
+              2 =>  "545843ec763cf.jpg",
+            ),
+            "type" => array(
+              0 => "image/png",
+              1 => "image/png",
+              2 => "image/jpeg",
+            ),
+            "tmp_name" => array(
+              0 => "C:\Windows\Temp\php55FF.tmp",
+              1 => "C:\Windows\Temp\php5600.tmp",
+              2 => "C:\Windows\Temp\php5601.tmp",
+            ),
+            "error" => array(
+              0 => 0,
+              1 => 0,
+              2 => 0,
+            ),
+            "size" => array(
+              0 => 8353,
+              1 => 8194,
+              2 => 527569,
+            )
+          ));
+
+        $result = array();
+        foreach (current($arr) as $key => $value) {
+          foreach ($value as $k => $val) {
+            $result[$k][$key] = $val;
+          }
+        }
+        >>> $result
+=> [
+       [
+           "name"     => "221.png",
+           "type"     => "image/png",
+           "tmp_name" => "C:\\Windows\\Temp\\php55FF.tmp",
+           "error"    => 0,
+           "size"     => 8353
+       ],
+       [
+           "name"     => "2211.png",
+           "type"     => "image/png",
+           "tmp_name" => "C:\\Windows\\Temp\\php5600.tmp",
+           "error"    => 0,
+           "size"     => 8194
+       ],
+       [
+           "name"     => "545843ec763cf.jpg",
+           "type"     => "image/jpeg",
+           "tmp_name" => "C:\\Windows\\Temp\\php5601.tmp",
+           "error"    => 0,
+           "size"     => 527569
+       ]
+   ]
+```
