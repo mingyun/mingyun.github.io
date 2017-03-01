@@ -239,3 +239,302 @@ foreach($bitfields as $feature)
     echo PHP_EOL;
 }
 ```
+###[MySQL 5.7 之联合（复合）索引实践](https://laravel-china.org/topics/3565)
+```js
+mysql> show create table m_user\G;
+*************************** 1. row ***************************
+       Table: m_user
+Create Table: CREATE TABLE `m_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` char(32) NOT NULL,
+  `age` tinyint(4) NOT NULL,
+  `school` char(128) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`,`age`,`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8
+1 row in set (0.00 sec)
+联合索引字段：
+KEY name (name,age,status)
+[1 3 命中]
+select * from m_user where name='feng1' and status=1
+
+[1 3 order by 3 命中]
+select * from m_user where name='feng1' and status=1 order by status desc
+
+[2 3 不命中]
+select * from m_user where age=10 and status=1
+
+[1 in 命中]
+select * from m_user where name in ('feng1') and age<10
+select * from m_user where name in ('feng1') and age<10 order by school
+
+[1 between 不命中]
+select * from m_user where name between 'feng1' and 'feng3'
+select * from m_user where name between 'feng1' and 'feng3' order by school desc
+
+[1 <> 不命中]
+select * from m_user where name<>'feng1'
+select * from m_user where name<>'feng1' and age<10
+select * from m_user where name<>'feng1' and age<10 order by school desc
+
+[1 < 或 <= 命中]
+select * from m_user where name < 'feng1'
+select * from m_user where name <= 'feng1'
+select * from m_user where name <= 'feng1' and age<10
+select * from m_user where name <= 'feng1' and age<10 order by school desc
+
+[1 > 或 >= 不命中]
+select * from m_user where name>'feng1'
+select * from m_user where name>='feng1'
+
+[无where条件 直接order by 不命中]
+select * from m_user order by name desc
+```
+###[链家的模拟登录python](https://iwww.me/522.html)
+```js
+header里面生成了一个键名为JSESSIONID的cookie，没有这个cookie是无法登录的，所以发送表单内容之前一定要先获取这个cookie，然后带着这个cookie去post数据。 然后输入账号密码进行登录
+# encoding:utf-8
+import urllib
+import urllib2
+import json
+import cookielib
+import time
+import re
+#获取Cookiejar对象（存在本机的cookie消息）
+cookie = cookielib.CookieJar()
+#自定义opener,并将opener跟CookieJar对象绑定
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
+#安装opener,此后调用urlopen()时都会使用安装过的opener对象
+urllib2.install_opener(opener)
+
+home_url = 'http://bj.lianjia.com/'
+auth_url = 'https://passport.lianjia.com/cas/login?service=http%3A%2F%2Fbj.lianjia.com%2F'
+chengjiao_url = 'http://bj.lianjia.com/chengjiao/'
+
+
+headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'passport.lianjia.com',
+    'Pragma': 'no-cache',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+}
+# 获取lianjia_uuid
+req = urllib2.Request('http://bj.lianjia.com/')
+opener.open(req)
+# 初始化表单
+req = urllib2.Request(auth_url, headers=headers)
+result = opener.open(req)
+# print(cookie)
+# 获取cookie和lt值
+pattern = re.compile(r'JSESSIONID=(.*)')
+jsessionid = pattern.findall(result.info().getheader('Set-Cookie').split(';')[0])[0]
+
+html_content = result.read()
+
+pattern = re.compile(r'value=\"(LT-.*)\"')
+lt = pattern.findall(html_content)[0]
+
+pattern = re.compile(r'name="execution" value="(.*)"')
+execution = pattern.findall(html_content)[0]
+
+# print(cookie)
+# opener.open(lj_uuid_url)
+# print(cookie)
+# opener.open(api_url)
+# print(cookie)
+
+# data
+data = {
+    'username': 'YOUR USERNAME',
+    'password': 'YOUR PASSWORD',
+    # 'service': 'http://bj.lianjia.com/',
+    # 'isajax': 'true',
+    # 'remember': 1,
+    'execution': execution,
+    '_eventId': 'submit',
+    'lt': lt,
+    'verifyCode': '',
+    'redirect': '',
+}
+# urllib进行编码
+post_data=urllib.urlencode(data)
+# header
+headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate',
+    'Accept-Language': 'zh-CN,zh;q=0.8',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    # 'Content-Length': '152',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'passport.lianjia.com',
+    'Origin': 'https://passport.lianjia.com',
+    'Pragma': 'no-cache',
+    'Referer': 'https://passport.lianjia.com/cas/login?service=http%3A%2F%2Fbj.lianjia.com%2F',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36',
+    'Upgrade-Insecure-Requests': '1',
+    'X-Requested-With': 'XMLHttpRequest',
+}
+
+headers2 = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, sdch',
+    'Accept-Language': 'zh-CN,zh;q=0.8',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Host': 'bj.lianjia.com',
+    'Pragma': 'no-cache',
+    'Referer': 'https://passport.lianjia.com/cas/xd/api?name=passport-lianjia-com',
+    'Upgrade-Insecure-Requests': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36'
+}
+req = urllib2.Request(auth_url, post_data, headers)
+try:
+    result = opener.open(req)
+except urllib2.HTTPError, e:
+    print e.getcode()  
+    print e.reason  
+    print e.geturl()  
+    print "-------------------------"
+    print e.info()
+    print(e.geturl())
+    req = urllib2.Request(e.geturl())
+    result = opener.open(req)
+    req = urllib2.Request(chengjiao_url)
+    result = opener.open(req).read()
+    print(result)
+```
+###[经典SQL：每个分组里的前n条记录问题](https://www.oschina.net/question/723168_127257)
+```js
+CREATE TABLE foo (
+person varchar(30) not null,
+groupname int not null,
+age int not null
+);
+
+INSERT INTO foo VALUES('Shawn',1,42);
+INSERT INTO foo VALUES('Jill', 1,34);
+INSERT INTO foo VALUES('Bob',  1,32);
+INSERT INTO foo VALUES('Fred', 1,12);
+INSERT INTO foo VALUES('Laaaaa', 1,10);
+
+INSERT INTO foo VALUES('Laura',2,39);
+INSERT INTO foo VALUES('Paul', 2,36);
+INSERT INTO foo VALUES('Joe',  2,36);
+INSERT INTO foo VALUES('Jake', 2,29);
+INSERT INTO foo VALUES('James',2,15);
+
+INSERT INTO foo VALUES('Chuck',3,65);
+INSERT INTO foo VALUES('Nancy',3,65);
+INSERT INTO foo VALUES('Andy', 3,65);
+INSERT INTO foo VALUES('King', 3,60);
+INSERT INTO foo VALUES('Kang', 3,54);
+
+INSERT INTO foo VALUES('no41',4,70);
+INSERT INTO foo VALUES('no42',4,70);
+INSERT INTO foo VALUES('no43', 4,70);
+INSERT INTO foo VALUES('no44',  4,70);
+INSERT INTO foo VALUES('no45', 4,54);
+
+INSERT INTO foo VALUES('no51',5,80);
+INSERT INTO foo VALUES('no52',5,80);
+INSERT INTO foo VALUES('no53', 5,80);
+INSERT INTO foo VALUES('no54',  5,80);
+INSERT INTO foo VALUES('no55', 5,80);
+SELECT
+    person,
+    groupname,
+    age
+FROM
+(
+    SELECT
+        person,
+        groupname,
+        age,
+        @rn := IF(@prev = groupname, @rn + 1, 1) AS rn,
+        @prev := groupname
+    FROM foo
+    JOIN (SELECT @prev := NULL, @rn := 0) AS vars
+    ORDER BY groupname, age DESC, person
+) AS T1
+WHERE rn <= 3;
++--------+-----------+-----+
+| person | groupname | age |
++--------+-----------+-----+
+| Shawn  |         1 |  42 |
+| Jill   |         1 |  34 |
+| Bob    |         1 |  32 |
+| Laura  |         2 |  39 |
+| Joe    |         2 |  36 |
+| Paul   |         2 |  36 |
+| Andy   |         3 |  65 |
+| Chuck  |         3 |  65 |
+| Nancy  |         3 |  65 |
+| no41   |         4 |  70 |
+| no42   |         4 |  70 |
+| no43   |         4 |  70 |
+| no51   |         5 |  80 |
+| no52   |         5 |  80 |
+| no53   |         5 |  80 |
++--------+-----------+-----+
+15 rows in set (0.01 sec)
+
+INSERT INTO foo VALUES('Laura',2,39);
+INSERT INTO foo VALUES('Paul', 2,36);
+INSERT INTO foo VALUES('Joe',  2,36);
+INSERT INTO foo VALUES('Jake', 2,29);
+INSERT INTO foo VALUES('James',2,15);
+
+SELECT
+DISTINCT 
+a.groupname 
+, b.* 
+FROM 
+foo a 
+LEFT JOIN ( 
+            SELECT c.*, 
+                    (SELECT COUNT(groupname) FROM foo d WHERE d.age >= c.age AND d.groupname = c.groupname) AS cnt 
+            FROM foo c 
+            group BY groupname, age , person 
+        ) AS b 
+    ON (a.groupname = b.groupname)
+    
+    +-----------+--------+-----------+------+------+
+| groupname | person | groupname | age  | cnt  |
++-----------+--------+-----------+------+------+
+|         1 | Bob    |         1 |   32 |    3 |
+|         1 | Jill   |         1 |   34 |    2 |
+|         1 | Shawn  |         1 |   42 |    1 |
+|         1 | Laaaaa |         1 |   10 |    5 |
+|         1 | Fred   |         1 |   12 |    4 |
+|         2 | Joe    |         2 |   36 |    3 |
+|         2 | Paul   |         2 |   36 |    3 |
+|         2 | Laura  |         2 |   39 |    1 |
+|         2 | James  |         2 |   15 |    5 |
+|         2 | Jake   |         2 |   29 |    4 |
+|         3 | Andy   |         3 |   65 |    3 |
+|         3 | Chuck  |         3 |   65 |    3 |
+|         3 | Nancy  |         3 |   65 |    3 |
+|         3 | Kang   |         3 |   54 |    5 |
+|         3 | King   |         3 |   60 |    4 |
+|         4 | no41   |         4 |   70 |    4 |
+|         4 | no42   |         4 |   70 |    4 |
+|         4 | no43   |         4 |   70 |    4 |
+|         4 | no44   |         4 |   70 |    4 |
+|         4 | no45   |         4 |   54 |    5 |
+|         5 | no52   |         5 |   80 |    5 |
+|         5 | no53   |         5 |   80 |    5 |
+|         5 | no54   |         5 |   80 |    5 |
+|         5 | no55   |         5 |   80 |    5 |
+|         5 | no51   |         5 |   80 |    5 |
++-----------+--------+-----------+------+------+
+25 rows in set (0.04 sec)
+```
