@@ -447,6 +447,7 @@ var_export($ipMsg);
 ```
 ###[图片鉴别](https://github.com/vhall/check_picture/blob/master/src/CheckPicture.php)
 ```js
+文档 https://help.aliyun.com/document_detail/50186.html?spm=5176.doc28432.2.2.f0RypD
 include_once 'aliyun-php-sdk-core/Config.php';
 use Green\Request\V20160308 as Green;
 class CheckPicture
@@ -891,6 +892,7 @@ python -m zipapp
 可以用来打包程序
 ```
 ###[chrome console tricks](http://coolshell.cn/articles/17634.html)
+```js
 1.source-snippet可以保存常用的一些脚本，可以在这写demo
 2.console 中， preservelog旁边的top标签可以切换global环境，top是当前页面，然后还有其他插件的页面，调用插件的函数。用来调试serviceworker
 console可以用btoa(‘test:test’)来返回Base64 encoding
@@ -899,3 +901,4 @@ copy函数可以把一个变量的值copy到剪贴板上。
  getEventListeners($("selector")) 来查看某个DOM对象上的事件
  Copy as cURL  设置你的网络的访问速度来模拟一个网络很慢的情况。
  document.designMode = "on"直接编辑网页
+```
