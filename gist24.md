@@ -851,4 +851,43 @@ Route::group(['middleware' => 'web', 'prefix' => 'Test', 'namespace' => 'Test'],
    ]);
   }
 ```
-###[]()
+###[python模块有缓存，import一次后再import，模块顶级作用域的代码不会再执行](https://segmentfault.com/q/1010000008524209)
+```js
+
+```
+###[Python LEGB 原则](https://zhuanlan.zhihu.com/p/25223919)
+```js
+def l(list):
+    def d():
+        return list
+    return d
+    
+ #运行
+l = l([1,2,3,4])
+print l()
+def l(list):
+    def d(list):
+        return list
+    return d
+ 
+#运行
+l = l([1,2,3,4])
+#提示错误
+print l()
+
+#正常
+print l([1,3,5,7,9])
+```
+###[javascript里的循环定时](https://segmentfault.com/q/1010000008524620)
+```js
+for(var i = 0; i < 5; i++) {
+    setTimeout(function() {
+        console.log(i);  
+    }, 1000);
+}
+let timer = setTimeout(function() {console.log(2)}, 2)
+> undefined
+console.log(timer)
+> 225
+setTimeout方法的返回值就是一个timeoutID，这里的225就是ID
+```
