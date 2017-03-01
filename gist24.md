@@ -538,3 +538,27 @@ LEFT JOIN (
 +-----------+--------+-----------+------+------+
 25 rows in set (0.04 sec)
 ```
+###[Ghost' object has no attribute 'open'](https://github.com/jeanphix/Ghost.py/issues/189)
+```js
+import ghost
+#http://jeanphix.me/Ghost.py/
+g = ghost.Ghost()
+with g.start() as session:
+    page, extra_resources = session.open("https://www.debian.org")
+    result, resources = session.evaluate( "document.getElementById('my-input').getAttribute('value');")
+    result, resources = session.set_field_value("input[name=username]", "jeanphix")
+    session.capture_to('ghost.png'")
+    if page.http_status == 200 and \
+            'The Universal Operating System' in page.content:
+        print("Good!")
+
+ghost = Ghost()
+session = ghost.start()
+p, r = session.open("http://www.google.com')
+ 
+
+session.capture_to(path=filename)
+ 
+
+p.content
+```
