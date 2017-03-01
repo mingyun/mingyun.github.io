@@ -196,3 +196,46 @@ $arr = array("photo" => array(
 于是,这样就有了一个问题, 并不是所有的Server都会正确应答100-continue, 比如lighttpd, 就会返回417 “Expectation Failed”, 则会造成逻辑出错,,
 解决方法:curl_setopt($ch, CURLOPT_HTTPHEADER, array(''Expect: '')); //头部要送出'Expect: '
 ```
+###[php过滤](https://github.com/wulijun/php-ext-trie-filter)
+https://github.com/morlay/gin-swagger 我们团队成员基于gin框架支持swagger，欢迎大家拔草
+【推荐一个php扩展级的敏感词过滤库】
+ trie树库libdatrie：https://github.com/Timandes/libdatrie
+ 基于libdatrie实现的php扩展：https://github.com/wulijun/php-ext-trie-filter
+
+使用以上扩展的PHP使用代码： https://github.com/heiyeluren/tools/blob/master/lnmp_install/trie_filter_make_dict.php https://github.com/heiyeluren/tools/blob/master/lnmp_install/trie_filter_find_word.php 
+
+
+敏感词库（参考）：
+
+http://vdisk.weibo.com/s/u7m7v7tUJtAIn
+ http://download.csdn.net/detail/jasonysu/9579408
+
+ 效率：15w敏感词库检测两千字左右文本大约0.13秒左右
+反垃圾内容阶段：
+1. 初级阶段：正则匹配、字符串扫描判断是否包含非法关键词库
+2. 中级阶段：高效率敏感词匹配算法，比如什么 ac自动机（trie树+回朔）
+3. 高级阶段：基本敏感词过滤+用户行为+机器学习（比如能够统计出新注册7天内的用户是坏人几率大等等）
+比如评论内容的相关性，字数，历史数，用户等级，用户注册时长，发送频率。建立模型，对他是不是正常的用户进行打分，分数低于一定阈值就加验证码或直接打回
+###[Use of undefined constant CURLOPT_IPRESOLVE - assumed 'CURLOPT_IPRESOLVE'](http://stackoverflow.com/questions/11220416/php-curl-curlopt-ipresolve)
+```js
+CURLOPT_IPRESOLVE is available since curl 7.10.8
+Try this sample code to test
+
+<?php
+
+    $version = curl_version();
+
+// These are the bitfields that can be used 
+// to check for features in the curl build
+$bitfields = Array(
+            'CURL_VERSION_IPV6', 
+            'CURLOPT_IPRESOLVE'
+            );
+
+
+foreach($bitfields as $feature)
+{
+    echo $feature . ($version['features'] & constant($feature) ? ' matches' : ' does not match');
+    echo PHP_EOL;
+}
+```
