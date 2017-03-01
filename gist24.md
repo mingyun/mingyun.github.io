@@ -803,3 +803,52 @@ sorted set肯定比你遍历查重快的，sorted set只用O(log(N))就能插入
 要方便地实现，可以把sorted set和一个普通的键值(counter)对结合一起用。
 
 先incr counter，用它的结果作为权重（分数），然后ZADD到sorted set，要用NX选项，不更新原有的key。
+###[php限制用户调用app接口的刷新频率，1秒不能达到20](https://segmentfault.com/q/1010000008515601)
+nginx层面做限制。
+可以使用openresty,用lua来写，每次请求都接口自增一次访问记录，可以把值记录到redis中。
+在单位时间内达到最大限制，返回错误的提示码。
+在http里server前加入:
+limit_req_zone $binary_remote_addr zone=allips:10m rate=20r/s;
+在server里加入:
+limit_req zone=allips burst=5 nodelay;
+超过每秒20次连接,则把IP加入黑名单,直接deny掉这些IP.
+###[Laravel Session 失效 Case](https://mikecoder.cn/post/142)
+```js
+Route::group(['prefix' => 'Test', 'namespace' => 'Test'], function() {
+    Route::get('/', function() {
+        Session::set('mike', 'mike');
+        d(Session::get('mike')); // d($value) 就是 var_dump 出来
+    });
+}); 
+在 route 中添加 web 中间件即可。如最上面的代码修改成:
+
+Route::group(['middleware' => 'web', 'prefix' => 'Test', 'namespace' => 'Test'], function() {
+    Route::get('/', function() {
+        Session::set('mike', 'mike');
+        d(Session::get('mike')); // d($value) 就是 var_dump 出来
+    });
+}); 
+```
+###[基于redis的发布订阅实战](https://laravel-china.org/articles/3884)
+```js
+//发布
+  $redis = new \Redis();
+  $redis->connect('127.0.0.1', 6379);
+  $redis->publish('msg', '来自msg频道的推送');
+  echo "msg频道消息推送成功～ \n";
+  $redis->close();
+  $redis = new \Redis();
+  $redis->pconnect('127.0.0.1', 6379);
+  //订阅
+  echo "订阅msg这个频道，等待消息推送... \n";
+  $redis->subscribe(['msg'], 'callfun');
+  function callfun($redis, $channel, $msg)
+  {
+   print_r([
+     'redis'   => $redis,
+     'channel' => $channel,
+     'msg'     => $msg
+   ]);
+  }
+```
+###[]()
