@@ -562,3 +562,244 @@ session.capture_to(path=filename)
 
 p.content
 ```
+###[数组里面对象如何排序](https://segmentfault.com/q/1010000008527144)
+function sort(list){
+  return list.sort(function(i1, i2){
+    return -((i1.ds+i1.dp) - (i2.ds+i2.dp));
+  })
+}
+
+###[js如何实现不同窗口之间共享数据](https://segmentfault.com/q/1010000008527746)
+###[求推荐效率很高的动态绘点插件](https://segmentfault.com/q/1010000008516708)
+用highstock
+https://www.hcharts.cn/demo/
+###[用Jenkins搭建PHP持续集成解决方案](https://segmentfault.com/q/1010000008471032)
+基于 flow.ci 实现 PHP 项目自动化持续集成
+###[一个数组 a[99] ,里面有1-100中的99个不重复的整数,让你找出没有的那1个。](https://segmentfault.com/q/1010000008526503)
+###[通过 Array.from(containers) 转为真正的数组再使用 forEach 方法](https://segmentfault.com/q/1010000008528453)
+page.evaluate(function () {
+            var dataList = [];
+            var containers=document.querySelectorAll('.c-container');
+            containers.forEach(function (val) {
+                console.log(val);
+            })
+            containers 是一个伪数组，可以通过 Array.from(containers) 转为真正的数组再使用 forEach 方法
+            有 length 属性不代表它就是一个数组，document.querySelectorAll 返回的是一个伪数组，类似的还有函数参数 arguments 也是伪数组
+###[node js的终端中，如何让 console.log 尽可能地完全展开](https://segmentfault.com/q/1010000008528325)
+console.log(JSON.stringify(obj));
+###[js如何判断对象为空？](https://segmentfault.com/q/1010000008525092)
+var obj;
+if(!obj){
+ console.log("object is null or undefined");
+}
+如果判断对象没有任何属性这个就不好弄了
+使用
+for...in能够遍历可枚举属性，包括prototype中的
+Object.keys(ES2015)值遍历自有的可枚举属性
+但是对象的属性也可以通过设置enumerable=false为不可枚举的，那么通过上面的方法你就无法判断是否具有某个属性了
+
+$.isEmptyObject();方法也是检查可枚举的属性
+
+所以具体问题还是要具体分析，根据你的业务场景来
+没有特殊的设置
+$.isEmptyObject();
+Object.keys()
+for...in
+###[诡异的字符串长度，虚心请教](https://segmentfault.com/q/1010000008528705)
+//代码如下：
+var str1='﻿﻿﻿﻿{"status":0}';
+console.log(str1.length)
+
+var str2='{"status":0}';
+console.log(str2.length)
+str1.charCodeAt(0); //65279 即 0xFEFF
+在某些东南亚语言里面，书写的时候有些字母间需要连字，有些不需要。这个似乎没有什么规律，所以只能人为的添加。0xFEFF是零宽度非连字空格，这个字符显示的效果是，有跟没有是一样的，对于其他语言。
+###[php 二维数组去重合并](https://segmentfault.com/q/1010000008525167)
+```js
+$arr = array(
+
+    array(
+        'id'=>'1',
+        'name' => '张三'
+        ),
+    array(
+        'id'=>'2',
+        'name' => '张三'
+        ),
+    array(
+        'id'=>'1',
+        'name' => '李四'
+        )
+);
+$item = array();
+
+foreach($arr as $k=>$v){
+
+if(!isset($item[$v['name']])){
+    $item[$v['name']]=$v;
+}else{
+    $item[$v['name']]['id']+=$v['id'];
+}
+}
+echo '<pre>';
+print_r(array_values($item));
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => 张三
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [name] => 张三
+        )
+
+    [2] => Array
+        (
+            [id] => 1
+            [name] => 李四
+        )
+
+)
+```
+###[一个循环遍历逻辑问题](https://segmentfault.com/q/1010000008523335)
+```js
+function demo($a=null,$b=null)
+{
+    // $a是一个数字或一个范围数组；
+    // $b是一个数组，代表多个除数；
+    
+    // 难点，如何判断$a里面的某个数字，能同时除尽$b里面的所有数字，并且还要一次性返回$a和$b相除后得到的多个正整数？
+}
+demo([1000,1600],[4,5,6]);
+  function demo($a=null,$b=null)
+    {
+        $result = array();
+        for ($i=$a[0]; $i<=$a[1]; $i++) {
+            foreach ($b as $b_key => $b_value) {
+                $result[$i][$b_value] = $i / $b_value;  //假设b中所有都能整除 , 先把值存起来
+                if ($i % $b_value != 0) {
+                    unset($result[$i]); // 一旦b中有一个数字不满足, 例如 1000 / 7 , 那就跳出循环, 移除 $result['1000']
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+    print_r(demo([1000,1600],[4,5,6]));
+    
+Array
+(
+    [1020] => Array
+        (
+            [4] => 255
+            [5] => 204
+            [6] => 170
+        )
+
+    [1080] => Array
+        (
+            [4] => 270
+            [5] => 216
+            [6] => 180
+        )
+
+    [1140] => Array
+        (
+            [4] => 285
+            [5] => 228
+            [6] => 190
+        )
+
+    [1200] => Array
+        (
+            [4] => 300
+            [5] => 240
+            [6] => 200
+        )
+
+    [1260] => Array
+        (
+            [4] => 315
+            [5] => 252
+            [6] => 210
+        )
+
+    [1320] => Array
+        (
+            [4] => 330
+            [5] => 264
+            [6] => 220
+        )
+
+    [1380] => Array
+        (
+            [4] => 345
+            [5] => 276
+            [6] => 230
+        )
+
+    [1440] => Array
+        (
+            [4] => 360
+            [5] => 288
+            [6] => 240
+        )
+
+    [1500] => Array
+        (
+            [4] => 375
+            [5] => 300
+            [6] => 250
+        )
+
+    [1560] => Array
+        (
+            [4] => 390
+            [5] => 312
+            [6] => 260
+        )
+
+)
+```
+###[SSL certificate problem: unable to get local issuer certificate](https://segmentfault.com/q/1010000008508237)
+因为它是https，你在curl那个方法加上
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 信任任何证书 
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // 检查证书中是否设置域名
+###[比较两个文本的差异用什么算法](https://segmentfault.com/q/1010000008499096)
+找到两个链接：全局对齐的Needleman–Wunsch算法和局部对齐Smith–Waterman算法。
+###[字符串转成数据 键值对应 不使用 eval](https://segmentfault.com/q/1010000008510596)
+去掉开头的array(和最后的);，变成：
+'"1"=>"给对方","2"=>"发鬼地方","5"=>"","6"=>"发鬼地方","7"=>"发光飞碟"'
+把=>替换成:，变成：
+'"1":"给对方","2":"发鬼地方","5":"","6":"发鬼地方","7":"发光飞碟"'
+前后加{}，变成：
+'{"1":"给对方","2":"发鬼地方","5":"","6":"发鬼地方","7":"发光飞碟"}'
+上json_decode
+###[mysq日期用datetime好还是用int10好](https://segmentfault.com/q/1010000008513894)
+建议用unsigned bigint(20).
+因为unsigned int(10)最大值为4294967295.
+64位PHP执行echo date('Y-m-d H:i:s', 4294967295);可见:
+2106-02-07 14:28:15
+这个时间是我们可以预见的.
+
+为什么要用时间戳(整数)呢?因为时间戳方便运算后对比.
+
+比如:以当前时间为基础,查询过去8小时内,1天内,1周内符合特定条件(比如浏览数/获赞数)的数据.
+
+8小时内: where time > (time()-3600*8) order by 浏览数 desc limit 20;
+1天内: where time > (time()-3600*24) order by 浏览数 desc limit 20;
+1周内: where time > (time()-3600*24*7) order by 浏览数 desc limit 20;
+###[同样php代码不同服务器执行消耗内存不一致](https://segmentfault.com/q/1010000008514882)
+PHP代码里可以用memory_get_usage/memory_get_peak_usage获取内存使用情况,用getrusage获取CPU使用情况.注意,memory_get_usage不包括PHP进程本身占用的内存.
+
+要看PHP进程本身占用的内存,可以用top或者ps aux|head -n1 && ps aux|grep php-fpm
+###[如何在list中插入不重复的数据？](https://segmentfault.com/q/1010000008519477)
+sorted set肯定比你遍历查重快的，sorted set只用O(log(N))就能插入一个，而你要O(N)，差了一个数量级。
+
+要方便地实现，可以把sorted set和一个普通的键值(counter)对结合一起用。
+
+先incr counter，用它的结果作为权重（分数），然后ZADD到sorted set，要用NX选项，不更新原有的key。
