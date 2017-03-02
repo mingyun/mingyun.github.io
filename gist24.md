@@ -1052,3 +1052,89 @@ $temp2[$k]["ename"] =$array[7];
 return $temp2; 
 } 
 ```
+###[事件有两种触发类型：一种是冒泡型；一种是捕获型](https://segmentfault.com/q/1010000008482488)
+```js
+冒泡型事件：从目标元素开始触发，然后触发其父元素上定义的同类型事件，再然后父元素的父元素...
+捕获型事件：从目标元素的父元素上定义的同类型事件开始触发，然后其子元素，直到触发目标元素上定义的事件
+
+对于你问题描述中说的 事件代理 ，应该是指不直接通过： domEle.addEventListener(event , fn , type) 这种方式定义，而是通过 loginEvent(domEle , event , fn , type) 这种方式去定义，就是委托第三方来定义事件。
+
+如果是这样的话，你的这个现象应该类似下面这种：
+
+// 事件代理（第三方注册事件的函数|对象）
+function loginEvent(domEle , event , fn , type){
+    domEle.addEventListener(event , fn , type);
+}
+
+// 注意第三个参数：表示是在捕获阶段触发
+btn.addEventListener('click' , function(){
+    // 按下这个按钮的时候：从 btn 的最顶级父元素上的 click 事件开始
+    // 触发，然后直到 btn 上定义的 click 事件触发
+    // 事件代理开始工作.....
+    loginEvent(domEle , event , fn , type);    
+} , true);
+```
+###[给 PHP 使用者的 Lua 教程](http://picasso250.github.io/2016/01/27/lua-for-php.html)
+###[PHP 错误处理](http://picasso250.github.io/2014/12/03/PHP-error.html)
+```js
+$trace = implode("\n".' <== ', array_map(function($e){
+        $func = isset($e['class']) ? "$e[class]::$e[function]" : $e['function'];
+        return "$e[file]:$e[line] $func";
+    }, debug_backtrace()));
+echo "$trace";
+不要使用 trigger_error 函数, PHP Web开发用 Exception 更合适
+PDO 中, 有三种错误模式
+
+PDO::ERRMODE_SILENT
+PDO::ERRMODE_WARNING
+PDO::ERRMODE_EXCEPTION
+默认是 PDO::ERRMODE_SILENT 坑! 所以, 我们还是将他设为 PDO::ERRMODE_EXCEPTION
+
+$dbh = new PDO($dsn, $user, $password);
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+json_decode 时, 可能会发生错误, 使用 json_last_error 可以获取错误. 为了严谨, 我们总是使用
+
+function try_json_decode($str)
+{
+    $arr = json_decode($str, true);
+    if (json_last_error()) {
+        throw new Exception("json decode error", json_last_error());
+    }
+    return $arr;
+}
+error_log() 函数可以记录日志.
+
+error_log("message");
+可以记录到当前的日志的位置(具体来说, 就是error_log配置项的位置). 如果想要记录到一个指定文件
+
+error_log("message\n", 3, 'log_file');
+3 指的是类型 记录到文件, 注意一定要有换行符, error_log() 函数不会自动添加.
+```
+###[Mysql 和 缓存](http://picasso250.github.io/2015/11/16/MySQL-cache.html)
+```js
+SELECT r.*, u.user_name FROM r join u using(user_id)
+            WHERE r.user_id != 0
+            ORDER BY r.create_time DESC LIMIT 11
+	    class Cachable
+{
+	function __call($name, $args)
+	{
+		if (preg_match('/(\w+)Cachable$/', $name, $m)) {
+			$method = $m[1];
+			if (method_exists($this, $method)) {
+				$key = $name.implode(',', $args);
+				if ($data = $cache->get($key)) {
+					return $data;
+				}
+				$data = $this->$method(...$args);
+				$cache->set($key, $data, 5); // 5 s
+				return $data;
+			} else {
+				throw new Exception("$method is not Cachable", 1);
+			}
+		} else {
+			throw new Exception("bad method call", 1);
+		}
+	}
+}
+```
