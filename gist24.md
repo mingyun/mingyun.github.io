@@ -891,3 +891,164 @@ console.log(timer)
 > 225
 setTimeout方法的返回值就是一个timeoutID，这里的225就是ID
 ```
+###[linux如何让一个文件在哪都能执行](https://segmentfault.com/q/1010000008515141)
+在abc.py 第一行加一句
+
+#!/usr/bin/env python
+然后在$HOME创建一个文件夹，一般叫做bin,然后在$HOME/.bashrc中添加一句export PATH=$HOME/bin:$PATH。
+然后,重启shell或者执行source ~/.bashrc
+
+# 或者 mv
+cp /path/to/abc.py ~/bin
+cd ~/bin
+chmod a+x abc.py
+这样就可以直接用abc.py执行了,不用加python
+你把abc.py放到PATH内，给它可执行权限，然后在任意目录中敲abc.py然后回车，就执行了
+###[一道正则表达式问题](https://segmentfault.com/q/1010000008513484)
+(^|W)'匹配的结果就是前面是字符串开头或者非单词字符（单词字符是指[^a-zA-Z0-9_]）的单引号；
+'(W|$)匹配的是后面是字符串结尾或者非单词字符的单引号。
+var text = "'I'm the cook,' he said, 'it's my job.'";
+function replacer(match,$1,$2){
+    console.log('match:['+match+']','$1:['+$1+']','$2:['+$2+']');
+    $1 = $1 || '';
+    $2 = $2 || '';
+    return $1+'"'+$2;
+}
+console.log(text.replace(/(^|\W)'|'(\W|$)/g, replacer));
+
+//match:['] $1:[] $2:[undefined]
+//match:[,'] $1:[,] $2:[undefined]
+//match:[ '] $1:[ ] $2:[undefined]
+//match:[.'] $1:[.] $2:[undefined]
+//"I'm the cook," he said, "it's my job."
+也就是说只匹配到了一个括号，所以$1是有值的，$2只是空字符串
+###[JS是单线程](https://segmentfault.com/q/1010000008514466)
+```js
+1、 JS是单线程，代码执行不会从一段代码突然打断，跳转到另一端代码去执行。
+paginButton.click（...）的意思是定义一个函数，其代码是xxx，并且绑定为事件处理函数。所以执行代码foo()的时候，x = paginButton.index($(this)); 这一句并不会执行。 而上面这段代码还没有执行完，不会突然跳转到这个实践处理函数，所以a = foo();即a=x先执行。
+等这段代码执行完了，在点击，出发事件处理函数的执行，才执行x = paginButton.index($(this));
+
+所以，a=x在x = paginButton.index($(this));之前。
+
+2 、在 JS 所有对象类型的变量都是一个引用，其中保存的不是具体的那个对象，而是一个指针，指向实际保存的对象。
+
+x = paginButton.index($(this)); 意思是x指向后面生成的那一个对象。
+a = x;让 a 和 x 指向了同一个对象。
+然后 x = new Object 这样x 指向了新的对象，而a还是原来的值。
+
+如果先执行a=x; a 和x 都指向了初始的那个对象，然后x = paginButton.index($(this)); x 指向了新的对象。可是a还是指向原来的对象。
+
+但是，如果 newArr。
+先执行，a=newArr 这样，a和newArr 指向了同一个对象。
+然后给newArr指向的对象添加值(而不是让newArr指向新的值)，也就是给a指向的对象添加值(它们指向同一个对象)。
+
+var x = {"0":1};
+var a = x;
+x[0] = 2;
+a[0]; // 2
+x = new Object();
+x[0] = 3;
+a[0]; // 2
+```
+###[即时执行匿名函数调用全局作用](https://segmentfault.com/q/1010000008515137)
+```js
+var a = 10;
+function foo() {
+  console.log(a)
+}
+
+foo();
+
+(function () {
+  var a = 20
+  foo()
+})();
+
+(function (fn) {
+  var a = 30
+  fn()
+})(foo);
+```
+###[php 求深度](https://segmentfault.com/q/1010000008537364)
+```js
+CREATE TABLE `tp_user` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `tp_user` (`id`, `parent_id`, `name`) VALUES
+(1, null, 'alpha1'),
+(2, 1, 'alpha2'),
+(3, 1, 'alpha3'),
+(4, 1, 'alpha4'),
+(5, 2, 'alpha5'),
+(6, null, 'alpha6'),
+(7, 3, 'alpha7'),
+(8, 3, 'alpha8'),
+(9, 5, 'alpha9'),
+(10, 5, 'alpha10'),
+(11, 8, 'alpha11');
+
+ALTER TABLE `tp_user`
+ADD PRIMARY KEY (`id`),
+ADD UNIQUE KEY `id` (`id`);
+
+```
+###php二维数组去除特定键的重复项
+```js
+//二维数组去除特定键的重复项
+    public function array_unset($arr,$key){   //$arr->传入数组   $key->判断的key值
+        //建立一个目标数组
+        $res = array();      
+        foreach ($arr as $value) {         
+           //查看有没有重复项
+           if(isset($res[$value[$key]])){
+                 //有：销毁
+                 unset($value[$key]);
+           }
+           else{
+                $res[$value[$key]] = $value;
+           }
+           //if(!isset($res[$value[$key]])){
+             //$res[$value[$key]] = $value;
+           //}
+        }
+        return $res;
+    }
+    //二维数组去掉重复值
+function array_unique_fb($array2D){  
+	foreach ($array2D as $v){
+		$v=join(',',$v);//降维,也可以用implode,将一维数组转换为用逗号连接的字符串
+		$temp[]=$v;
+	}
+	$temp=array_unique($temp);//去掉重复的字符串,也就是重复的一维数组
+	foreach ($temp as $k => $v){
+		$temp[$k]=explode(',',$v);//再将拆开的数组重新组装
+	}
+	return $temp;
+}
+//二维数组去掉重复值 并保留键值 http://www.jb51.net/article/27738.htm
+function array_unique_fb($array2D) 
+{ 
+foreach ($array2D as $k=>$v) 
+{ 
+$v = join(",",$v); //降维,也可以用implode,将一维数组转换为用逗号连接的字符串 
+$temp[$k] = $v; 
+} 
+$temp = array_unique($temp); //去掉重复的字符串,也就是重复的一维数组 
+foreach ($temp as $k => $v) 
+{ 
+$array=explode(",",$v); //再将拆开的数组重新组装 
+$temp2[$k]["id"] =$array[0]; 
+$temp2[$k]["litpic"] =$array[1]; 
+$temp2[$k]["title"] =$array[2]; 
+$temp2[$k]["address"] =$array[3]; 
+$temp2[$k]["starttime"] =$array[4]; 
+$temp2[$k]["endtime"] =$array[5]; 
+$temp2[$k]["classid"] =$array[6]; 
+$temp2[$k]["ename"] =$array[7]; 
+} 
+return $temp2; 
+} 
+```
