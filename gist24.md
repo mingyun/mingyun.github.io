@@ -1,5 +1,80 @@
 ###[http code](https://http.cat/)
+###查询表
+`mysql> show table status like '%user%'\G`
+###[this指向问题](https://segmentfault.com/q/1010000008554561)
+```js
+var fullname = 'a';
+ var obj = {
+   fullname: 'b',
+   getFullname: function() {
+     return this.fullname;
+   }
+ }
+ 
+ var person = obj.getFullname
+ 
+ console.log(obj.getFullname()) // b
+ console.log(person()) // a
+ var person = obj.getFullname.bind(obj);
+person(); // b
+var person = obj.getFullname;
+person.call(obj); // b
+person.apply(obj); // b
+```
+###[求n至少为多大时，n个1组成的整数能被2013 整除])(https://segmentfault.com/q/1010000008553427)
+```js
+python黑科技:
 
+i = 1
+while int('1' * i) % 2013:
+    i += 1
+print(i)
+不使用黑科技:
+
+i = s = t = 1
+
+while s % 2013:
+    i += 1
+    t = t * 10 % 2013
+    s = (s + t) % 2013
+print(i)
+```
+###[每五条数据求一个score的和](https://segmentfault.com/q/1010000008556595)
+```js
+sql语句：SELECT SUM(score) FROM student group by column
+
+PHP：
+
+    $i      = 0;
+    $arr    = array_chunk($arr, 5);
+    $result = array();
+    foreach($arr as $value) {
+        foreach($value as $val) {
+            $result[$i] += (int)$val['score'];
+        }
+        $i ++;
+    }
+    var_dump($result);die;
+```
+###[用JavaScript封装bind函数](https://segmentfault.com/q/1010000008556853)
+```js
+function bind(fn, obj) {
+   return fn.apply(obj, arguments);
+}
+function func(){
+   console.log(this.a);
+}
+// 期望结果是 bind(func, { a:1 })() 输出1
+bind(func, { a:1 }); // 直接输出1
+新鲜可食的栗子：
+
+Function.prototype.bind = Function.prototype.bind || function bind(context, ...args){
+   let fn = this;
+   return function(...newArgs){
+      fn.apply(context, [].concat(args, newArgs));
+   }
+}
+```
 ###[php 一个方法死循环， 其他页面无法访问](https://segmentfault.com/q/1010000008412879)
 ```js
 public function a(){
