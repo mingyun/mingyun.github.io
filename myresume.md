@@ -17,7 +17,7 @@
  - 本科/东华理工大学 
  - 工作年限：5年
  - 技术博客：[苏生不惑](https://segmentfault.com/u/susheng/articles)
- - Github：[github](http://github.com/lovecn)
+ - Github：[github](http://github.com/mingyun)
  - 期望职位：PHP程序员
  - 期望薪资：税前月薪15k~20k
  - 期望城市：北京
@@ -40,7 +40,7 @@
 
 ### 恋爱交友网站
 该项目是一个恋爱交友平台，采用lamp(apache php mysql memcached)基于开源框架doophp开发,使用memcached缓存,smarty模板等
-本人主要负责http://www.love.cn网站前后端开发及维护,涉及会员邀请注册，支付，后台会员管理及对应微信公众号开发
+本人主要负责 http://www.love.cn 网站前后端开发及维护,涉及会员邀请注册，支付，后台会员管理及对应微信公众号开发
 
 ## 好望角管理咨询有限公司 （ 2010年8月 ~ 2012年1月 ）
 
