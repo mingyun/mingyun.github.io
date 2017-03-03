@@ -1138,3 +1138,332 @@ SELECT r.*, u.user_name FROM r join u using(user_id)
 	}
 }
 ```
+###[详细论述联表查询与分步查询的优缺点](https://segmentfault.com/q/1010000008549113)
+联表查询的优点：
+
+简化代码逻辑，通过适当的注释可以轻松理解。
+减少数据库查询次数，通常情况下，查询速度更快。
+分步查询的优点：
+
+能有效理由数据库缓存，提高查询效率，减少数据库压力。
+数据库表结构发生变化时，代码受到的影响比较少。
+###[统计出数组里相同名称的数量之和](https://segmentfault.com/q/1010000008548967)
+```js
+var res = [{
+    "name": "apple",
+    "number": "15",
+    "date": "2017/1/2",
+}, {
+    "name": "orange",
+    "number": "25",
+    "date": "2017/1/4",
+}, {
+    "name": "apple",
+    "number": "4",
+    "date": "2017/1/7",
+}, {
+    "name": "banana",
+    "number": "1",
+    "date": "2017/1/1",
+}];
+
+var res = [{
+    "name": "apple",
+    "number": "19",
+}, {
+    "name": "orange",
+    "number": "25",
+}, {
+    "name": "banana",
+    "number": "1",
+}];
+
+let tmp = {}
+res.forEach(v => tmp[v.name] = (tmp[v.name] || 0) + Number(v.number))
+res = Object.keys(tmp).map(name => ({ name, number: tmp[name]}))
+console.log(res)
+    function parseArr(arr){
+        var nameArr=[];
+        var result=[]
+        arr.forEach(function(item){
+            var i
+            if((i=nameArr.indexOf(item.name))>-1){
+                console.log(result,i)
+                result[i].number=Number(result[i].number)+Number(item.number);
+            }else{
+                nameArr.push(item.name);
+                result.push({
+                    name:item.name,
+                    number:item.number
+                })
+            }
+        })
+        return result
+    }
+```
+###[php两个数组合并](https://segmentfault.com/q/1010000008532899)
+```js
+$list1=[
+    ['name'=> '好好','float_minimum_order_amount'=> '1'],
+    ['name'=> '新保挪威三文鱼','float_minimum_order_amount'=> '2'],
+    ['name'=> '天天','float_minimum_order_amount'=> '3'],
+    ['name'=> '向上','float_minimum_order_amount'=> '4'],
+    ['name'=> '哈哈','float_minimum_order_amount'=> '6']
+];
+$list2=[
+    ['name'=> '哈哈','float_minimum_order_amount'=> '5'],
+    ['name'=> '新保挪威三文鱼','float_minimum_order_amount'=> '8'],
+    ['name'=> '天123天','float_minimum_order_amount'=> '9'],
+    ['name'=> '向dd上','float_minimum_order_amount'=> '10'],
+    ['name'=> '哈dd哈','float_minimum_order_amount'=> '11']
+];
+//第一步合并数据
+$array = array_merge($list1, $list2);
+//第二步 降维成一维数组
+$array_1 = array_map('implode',$array);
+//第三步 将一维数组作为键,二维数组作为值, 合并为新数组,因为重复键会直接被覆盖,故自动排重
+//array_values 将数组由关联数组转换为枚举数组 over
+$array_2 = array_values(array_combine($array_1, $array));
+
+```
+###[如何取出大字符串中指定的小字符串](https://segmentfault.com/q/1010000008550134)
+```js
+/**
+ * @param target    123453423423
+ * @param token     4
+ */
+function transform (target, token){
+    return (target + '').split(token).map(item => `</span>${item}<span>`).join(token).slice("</span>".length, -"<span>".length);
+}
+function transform (target, token) {
+    return (target + '').replace(new RegExp(token, 'g'), `<span>${token}</span>`);
+}
+```
+###[js如何跨浏览器获取浏览器视口大小](https://segmentfault.com/q/1010000008548366)
+document.documentElement.clientHeight
+手边没ie7、8没法测试效果。但是一般我们做此设置
+
+html,body{
+    width:100%;
+    height:100%
+}
+然后用document.body.clientHeight就行了
+
+然后高程上document.compatMode == 'CSS1Compat'内的应该是针对doctype声明不是!doctype html的。所以ie7、8还是会走else。你可以加个断点或者console.log试试
+###[npm 非管理员权限 全局安装问题](https://segmentfault.com/q/1010000008545037)
+npm config set prefix "C:\\Users\\<用户名>\\.nodejs\\node_global"
+npm config set cache "C:\\Users\\<用户名>\\.nodejs\\node_cache"
+环境变量NODE_PATH改到C:\Users\<用户名>\.nodejs\node_global\node_modules
+
+没权限就把路径改到有权限的地方呗
+
+如果安装后成功却运行不了,记得把C:\Users\<用户名>\.nodejs\node_global加到PATH里
+###[基于浏览器安全的限制，在https下是无法发起http请求的](https://segmentfault.com/q/1010000008547583)
+在有http请求的时候，将页面从https重定向到http 这种做法比较恶心……
+使用服务器端代理，对于http请求由页面发到服务器端，再有服务器代理发出请求
+###[利用python如何将无限分类结构的数据](https://segmentfault.com/q/1010000008541784)
+```js
+import json
+source=[
+    {"name":"my document","id":1 , "parentid": 0 },
+    {"name":"photos","id":2 , "parentid": 1 },
+    {"name":"Friend","id":3 , "parentid": 2 },
+    {"name":"Wife","id":4 , "parentid": 2 },
+    {"name":"Company","id":5 , "parentid": 2 },
+    {"name":"Program Files","id":6 , "parentid": 1 },
+    {"name":"intel","id":7 , "parentid": 6 },
+    {"name":"java","id":8 , "parentid": 6 },
+]
+
+def getChildren(id=0):
+    sz=[]
+    for obj in source:
+        if obj["parentid"] ==id:
+            sz.append({"id":obj["id"],"text":obj["name"],"children":getChildren(obj["id"])})
+    return sz
+
+print json.dumps(getChildren())
+[
+  {
+    "text": "my document",
+    "id": 1,
+    "children": [
+      {
+        "text": "photos",
+        "id": 2,
+        "children": [
+          {
+            "text": "Friend",
+            "id": 3,
+            "children": [ ]
+          },
+          {
+            "text": "Wife",
+            "id": 4,
+            "children ": [ ]
+          },
+          {
+            "text": "Company",
+            "id": 5,
+            "children": [ ]
+          }
+        ]
+      },
+      {
+        "text": "Program Files",
+        "id": 6,
+        "children": [
+          {
+            "text": "intel",
+            "id": 7,
+            "children": [ ]
+          },
+          {
+            "text": "java",
+            "id ": 8,
+            "children": [ ]
+          }
+        ]
+      }
+    ]
+  }
+]
+```
+###[图片一般一怎么的形式存放在服务器中](https://segmentfault.com/q/1010000008549597)
+是问几个浏览器(手机浏览器)支持 dataurl:base64 和 blob://
+这些数据存数据库，本身就是对数据库的不负责，还受限于数据库I/O的性能瓶颈？
+如何使用nginx的静态文件性能？
+如果以后要支持CDN怎么办，上面格式你能做CDN吗？
+实时裁剪图片，岂不是要先解码，然后裁切无故耗费性能
+能顺利的做分布式 Filesystem 吗?
+能顺利双击打开查看是什么？
+剔除重复的文件，计算MD5等，这些格式可以快速做到吗？
+文件就是文件，无故耗费性能，何必。
+###[php正则替换成数组里面的值](https://segmentfault.com/q/1010000008550214)
+```js
+[]要加反斜杠转义，下面这个可以生效，其实这边可以不用正则替换，你用str_replace就能实现
+
+$arr = array('微笑','吃饭','睡觉','看书','玩手机','做梦');
+
+$arrt=array_flip($arr);
+$str='你好啊微笑[微笑]，吃饭了吗[吃饭]';
+foreach($arrt as $aKey => $aVal) {
+    $pattern = "/\[$aKey\]/";
+    $str=preg_replace($pattern,"<img src=./img/" . $aVal . '.jpg' . '>', $str);
+}
+
+var_dump($str);exit;
+$arr = array('微笑','吃饭','睡觉','看书','玩手机','做梦');foreach ($arr as $key => $value) {
+
+$arrt[$key]='['.$value.']';
+}
+$arrt=array_flip($arrt);
+$str='你好啊微笑[微笑]，吃饭了吗[吃饭]';
+foreach($arrt as $aKey => $aVal) {
+
+$str = str_replace($aKey, "<img src=./img/" . $aVal . '.jpg' . '>', $str);
+//$str=preg_replace($pattern,"<img src=./img/" . $aVal . '.jpg' . '>', $str);
+}
+
+str_replace效率更快
+```
+###[php把时间戳以小时结算](https://segmentfault.com/q/1010000008551488)
+```js
+$start=1488484037；
+$end=1488504037；
+$difference=$end-$start;
+//小时
+$h=intval($difference/3600);
+$i=intval(($difference-$h*3600)/60);
+$s=$difference-$h*3600-$i*60;
+echo '耗时'.$h.'小时,'.$i.'分,'.$s.'秒';
+/**
+ * [format_date 格式化时间]
+ * @param  [type] $start_time [开始时间]
+ * @param  [type] $end_time   [结束时间]
+ * @return [type]             [string]
+ */
+function format_date($start_time, $end_time){
+    $t = $end_time - $start_time;
+
+    $f = [
+        // '31536000' => '年',
+        // '2592000'  => '个月',    
+        // '604800'   => '星期',
+        // '86400'    => '天',
+        '3600'        => '小时',
+        // '60'       => '分钟',
+        // '1'        => '秒'
+    ];
+    foreach ($f as $k=>$v)    {
+        if (0 != $c = floor($t/(int)$k)) {
+            return $c.$v.'前';
+        }
+    }
+}
+
+
+```
+###[理解原型模式](https://segmentfault.com/q/1010000008546340)
+```js
+a) Prototype:每一个函数都包含一个prototype属性，这个属性指向的是一个对象的引用；而对已每一个函数（类）的实例都会从prototype属性指向的对象上继承属性，换句话说通过同一个函数创建的所有对象都继承一个相同的对象。b) 通过new 关键字和构造函数创建的对象的原型，就是构造函数的prototype指向的那个对象
+
+每一个函数的Prototype属性指向的对象都包含唯一一个不可枚举属性constructor,该属性的值是这么一个对象：它指向了它所在的构造函数。
+   var obj = function () {
+        this.a = 'a';
+    }
+    obj.prototype.say = function () {
+       console.log("say")
+    }
+    var nobj = new obj();
+    console.log(nobj.constructor===obj);//TRUE
+    console.log(nobj)
+
+    var OP=function(){
+        this.a='a'
+    }
+    OP.prototype={
+    /*让constructor指向OP解决办法
+      constructor: OP,*/
+        say:function(){
+            console.log("say")
+        }
+    };
+    var p =new OP();
+    console.log(p.constructor===OP)//FALSE
+```
+###[轻量的博客程序，支持markdown的](https://segmentfault.com/q/1010000008536559)  
+http://topspeedsnail.com/static-website-generators_or_tools/
+###[ajax获取评论的问题](https://segmentfault.com/q/1010000008543130)
+如果每条数据有个id就很好解决，如果只是你说明的问题的话，解决方案可以搞个临时变量记录已经插入多少条了，然然后，第二次的时候在减去第一次插入的条数，然后剩下的在插入数据，然后更新临时变量，一次类推就行了。
+```js
+ajax 相应的参数有 url（请求地址），page（页数），showNum（每页显示数）。请求的最终地址就像这样：
+
+http://xx.com/comment?page=2&showNum=10
+
+而有些网站则是直接通过第N条开始取的，它后台默认指定了每页显示的数目(showNum)，比如说豆瓣的影评：
+
+https://movie.douban.com/subject/3792799/reviews?start=40
+
+此时，后台只需要通过数据库查找语句 skip(start).limit(showNum) 来跳过前面 start 条，然后获取之后的 showNum 条。
+
+按照你上面的意思，好像是不通过ajax请求后台。只是前端 mock 一大堆数据，一次性把这个数据全部请求回来，然后通过事件分批展示（比如总共有50条，每次点击按钮展示新的10条）。
+
+var data = list, // list 为返回的数据列表
+    dataSize = data.length,
+    showNum = 10,
+    page = 0,
+    loadData = [];
+
+for (var i = 0; i < dataSize; i += showNum) {
+    loadData.push(data.slice(i, i + showNum));
+}
+loadData 是一个二维数组，它的每项是一个长度为 showNum 的数组。
+
+最后，通过事件触发数据按批渲染：
+
+btn.addEventListener('click', function() {
+    page += 1;
+    render(loadData[page]);
+}, false);
+```
