@@ -1467,3 +1467,93 @@ btn.addEventListener('click', function() {
     render(loadData[page]);
 }, false);
 ```
+###[寄生构造函数里的一个疑问](https://segmentfault.com/q/1010000008555592)
+```js
+function SpecialArray(){
+
+    //创建数组
+    var values = new Array();
+
+    //添加值
+    values.push.apply(values, arguments);
+
+    //添加方法
+    values.toPipedString = function(){
+        return this.join("|");
+    };
+
+    //返回数组
+    return values;
+}
+
+var colors = new SpecialArray("red", "blue", "green");
+//"red|blue|green"
+alert(colors.toPipedString());
+```
+![img](https://segmentfault.com/img/bVJ3T9?w=259&h=218)
+###[PHP 类, 邪恶的继承](http://picasso250.github.io/2014/12/29/PHP-class.html)
+```js
+$o = new stdClass();
+$o = new stdClass; // exactly the same
+class A { public function foo(){} }
+class B extends A { public function foo(){} }
+class C extends A {}
+(new B)->foo();
+(new C)->foo();
+那么, 如果调用 B 的 foo 方法, 调用的是B自身的方法. 如果调用C的 foo 方法, 调用的是A的方法.
+
+接下来要讲的是邪恶的继承. 邪恶的继承是可以破坏封装的.
+
+class A { public function foo() { $this->bar(); } }
+class B extends A { public function bar(){ echo 8888; } }
+(new B)->foo();//8888
+foo函数是无辜的, 它不知道自己做了邪恶的事情. 所以大神们会推荐用组合而非继承.
+
+static 方法可以被继承.
+
+class A { public static function foo(){} }
+class B extends A { public static function foo(){} }
+class C extends A {}
+B::foo();
+C::foo();
+和预想的一样.
+
+接下来就要讲一下不邪恶的继承:
+
+class A {
+    public static function foo() { self::bar(); }
+    public static function bar() { echo 6666;  }
+}
+class B extends A { public static function bar(){ echo 8888;  } }
+B::foo(); // 66666
+但这显然不灵活, 失去了多态.
+
+class A { public static function foo() { static::bar(); } }
+B::foo(); // 8888
+你可能会怀疑这个有什么用. 假设你写一个ORM的类库. 你希望用户的表名可以默认不配置.
+
+class UserTask extends OrmBase {} // 默认表名 user_task
+class UserHost extends OrmBase {
+    public static $tableName = 'userhost';
+} // 指定表名 userhost
+那么假设 getTableName() 方法可以获取表名, 那么这个方法该怎么写呢?
+
+class OrmBase()
+{
+    public static function getTableName()
+    {
+        if (static::$tableName) return static::$tableName;
+        return strtolower(preg_replace('/[A-Z]/', '$0_', get_called_class()));
+    }
+}
+当然, 如果你这个是是个效率党人, 那么你一定不能错过cache的机会
+
+public static function getTableName()
+{
+    if (!static::$tableName)
+        static::$tableName = strtolower(preg_replace('/[A-Z]/', '$0_', get_called_class()));
+    return static::$tableName; 
+}
+get_called_class() 返回运行时类名.
+get_class() 返回字面量类名, 等同于 CLASS
+```
