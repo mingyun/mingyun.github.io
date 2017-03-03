@@ -1557,3 +1557,294 @@ public static function getTableName()
 get_called_class() 返回运行时类名.
 get_class() 返回字面量类名, 等同于 CLASS
 ```
+###Xphrof
+```js
+// Xphrof 数据收集，通过header头开启收集
+include __DIR__ . '/../bootstrap/profiler.php';
+<?php
+
+if (isset($_SERVER['HTTP_ENABLE_PROFILER']) && $_SERVER['HTTP_ENABLE_PROFILER'] == '1') {
+    vhall_enable_xhprof();
+}
+
+function vhall_enable_xhprof($autosave = true)
+{
+    // 判断 XHProf 扩展是否安装
+    if (!function_exists('xhprof_enable')) {
+        return;
+    }
+
+    $GLOBALS['xhprofDataQuery']['httpHost'] = $_SERVER['HTTP_HOST'];
+    $GLOBALS['xhprofDataQuery']['request'] = $_SERVER['REQUEST_URI'];
+    $GLOBALS['xhprofDataQuery']['requestId'] = '';
+    $GLOBALS['xhprofDataQuery']['timestamp'] = $_SERVER['REQUEST_TIME_FLOAT'];
+    $GLOBALS['xhprofDataPost']['post'] = $_POST;
+    $GLOBALS['xhprofDataPost']['get'] = $_GET;
+    $GLOBALS['xhprofDataPost']['cookie'] = $_COOKIE;
+    $GLOBALS['xhprofDataPost']['server'] = $_SERVER;
+    $GLOBALS['xhprofDataSaved'] = false;
+
+    if ($autosave) {
+        register_shutdown_function('vhall_disable_xhprof');
+    }
+
+    //xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+    // 兼容PHP7 laravel 框架问题
+    xhprof_enable();
+}
+
+function vhall_disable_xhprof()
+{
+    // 判断 XHProf 扩展是否安装
+    if (!function_exists('xhprof_enable')) {
+        return;
+    }
+
+    if ($GLOBALS['xhprofDataSaved']) {
+        return;
+    } else {
+        $GLOBALS['xhprofDataSaved'] = true;
+    }
+
+    global $xhprofDataQuery, $xhprofDataPost;
+    $xhprofDataPost['data'] = xhprof_disable();
+    $xhprofDataQuery['requestTime'] = microtime(1) - $xhprofDataQuery['timestamp'];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'http://profiler.admin.xxx.com/api/log?' . http_build_query($xhprofDataQuery));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($xhprofDataPost));
+    curl_exec($ch);
+}
+
+$env = parse_ini_file(__DIR__."/../.env");
+$contentArray = file(__DIR__."/../.env", FILE_IGNORE_NEW_LINES);
+
+foreach ($contentArray as $value) {
+        // 检测是否注释
+        if (strpos(trim($value), 'SOLR') !== 0) {
+            continue;
+        }
+
+        if (strpos(trim($value), '#') === 0) {
+            continue;
+        }
+
+        $listMsg = explode('=',$value);
+
+        if (count($listMsg) < 2) {
+            continue;
+        }
+
+        define($listMsg[0],$listMsg[1]);
+    }
+    
+    curl_setopt($curl, CURLOPT_TIMEOUT_MS,500);
+    session 'driver' => 'redis',
+    queue failed
+    'failed' => [
+		'database' => 'mysql', 'table' => 'failed_jobs',
+	], 
+'sendmail' => '/usr/sbin/sendmail -bs',
+function getOrderId()
+    {
+        do {
+            $id = sprintf('%d%d', time(), mt_rand(1000, 9999));
+            $row = $this->find($id);
+        } while ($row);
+
+        return $id;
+    }
+
+namespace App\Providers\Hashing;
+
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+
+class Md5Hasher implements HasherContract
+namespace App\Providers\Hashing;
+
+use Illuminate\Support\ServiceProvider;
+
+class Md5ServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
+        //
+    }
+
+    /**
+     * Register the application services.
+     */
+    public function register()
+    {
+        $this->app->singleton('hash', function () { return new Md5Hasher(); });
+    }
+}
+/**
+     * 获取设置活动pv
+     * @param $webinar 活动
+     * @return mixed
+     */
+    public static function getWebinarPv($webinar)
+    {
+        $pv = Redis ::incr('view:webinarpvs'.$webinar->id);
+        if ($pv % 7 === 0) {
+            $webinar->increment('pv', 7);
+        } else if ($pv == 1) {
+            $pv = $webinar->pv + 1;
+            Redis ::set('view:webinarpvs'.$webinar->id, $pv);
+        }
+        return $pv;
+    }
+public static function getTimeOfDay($day = 0)
+    {
+        $date = '';
+        $dateArr = [];
+        $date =  date('Y-m-d', strtotime('-'.$day.' day'));
+        for ($x = 1; $x <= $day; $x++) {
+            $date = date('Y-m-d', (strtotime($date) + 3600 * 24));
+            array_push($dateArr, $date);
+        }
+        return $dateArr;
+    }
+function weekday($year, $week = 1){
+    $year_start = mktime(0,0,0,1,1,$year);
+    $year_end = mktime(0,0,0,12,31,$year);
+
+    if (intval(date('w',$year_start)) === 1){
+        $start = $year_start;
+    }else{
+        $start = strtotime('+1 monday',$year_start);
+    }
+
+    if ($week === 1){
+        $weekday['start'] = $start;
+    }else{
+        $weekday['start'] = strtotime('+'.($week-0).' monday',$start);
+    }
+
+    $weekday['end'] = strtotime('+1 sunday',$weekday['start']);
+    if (date('Y',$weekday['end'])!=$year){
+        $weekday['end'] = $year_end;//跳过今年
+    }
+    return array_map(function($i){
+        return date('Y-m-d',$i);
+    },$weekday);
+}
+
+function merge($a, $b, $k, $k1, $k2 = '')
+{
+    $result = array_merge($a, $b);
+    $res = [];
+    foreach ($result as $key => $value) {
+        if (isset($res[$value[$k]])) {
+            $res[$value[$k]][$k1] += $value[$k1];
+            $k2 && $res[$value[$k]][$k2] += $value[$k2];
+        } else {
+            $res[$value[$k]] = $value;
+        }
+    }
+    return $res;
+}
+//注意使用int数字
+public function getOnlineList($room, $offset, $limit)
+    {
+        try {
+            return $this->getRedisConn($room)->ZRANGEBYSCORE('room_user_set_'.$room, 1, '+infinity', ['limit' => [intval($offset), intval($limit)]]);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    /**
+     * 生成随机份额红包： 根据红包金额，份数生成红包金额
+     * @param $total    金额
+     * @param $num      份数
+     * @param float $min    最小金额
+     * @return array
+     */
+    public static function createRandomRed($total,$num,$min = 0.01){
+        $list = [];
+        for($i= 1;$i< $num;$i++){
+            $safe_total = ($total-($num-$i)*$min)/($num-$i);//随机安全上限
+            $tmpMin = $min * 100;
+            $tmpsafe = $safe_total * 100;
+            if($tmpsafe < 1){
+                $tmpsafe = $tmpMin;
+                $tmpMin  = $tmpsafe;
+            }
+            $money      = mt_rand($tmpMin,$tmpsafe)/100;
+            $total      = $total-$money;
+            $list[$i]   = round($money,2);
+        }
+        $list[$num] = round($total,2);
+        //打乱次序 随机红包算法无规律可循
+        shuffle($list);
+        return $list;
+    }
+class Sid
+{
+    /**
+     * 
+     */
+    protected static $keyPrefix = 'app:user:sid:';
+
+    /**
+     * 生成sid
+     *
+     * @param  int $userId 用户id
+     * @return string
+     */
+    public static function generateSid($userId)
+    {
+        $randHash = md5($userId . microtime(true) . mt_rand(100000, 999999));
+        $ssid = substr($randHash, mt_rand(0, 18), mt_rand(14, 20));
+
+        RedisFacade::set(static::$keyPrefix . $userId, $ssid);
+
+        return $userId . '-' . $ssid;
+    }
+
+    /**
+     * 获取用户的sid
+     * @param  int $userId 用户id
+     * @return string
+     */
+    public static function getSid($userId)
+    {
+        if ($ssid = Redis::get(static::$keyPrefix . $userId)) {
+            return $userId . '-' . $ssid;
+        }
+
+        return '';
+    }
+
+    /**
+     * 检测sid返回用户id
+     *
+     * @param  string $sid
+     * @return int
+     */
+    public static function getUid($sid)
+    {
+        if (!$sid) {
+            return 0;
+        }
+
+        $sidInfo = explode('-', $sid, 2);
+        if (count($sidInfo) < 2) {
+            return 0;
+        }
+
+        list($userId, $ssid) = explode('-', $sid);
+        if ($ssid && Redis::get(static::$keyPrefix . $userId) === $ssid) {
+            return $userId;
+        }
+
+        return 0;
+    }
+}    
+```
+###
