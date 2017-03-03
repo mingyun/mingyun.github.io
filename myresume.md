@@ -54,7 +54,7 @@
 [支付宝转账composer包](https://github.com/lovecn/alipaybatchphp)
 
 ## 微信公众号
-
+[苏生不惑](http://mp.weixin.qq.com/profile?src=3&timestamp=1488511512&ver=1&signature=jbHo55gMUw**Zg2iOHrEwqtVIxzlQmFOJDYpmjzA7hFqWQLR22ALhkftiMzt**YrV47UaAmvyZUfJc-DAubZ5A==)
 # 技能清单
 
 
