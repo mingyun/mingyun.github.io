@@ -288,6 +288,8 @@ https://link.zhihu.com/?target=https%3A//smallpdf.com/
 
 http://link.zhihu.com/?target=http%3A//www.epubit.com.cn/book/details/4868
 ###[JavaEE 要懂的小事：图解Http协议](https://zhuanlan.zhihu.com/p/25518072)
+
+```js
 HTTP是一个客户端和服务器端请求和响应的标准TCP。其实建立在TCP之上的
 1、客户端与服务器需要建立连接。（比如某个超级链接，HTTP就开始了。）
 
@@ -312,6 +314,14 @@ HTTP是一个客户端和服务器端请求和响应的标准TCP。其实建立�
 3xx：重定向–要完成请求必须进行更进一步的操作
 4xx：客户端错误–请求有语法错误或请求无法实现
 5xx：服务器端错误–服务器未能实现合法的请求
+200 OK //请求成功
+400 Bad Request //客户端请求有语法错误，不能被服务器所理解
+401 Unauthorized //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用
+403 Forbidden //服务器收到请求，但是拒绝提供服务
+404 Not Found //请求资源不存在，eg：输入了错误的URL
+500 Internal Server Error //服务器发生不可预期的错误
+503 Server Unavailable //服务器当前不能处理客户端的请求，一段时间后可能恢复正常
+```
 ###[谈谈对 Web 安全的理解](https://zhuanlan.zhihu.com/p/25486768)_
 CSRF 可以简单理解为：攻击者盗用了你的身份，以你的名义发送恶意请求，容易造成个人隐私泄露以及财产安全。
 ![img](https://pic4.zhimg.com/v2-0c63c4193d48b8f42c4a4f53d82330df_b.jpg)
@@ -523,10 +533,7 @@ b. 关闭公网访问
 medoo.php这个PHP实现的Query Builder,就是通过PDO::quote($param)手动转义参数,然后通过exec/query来执行SQL,其并没有使用预处理参数化查询(prepare($sql)/execute(array($param))
 
 ```js
-作者：eechen
-链接：https://www.zhihu.com/question/20076383/answer/149180990
-来源：知乎
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+ 
 
 //id IN ($ids) 占位符生成
 function app_place_holders(array $params) {
@@ -577,6 +584,16 @@ $DB->query("SELECT * FROM users WHERE name=? and password=?",array($_GET['name']
 
  
 ```
+###[公众号文章配图](https://www.zhihu.com/question/37493361)
+https://link.zhihu.com/?target=http%3A//www.91yunying.com/25691.html https://link.zhihu.com/?target=http%3A//huaban.com/
 
+###[在SQL中，如何查询某一字段中最大值的数据](https://www.zhihu.com/question/56557077)
+ select * from shit as A inner join (select max(date) as date from shit) as B on A.date = B.date
+ select * from shit as A where not exists(select * from shit where date>A.date)
+ where date=(select max(date) from ..)
+ 最简单的子查询：select * from table where date = (select max(date) from table)
 
+或者用轮子哥讲的join自己：
+
+select * from table t1 left join (select max(date) as date from table) t2 on t1.date=t2.date where t2.date is not null
 
