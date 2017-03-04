@@ -1,3 +1,13 @@
+###[__contruct方法](https://segmentfault.com/q/1010000008565442)
+一个类中如果同时存在__construct(非父类的)和与类名同名函数，则__construct是构造函数，而同名函数则当作普通函数；
+
+2.如果一个子类的父类中有__construct(即使是public)但子类中没有,而子类中有同名函数，而同名函数是构造函数。如果你用get_class_methods($this);获取类的方法会发现其实是有__construct方法的;
+
+3.php官方手册中有这么一句话：
+
+自 PHP 5.3.3 起，在命名空间中，与类名同名的方法不再作为构造函数。这一改变不影响不在命名空间中的类
+###[es6()=>{} 这种形式的代码](https://segmentfault.com/q/1010000008556196)
+语法规定就是(function(){}).bind(this),即自动添加了bind this
 ###[.gitignore 没有生效](https://segmentfault.com/q/1010000008565646)
 因为之前已经提交过，解决办法就是先把.gitignore中这三个目录去掉，然后删除这三个目录后再提交，push，最后再把这三个目录添加到.gitignore中，这样以后就被排除了
 ###[怎样将JS中的json对象转换成PHP可以识别的json对象](https://segmentfault.com/q/1010000008553610)
