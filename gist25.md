@@ -66,4 +66,231 @@ wget -q ifconfig.cat
 http -b ifconfig.cat 
 curl http://ip-api.com/line http://ip-api.com/docs/  
 curl ipecho.net/plain https://ifconfig.minidump.info/ 
+###[24小时从0到1开发阴阳师小程序](https://zhuanlan.zhihu.com/p/25477688)
+```js
+前端毫无疑问就是微信小程序咯；
+后端使用 Django 提供 Restful API 服务；https://link.zhihu.com/?target=https%3A//github.com/bluedazzle/django-simple-serializer
+# coding: utf-8
+import json
+import requests
+import urllib
+from xpinyin import Pinyin
+url = "https://g37simulator.webapp.163.com/get_heroid_list?callback=jQuery11130959811888616583_1487429691764&rarity=0&page=1&per_page=200&_=1487429691765"
+result = requests.get(url).content.replace('jQuery11130959811888616583_1487429691764(', '').replace(')', '')
+json_data = json.loads(result)
+hellspawn_list = json_data['data']
+p = Pinyin()
+for k, v in hellspawn_list.iteritems():
+    file_name = p.get_pinyin(v.get('name'), '')
+    print 'id: {0} name: {1}'.format(k, v.get('name'))
+    big_url = "https://yys.res.netease.com/pc/zt/20161108171335/data/shishen_big/{0}.png".format(k)
+    urllib.urlretrieve(big_url, filename='big/{0}@big.png'.format(file_name))
+    avatar_url = "https://yys.res.netease.com/pc/gw/20160929201016/data/shishen/{0}.png".format(k)
+    urllib.urlretrieve(avatar_url, filename='icon/{0}@icon.png'.format(file_name))
+    
+    https://link.zhihu.com/?target=https%3A//github.com/bluedazzle/HellspawnHunterBackend 
+    >>> p.get_pinyin('世界只关心你能提供')
+'shi-jie-zhi-guan-xin-ni-neng-ti-gong'
+```
+###[代码这样写更优雅 (Python 版)](https://zhuanlan.zhihu.com/p/25518608)
+```js
+变量交换
+
+大部分编程语言中交换两个变量的值时，不得不引入一个临时变量：
+
+>>> a = 1
+>>> b = 2
+>>> tmp = a
+>>> a = b
+>>> b = tmp
+pythonic
+
+>>> a, b = b, a
+循环遍历区间元素
+
+for i in [0, 1, 2, 3, 4, 5]:
+    print i
+# 或者
+for i in range(6):
+    print (i)
+pythonic
+
+for i in xrange(6):
+    print (i)
+
+带有索引位置的集合遍历
+
+遍历集合时如果需要使用到集合的索引位置时，直接对集合迭代是没有索引信息的，普通的方式使用：
+
+colors = ['red', 'green', 'blue', 'yellow']
+
+for i in range(len(colors)):
+    print (i, '--->', colors[i])
+pythonic
+
+for i, color in enumerate(colors):
+    print (i, '--->', color)
+
+字符串连接
+
+字符串连接时，普通的方式可以用 + 操作
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+
+s = names[0]
+for name in names[1:]:
+    s += ', ' + name
+print (s)
+pythonic
+
+print (', '.join(names))
+
+f = open('data.txt')
+try:
+    data = f.read()
+finally:
+    f.close()
+pythonic
+
+with open('data.txt') as f:
+    data = f.read()
+列表推导式
+
+能够用一行代码简明扼要地解决问题时，绝不要用两行，比如
+
+result = []
+for i in range(10):
+    s = i*2
+    result.append(s)
+pythonic
+
+[i*2 for i in xrange(10)]
+
+遍历字典的 key 和 value
+
+# 方法一
+for k in d:
+    print k, '--->', d[k]
+
+# 方法二
+for k, v in d.items():
+    print (k, '--->', v)
+pythonic
+
+for k, v in d.iteritems():
+    print (k, '--->', v)
+
+names = ['raymond', 'rachel', 'matthew', 'roger',
+         'betty', 'melissa', 'judith', 'charlie']
+names.pop(0)
+names.insert(0, 'mark')
+pythonic
+
+from collections import deque
+names = deque(['raymond', 'rachel', 'matthew', 'roger',
+               'betty', 'melissa', 'judith', 'charlie'])
+names.popleft()
+names.appendleft('mark')
+deque 是一个双向队列的数据结构，删除元素和插入元素会很快
+ 
+
+善用装饰器
+
+装饰器可以把与业务逻辑无关的代码抽离出来，让代码保持干净清爽，而且装饰器还能被多个地方重复利用。比如一个爬虫网页的函数，如果该 URL 曾经被爬过就直接从缓存中获取，否则爬下来之后加入到缓存，防止后续重复爬取。
+
+def web_lookup(url, saved={}):
+    if url in saved:
+        return saved[url]
+    page = urllib.urlopen(url).read()
+    saved[url] = page
+    return page
+pythonic
+
+import urllib #py2
+#import urllib.request as urllib # py3
+
+def cache(func):
+    saved = {}
+
+    def wrapper(url):
+        if url in saved:
+            return saved[url]
+        else:
+            page = func(url)
+            saved[url] = page
+            return page
+
+    return wrapper
+
+
+@cache
+def web_lookup(url):
+    return urllib.urlopen(url).read()
+
+
+
+```
+###[ 使用Python定制词云](https://zhuanlan.zhihu.com/p/25538157)
+```js
+$ mkdir work && cd work
+$ sudo apt-get update
+$ sudo apt-get install python-dev
+$ sudo pip install numpy
+$ sudo apt-get install python-matplotlib
+$ sudo apt-get install python-pil
+下载小说《三体》I、 II、 III。
+
+$ wget http://labfile.oss.aliyuncs.com/courses/756/santi.txt
+$ wget http://labfile.oss.aliyuncs.com/courses/756/santi2.txt
+$ wget http://labfile.oss.aliyuncs.com/courses/756/santi3.txt
+安装wordcloud扩展包。
+
+$ sudo pip install wordcloud
+
+作者：Wayne Shi
+链接：https://zhuanlan.zhihu.com/p/25538157
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+#!/usr/bin/env python
+"""
+Minimal Example
+===============
+Generating a square wordcloud from the US constitution using default arguments.
+"""
+
+from os import path
+from wordcloud import WordCloud
+
+d = path.dirname(__file__)
+
+# Read the whole text.
+text = open(path.join(d, 'constitution.txt')).read()
+
+# Generate a word cloud image
+wordcloud = WordCloud().generate(text)
+
+# Display the generated image:
+# the matplotlib way:
+import matplotlib.pyplot as plt
+plt.imshow(wordcloud)
+plt.axis("off")
+
+# lower max_font_size
+wordcloud = WordCloud(max_font_size=40).generate(text)
+plt.figure()
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.show()
+
+```
+###[这个网站能够在线帮你把 PDF 文件轻松转成 PPT、Exel、JPG、Word 等文件](https://zhuanlan.zhihu.com/p/24735371)
+https://link.zhihu.com/?target=https%3A//smallpdf.com/
+###[《一个全栈增长工程师的练手项目集》](https://zhuanlan.zhihu.com/p/25534234)
+
+http://link.zhihu.com/?target=http%3A//www.epubit.com.cn/book/details/4868
+
+
+
 
