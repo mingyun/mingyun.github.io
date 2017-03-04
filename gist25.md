@@ -248,10 +248,7 @@ $ wget http://labfile.oss.aliyuncs.com/courses/756/santi3.txt
 
 $ sudo pip install wordcloud
 
-作者：Wayne Shi
-链接：https://zhuanlan.zhihu.com/p/25538157
-来源：知乎
-著作权归作者所有，转载请联系作者获得授权。
+ 
 
 #!/usr/bin/env python
 """
@@ -290,7 +287,296 @@ https://link.zhihu.com/?target=https%3A//smallpdf.com/
 ###[《一个全栈增长工程师的练手项目集》](https://zhuanlan.zhihu.com/p/25534234)
 
 http://link.zhihu.com/?target=http%3A//www.epubit.com.cn/book/details/4868
+###[JavaEE 要懂的小事：图解Http协议](https://zhuanlan.zhihu.com/p/25518072)
+HTTP是一个客户端和服务器端请求和响应的标准TCP。其实建立在TCP之上的
+1、客户端与服务器需要建立连接。（比如某个超级链接，HTTP就开始了。）
 
+
+2、建立连接后，发送请求。
+
+
+3、服务器接到请求后，响应其响应信息。
+
+
+4、客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户机与服务器断开连接。
+
+建立连接，其实建立在TCP连接基础之上
+
+ 请求报文格式如下：
+
+请求行 通用信息头 请求头 实体头 （空行） 报文主体
+响应行-状态码
+
+1xx：指示信息–表示请求已接收，继续处理
+2xx：成功–表示请求已被成功接收、理解、接受
+3xx：重定向–要完成请求必须进行更进一步的操作
+4xx：客户端错误–请求有语法错误或请求无法实现
+5xx：服务器端错误–服务器未能实现合法的请求
+###[谈谈对 Web 安全的理解](https://zhuanlan.zhihu.com/p/25486768)_
+CSRF 可以简单理解为：攻击者盗用了你的身份，以你的名义发送恶意请求，容易造成个人隐私泄露以及财产安全。
+![img](https://pic4.zhimg.com/v2-0c63c4193d48b8f42c4a4f53d82330df_b.jpg)
+```js
+登录受信任网站，并在本地生成 cookie
+在不登出 A 的情况下，访问危险网站 B
+举个简单的例子：
+
+某银行网站 A，它以 GET 请求来完成银行转账的操作，如：
+
+http://www.mybank.com/transfer.php?toBankId=11&money=1000
+而某危险网站 B，它页面中含有一段 HTML 代码如下：
+
+<img src=http://www.mybank.com/transfer.php?toBankId=11&money=1000>
+
+
+ session_start();
+    if (isset($_POST['toBankId'] &&isset($_POST['money']))
+    {
+        transfer($_POST['toBankId'],　$_POST['money']);
+    }
+
+<body onload="steal()">
+    <iframe name="steal" display="none">
+　　     <form method="POST" name="transfer"　action="http://www.myBank.com/transfer.php">
+　　	    <input type="hidden" name="toBankId" value="11">
+　　	    <input type="hidden" name="money" value="1000">
+　　     </form>
+    </iframe>
+</body>
+```
+###[Phantomjs性能优化](https://zhuanlan.zhihu.com/p/25507989)
+```js
+from selenium import webdriver
+
+d=webdriver.PhantomJS("D:\python27\Scripts\phantomjs.exe",service_args=[])
+d.get("http://thief.one")
+d.quit()
+
+service_args=[]
+service_args.append('--load-images=no')  ##关闭图片加载
+service_args.append('--disk-cache=yes')  ##开启缓存
+service_args.append('--ignore-ssl-errors=true') ##忽略https错误
+
+d=webdriver.PhantomJS("D:\python27\Scripts\phantomjs.exe",service_args=service_args)
+d.get("http://thief.one")
+ d.implicitly_wait(10)        ##设置超时时间
+d.set_page_load_timeout(10)  ##设置超时时间
+url_list=["http://www.baidu.com"]*10
+d=webdriver.PhantomJS()   
+def test(url):
+     d.get(url)
+运行一个phantomjs进程，进程内开启多线程）
+url_list=["http://www.baidu.com"]*10
+for url in url_list:
+     threading.Thread(target=test,args=(url,)).start() 
+d.quit()
+
+__author__="nMask"
+__Date__="20170224"
+__Blog__="http://thief.one"
+
+import Queue
+from selenium import webdriver
+import threading
+import time
+
+class conphantomjs:
+	phantomjs_max=1             ##同时开启phantomjs个数
+	jiange=0.00001                  ##开启phantomjs间隔
+	timeout=20                  ##设置phantomjs超时时间
+	path="D:\python27\Scripts\phantomjs.exe" ##phantomjs路径
+	service_args=['--load-images=no','--disk-cache=yes'] ##参数设置
+
+	def __init__(self):
+		self.q_phantomjs=Queue.Queue()   ##存放phantomjs进程队列
+
+	def getbody(self,url):
+		'''
+		利用phantomjs获取网站源码以及url
+		'''
+		d=self.q_phantomjs.get()
+
+		try:
+			d.get(url)
+		except:
+			print "Phantomjs Open url Error"
+
+		url=d.current_url
+
+		self.q_phantomjs.put(d)
+
+		print url
+
+	def open_phantomjs(self):
+		'''
+		多线程开启phantomjs进程
+		'''
+		def open_threading():
+			d=webdriver.PhantomJS(conphantomjs.path,service_args=conphantomjs.service_args) 
+			d.implicitly_wait(conphantomjs.timeout)        ##设置超时时间
+			d.set_page_load_timeout(conphantomjs.timeout)  ##设置超时时间
+
+			self.q_phantomjs.put(d) #将phantomjs进程存入队列
+
+		th=[]
+		for i in range(conphantomjs.phantomjs_max):
+			t=threading.Thread(target=open_threading)
+			th.append(t)
+		for i in th:
+			i.start()
+			time.sleep(conphantomjs.jiange) #设置开启的时间间隔
+		for i in th:
+			i.join()
+
+
+	def close_phantomjs(self):
+		'''
+		多线程关闭phantomjs对象
+		'''
+		th=[]
+		def close_threading():
+			d=self.q_phantomjs.get()
+			d.quit()
+
+		for i in range(self.q_phantomjs.qsize()):
+			t=threading.Thread(target=close_threading)
+			th.append(t)
+		for i in th:
+			i.start()
+		for i in th:
+			i.join()
+
+
+if __name__=="__main__":
+	'''
+	用法：
+	1.实例化类
+	2.运行open_phantomjs 开启phantomjs进程
+	3.运行getbody函数，传入url
+	4.运行close_phantomjs 关闭phantomjs进程
+	'''
+	cur=conphantomjs()
+	conphantomjs.phantomjs_max=10
+	cur.open_phantomjs()
+	print "phantomjs num is ",cur.q_phantomjs.qsize()
+
+	url_list=["http://www.baidu.com"]*50
+
+	th=[]
+	for i in url_list:
+		t=threading.Thread(target=cur.getbody,args=(i,))
+		th.append(t)
+	for i in th:
+		i.start()
+	for i in th:
+		i.join()
+
+	cur.close_phantomjs()
+	print "phantomjs num is ",cur.q_phantomjs.qsize()
+ 
+ d=webdriver.PhantomJS("D:\python27\Scripts\phantomjs.exe",service_args=['--load-images=no','--disk-cache=yes'])
+ 每次d.get()请求完就d.quit()关闭phantomjs进程，待到新的请求再开启。（
+ 每次get后，保存current_url的值，待下一次请求后与此值相比较，如果一样，则说明状态没有被改变。
+```
+###[从设计到上线：如何用Vue.js和Python做一个博客？](https://zhuanlan.zhihu.com/p/25507320)
+
+https://link.zhihu.com/?target=https%3A//github.com/hating/Shakespeare-TheBlog
+
+###[推荐：Python学习总结](https://zhuanlan.zhihu.com/p/25507110)
+
+###[MySQL成数据勒索新目标，开发4步自查](https://zhuanlan.zhihu.com/p/25497458)
+```js
+
+2、Redis
+a. 配置鉴权
+
+修改配置文件，增加 “requirepass 密码” 项配置（配置文件一般在/etc/redis.conf）
+在连接上Redis的基础上，通过命令行配置，config set requirepass yourPassword
+b. 关闭公网访问
+
+配置bind选项，限定可以连接Redis服务器的IP，修改 Redis 的默认端口6379
+c. 其他
+
+配置rename-command 配置项 “RENAME_CONFIG”，重名Redis相关命令，这样即使存在未授权访问，也能够给攻击者使用config 指令加大难度（不过也会给开发者带来不方便）
+相关配置完毕后重启Redis-server服务
+
+3、MySQL
+a. 配置鉴权
+MySQL安装默认要求设置密码，如果是弱命令，可通过以下几种方式修改密码:
+
+UPDATE USER语句
+ //以root登录MySQL后，
+ USE mysql；
+ UPDATE user SET password=PASSWORD('新密码') WHERE user='root';
+ FLUSH PRIVILEGES;
+SET PASSWORD语句
+//以root登录MySQL后，
+ SET PASSWORD FOR root=PASSWORD('新密码');
+mysqladmin命令
+mysqladmin -u root -p 旧密码 新密码
+b. 关闭公网访问
+
+启动参数或者配置文件中设置bind-address= IP绑定内部IP
+以root账号连接数据库，排查user表中用户的host字段值为%或者非localhost的用户，修改host为localhost或者指定IP或者删除没必要用户
+```
+###[GO语言学习资源整理](https://zhuanlan.zhihu.com/p/25493806)
+###[PHP 开发中有效防御 SQL 注入攻击有哪些好方法](https://www.zhihu.com/question/20076383)
+medoo.php这个PHP实现的Query Builder,就是通过PDO::quote($param)手动转义参数,然后通过exec/query来执行SQL,其并没有使用预处理参数化查询(prepare($sql)/execute(array($param))
+
+```js
+作者：eechen
+链接：https://www.zhihu.com/question/20076383/answer/149180990
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+//id IN ($ids) 占位符生成
+function app_place_holders(array $params) {
+	//http://php.net/manual/zh/pdostatement.execute.php
+	return implode(',', array_fill(0, count($params), '?'));
+}
+
+// var_export(app_in_pdo(array(1, 3, 5)));
+function app_in_pdo(array $ids) {
+	global $app;
+	$db = app_db();
+	$table = $app['db_prefix'].'post';
+	$place_holders = app_place_holders($ids);
+	$sql = "SELECT * FROM `{$table}` WHERE `id` IN ({$place_holders})";
+	$stmt = $db->prepare($sql);
+	$stmt->execute($ids); //所有id都当做字符串处理,值传递.
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// var_export(app_in_mysqli(array(1, 3, 5))); 要求使用PHP内置的mysqlnd驱动
+function app_in_mysqli(array $ids) {
+	global $app;
+	$db = app_mysql();
+	$table = $app['db_prefix'].'post';
+	$place_holders = app_place_holders($ids);
+	$sql = "SELECT * FROM `{$table}` WHERE `id` IN ({$place_holders})";
+	$stmt = $db->prepare($sql);
+	//MySQLi自动化"引用绑定"参数(因为mysqli的execute不像pdo的execute支持参数数组传递,所以显得麻烦些)
+	$params = array_merge(array(str_repeat('s', count($ids))), $ids); //array('sss', 1, 3, 5)
+	foreach($params as $k => $v) { $params[$k] = &$params[$k]; } //因为bind_param要求传递引用.
+	call_user_func_array(array($stmt, 'bind_param'), $params); //相当于$stmt->bind_param('sss', $ids[0], $ids[1], $ids[2]);
+	$stmt->execute();
+	return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+用tail -f /path/to/mysqld/general_log查看MySQL的SQL日志可见:Prepare	SELECT * FROM `app_post` WHERE `id` IN (?,?,?)
+Execute	SELECT * FROM `app_post` WHERE `id` IN ('1','3','5')
+Close stmt
+
+防SQL注入最好的方法就是千万不要自己拼装SQL命令和参数, 而是用PDO的prepare和bind. 
+原理就在于要把你的SQL查询命令和传递的参数分开:
+    > prepare的时候, DB server会把你的SQL语句解析成SQL命令.
+    > bind的时候, 只是动态传参给DB Server解析好的SQL命令.
+
+其他所有的过滤特殊字符串这种白名单的方式都是浮云.
+https://link.zhihu.com/?target=https%3A//github.com/lincanbin/PHP-PDO-MySQL-Class 
+$DB->query("SELECT * FROM fruit WHERE name IN (?)",array($_GET['pm1'],$_GET['pm2']));
+$DB->query("SELECT * FROM users WHERE name=? and password=?",array($_GET['name'],$_GET['pw']));
+
+ 
+```
 
 
 
