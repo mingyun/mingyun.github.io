@@ -1,3 +1,91 @@
+###[.gitignore 没有生效](https://segmentfault.com/q/1010000008565646)
+因为之前已经提交过，解决办法就是先把.gitignore中这三个目录去掉，然后删除这三个目录后再提交，push，最后再把这三个目录添加到.gitignore中，这样以后就被排除了
+###[怎样将JS中的json对象转换成PHP可以识别的json对象](https://segmentfault.com/q/1010000008553610)
+```js
+<?php
+
+$str = <<<STR
+{
+  a: {
+    b: '1',
+    c: '2',
+    d: '3'
+  },
+  e: {
+    f: '4',
+    g: '5',
+    h: '6'
+  },
+  i: [
+    {
+      j: '7',
+      k: '8',
+      l: '9'
+    },
+    {
+      m: '10',
+      n: '11',
+      o: '12'
+    },
+    {
+      p: '13',
+      q: '14 ',
+      r: '15'
+    }
+  ],
+  s: '16',
+  t: '17',
+  u: '18',
+  v: false,
+  w: 'final',
+  x: '',
+  y: true,
+  z: true
+}
+STR;
+
+$str = preg_replace(["/([a-zA-Z_]+[a-zA-Z0-9_]*)\s*:/", "/:\s*'(.*?)'/"], ['"\1":', ': "\1"'], $str);
+var_dump($str);
+var_dump(json_decode($str));
+
+```
+###[正确移除绑定事件？？](https://segmentfault.com/q/1010000008561000)
+```js
+const something = {
+    bindEvent() {
+        // 不管是用 function 或箭头函数封装还是 bind(this)，
+        // 都会产生新的函数，需要把这个新函数保存起来，这里用 this.events 来保存，
+        // 方便以后移除绑定事件
+        this.events = {
+            mouseenter: e => this.mouseenterHandler(e),
+            mouseleave: this.mouseleaveHandler.bind(this),
+            click: this.clickHandler
+        };
+
+        // Array.from 可以把伪数组变成真正的数组，
+        // 当然原来的 [].forEach.call 也没有什么问题
+        // 不过 dot => { ... } 是箭头函数，不需要定义 self 来保存 this
+        Array.from(document.querySelectorAll(".dot"))
+            .forEach(dot => {
+                // 这里是三句 addEventListener，
+                // 直接用 Object.keys(this.events).forEach 简写了
+                Object.keys(this.events)
+                    .forEach(key => dot.addEventListener(key, this.events[key]));
+            });
+    },
+
+    unbindEvent() {
+        // 万一没调 bindEvent，this.events 会是 undefined，所以这里处理一下。
+        // 其它的和 bindEvent 中的代码差不多，就不逐一解释了
+        const events = this.events || {};
+        Array.from(document.querySelectorAll(".dot"))
+            .forEach(dot => {
+                Object.keys(events)
+                    .forEach(key => dot.removeEventListener(key, events[key]));
+            });
+    }
+};
+```
 ###[正则取出其中的 IP 地址](https://www.v2ex.com/t/344344#reply19)
 ```js
 print 'jdbc:mysql://10.0.151.205:3306 -> 10.0.151.205:3306'.split('->')[1].split(':')[0].strip()
