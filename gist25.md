@@ -1,3 +1,27 @@
+
+###[扛住100亿次请求？我们来试一试](https://github.com/xiaojiaqi/10billionhongbaos/wiki/%E6%89%9B%E4%BD%8F100%E4%BA%BF%E6%AC%A1%E8%AF%B7%E6%B1%82%EF%BC%9F%E6%88%91%E4%BB%AC%E6%9D%A5%E8%AF%95%E4%B8%80%E8%AF%95)
+###[收集在学习和提高技术过程中遇到的比较有价值的网站、文档、Blog等，方便自己查阅。](https://github.com/china-kook/Skill-learn-collect)
+###[Git 工作流的一些经验分享](http://www.jianshu.com/p/ca5ee4ea6420)
+###[全面了解Nginx主要应用场景](http://www.raye.wang/2017/02/24/quan-mian-liao-jie-nginxdao-di-neng-zuo-shi-yao/)
+###[米斯特白帽培训讲义（v2）漏洞篇 弱口令、爆破、遍历](http://blog.csdn.net/wizardforcel/article/details/56678797)
+###[写给后端看的前端技术——webpack（上）](https://mp.weixin.qq.com/s?__biz=MzIxMjAzMDA1MQ%3D%3D&mid=2648945804&idx=1&sn=602698b6937004f3c2cad0a634ca5cf0&chksm=8f5b5380b82cda96c0c2d7a7f15d51af728f66a267391b14b531b9090f7e71f071e15b6debf3)
+https://github.com/xrr2016/vue-express-mongodb/blob/master/README.md  
+###[前端基础进阶（七）：函数与函数式编程](http://www.jianshu.com/p/69dede6f7e5f)
+基于Laravel的API服务端架构代码https://segmentfault.com/a/1190000006178269 
+https://segmentfault.com/r/1250000008408446?shareId=1210000008408447 
+http://blog.csdn.net/qq_35246620/article/details/54317740?ref=myread  
+https://rdnote.cn/archives.html
+https://ipfans.github.io/2017/02/analyzing-pronto-cycleshare-data-with-python-and-pandas/ 
+http://blog.yubangweb.com/ni-zhen-de-dong-redisma/ 
+https://coyee.com/article/11939-mysql-when-not-in-is-not-equal-to-not-exists 
+http://blog.shanamaid.top/2017/02/14/200%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0web%E5%9C%A8%E7%BA%BF%E8%81%8A%E5%A4%A9%E5%AE%A4/
+http://magicly.me/2017/03/03/word2vec-first-try-md/  
+Redis的内存优化https://cachecloud.github.io/2017/02/16/Redis%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96/ 
+https://qiaohong.org/2017/02/21/%E7%88%AC%E8%99%AB%E6%8E%92%E9%99%A4%E5%8D%8F%E8%AE%AE-robots-txt/ 
+http://www.jianshu.com/u/4664d9570527   https://aotu.io/notes/2016/03/16/optimization/ 
+https://mp.weixin.qq.com/s?__biz=MzIyMjUyNTkyNQ==&mid=2247484229&idx=1&sn=e537799c50251c8c5af5bce934f69e41&chksm=e82d63cfdf5aead9dd9a6dc8751cc7113fe536aff97788d0a2cf953510b2f6fdb7a2c9d87a3f&mpshare=1&scene=1&srcid=0221uPj1ObVWZaZ3EWyXxPY8&key=1421ccb947cab700ccf26f82e6cc80a1082411e2caa00a1d543e7de6420cf2d2c0d5d33b03fadf546567e38aeac8ec40cd2e0c8b0b9f3de092079bab3fedb195ef82cdab9443e22bd85b7fbda1949ed5&ascene=0&uin=MTg0OTA4MjAw&devicetype=iMac+MacBookPro8%2C1+OSX+OSX+10.10.3+build(14D131)&version=11020201&pas  逆天了word 90后：情人节巧用小小技术就俘获了女神 
+###[WEB前端知识总结](https://zhuanlan.zhihu.com/p/25334672)
+https://github.com/alcat2008/front-end-study-guide 
 ###[一个循环遍历逻辑问题](https://segmentfault.com/q/1010000008523335)
 ```js
 function demo($a=null,$b=null)
