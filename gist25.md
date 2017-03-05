@@ -1,3 +1,286 @@
+###[一个循环遍历逻辑问题](https://segmentfault.com/q/1010000008523335)
+```js
+function demo($a=null,$b=null)
+    {
+        $result = array();
+        for ($i=$a[0]; $i<=$a[1]; $i++) {
+            foreach ($b as $b_key => $b_value) {
+                $result[$i][$b_value] = $i / $b_value;  //假设b中所有都能整除 , 先把值存起来
+                if ($i % $b_value != 0) {
+                    unset($result[$i]); // 一旦b中有一个数字不满足, 例如 1000 / 7 , 那就跳出循环, 移除 $result['1000']
+                    break;
+                }
+            }
+        }
+        return $result;
+    }
+    print_r(demo([1000,1600],[4,5,6]));
+```
+###[Laravel 5.3入门](http://www.jianshu.com/p/6719e9424088)
+###[从++[[]][+[]]+[+[]]==10?深入浅出弱类型JS的隐式转换 ](https://github.com/jawil/blog/issues/5)
+###[一天一算法 – 快速排序](http://hwaphon.site/?p=287)
+###[SELECT … FOR UPDATE如何影响INNODB的锁级别](https://github.com/wing324/helloworld_zh/blob/master/MySQL/SELECT%20%E2%80%A6%20FOR%20UPDATE%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8DINNODB%E7%9A%84%E9%94%81%E7%BA%A7%E5%88%AB.md)
+WHERE条件使用主键，SELECT ... FOR UPDATE为行级锁；
+WHERE条件使用唯一索引，SELECT ... FOR UPDATE为行级锁；
+WHERE条件使用普通索引，SELECT ... FOR UPDATE为行级锁；
+WHERE条件使用联合索引的前缀索引，SELECT ... FOR UPDATE为行级锁；
+WHERE条件不使用索引，SELECT ... FOR UPDATE为表级锁；
+即：WHERE条件能使用索引时，SELECT ... FOR UPDATE表现为行级锁；WHERE条件不使用索引，SELECT ... FOR UPDATE表现为表级锁；
+###[Linux系统安全需要注意的一些问题](http://www.cnblogs.com/chenpingzhao/p/6443354.html)
+###[PHP程序员玩转Linux系列-备份还原MySQL](http://www.cnblogs.com/taoshihan/p/6437468.html)
+###[解析 Nginx 负载均衡](http://mp.weixin.qq.com/s/egSpuYxKml_1xyFqoTqSjg)
+###[Redis常见7种使用场景(PHP实战)](https://segmentfault.com/a/1190000008475712)
+###[套公式让你不再害怕JavaScript中的原型链](http://www.jianshu.com/p/a81692ad5b5d)
+###[教你撸一个网页聊天室](http://kyrieliu.cn/huno/2016/11/27/chatting-room/)
+
+###[PHP导出报表(案例)](https://segmentfault.com/a/1190000008133820)
+```js
+public function export()
+{
+
+    //获取2016年日期
+    $time_start = strtotime('2016-01-01');
+    $time_end   = strtotime('2016-12-31');
+
+    $month_arr = [];
+    $month_arr['month'][]   = '2016-01';
+    $month_arr['numbers'][] = date(t,$time_start); //获取天数
+
+    while (($time_start = strtotime('+1 month', $time_start)) <= $time_end) {
+        $month_arr['month'][]   = date('Y-m',$time_start); //取得递增月
+        $month_arr['numbers'][] = date(t,$time_start);     //获取天数
+    }
+
+    function check_week($time = [])
+    {
+        if (empty($time['day'])) {
+            return '';
+        }
+        $w = intval(date('w' , strtotime($time['day'])));
+        if( $w === 0 || $w === 6){
+            return '<td style="background-color: red;">'.date('d', strtotime($time['day'])).'</td>';
+        }
+        return '<td>'.date('d', strtotime($time['day'])).'</td>';
+    }
+
+    //向模板中注册一个函数
+    $this->smarty->registerPlugin('function','check_week','check_week');
+
+    //模拟数据如下：
+    $list[0]['name'] = 'Tom';
+    $list[1]['name'] = 'Joan';
+
+    $list[0]['sex'] = '男';
+    $list[1]['sex'] = '女';
+
+    $list[0]['age'] = '30';
+    $list[1]['age'] = '31';
+
+    //设置迟到
+    $list[0]['late'] = [
+        '2016-01-08',
+        '2016-01-09',
+        '2016-02-09',
+        '2016-03-09',
+        '2016-04-09',
+        '2016-05-09'
+    ];
+
+    $list[1]['late'] = [
+        '2016-02-12',
+        '2016-03-15',
+        '2016-04-13',
+        '2016-05-19',
+        '2016-05-19'
+    ];
+
+    //设置早退
+    $list[0]['leave'] = [
+        '2016-03-09',
+        '2016-04-11',
+        '2016-05-15',
+        '2016-06-18',
+        '2016-07-21',
+        '2016-08-23',
+        '2016-09-22',
+        '2016-10-20',
+        '2016-11-17',
+        '2016-12-14',
+    ];
+    $list[1]['leave'] = [
+        '2016-05-09',
+        '2016-06-11',
+        '2016-07-13',
+        '2016-08-15',
+        '2016-09-17',
+        '2016-10-19',
+        '2016-11-20',
+        '2016-12-23',
+        '2016-03-18',
+        '2016-02-19',
+        '2016-01-23',
+    ];
+
+    $file_name   = "报表-".date("YmdHis",time());
+    $file_suffix = "xls";
+    header("Content-Type: application/vnd.ms-excel");
+    header("Content-Disposition: attachment; filename=$file_name.$file_suffix");
+    $this->_assign('list', $list);
+    $this->_assign('month', $month_arr);
+    $this->_display();
+}
+```
+phpDocumentor的代码分析工具： https://phpdoc.org/
+
+
+###[探索PHP与Vue通用直出模板方案](http://blog.krimeshu.com/2017/02/13/vue-php-template-convertor/)
+###[程序猿必读-防范CSRF跨站请求伪造](https://segmentfault.com/a/1190000008505616)
+###[图例详解那道setTimeout与循环闭包的经典面试题](http://www.jianshu.com/p/9b4a54a98660)
+###[教你破解隔壁妹子的wifi密码](http://www.imlifengfeng.com/blog/?utm_source=gank.io&utm_medium=email&p=15)
+
+###[对设计模式的极简说明](https://github.com/questionlin/design-patterns-for-humans)
+###[HTTP API网关选择之一Kong介绍](http://mp.weixin.qq.com/s/LIq2CiXJQmmjBC0yvYLY5A)
+
+###[【建议收藏】黑客基础必学命令行！](https://zhuanlan.zhihu.com/p/22900743)
+###[挖 "掘" 淘 "金" 之 前端闯关历险记学习资料汇总](https://github.com/jawil/blog/issues/4)
+###[优雅的php短信发送库](https://github.com/toplan/phpsms)
+###[Git Cheat Sheet](https://github.com/shfshanyue/cheat-sheets/blob/master/docs/git.md)
+###[理解 TCP 和 UDP](https://github.com/JerryC8080/understand-tcp-udp)
+###[密码技术那些事儿](http://www.jianshu.com/p/8d7c8f59ea21)
+###[HTTP长连接？短连接？长轮询？短轮询？](http://www.jianshu.com/p/00daa2d84266)
+###[less](https://github.com/holidaying/less-demo)
+###[大话程序猿眼里的高并发之续篇](https://blog.thankbabe.com/2017/02/27/high-concurrency-scheme-xp/)
+###[使用Redis存储用户粉丝](https://segmentfault.com/q/1010000008547001)
+假设当前用户ID为1;
+
+首先：依靠有序集合实现好友关系（对应的score就是关注时间戳）,假设与用户ID：2，3，4为好友
+
+其次：使用hash去记录好友的具体信息（多个hash），存储规则如下：
+
+# 存储规则如下
+user:uid:fans:fuid:info  #user:用户ID:fans:好友ID:info
+
+# 那对应2，3，4的三个hash存储，就是
+user:1:fans:2:info
+user:1:fans:3:info
+user:1:fans:4:info
+###[mysql和redis效率问题](https://segmentfault.com/q/1010000008553704)
+```js
+<?php 
+$redis = new redis();
+$redis->connect('127.0.0.1', 6379);
+for ($i=0; $i <100 ; $i++) { 
+    $redis->lpush('test',rand(1000,9999));
+}
+var_dump($redis->lrange('test', 0, 99));
+$redis->delete('test');
+$redis->close();
+die;
+ ?>
+=================================
+<?php 
+$host = 'mysql:host=127.0.0.1;dbname=test';
+$user = 'root';
+$pass = 'root';
+$pdo = new PDO($host, $user, $pass);
+for ($i=0; $i < 100 ; $i++) { 
+    $pdo->query('insert into abc (title) values( title = '.rand(1000,9999).')');
+}
+var_dump($pdo->query('select * from abc')->fetch());
+$pdo->query('truncate table abc');
+die;
+ ?>
+ ab -n10000 -c10000 http://localhost/test.php
+ 不管是Redis还是MySQL，创建连接的消耗都是不可忽视的。具体到你贴的代码，场景1下，连接都重复创建了10000次，时间主要都花在创建连接上了，执行命令的时间相比而言是次要的；场景2下，都只创建了一次连接，那么对比的主要就是各自执行命令的速度了，Redis完胜是必然的。
+ 果Redis采用pipeline模式来发送命令，Redis的优势会更大。
+```
+
+###[从零开始 Python 微信公众号开发](https://zhuanlan.zhihu.com/p/25561176?group_id=821373794957545472)
+http://link.zhihu.com/?target=https%3A//github.com/loveQt/wxpytest
+###[前端开发者应知必会：浏览器是如何渲染网页的](https://zhuanlan.zhihu.com/p/25554352?group_id=821150779464372224)
+###[win7下python2和python3共存问题](https://zhuanlan.zhihu.com/p/25544755?group_id=821018977596735488)
+python2 -m pip install package
+python3 -m pip install package
+###[根据指定坐标来找出指定距离内的其他坐标](https://segmentfault.com/q/1010000008537516)
+``js
+GeoHash，Redis直接支持，快速存储和查询都搞定了，最高0.5%的错误率。
+
+插入用户的坐标：
+
+GEOADD users 13.361389 38.115556 user1
+GEOADD users 13.361389 38.115566 user2
+...
+查里user1半径500米的用户：
+
+GEORADIUSBYMEMBER users user1 500 m
+更好的是GEORADIUSBYMEMBER加WITHDIST还能得到用户间距离
+ * 根据一个给定经纬度的点，进行附近地点查询
+ * 获取周围坐标
+ * @param double $lng
+ * @param double $lat
+ * @param real $distance
+ * @return multitype:multitype:number
+ */
+public function returnSquarePoint($lng, $lat,$distance = 0.5)
+{
+    $earthRadius = 6378138;
+    $dlng =  2 * asin(sin($distance / (2 * $earthRadius)) / cos(deg2rad($lat)));
+    $dlng = rad2deg($dlng);
+    $dlat = $distance/$earthRadius;
+    $dlat = rad2deg($dlat);
+    return array(
+        'left-top'=>array('lat'=>$lat + $dlat,'lng'=>$lng-$dlng),
+        'right-top'=>array('lat'=>$lat + $dlat, 'lng'=>$lng + $dlng),
+        'left-bottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng - $dlng),
+        'right-bottom'=>array('lat'=>$lat - $dlat, 'lng'=>$lng + $dlng)
+    );
+}
+
+传个坐标进去范围范围
+$wherefind['lat']['between']=array($around['right-bottom']['lat'],$around['left-top']['lat']);
+                        $wherefind['lng']['between']=array($around['left-top']['lng'],$around['right-bottom']['lng']);
+                        然后用范围搜索就可以了
+```
+###[分享离线版维基百科](https://zhuanlan.zhihu.com/p/25410565)
+https://link.zhihu.com/?target=http%3A//www.mirrorservice.org/sites/download.kiwix.org/portable/wikipedia/kiwix-0.9%2Bwikipedia_zh_all_2017-01.zip  From微信公众号：wnsouba
+###[自定义百度网盘分享密码](https://zhuanlan.zhihu.com/p/25518128)
+require(["function-widget-1:share/util/service/createLinkShare.js"]).prototype.makePrivatePassword = () => {
+  return prompt("请输入自定义的密码", "1234")
+}
+###[看到一个字体很喜欢，想知道是啥字体](https://link.zhihu.com/?target=http%3A//www.qiuziti.com/)
+###[将文字隐藏到图片中](https://zhuanlan.zhihu.com/p/25285364)
+https://link.zhihu.com/?target=http%3A//www.shuidi.im/ 
+###[Python教你用matplotlib画个心心撩妹](https://zhuanlan.zhihu.com/p/25575403?group_id=821786158840320000)
+```js
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+pi = math.pi
+t = np.arange(0,2*pi,0.001)
+r = np.frompyfunc(round,1,1)
+sin = np.frompyfunc(math.sin,1,1)
+cos = np.frompyfunc(math.cos,1,1)
+#y = sin(x)*(abs(cos(x)))**0.5/(sin(x)+1.4)-2*sin(x)+2
+'''
+y = 2*cos(t)-cos(2*t)
+x = 2*sin(t)-sin(2*t)
+'''
+x=sin(t)
+c=cos(t)
+p=x**2
+y=c+p**(1/3)
+plt.plot(x, y,color='r', linewidth=9)
+plt.fill(x,y,color='r')
+plt.title("my heart for you")
+ax = plt.subplot(111)
+ax.spines['right'].set_color('none')
+ax.spines['top'].set_color('none')
+ax.spines['bottom'].set_color('none')
+ax.spines['left'].set_color('none')
+plt.xlim(-1.2,1.2),plt.xticks([])
+plt.yticks([])
+plt.show()
+```
 ###[QQ好友列表数据获取](https://zhuanlan.zhihu.com/p/24580113?refer=codes)
 QQ空间发说说的时候都有一个艾特好友功能，可以选择艾特列表中任意好友。这个地方有可能也会请求一个获取好友列表的接口
 https://h5.qzone.qq.com/proxy/domain/r.qzone.qq.com/cgi-bin/tfriend/friend_show_qqfriends.cgi?uin=867597730&follow_flag=1&groupface_flag=0&fupdate=1&g_tk=1803395013 
