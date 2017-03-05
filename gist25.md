@@ -1,3 +1,20 @@
+###[QQ好友列表数据获取](https://zhuanlan.zhihu.com/p/24580113?refer=codes)
+QQ空间发说说的时候都有一个艾特好友功能，可以选择艾特列表中任意好友。这个地方有可能也会请求一个获取好友列表的接口
+https://h5.qzone.qq.com/proxy/domain/r.qzone.qq.com/cgi-bin/tfriend/friend_show_qqfriends.cgi?uin=867597730&follow_flag=1&groupface_flag=0&fupdate=1&g_tk=1803395013 
+```js
+
+>>> url='http://ti.qq.com/cgi-bin/more_profile_card/more_profile_card'
+>>> cookie='pgv_pvi=3128177664; '
+>>> r=requests.post(url,headers={"cookie":cookie},data={"_q":12345678,"bkn":315
+795074,"src":"mobile"})
+>>> r.json()
+{'ec': 0, 'profile': [{'birthday': {'year': 1998, 'day': 23, 'month': 7}, 'locat
+ion_state': '江西', 'gender': 1, 'location_area': '', 'age': 22, 'email': '12345678@qq.com', 'hometown_state': '', 'college': '00210027238', 'location_city': '
+xxx', 'company': '', 'hometown_country': '', 'constellation': 7, 'hometown_area
+': '', 'location_country': '中国', 'occupation': 0, 'hometown_city': '', 'person
+al': 'xxxx', 'nick': 'xx'}]
+}
+```
 ###[词频统计作业](https://mp.weixin.qq.com/s?__biz=MzI3NzM3NzIzNQ==&mid=2247483844&idx=1&sn=7f2951c419c7883a8b954795790eb99d&chksm=eb667878dc11f16eae9251eca34537d149dde30dc86d90efc2d8d8863658081e2ad78b33772f&mpshare=1&scene=1&srcid=0304HCTUV8BseFgWJWl83GBl&pass_ticket=3yy5RFt3ntIFQ55PGWeesIpcVyX1chP%2FFK%2Bcad%2F65Io%2BkE4xNZ%2BOltFjcDz68Ner#rd)
 
 读取文件 → 用 jieba 分词 → 清除非中文字符 → 用 counter 计数 → 用 sorted 排序
