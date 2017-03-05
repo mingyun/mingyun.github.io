@@ -1,3 +1,49 @@
+###[词频统计作业](https://mp.weixin.qq.com/s?__biz=MzI3NzM3NzIzNQ==&mid=2247483844&idx=1&sn=7f2951c419c7883a8b954795790eb99d&chksm=eb667878dc11f16eae9251eca34537d149dde30dc86d90efc2d8d8863658081e2ad78b33772f&mpshare=1&scene=1&srcid=0304HCTUV8BseFgWJWl83GBl&pass_ticket=3yy5RFt3ntIFQ55PGWeesIpcVyX1chP%2FFK%2Bcad%2F65Io%2BkE4xNZ%2BOltFjcDz68Ner#rd)
+
+读取文件 → 用 jieba 分词 → 清除非中文字符 → 用 counter 计数 → 用 sorted 排序
+```js
+# -*- coding: utf-8 -*-
+
+import jieba # for spliting
+import re # for regular expression
+from collections import Counter # for stat
+
+# Read file
+loadfile = open('happiness.txt', 'r')
+text = loadfile.read().decode('utf-8')
+loadfile.close()
+
+# Split words into a dict
+dict = []
+words = jieba.cut(text)
+for word in words:
+    if re.match(u'([\u4e00-\u9fff]+)', word):
+        dict.append(word)
+
+# Sort the list
+sorted_list = sorted(Counter(dict).items(), key=lambda x:x[1], reverse=True)
+    
+# Print result
+for i in sorted_list[:10]:
+    print " '%s' : %d " % (i[0], i[1])
+'的' : 22848 
+ '是' : 4123 
+ '在' : 3538 
+ '他' : 2522 
+ '了' : 2288 
+ '人' : 2089 
+ '他们' : 1811 
+ '和' : 1746 
+ '有' : 1478 
+ '我' : 1433
+```
+###[分页与分库那些事儿（线上交流纪要）](https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651959953&idx=1&sn=bc2f974f31ac21e43175ab585aa4038b&chksm=bd2d074d8a5a8e5b69582d566de142598cf1dc627a4bc927dda7ad59d411b2868acdf0a325db&mpshare=1&scene=1&srcid=0305IqPxxk072D4nmUwwEW9W&pass_ticket=3yy5RFt3ntIFQ55PGWeesIpcVyX1chP%2FFK%2Bcad%2F65Io%2BkE4xNZ%2BOltFjcDz68Ner#rd)
+数据库水平切分的方式，常用的有两种：
+hash取模：user_id%2=0为0库，user_id%2=1为1库。
+数据分段：user_id属于[0, 1亿]为0库，属于[1亿, 2亿]为2库。
+“单表多大数据量时才考虑分库分表”，我们的经验，mysql，1000w-2000w，要考虑分了。如果查询比较简单，例如订单全是单key查询，5000w。
+###[零基础12天从入门到精通Python爬虫](http://log4geek.cc/2017/03/%E9%9B%B6%E5%9F%BA%E7%A1%8012%E5%A4%A9%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E7%B2%BE%E9%80%9Apython%E7%88%AC%E8%99%AB/)
+
 ###[CSRF 问题](https://www.v2ex.com/t/344850)
 ```js
 防止 csrf 攻击 服务端下发 token 到表单里 提交时进行比对即可防住
