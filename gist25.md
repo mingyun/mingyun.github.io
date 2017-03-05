@@ -1,3 +1,297 @@
+###[CSRF 问题](https://www.v2ex.com/t/344850)
+```js
+防止 csrf 攻击 服务端下发 token 到表单里 提交时进行比对即可防住
+
+但是如果攻击者盗取了 cookie 他通过 cookie 登陆网站 不是也得到了 token 吗
+csrf 攻击者是弄不到 cookie 的，所以有 http only
+csrf 攻击是这样的： 
+
+1.网站删除文章功能是个 post 请求 
+2.攻击者构建一个网页，网页自动提交删除的那个 post 请求，现在的 html 规范是允许这种提交的。 
+3.引诱管理员访问这个网页。 
+4.这个网页自动提交了删除的那个 post 请求。按照浏览器规则，这个请求会带着被攻击网站的 cookie ，是以管理员的身份提交的。 
+5.如果没有做 csrf 防护，那么这个删除请求会被执行。而如果做了防护，攻击者是无法获得 token ，删除请求不会被执行。 
+
+xxs 可以看作是前端的注入，输出用户提交的内容未作过滤，造成访问时会自行攻击者的 js ，那么这时候攻击者是可以获得和网页 js 同一权限 
+。虽然 http omly 可以预防获得 cookie ，但是攻击者是可以以用户身份执行操作的，例如如果时管理员中招，可以删帖等。如果时普通用户中招，可以添加关注，可以继续向其他好友发起攻击进行传播等。
+防 CSRF ，用 token 
+防 XSS , 过滤用户提交的数据 
+防中间人，上 HTTPS+HSTS 
+防对方拿到用户 Cookie 后做危险操作 ， 麻烦你重要操作做二次认证（比如短信，扫码，邮箱， QQ 、微信等其他设备方式的验证） 
+```
+###合并开发分支到master
+合并开发分支到master为例：
+1、首先提交开发分支代码并使用git checkout master命令到主分支；
+2、使用git pull origin master命令拉取主干分支最新代码；
+3、使用git merge 分支名称 --squash命令合并分支代码到主干分支，但并不提交；
+4、使用git diff --cached 来查看对比合并的差异;
+5、确定差异都为自己或者为此版本内的修改后，使用git commit -m "写清楚修改或者版本变更说明” 提交修改。
+6、使用git push origin master将本地master推送到远程master分支。
+###[Hexo搭建博客教程](http://thief.one/2017/03/03/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E6%95%99%E7%A8%8B/)
+```js
+新建一个文件夹，如MyBlog
+进入该文件夹内，右击运行git，输入：hexo init（生成hexo模板，可能要翻墙）
+生成完模板，运行npm install（目前貌似不用运行这一步）
+最后运行：hexo server （运行程序，访问本地localhost:4000可以看到博客已经搭建成功）
+在Github上创建名字为XXX.github.io的项目，XXX为自己的github用户名。
+
+打开本地的MyBlog文件夹项目内的_config.yml配置文件，将其中的type设置为git
+
+ 
+deploy:
+  type: git
+  repository: https://github.com/tengzhangchao/tengzhangchao.github.io.git
+  branch: master
+运行：npm install hexo-deployer-git –save
+运行：hexo g（本地生成静态文件）
+运行：hexo d（将本地静态文件推送至Github）
+此时，打开浏览器，访问http://tengzhangchao.github.io
+```
+###[基于Python的WebServer](http://thief.one/2016/09/14/%E5%9F%BA%E4%BA%8EPython%E7%9A%84WebServer/)
+python -m SimpleHTTPServer 8000
+此时打开浏览器，访问localhost:8000端口即可。
+为了方便没有安装python环境的windows机子启动，用pyinstaller工具将py程序打包成了exe可执行程序。
+在服务器上运行程序，用来替代FTP等工具，下载服务器上的文件
+###[  turnjs插件翻书](https://segmentfault.com/q/1010000008568079)
+###[前端插件库 http://jquerywidget.com/](https://github.com/mumuy/widget)
+###[PHP error tracking with Sentry](https://sentry.io/for/php/)
+###[Python在unpacking上的一个小陷阱](https://zhuanlan.zhihu.com/p/25436739)
+```js
+a[i], a[j] = a[j], a[i]
+j = 0
+m = [1, 3, 5] 
+j, m[j] = m[j], 99
+结果违背了（我的）直觉：
+
+print(j)    # 1
+print(m)    # [1, 99, 5]
+i, a[i] = 1, 2
+# not equivalent to
+a[i], i = 2, 1
+的情形时要稍加注意，以免掉坑难以查错。dis可以解码类、函数、语句等多种结构
+>>> import dis
+>>> dis.dis("j, m[j] = m[j], 99")
+  1           0 LOAD_NAME                0 (m)
+              3 LOAD_NAME                1 (j)
+              6 BINARY_SUBSCR
+              7 LOAD_CONST               0 (99)
+             10 ROT_TWO
+             11 STORE_NAME               1 (j)
+             14 LOAD_NAME                0 (m)
+             17 LOAD_NAME                1 (j)
+             20 STORE_SUBSCR
+             21 LOAD_CONST               1 (None)
+             24 RETURN_VALUE
+```
+###[PHP主干源码就集成了对libcurl的接口扩展](https://www.zhihu.com/question/56172183/answer/148929267)
+```js
+作者：eechen
+链接：https://www.zhihu.com/question/56172183/answer/148929267
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+PHP主干源码就集成了对libcurl的接口扩展php-src/ext/curl.
+http://php.net/curl
+Firefox和Chrome也都提供了对curl的支持,F12开发者工具的网络请求里可以直接把请求复制为cURL命令,主要就是一些头,关键如Cookie信息:
+curl 'https://www.zhihu.com/topic/19552910/newest' \
+-H 'Host: www.zhihu.com' \
+-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0' \
+-H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
+-H 'Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Cookie: name1=value1; name2=value2' \
+-H 'Connection: keep-alive' \
+-H 'Upgrade-Insecure-Requests: 1'
+要实现PHP编程(爬虫,自动化测试),你还可以根据浏览器里得到的命令参数转换为PHP curl代码:
+http://php.net/curl_setopt
+CURLOPT_COOKIEFILE:
+包含 cookie 数据的文件名，cookie 文件的格式可以是 Netscape 格式，或者只是纯 HTTP 头部风格，存入文件。如果文件名是空的，不会加载 cookie，但 cookie 的处理仍旧启用。 
+CURLOPT_COOKIEJAR:
+连接结束后，比如，调用 curl_close 后，保存 cookie 信息的文件。
+
+使用PHP curl,单进程也可以并行发起多个请求:
+接口1: php -S 127.0.0.1:8080 -t /home/eechen/www
+接口2: php -S 127.0.0.2:8080 -t /home/eechen/www
+/home/eechen/www/index.php:
+<?php
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(array('SERVER_NAME' => $_SERVER['SERVER_NAME']));
+//串行访问需要sum(2,1)秒,并行访问需要max(2,1)秒.
+($_SERVER['SERVER_NAME'] == '127.0.0.1') ? sleep(2) : sleep(1);
+?>
+
+并行:
+/home/eechen/curl.php
+<?php
+$url[] = 'http://127.0.0.1:8080';
+$url[] = 'http://127.0.0.2:8080';
+$mh = curl_multi_init();
+foreach($url as $k => $v) {
+	$ch[$k] = curl_init($v);
+	curl_setopt($ch[$k], CURLOPT_HEADER, 0); //不输出头
+	curl_setopt($ch[$k], CURLOPT_RETURNTRANSFER, 1); //exec返回结果而不是输出,用于赋值
+	curl_multi_add_handle($mh, $ch[$k]); //决定exec输出顺序
+}
+$running = null;
+$starttime = microtime(true);
+//执行批处理句柄(类似pthreads多线程里的start开始和join同步)
+do {
+	//CURLOPT_RETURNTRANSFER如果为0,这里会直接输出获取到的内容.如果为1,后面可以用curl_multi_getcontent获取内容.
+	curl_multi_exec($mh, $running);
+	//阻塞直到cURL批处理连接中有活动连接,不加这个会导致CPU负载超过90%.
+	curl_multi_select($mh);
+} while ($running > 0);
+echo microtime(true) - $starttime."\n"; //耗时约2秒
+foreach($ch as $v) {
+	$info[] = curl_getinfo($v);
+	$json[] = curl_multi_getcontent($v);
+	curl_multi_remove_handle($mh, $v);
+}
+curl_multi_close($mh);
+var_export($json); 
+var_export($info);
+?>
+输出:
+2.0015449523926
+array (
+  0 => '{"SERVER_NAME":"127.0.0.1"}',
+  1 => '{"SERVER_NAME":"127.0.0.2"}',
+)
+array (
+  0 => 
+  array (
+    'url' => 'http://127.0.0.1:8080/',
+    'content_type' => 'application/json; charset=utf-8',
+    'http_code' => 200,
+    'header_size' => 107,
+    'request_size' => 53,
+    'filetime' => -1,
+    'ssl_verify_result' => 0,
+    'redirect_count' => 0,
+    'total_time' => 2.0013990000000002,
+    'namelookup_time' => 5.3999999999999998E-5,
+    'connect_time' => 0.00015799999999999999,
+    'pretransfer_time' => 0.000194,
+    'size_upload' => 0,
+    'size_download' => 27,
+    'speed_download' => 13,
+    'speed_upload' => 0,
+    'download_content_length' => -1,
+    'upload_content_length' => 0,
+    'starttransfer_time' => 0.00079699999999999997,
+    'redirect_time' => 0,
+    'certinfo' => 
+    array (
+    ),
+    'primary_ip' => '127.0.0.1',
+    'primary_port' => 8080,
+    'local_ip' => '127.0.0.1',
+    'local_port' => 57653,
+    'redirect_url' => '',
+  ),
+  1 => 
+  array (
+    'url' => 'http://127.0.0.2:8080/',
+    'content_type' => 'application/json; charset=utf-8',
+    'http_code' => 200,
+    'header_size' => 107,
+    'request_size' => 53,
+    'filetime' => -1,
+    'ssl_verify_result' => 0,
+    'redirect_count' => 0,
+    'total_time' => 1.0012369999999999,
+    'namelookup_time' => 1.1E-5,
+    'connect_time' => 4.6999999999999997E-5,
+    'pretransfer_time' => 6.3E-5,
+    'size_upload' => 0,
+    'size_download' => 27,
+    'speed_download' => 26,
+    'speed_upload' => 0,
+    'download_content_length' => -1,
+    'upload_content_length' => 0,
+    'starttransfer_time' => 0.00063699999999999998,
+    'redirect_time' => 0,
+    'certinfo' => 
+    array (
+    ),
+    'primary_ip' => '127.0.0.2',
+    'primary_port' => 8080,
+    'local_ip' => '127.0.0.1',
+    'local_port' => 43645,
+    'redirect_url' => '',
+  ),
+)
+```
+###[逻辑或(||)优先级比赋值运算符(=)高.](https://www.zhihu.com/question/56093849)
+```js
+$a = 3;
+$b = 5;
+if ($a = 5 || $b = 7) {
+$a++;
+$b++;
+}
+echo $a . " " . $b;
+if条件 $a = 5 || $b = 7 相当于 $a = (5 || $b = 7)
+逻辑或运算 (5 || $b = 7) 判断到左边的5为true,就不再执行右边的逻辑(所以$b的值仍是5),整个表达式返回值是true,于是$a的值为true,$a++后$a的值为1,$b++后$b的值为6.
+
+其实我也有困惑,为什么当$a的值为true时,$a++后$a的值为1,而不是像(true+1)为2.递增或递减布尔值没有效果.
+
+如果要按预期,赋值时前后最好加上括号:
+if( ($a = 5) || ($b = 7) ) {}
+
+if( ($stmt = $db->prepare($sql)) && $stmt->execute(array($id)) ) {
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else { 
+	return false;
+}
+
+ 
+```
+###[教你免费搭建个人博客，Hexo&Github](https://zhuanlan.zhihu.com/p/25471760)
+###[10个赚钱项目 月赚10000+](https://zhuanlan.zhihu.com/p/25531259)
+###判断json
+```js
+function isJsonString(str) {
+  try {
+    JSON.parse(str)
+    return true
+  } catch (err) {
+    return false
+  }
+}
+```
+###[Shadowsocks折腾记](http://thief.one/2017/02/22/Shadowsocks%E6%8A%98%E8%85%BE%E8%AE%B0/)
+```js
+pip install shadowsocks
+
+{
+"server":"",     ##服务器ip地址
+"server_port":8000,  ##代理端口
+"local_address":"127.0.0.1",
+"local_port":1080, ##本地监听端口
+"password":"",   ##连接密码
+"timeout":300,
+"method":"aes-256-cfb", ##加密方式
+"dast_open":false
+}
+{
+"server":"",
+"local_address":"127.0.0.1",
+"local_port":1080,
+"port_password":{
+"8000":"123456",
+"8001":"123456"
+},
+"timeout":300,
+"method":"aes-256-cfb",
+"fast_open":false
+}
+ssserver -c config.json
+sudo useradd ssuser //添加一个ssuser用户
+sudo ssserver [other options] --user ssuser //用ssuser这个用户来运行ss
+将之前的ssserver -c /etc/shadowsocks.json -d start改为ssserver -c /etc/shadowsocks.json -d start –user ssuser
+```
+###[黑帽SEO之基础知识](http://thief.one/2016/10/09/%E9%BB%91%E5%B8%BDSEO%E4%B9%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/)
 ###[__contruct方法](https://segmentfault.com/q/1010000008565442)
 一个类中如果同时存在__construct(非父类的)和与类名同名函数，则__construct是构造函数，而同名函数则当作普通函数；
 
