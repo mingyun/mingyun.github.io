@@ -1,3 +1,188 @@
+###[php isset和empty用于处理变量是否设置或者设置了是否为空。](https://www.v2ex.com/t/79807)
+http://php.net/manual/en/aliases.php
+
+parse_str 使用 传入参数来获取返回值，常用的函数中真独特
+
+Python 是强类型的，比如： 
+
+a = 1 # 变量 a 的值是一个整数 
+b = '2' # 变量 b 的值是一个字符串 
+a + b # 这里会报错 
+
+而 PHP、Javascript 这些则不然，比如 Javascript 的 1 + '2' 的计算结果似乎是字符串 '12'，PHP 的 1 + '2' 的结果好像是整数 3。
+php7可以指定类型
+###[对设计模式的极简说明](https://github.com/questionlin/design-patterns-for-humans)
+###[PHP 完整实战 23 种设计模式](https://www.v2ex.com/t/327657)
+```js
+
+面向对象的目标
+
+高内聚，低耦合
+面向对象设计的基本原则
+
+单一职责：一个类只做一件事
+开闭原则：对扩展开放对修改关闭
+里氏替换：子类必须能替换所有父类的使用
+依赖倒置：设计依赖于抽象而不是实现
+最少知识：对象应当尽可能少的去了解其他对象
+接口隔离：接口倾向于小而多
+组合优先：优先使用类的组合而不是继承
+抽象类和接口的使用
+
+当类中有共同的行为或属性时,可以考虑使用 abstract calss
+当类别中有共同的操作界面,但是在实现上有所差别,可以考虑使用 interface
+```
+###[现代化高性能 PHP 开发](https://www.v2ex.com/t/296145)
+```
+命名空间 psr composer php7性能 
+https://blog.tanteng.me/2016/09/modern-php/ 
+命名空间好比操作系统中的目录，两个同名的文件可以共存在不同的目录下。同理两个同名的 PHP 类可以在不同的 PHP 命名空间下共存，就这么简单。
+自动加载规范非常重要，PHP 组件都遵循自动加载规范，才能通过 Composer 进行管理。
+https://oddgb63aa.qnssl.com/uploads/2016/08/modern-php.pdf  
+ apc opcache
+1.PSR 规范 
+曾经的乱象：什么.inc.php,class.php,大驼峰小驼峰等语法规范上的乱象 
+出现后解决了什么问题 
+PS:可以在讲 PSR4 的时候讲下 PSR0 ，然后一笔带过命名空间 
+2.组件化 
+解决了什么问题 
+然后引入包管理器 
+3.包管理器 Composer 
+与 PEAR 的区别 
+与其它语言的包管理,例如 pip,gem,npm 的比较，可以借鉴什么 
+4.PHP 语法新特性 
+语法糖 
+面向对象特性上(trait) 
+性能上(yield) 
+5.现代框架的出现 
+Yii,symfony,Laravel 为 phper 们带来了开发速度上的提升 
+- -Ioc 容器？ 
+Swoole 在性能上的突破 
+6.PHP7 以及对 PHP 未来的展望
+什么规范，都解决不了 in_array ， array_key_exists ， array_map ， array_filter 这些混乱的命名，混乱的参数位置。
+在一个大型应用中，往往要用到好多种语言，就拿 PHP 来说，前期项目用它作为后端服务都没问题，但是随着并发量大了，可能部分需要 java 来实现，做成服务化接口， PHP 来调用， PHP 的灵活和开发效率是他的优势，而很多情况，一个完整的系统还包含 python 的脚本在运行， Redis 做缓存，我们的项目还用到 lua ，数据库一般都是 MySQL ，后端服务是 java ，还可能是 C++，前端还有 js 工程师支持，这才是一个完整的项目它包含各种语言。 
+
+在大的互联网公司， PHP 是属于前端，这个前端就是广义的前端了，比如页面，还有后台系统，都是 PHP 做，后端指的是服务接口，可能是 python ，或者 lua ，总之是 HTTP 协议的，给 PHP 调用实现功能。
+
+从性能角度说， C ， C++， JAVA 编译型语言，肯定比 PHP 快得多，而 WEB 开发本身不需要太高的性能，注重性能的用其他技术做，比如 Redis ，调服务接口等等， PHP 注重业务逻辑处理，开发效率快。  php糟糕特性 
+```
+###[Go 搭建 WebSocket 服务端例子](https://blog.tanteng.me/2017/02/go-websocket-demo/#more-11301)
+```js
+ 
+import (
+	"fmt"
+	"log"
+	"net/http"
+ 
+	"golang.org/x/net/websocket"
+)
+ 
+func Echo(ws *websocket.Conn) {
+	var err error
+ 
+	for {
+		var reply string
+ 
+		if err = websocket.Message.Receive(ws, &reply); err != nil {
+			fmt.Println("Can't receive")
+			break
+		}
+ 
+		fmt.Println("Received back from client: " + reply)
+ 
+		msg := "Received:  " + reply
+		fmt.Println("Sending to client: " + msg)
+ 
+		if err = websocket.Message.Send(ws, msg); err != nil {
+			fmt.Println("Can't send")
+			break
+		}
+	}
+}
+ 
+func main() {
+	http.Handle("/", websocket.Handler(Echo))
+ 
+	if err := http.ListenAndServe(":1234", nil); err != nil {
+		log.Fatal("ListenAndServe:", err)
+	}
+}
+var wsServer = 'ws://localhost:1234';
+var websocket = new WebSocket(wsServer);
+websocket.onopen = function (evt) {
+    console.log("Connected to WebSocket server.");
+};
+ 
+websocket.onclose = function (evt) {
+    console.log("Disconnected");
+};
+ 
+websocket.onmessage = function (evt) {
+    console.log('Retrieved data from server: ' + evt.data);
+};
+ 
+websocket.onerror = function (evt, e) {
+    console.log('Error occured: ' + evt.data);
+};
+```
+###[纯git pull然后同步到其他机器](https://www.v2ex.com/t/196046)
+```js
+ansible http://docs.ansible.com/index.html  Ansible + Ansible Docker module
+Capistrano + 1 
+
+个人项目没所谓，公司项目用ftp一旦出问题回滚不方便
+即使我是一个人做再小的项目，也是用 git hook，本地一个 push 服务器就自动部署了。于是每次新建项目都要先配置好自动部署环境，所以写了这个工具，欢迎 star： 
+
+https://github.com/mytharcher/hookagent
+
+[desktop] 
+
+git commit, push 
+
+
+[server] 
+
+-- deploy.sh -- 
+#!/bin/bash 
+
+echo -e "\033[31mPulling source...\033[0m" 
+cd /env_name/src/app_name 
+git pull 
+
+echo -e "\033[31mBuilding...\033[0m" 
+composer install 
+
+echo -e "\033[31mDeploy complete.\033[0m"
+
+Walle-瓦力，一个 web 部署系统工具，可能也是个持续发布工具，配置简单、功能完善、界面流畅、开箱即用！ 
+
+支持 git 、 svn 版本管理，支持各种 web 代码发布，静态的 HTML ，动态 PHP ，需要编译的 JAVA 等
+
+github 项目地址： https://github.com/meolu/walle-web ，官方主页介绍： http://www.huamanshu.com/walle.html
+```
+###[排行榜实战](https://segmentfault.com/a/1190000008475712)
+```js
+
+$redis->connect('127.0.0.1', 6379);
+$strKey = 'Test_bihu_score';
+
+//存储数据
+$redis->zadd($strKey, '50', json_encode(['name' => 'Tom']));
+$redis->zadd($strKey, '70', json_encode(['name' => 'John']));
+$redis->zadd($strKey, '90', json_encode(['name' => 'Jerry']));
+$redis->zadd($strKey, '30', json_encode(['name' => 'Job']));
+$redis->zadd($strKey, '100', json_encode(['name' => 'LiMing']));
+
+$dataOne = $redis->ZREVRANGE($strKey, 0, -1, true);
+echo "---- {$strKey}由大到小的排序 ---- <br /><br />";
+print_r($dataOne);
+
+$dataTwo = $redis->ZRANGE($strKey, 0, -1, true);
+echo "<br /><br />---- {$strKey}由小到大的排序 ---- <br /><br />";
+print_r($dataTwo);
+```
+
+
 
 ###[扛住100亿次请求？我们来试一试](https://github.com/xiaojiaqi/10billionhongbaos/wiki/%E6%89%9B%E4%BD%8F100%E4%BA%BF%E6%AC%A1%E8%AF%B7%E6%B1%82%EF%BC%9F%E6%88%91%E4%BB%AC%E6%9D%A5%E8%AF%95%E4%B8%80%E8%AF%95)
 ###[收集在学习和提高技术过程中遇到的比较有价值的网站、文档、Blog等，方便自己查阅。](https://github.com/china-kook/Skill-learn-collect)
@@ -154,7 +339,7 @@ public function export()
     $this->_display();
 }
 ```
-phpDocumentor的代码分析工具： https://phpdoc.org/
+###[phpDocumentor的代码分析工具]( https://phpdoc.org/)
 
 
 ###[探索PHP与Vue通用直出模板方案](http://blog.krimeshu.com/2017/02/13/vue-php-template-convertor/)
@@ -226,7 +411,7 @@ http://link.zhihu.com/?target=https%3A//github.com/loveQt/wxpytest
 python2 -m pip install package
 python3 -m pip install package
 ###[根据指定坐标来找出指定距离内的其他坐标](https://segmentfault.com/q/1010000008537516)
-``js
+```js
 GeoHash，Redis直接支持，快速存储和查询都搞定了，最高0.5%的错误率。
 
 插入用户的坐标：
