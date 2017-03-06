@@ -1,3 +1,443 @@
+
+###[一个php技术栈后端猿的知识储备大纲](https://github.com/TIGERB/easy-tips) 
+###[模拟滑动验证码](https://segmentfault.com/q/1010000008584470)
+```js
+# -*- coding:utf-8 -*-
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+import PIL.Image as image
+import time,re, random
+import requests
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+#爬虫模拟的浏览器头部信息
+agent = "Mozilla/5.0 (Windows NT 5.1; rv:33.0) Gecko/20100101 Firefox/33.0"
+headers = {
+        "User-Agent": agent
+        }
+
+# 根据位置对图片进行合并还原
+# filename:图片
+# location_list:图片位置
+#内部两个图片处理函数的介绍
+#crop函数带的参数为(起始点的横坐标，起始点的纵坐标，宽度，高度）
+#paste函数的参数为(需要修改的图片，粘贴的起始点的横坐标，粘贴的起始点的纵坐标）
+def get_merge_image(filename,location_list):
+    #打开图片文件
+    im = image.open(filename)
+    #创建新的图片,大小为260*116
+    new_im = image.new("RGB", (260,116))
+    im_list_upper=[]
+    im_list_down=[]
+    # 拷贝图片
+    for location in location_list:
+        #上面的图片
+        if location["y"]==-58:
+            im_list_upper.append(im.crop((abs(location["x"]),58,abs(location["x"])+10,166)))
+        #下面的图片
+        if location["y"]==0:
+            im_list_down.append(im.crop((abs(location["x"]),0,abs(location["x"])+10,58)))
+    new_im = image.new("RGB", (260,116))
+    x_offset = 0
+    #黏贴图片
+    for im in im_list_upper:
+        new_im.paste(im, (x_offset,0))
+        x_offset += im.size[0]
+    x_offset = 0
+    for im in im_list_down:
+        new_im.paste(im, (x_offset,58))
+        x_offset += im.size[0]
+    return new_im
+
+#下载并还原图片
+# driver:webdriver
+# div:图片的div
+def get_image(driver,div):
+    #找到图片所在的div
+    background_images=driver.find_elements_by_xpath(div)
+    location_list=[]
+    imageurl=""
+    #图片是被CSS按照位移的方式打乱的,我们需要找出这些位移,为后续还原做好准备
+    for background_image in background_images:
+        location={}
+        #在html里面解析出小图片的url地址，还有长高的数值
+        location["x"]=int(re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][1])
+        location["y"]=int(re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][2])
+        imageurl=re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][0]
+        location_list.append(location)
+    #替换图片的后缀,获得图片的URL
+    imageurl=imageurl.replace("webp","jpg")
+    #获得图片的名字
+    imageName = imageurl.split("/")[-1]
+    #获得图片
+    session = requests.session()
+    r = session.get(imageurl, headers = headers, verify = False)
+    #下载图片
+    with open(imageName, "wb") as f:
+        f.write(r.content)
+        f.close()
+    #重新合并还原图片
+    image=get_merge_image(imageName, location_list)
+    return image
+
+#对比RGB值
+def is_similar(image1,image2,x,y):
+    pass
+    #获取指定位置的RGB值
+    pixel1=image1.getpixel((x,y))
+    pixel2=image2.getpixel((x,y))
+    for i in range(0,3):
+        # 如果相差超过50则就认为找到了缺口的位置
+        if abs(pixel1[i]-pixel2[i])>=50:
+            return False
+    return True
+
+#计算缺口的位置
+def get_diff_location(image1,image2):
+    i=0
+    # 两张原始图的大小都是相同的260*116
+    # 那就通过两个for循环依次对比每个像素点的RGB值
+    # 如果相差超过50则就认为找到了缺口的位置
+    for i in range(0,260):
+        for j in range(0,116):
+            if is_similar(image1,image2,i,j)==False:
+                return  i
+
+#根据缺口的位置模拟x轴移动的轨迹
+def get_track(length):
+    pass
+    list=[]
+    #间隔通过随机范围函数来获得,每次移动一步或者两步
+    x=random.randint(1,3)
+    #生成轨迹并保存到list内
+    while length-x>=5:
+        list.append(x)
+        length=length-x
+        x=random.randint(1,3)
+    #最后五步都是一步步移动
+    for i in range(length):
+        list.append(1)
+    return list
+
+#滑动验证码破解程序
+def main():
+    #打开火狐浏览器
+    driver = webdriver.Firefox()
+    #用火狐浏览器打开网页
+    driver.get("http://www.geetest.com/exp_embed")
+    #等待页面的上元素刷新出来
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_slider_knob gt_show"]").is_displayed())
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_cut_bg gt_show"]").is_displayed())
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_cut_fullbg gt_show"]").is_displayed())
+    #下载图片
+    image1=get_image(driver, "//div[@class="gt_cut_bg gt_show"]/div")
+    image2=get_image(driver, "//div[@class="gt_cut_fullbg gt_show"]/div")
+    #计算缺口位置
+    loc=get_diff_location(image1, image2)
+    #生成x的移动轨迹点
+    track_list=get_track(loc)
+    #找到滑动的圆球
+    element=driver.find_element_by_xpath("//div[@class="gt_slider_knob gt_show"]")
+    location=element.location
+    #获得滑动圆球的高度
+    y=location["y"]
+    #鼠标点击元素并按住不放
+    print ("第一步,点击元素")
+    ActionChains(driver).click_and_hold(on_element=element).perform()
+    time.sleep(0.15)
+    print ("第二步，拖动元素")
+    track_string = ""
+    for track in track_list:
+        #不能移动太快,否则会被认为是程序执行
+        track_string = track_string + "{%d,%d}," % (track, y - 445)
+        #xoffset=track+22:这里的移动位置的值是相对于滑动圆球左上角的相对值，而轨迹变量里的是圆球的中心点，所以要加上圆球长度的一半。
+        #yoffset=y-445:这里也是一样的。不过要注意的是不同的浏览器渲染出来的结果是不一样的，要保证最终的计算后的值是22，也就是圆球高度的一半
+        ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=track+22, yoffset=y-445).perform()
+        #间隔时间也通过随机函数来获得,间隔不能太快,否则会被认为是程序执行
+        time.sleep(random.randint(10,50)/100)
+    print (track_string)
+    #xoffset=21，本质就是向后退一格。这里退了5格是因为圆球的位置和滑动条的左边缘有5格的距离
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    print ("第三步，释放鼠标")
+    #释放鼠标
+    ActionChains(driver).release(on_element=element).perform()
+    time.sleep(3)
+    #点击验证
+    # submit = driver.find_element_by_xpath("//div[@class="gt_ajax_tip success"]")
+    # print(submit.location)
+    # time.sleep(5)
+    #关闭浏览器,为了演示方便,暂时注释掉.
+    #driver.quit()
+
+#主函数入口
+if __name__ == "__main__":
+    pass
+    main()
+把find_element_by_xpath("//div[@class="gt_slider_knob gt_show"]")改成这样find_element_by_xpath('//div[@class="gt_slider_knob gt_show"]')    
+    
+```
+###[Python 是否是下一个 PHP？](https://www.zhihu.com/question/19557358/answer/142764963)
+作者：eechen
+链接：https://www.zhihu.com/question/19557358/answer/142764963
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+Apache模块和PHP-FPM的确是PHP传统的Web运行模式,但基于CLI的WorkerMan和Swoole服务都出来很久了,可惜很多人选择性看不到.又比如PHP一直都有很多实用的数学处理功能(PHP: 数学扩展 - Manual),但有些人故意不提,故意让人觉得PHP只能写写网页做做模板,比如PHP把数字转成更短的字符串(邀请码/短网址)就用到了GMP这个数学扩展:
+echo gmp_strval(gmp_init('9876543210', 10), 62)."\n"; //AmOy42
+echo gmp_strval(gmp_init('AmOy42',     62), 10)."\n"; //9876543210
+其实就是10进制和62进制互转.
+62进制(10+26+26)利用10个数字+26个小写字母+26个大写字母来表示数值,从而大大减少数值位数.
+Web应用开发的确是PHP的优势,但PHP不仅仅只能用于Web开发,PHP是一门图灵完备的编程语言,只要敢想敢做,你用PHP来开发一个数据库都没有问题,实现B+树聚簇索引和数据的存储结构,实现二分查找,实现锁机制,实现undo/redo事务日志,用线程安全版PHP配合pthreads扩展实现多线程,用libevent扩展实现异步.Java这种不能精确控制内存的虚拟机语言不一样可以开发HBase这种数据库么?只不过用PHP这种动态弱类型而且还没有JIT运行时编译的语言在内存上进行计算密集操作时没有优势罢了.总而言之,PHP能干的事很多,Web开发只不过是PHP最擅长的领域.我觉得用PHP写写自动化运维以及爬虫脚本也很方便,并不觉得在这种领域Python就比PHP有绝对优势.
+
+###[两个数组相同的去重](https://segmentfault.com/q/1010000008585672)
+Laravel 学习笔记 —— 神奇的服务容器
+https://laravel-china.org/topics/789 
+相同测试数据下，为什么快速排序比插入排序都慢https://segmentfault.com/q/1010000008588562 
+
+###[闭包中局部变量的问题](https://segmentfault.com/q/1010000008586026)
+function say() {
+ // Local variable that ends up within closure
+ var num = 888;
+ var sayAlert = function() { alert(num); }
+ num++;
+ return sayAlert;
+}
+var sayAlert = say();    
+sayAlert();       
+
+###[js扑克牌发牌算法](https://segmentfault.com/q/1010000008581427)
+```js
+
+const pools = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "red Joker", "black Joker"];
+const types = ["♠", "♥", "♣", "♦"];
+
+// pools 点数，types 花色，count 张数
+function getRandom(pools, types, count) {
+  const arr = [];
+  for (let i = 0; i < count; i++) {
+    // 获取点数（大小王）
+    let pool = pools[Math.floor(Math.random() * pools.length)];
+    // 获取花色
+    let type = types[Math.floor(Math.random() * types.length)];
+    // 获取组合
+    let poker = pool === 'red Joker' || pool === 'black Joker' ? pool : type + pool;
+    // 组合去重
+    arr.indexOf(poker) == -1 ? arr.push(poker) : i--;
+  }
+  return arr;
+}
+
+getRandom(pools, types, 7) // ["♥8", "♠4", "♠2", "♣5", "♠10", "♦3", "black Joker"]
+```
+
+###[serialize()包括类型一并序列化](https://segmentfault.com/q/1010000008576315)
+用PDO的话：PDO::ATTR_STRINGIFY_FETCHES，例：
+
+$pdo = new PDO('...');
+$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+$stm = $pdo->prepare("select 1, 2.3, 'hello'");
+$stm->execute();
+$result = $stm->fetch(PDO::FETCH_NUM);
+
+###[每天自动优化mysql指定表](https://segmentfault.com/q/1010000008568405)
+CREATE EVENT `optimize_table_event` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-06 00:00:00' ON COMPLETION NOT PRESERVE ENABLE COMMENT '自动优化表' DO CALL p_optimize_table()
+
+###[VUE（不仅仅是VUE吧 应该是所有前端框架） 写出来的项目，如何用chromeTools调试js?](https://segmentfault.com/q/1010000008574134)
+翻墙下载vue-devtools
+使用了source-map之后在chrome的控制台可以在source中的webpack去调试源码的，so easy的 
+###[select for update这种写法会锁表](https://segmentfault.com/q/1010000008582119)
+在[mysqld]下面加入:
+
+innodb_lock_wait_timeout=10
+###[phpmd是一款PHP代码分析工具](https://segmentfault.com/q/1010000008585396)
+
+https://github.com/squizlabs/PHP_CodeSniffer 推荐PHP_CodeSniffe
+###[判断数组有多少个重复的](https://segmentfault.com/q/1010000008586569)
+
+var arr = [1,2,3,4,1,3,4,5,5,88,7,3,1];
+    function counterArray(arr){
+        var obj = {}
+        arr.forEach(function(v,k){
+            if(obj[v]){
+                obj[v]++;
+            }else{
+                obj[v] = 1;
+            }
+        })
+        return obj;
+    }
+###[生成不重复随机数](https://segmentfault.com/q/1010000008588072)
+```js
+const indRandom = (n, maxValue, minValue = 0) => {
+  const nNumArray = [...Array(maxValue + 1).keys()];
+  const resultArray = [];
+  for (let i = 0; i < n; i++) {
+    const randomNum = Math.floor((Math.random() * (((maxValue - minValue) + 1) - i)) + minValue);
+    resultArray.push(nNumArray[randomNum]);
+    nNumArray.splice(randomNum, 1);
+  }
+  console.log(resultArray);
+  return resultArray;
+};
+
+indRandom(5, 10000);
+function indRandom(n, max){
+  var arr = [];
+  for(var i = 0; i < n; i++){
+    var item = Math.floor(Math.random() * max);
+    if(arr.indexOf(item) > -1){ i--; continue; }
+    else arr.push(item);
+  }
+  return arr;
+}
+```
+###[js如何实现文件下载](https://segmentfault.com/q/1010000008587194)
+<a href="js/contact.js" download="newName.js">下载JS</a>
+ar  e = document.createEvent('MouseEvents');
+var  a = document.createElement('a');
+
+a.download = '404.svg';
+a.href = 'https://sf-static.b0.upaiyun.com/v-58bd1fcb/global/img/404.svg';
+if(confirm('您确定要下载吗？')){
+    e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(e);
+}
+
+###[python在list相加](https://segmentfault.com/q/1010000008585692)
+[x+y for y in b for x in a]
+c = list(map(lambda i: a[i] + b[i], range(len(a)))
+from itertools import product
+
+>>> a = ['a', 'b', 'c']
+>>> b=[1, 2, 3]
+>>> c = list(product(a, b))
+>>> print(c)
+[('a', 1), ('a', 2), ('a', 3), ('b', 1), ('b', 2), ('b', 3), ('c', 1), ('c', 2), ('c', 3)]
+>>>
+###[python 发邮件](https://segmentfault.com/q/1010000008586402)
+```js
+import smtplib 
+from email.MIMEMultipart import MIMEMultipart 
+from email.MIMEText import MIMEText 
+from email.mime.application import MIMEApplication 
+ 
+#Configuration file for 6 items below.Write it yourself.
+import config
+ 
+MAIL_HOST=config.MAIL_HOST#'smtp.sina.cn' 
+MAIL_PORT=config.MAIL_PORT#25
+ 
+#Sender's address.The two are the same,in my case.
+MAIL_ADMIN=config.MAIL_ADMIN
+MAIL_USER=config.MAIL_USER
+#Sender's password
+MAIL_PASSWORD=config.MAIL_PASSWORD
+ 
+#Reciever's address
+MAIL_to=config.MAIL_to
+ 
+MAIL_title="test"
+MAIL_content="test content"
+ 
+#The name of the attachment which can be in any format like zip or jpg.
+ATTATCH_FILENAME="E:/memcached-master.zip"
+ 
+def test():    
+    smtp=smtplib.SMTP(MAIL_HOST,MAIL_PORT) 
+    smtp.login(MAIL_USER,MAIL_PASSWORD) 
+     
+    msg=MIMEMultipart() 
+    msg['From']=MAIL_ADMIN 
+    msg['To']=MAIL_to 
+    msg['Subject']=MAIL_title 
+    msg.attach(MIMEText(MAIL_content)) 
+    
+    filename=ATTATCH_FILENAME
+    part = MIMEApplication(open(filename,'rb').read())  
+    part.add_header('Content-Disposition', 'attachment', filename=filename)  
+    msg.attach(part)
+     
+    smtp.sendmail(MAIL_ADMIN,MAIL_to,msg.as_string()) 
+    smtp.quit() 
+ 
+if __name__=='__main__': 
+    test() 
+    print 'over'
+```
+###[Mysql 常用SQL语句集锦](https://segmentfault.com/a/1190000007776482)
+```js
+//一个sql返回多个总数
+$sql = "select count(*) all, " ;
+$sql .= " count(case when status = 1 then status end) status_1_num, ";
+$sql .= " count(case when status = 2 then status end) status_2_num ";
+$sql .= " from table_name";
+//替换某字段的内容的语句
+$sql = "update table_name set content = REPLACE(content, 'aaa', 'bbb') ";
+$sql .= " where (content like '%aaa%')";
+//获取表中某字段包含某字符串的数据
+$sql = "SELECT * FROM `表名` WHERE LOCATE('关键字', 字段名) ";
+//查找表中多余的重复记录
+//单个字段
+$sql = "select * from 表名 where 字段名 in ";
+$sql .= "(select 字段名 from 表名 group by 字段名 having count(字段名) > 1 )";
+//多个字段
+$sql = "select * from 表名 别名 where (别名.字段1,别名.字段2) in ";
+$sql .= "(select 字段1,字段2 from 表名 group by 字段1,字段2 having count(*) > 1 )";
+//删除表中多余的重复记录(留id最小)
+//单个字段
+$sql = "delete from 表名 where 字段名 in ";
+$sql .= "(select 字段名 from 表名 group by 字段名 having count(字段名) > 1)  ";
+$sql .= "and 主键ID not in ";
+$sql .= "(select min(主键ID) from 表名 group by 字段名 having count(字段名 )>1) ";
+//多个字段
+$sql = "delete from 表名 别名 where (别名.字段1,别名.字段2) in ";
+$sql .= "(select 字段1,字段2 from 表名 group by 字段1,字段2 having count(*) > 1) ";
+$sql .= "and 主键ID not in ";
+$sql .= "(select min(主键ID) from 表名 group by 字段1,字段2 having count(*)>1) ";
+```
+###[Laravel 中管道设计模式的使用 —— 中间件实现原理探究](http://laravelacademy.org/resources/design-patterns)
+###[理解 Python 装饰器就看这一篇](https://zhuanlan.zhihu.com/p/24900548)
+装饰器就像我们这里说的长裤，在不影响内裤作用的前提下，给我们的身子提供了保暖的功效。
+```js
+def use_logging(func):
+
+    def wrapper():
+        logging.warn("%s is running" % func.__name__)
+        return func()   # 把 foo 当做参数传递进来时，执行func()就相当于执行foo()
+    return wrapper
+
+def foo():
+    print('i am foo')
+
+foo = use_logging(foo)  # 因为装饰器 use_logging(foo) 返回的时函数对象 wrapper，这条语句相当于  foo = wrapper
+foo()                    # 执行foo()就相当于执行 wrapper()
+
+def use_logging(func):
+
+    def wrapper():
+        logging.warn("%s is running" % func.__name__)
+        return func()
+    return wrapper
+
+@use_logging
+def foo():
+    print("i am foo")
+
+foo()
+```
+
 ###[php isset和empty用于处理变量是否设置或者设置了是否为空。](https://www.v2ex.com/t/79807)
 http://php.net/manual/en/aliases.php
 
