@@ -1,3 +1,357 @@
+###[文章、分类、标签的mysql查询问题](https://segmentfault.com/q/1010000008601655)
+
+```js
+CREATE TABLE `articles` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `title` varchar(50) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE `tags` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(50) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE `tag_links` (
+    `aid` int(11) NOT NULL,
+    `tid` int(11) NOT NULL,
+    PRIMARY KEY (`aid`,`tid`)
+);
+
+-- insert demo data
+
+INSERT INTO `articles` (`id`,`title`) VALUES (1,'xxx'),(2,'a'),(3,'b');
+INSERT INTO `tags` (`id`,`name`) VALUES (1,'php'),(2,'java'),(3,'sql');
+
+INSERT INTO `tag_links` (`aid`,`tid`) VALUES (1,2),(1,3);
+INSERT INTO `tag_links` (`aid`,`tid`) VALUES (2,1),(2,3);
+
+-- query statement
+
+SELECT a.title as 'title',
+(
+    SELECT GROUP_CONCAT(t.name,' ') FROM `tags` t 
+    LEFT JOIN `tag_links` tl 
+    ON t.id=tl.tid 
+    WHERE tl.aid=a.id
+) as 'tags'
+FROM `articles` a;
+
+```
+###[判断每个月的每一周是几号到几号](https://segmentfault.com/q/1010000008608311)
+
+```js
+print_r(date('Y-m-d', strtotime('first mon of january'))); 
+for($i=1;$i<=52;$i++){
+    $month = ($i < 10) ? '0'.$i : $i;
+    echo '第'.$i.'周开始：';
+    $monday = date('Y-m-d', strtotime('2017W'.$month));
+    echo $monday;
+    echo '第'.$i.'周结束：';
+    $sunday = date('Y-m-d' ,strtotime($monday . '+6day'));
+    echo $sunday;
+    echo '<br>';
+}
+
+function get_weekinfo($month){
+    $weekinfo = array();
+    $end_date = date('d',strtotime($month.' +1 month -1 day'));
+    for ($i=1; $i <$end_date ; $i=$i+7) { 
+        $w = date('N',strtotime($month.'-'.$i));
+ 
+        $weekinfo[] = array(date('Y-m-d',strtotime($month.'-'.$i.' -'.($w-1).' days')),date('Y-m-d',strtotime($month.'-'.$i.' +'.(7-$w).' days')));
+    }
+    return $weekinfo;
+}
+print_r(get_weekinfo('2013-11'));
+ 
+//执行结果
+Array    
+(    
+   [0] => Array    
+       (    
+           [0] => 2013-11-25    
+           [1] => 2013-12-01    
+       )    
+   [1] => Array    
+       (    
+           [0] => 2013-12-02    
+           [1] => 2013-12-08    
+       )    
+   [2] => Array    
+       (    
+           [0] => 2013-12-09    
+           [1] => 2013-12-15    
+       )    
+   [3] => Array    
+       (    
+           [0] => 2013-12-16    
+           [1] => 2013-12-22    
+       )    
+   [4] => Array    
+       (    
+           [0] => 2013-12-23    
+           [1] => 2013-12-29    
+       )    
+)
+
+
+/**
+ * @param DateTime|int|string|null $date 可以是DateTime对象、时间戳、字符串形式的日期或者空值表示当前月份
+ * @return array [[1,2,3,4,5], ...] 分别表示这月每一周都是几号到几号
+ */
+function getWeeksOfMonth($date=null){
+    if (is_numeric($date)){
+        $d = new DateTime();
+        $d->setTimestamp($date);
+        $date = $d;
+    } else if (is_string($date)){
+        $date = new DateTime($date);
+    } else if ($date instanceof DateTime){
+        // nothing to do
+    } else if (!$date){
+        $date = new DateTime();
+    } else {
+        throw new InvalidArgumentException("Invalid type of date!");
+    }
+
+
+    // 当前日期是在一个月里面是第几天
+    //  j: 月份中的第几天，没有前导零    1 到 31
+    $dateDay = (int)$date->format('j');
+
+    // 这个月1号是星期几
+    // N: 1（表示星期一）到 7（表示星期天）
+    $beginWeekDay = (int)$date->sub(new DateInterval("P" . ($dateDay - 1) . "D"))->format('N');
+
+    // 这个月最后一天是几号
+    // j    月份中的第几天，没有前导零    1 到 31
+    $endMonthDay = (int)($date->add(new DateInterval('P1M'))->sub(new DateInterval("P1D"))->format('j'));
+
+    $weeks = [];
+    $indexOfWeek = 0;
+    $weekDay = $beginWeekDay;
+
+    for ($day = 1; $day <= $endMonthDay; $day++){
+        if (!isset($weeks[$indexOfWeek])){
+            $weeks[$indexOfWeek] = [];
+        }
+
+        $weeks[$indexOfWeek][] = $day;
+
+        $weekDay++;
+        if ($weekDay > 7){
+            $weekDay = $weekDay - 7;
+            $indexOfWeek++;
+        }
+    }
+
+    // 只要一个星期里面的第一天和最后一天？
+    foreach ($weeks as &$week) {
+        $week = [$week[0], end($week)];
+    }
+
+    return $weeks;
+}
+
+// 测试一下：
+foreach (getWeeksOfMonth() as $week){
+    echo implode(", ", $week) . "\n";
+}
+
+// 输出：（今天是2017-03-08）
+// 1, 5
+// 6, 12
+// 13, 19
+// 20, 26
+// 27, 31
+// 
+
+
+
+```
+###[请问那个带授权的视频怎么下载](https://segmentfault.com/q/1010000008607901)
+
+让视频加载结束，到浏览器缓存目录中找到大小时间吻合的文件
+我是 win10 chrome 中测试缓存目录是 C:\Users\当前登录用户名\AppData\Local\Google\Chrome\User Data\Default\Cache ，然后把找到吻合的文件添加上后缀就可以正常使用了
+###[获取网页默认字体的字号大小?](https://segmentfault.com/q/1010000008605788)
+getComputedStyle(document.getElementsByTagName("p")[0],undefined).fontSize就可以
+
+刚刚试了用getComputedStyle(document.getElementsByTagName("p")[0],undefined).getPropertyValue("font-size")也可以,你这个更方便
+###[PHP多维数组排序问题](https://segmentfault.com/q/1010000008605080)
+```js
+如果a相等，那么比较b，b相等再比较c，排序完在生成个新字段sort 作为标识
+        $arr = [
+            0 =>[
+                a=>1,
+                b=>3,
+                c=>3
+            ],
+            1=>[
+                a=>2,
+                b=>2,
+                c=>3
+            ],
+            2=>[
+                a=>1,
+                b=>2,
+                c=>3
+            ]
+        ];
+        for($i = 0;$i < count($arr); $i++){
+            for($j = $i+1;$j <count($arr);$j++){
+                $temp1 = $arr[$i];
+                $temp2 = $arr[$j];
+                if($temp1["a"] > $temp2["a"] || ($temp1["a"] == $temp2["a"] && $temp1["b"] > $temp2["b"]) || ($temp1["a"] == $temp2["a"] && $temp1["b"] == $temp2["b"] && $temp1["c"] > $temp2["c"])){
+                    $arr[$i] = $temp2;
+                    $arr[$j] = $temp1;
+                }
+            }
+        }
+        var_dump($arr);
+	<?php
+
+$a = $b = $c = [];
+
+array_map(function( $value ) use ( &$a,&$b,&$c ){
+      array_push($a, $value['a']);
+      array_push($b, $value['b']);
+      array_push($c, $value['c']);
+} , $arr);
+
+$count = $arr;
+
+var_dump($count);
+array_multisort(
+    $a,SORT_ASC,
+    $b,SORT_ASC,
+    $c,SORT_ASC,
+    $arr
+);
+
+var_dump($arr);
+```
+###[如何使用html5的FileApi上传大文件](https://segmentfault.com/q/1010000008603884)
+
+https://github.com/recca0120/upload  https://famanoder.com/bokes/5867fddf4aee37201fb4d1d3 
+###[如何在浏览器上启动本地的应用程序](https://segmentfault.com/q/1010000008596199)
+http://geeklu.com/2011/01/start-application-from-url-talk-about-wangwang/
+###[正则表达式匹配@和空格之间的字符](https://segmentfault.com/q/1010000008594625)
+```js
+preg_match('/@(.*) /', 'AAA@XXX YYYY', $result);
+if(preg_match_all(
+    '%@(\w+)%u', 
+    '@张全蛋 含泪质检@三星Note7 被炸飞,听说@炸机 跟@啤酒 更配哦!', 
+    $arr
+)) {
+    var_export($arr);
+}
+//输出
+array (
+  0 => 
+  array (
+    0 => '@张全蛋',
+    1 => '@三星Note7',
+    2 => '@炸机',
+    3 => '@啤酒',
+  ),
+  1 => 
+  array (
+    0 => '张全蛋',
+    1 => '三星Note7',
+    2 => '炸机',
+    3 => '啤酒',
+  ),
+)
+正则表达式 %@(\w+)%u 中:
+%是分隔符.
+u是修饰符,表示unicode.
+\w是元字符,在ASCII下等价于[A-Za-z0-9_],在unicode下表示字符(包括中文)和数字和下划线.
++是量词,表示1个或多个,等价于{1,}的写法.
+()表示子模式,体现在匹配结果中的$arr[1]里.
+区别于主模式,体现在匹配结果中的$arr[0]里.
+
+另外,也可以试试下面这个正则表达式:
+
+%@(\S+)\s%
+其中:
+\s   匹配空白字符,包括:空格,制表符(\t,\v),回车(\r),换行(\n),换页(\f),等价于[ \t\r\n\v\f]
+\S   匹配除空白字符外的任意字符,等价于[^ \t\r\n\v\f]
+另外:
+
+preg_match:     返回模式的匹配次数,0次(不匹配)或1次,因为preg_match在第1次匹配后会停止搜索.
+preg_match_all: 返回完整匹配次数,如果发生错误返回FALSE.
+也就是说,如果上面的例子使用preg_match,那只能匹配到字符串中的"张全蛋".
+```
+###[php56-redis 安装出错](https://segmentfault.com/q/1010000008594306)
+
+brew install php56-igbinary --build-from-source
+
+
+
+###[python list 写进txt中的问题](https://segmentfault.com/q/1010000008604099)
+```js
+# -*- coding: utf-8 -*-
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+from bs4 import BeautifulSoup
+import requests
+url = 'http://news.qq.com/'
+wb_data = requests.get(url).text
+soup = BeautifulSoup(wb_data,'lxml')
+news_titles = soup.select('div.text > em.f14 > a.linkto')
+file = open('新闻.txt', 'a')
+for n in news_titles:
+    title = n.get_text()
+
+    link = n.get("href")
+    b = str(title) + ' 链接: ' + link +"\n"
+    file.write(str(b))
+
+file.close()
+
+for n in news_titles:
+    title = n.get_text()
+
+    link = n.get("href")
+
+
+    b = []
+    b.append(title + '链接' + link)
+    
+with open('/Users/sufan/Desktop/新闻.txt', 'w') as file:
+    file.write(str(b))
+```
+
+###[大家有javascript检测回文](https://segmentfault.com/q/1010000008606309)
+```js
+function isHuiwen(text) {
+  if(text.length <= ) return true;
+  if(text.charAt(0) != text.chatAt(text.length - 1)) return false;
+  return isHuiwen(text.substr(1, text.length - 2));
+}
+function isHuiwen(str){
+     str = str.replace(/\W\s_/gi,'');
+     return str.toLowerCase == str.split('').reverse().join('').toLowerCase();
+}
+return  text.split('').reverse().join('')==text;
+function palindrome(str) {
+    if (!str) return false; // null或undefined
+    for ( var i = 0, len = str.length; i < Math.floor(len/2); i++ ) {
+        if (str[i] !== str[len - 1 - i]) {
+            return false;
+        }
+    }
+    return true;
+}
+['1', null, '121', '111', undefined, '1a1', 'asdf', '', '我为人人人人为我'].forEach(function(v) {
+    console.log(v, palindrome(v) ? '是回文' : '不是回文');
+});
+```
 ###[Python 练习实例2](http://www.runoob.com/python/python-exercise-example2.html)
 ```js
 利润(I)低于或等于10万元时，奖金可提10%；利润高于10万元，低于20万元时，低于10万元的部分按10%提成，高于10万元的部分，可提成7.5%；20万到40万之间时，高于20万元的部分，可提成5%；40万到60万之间时高于40万元的部分，可提成3%；60万到100万之间时，高于60万元的部分，可提成1.5%，高于100万元时，超过100万元的部分按1%提成，从键盘输入当月利润I，求应发放奖金总数
