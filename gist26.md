@@ -1,3 +1,111 @@
+###[女神](https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgeticon?seq=666763777&username=@4f873dc74aadf84024d98e388ce128ca&skey=@crypt_62a633fb_209bfde195bcf54b88f99ce2646e0a1d&type=big)
+###[求windows下git bash配色方案及方法](https://segmentfault.com/q/1010000008603023)
+$ cd ~
+
+$ vim .minttyrc https://github.com/mavnn/mintty-colors-solarized
+###[使用第三方的守护程序启动，比如 forever 、 pm2](https://segmentfault.com/q/1010000008567492)
+```js
+npm install pm2 -g
+2.用pm2运行你的项目入口文件
+
+pm2 start [项目入口文件].js
+3.如果需要热更新，需要加上参数--watch
+
+pm2 start [项目入口文件].js --watch
+###[求教使用python库提取pdf](https://segmentfault.com/q/1010000008611030)
+使用过pypdf 对英文pdf文档处理比较简单，但是对中文的支持好像不太好
+import textract
+import pyPdf
+import pdf2text
+import pdfminer
+import chardet
+
+text = textract.process("F:ll.pdf",method = 'pdfminer')print text
+import textract
+import pyPdf
+import pdfminer
+import chardet
+
+text = textract.process("F:ll.pdf",method = 'pdfminer')print text
+```
+###[有没有适配移动页面的pdf转html工具](https://segmentfault.com/q/1010000008611494)
+###[javascript动态插入DOM节点详细过程如何](https://segmentfault.com/q/1010000008604339)
+```js
+<iframe src="A.html" width="" height=""></iframe>
+<iframe src="null" name="frame" id="frame" width="" height=""></iframe>
+<ul>
+    <li><a href="B.html" target="frame">我是主角，点我右边跳到页B</a><b onclick="new A()">点我new A()</b></li>
+    <li><a href="C.html" target="frame">我是配角，点我右边跳刀页C</a></li>
+</ul>
+<script type="text/javascript">
+    function A() {
+        if (!this.dom) {
+            this.dom = this.create()
+            this.bindEvent()
+            this.append()
+        } else {
+            /* OOXX */
+            this.append()
+        }
+    }
+    A.prototype.create = function() {
+        /* 创建DOM对象 append到右侧iFrame */
+        return document.createElement('div');
+    }
+    A.prototype.append = function() {
+        /* 把this.dom追加到父容器 假定是body */
+        top.document.getElementById('frame').contentDocument.body.appendChild(this.dom);
+    }
+    A.prototype.bindEvent = function() {
+        /* 绑定事件 click, alert(123)*/
+        this.dom.addEventListener('click', function() {
+            alert(1)
+        }, false);
+    }
+</script>
+```
+
+###[一个表只能有一个 自增键](https://segmentfault.com/q/1010000008610794)
+```js
+如果你的主键已经是自增了，那么这个表不能再有自增键了。
+如果你的主键是非自增的，那么可以设置一个
+
+ALTER TABLE `weibo`
+ADD COLUMN `serial`  bigint UNSIGNED NOT NULL AUTO_INCREMENT AFTER `id`,
+ADD INDEX `serial` (`serial`) USING BTREE,
+AUTO_INCREMENT=94381;
+
+create table test(
+   id int not null,
+   noid int not null auto_increment,
+   primary key(id), --如果主键设置了自增长，那么其他列就不能在设置自增长了
+   key(noid) -- 如果给其他列设置自增长，那么必须为其创建一个索引，索引类型有很多，自行查资料
+)engine=xxx auto_increment=10000;
+```
+
+###[内部函数调用对象的问题](https://segmentfault.com/q/1010000008603916)
+```js
+function Person(name){
+    var name=name;
+    function getName(){
+        return name;
+    }
+    getName();
+}
+Person("Nicholas");
+在全局作用域中，调用Person("Nicholas")对象是window,那么在Person函数的内部，
+调用getName()函数的对象该是谁呢？？？
+
+补充:
+ function Person(name){
+    var name=name;
+    function getName(){
+        alert(name);
+    }
+    window.getName();//window.getName is not a function 
+}
+Person("Nicholas");
+```
 ###[文章、分类、标签的mysql查询问题](https://segmentfault.com/q/1010000008601655)
 
 ```js
