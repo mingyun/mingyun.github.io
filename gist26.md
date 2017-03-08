@@ -3,6 +3,79 @@
 $ cd ~
 
 $ vim .minttyrc https://github.com/mavnn/mintty-colors-solarized
+###[TCP的三次握手和HTTP的返回状态](https://segmentfault.com/q/1010000008610755)
+1xx：请求收到，继续处理
+2xx：操作成功收到，分析、接受
+3xx：完成此请求必须进一步处理
+4xx：请求包含一个错误语法或不能完成
+5xx：服务器执行一个完全有效请求失败
+HTTP 是基于TCP协议的。
+只有在TCP协议三次握手成功之后，上层协议（本例为HTTP）才会工作。
+HTTP状态码是定义HTTP请求响应状态码，能正常发出/接收响应，证明HTTP协议工作正常
+没有关系。分层就是为了让层与层之间没有关系。
+
+TCP 的三次握手是为了保证通信的可靠性。HTTP 的状态码是对服务器返回的对请求的处理状态。
+
+HTTP 建立在 TCP 的基础上，TCP 建立了通信链路，HTTP 通过这个链路让服务器和浏览器通信。能进行HTTP通信了，就是说明 TCP 已经建立好了。
+
+如果 TCP 建立失败，浏览器显示的是无法找到找服务，或者是服务器响应时间过长。如果是服务器处理错误，浏览器显示的就是 HTTP 返回的内容，即服务器返回给浏览器的信息。
+###[]()
+```js
+pip install git+https://github.com/mstamy2/PyPDF2
+def getDataUsingPyPdf2(filename):  
+    pdf = PdfFileReader(open(filename, "rb"))  
+    content = ""  
+    for i in range(0, pdf.getNumPages()):  
+        extractedText = pdf.getPage(i).extractText()  
+        content +=  extractedText + "\n"  
+    #return content.encode("ascii", "ignore")  
+    return content
+from PyPDF2 import PdfFileWriter, PdfFileReader
+
+output = PdfFileWriter()
+input1 = PdfFileReader(open("document1.pdf", "rb"))
+
+# print how many pages input1 has:
+print "document1.pdf has %d pages." % input1.getNumPages()
+
+# add page 1 from input1 to output document, unchanged
+output.addPage(input1.getPage(0))
+
+# add page 2 from input1, but rotated clockwise 90 degrees
+output.addPage(input1.getPage(1).rotateClockwise(90))
+
+# add page 3 from input1, rotated the other way:
+output.addPage(input1.getPage(2).rotateCounterClockwise(90))
+# alt: output.addPage(input1.getPage(2).rotateClockwise(270))
+
+# add page 4 from input1, but first add a watermark from another PDF:
+page4 = input1.getPage(3)
+watermark = PdfFileReader(open("watermark.pdf", "rb"))
+page4.mergePage(watermark.getPage(0))
+output.addPage(page4)
+
+
+# add page 5 from input1, but crop it to half size:
+page5 = input1.getPage(4)
+page5.mediaBox.upperRight = (
+    page5.mediaBox.getUpperRight_x() / 2,
+    page5.mediaBox.getUpperRight_y() / 2
+)
+output.addPage(page5)
+
+# add some Javascript to launch the print window on opening this PDF.
+# the password dialog may prevent the print dialog from being shown,
+# comment the the encription lines, if that's the case, to try this out
+output.addJS("this.print({bUI:true,bSilent:false,bShrinkToFit:true});")
+
+# encrypt your new PDF and add a password
+password = "secret"
+output.encrypt(password)
+
+# finally, write "output" to document-output.pdf
+outputStream = file("PyPDF2-output.pdf", "wb")
+output.write(outputStream)
+```
 ###[使用第三方的守护程序启动，比如 forever 、 pm2](https://segmentfault.com/q/1010000008567492)
 ```js
 npm install pm2 -g
