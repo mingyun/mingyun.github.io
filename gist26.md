@@ -1,3 +1,12 @@
+###[php 在线打开word文档](https://segmentfault.com/q/1010000008623235)
+1.借助第三方：http://www.idocv.com/index.html http://www.officeweb365.com
+2.自己转换成swf http://www.print2flash.com
+###[打印RegExp对象](https://segmentfault.com/q/1010000008626133)
+
+var reg=new RegExp('\w');
+console.log(reg);
+
+输出 /w/
 ###[把一个 name 数组 和 value 数组 组成这个多维数组](https://segmentfault.com/q/1010000008625086)
 var data = [];
 for (var i = 0; i < name.length; i++) {
@@ -354,6 +363,85 @@ Person("Nicholas");
 }
 Person("Nicholas");
 ```
+###[腾讯视频播放页地址怎么得到视频的真实地址](https://segmentfault.com/q/1010000008626828)
+document.querySelector('.mod_episode').querySelectorAll('.item').forEach(item=>{console.log(item.id)})
+https://h5vv.video.qq.com/getinfo?callback=txplayerJsonpCallBack_getinfo_336358&charge=0&vid=f0157y2e83y&defaultfmt=auto&otype=json&guid=fd59d5ff4c6123d34abef67d8fc15506&platform=10901&defnpayver=1&appVer=3.0.0&sdtfrom=v1010&host=v.qq.com&_rnd=1489037475&defn=&fhdswitch=0&show1080p=1&isHLS=0&newplatform=10901&_qv_rmt=GOWWn6AmA18077APA%3D&_qv_rmt2=LTukpg0E149345heg%3D&_1489037475190= 
+```js
+function get_url($url)
+{
+    $ch=curl_init();
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //不验证证书
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    $result=curl_exec($ch);
+    $code=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+    if($code!='404' && $result)
+    {
+        return $result;
+    }
+    curl_close($ch);
+}
+function get_tc_video($url)
+{
+    if(!$url) { return false; }
+    $sp = explode('/', $url);
+    $code = end($sp);
+    $code = explode('.', $code)[0];
+    $res = get_url('http://vv.video.qq.com/getinfo?otype=json&platform=11001&vid='.$code);
+    $res = mb_substr(mb_strcut($res, 13),0,-1);
+    $res = json_decode($res, true);
+    $u = $res['vl']['vi'][0];
+    $p0 = $u['ul']['ui'][0]['url'];
+    $p1 = $u['fn'];
+    $p2 = $u['fvkey'];
+    return $p0.$p1.'?vkey='.$p2;  
+}
+```
+###[引用返回](https://segmentfault.com/q/1010000008626085)
+```js
+class foo {
+    public $value = 42;
+
+    public function &getValue() {
+        return $this->value;
+    }
+}
+
+$obj = new foo;
+$referenceValue = &$obj->getValue();
+$myValue = $obj->getValue();
+$obj->value = 2;
+echo $referenceValue; // 输出2
+echo $myValue; // 输出42 http://php.net/manual/zh/language.references.return.php 
+```
+###[php 2的n次方](https://segmentfault.com/q/1010000008625910)
+```js
+function sum($n){
+  $i = 0;
+  $t = 0;
+  $arr = [];
+   while(++$i && $i < $n){
+     $tmp = pow(2,$i);
+     $t+=$tmp;
+     $arr[] = $tmp;
+     if($t == $n) {
+        return $arr;
+     }
+   }
+}
+print_r( sum(254));
+Array
+(
+    [0] => 2
+    [1] => 4
+    [2] => 8
+    [3] => 16
+    [4] => 32
+    [5] => 64
+    [6] => 128
+)
+```
 ###[文章、分类、标签的mysql查询问题](https://segmentfault.com/q/1010000008601655)
 
 ```js
@@ -398,6 +486,44 @@ FROM `articles` a;
 ###[判断每个月的每一周是几号到几号](https://segmentfault.com/q/1010000008608311)
 
 ```js
+class GetWeeksOfMonths
+{
+    public $_month;
+
+    public $_week =array( '1'=>'first','2'=>'second','3'=>'third','4'=>'fourth','5'=>'fifth');
+
+    public $_months = array('january','february','march','april','may','june','july','august ','september','october','november','december');
+    public function __construct($month)
+    {
+        header('Content-Type:text/html;charset:utf-8');
+    
+        $this->_month = $this->_months[$month];
+
+    }
+    //return array
+    public function get_weeks_of_months()
+    {
+        $week = $this->get_total_weeks();
+        //$total = array();
+        for($i=1;$i<=$week;$i++)
+        {
+            if($i==$week)
+            {
+                $start ='第 '.$i.' 周: ';
+                $monday =  date('Y-m-d', strtotime( $this->_week[$i].' monday of '.$this->_month));
+                $sunday =  date('Y-m-d', strtotime('last day of '.$this->_month));
+            }
+            else
+            {
+                $start ='第 '.$i.' 周: ';
+                $monday =  date('Y-m-d', strtotime( $this->_week[$i].' monday of '.$this->_month));
+                $sunday =  date('Y-m-d', strtotime( $monday.' +6 day'));
+            }
+            
+            $total[]=$monday.' to '.$sunday;
+            
+            
+
 print_r(date('Y-m-d', strtotime('first mon of january'))); 
 for($i=1;$i<=52;$i++){
     $month = ($i < 10) ? '0'.$i : $i;
