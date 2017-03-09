@@ -1,3 +1,20 @@
+###[把一个 name 数组 和 value 数组 组成这个多维数组](https://segmentfault.com/q/1010000008625086)
+var data = [];
+for (var i = 0; i < name.length; i++) {
+    data.push({
+        'name': name[i],
+        'value': value[i]
+    });
+}
+https://segmentfault.com/q/1010000008506557/a-1020000008506804
+###[web服务器只能本机访问](https://segmentfault.com/q/1010000008624550)
+防火墙
+
+chkconfig iptables off
+要重启后生效
+
+service iptables stop
+
 ###[mysql 不能在子查询中使用limit](http://blog.csdn.net/tsxw24/article/details/44994835)
 ```js
 mysql 不能在子查询中使用limit，如select * from table where id in (select id from table limit 10)，
