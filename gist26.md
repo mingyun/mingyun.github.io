@@ -1,3 +1,161 @@
+###[mysql 不能在子查询中使用limit](http://blog.csdn.net/tsxw24/article/details/44994835)
+```js
+mysql 不能在子查询中使用limit，如select * from table where id in (select id from table limit 10)，
+但是再来一层就可以了 select * from table where id in (select id from (select * from table limit 10))
+从文章点击前50名中随机抽出10名列出来，于是构造如下SQL语句：
+
+SELECT * FROM article where id IN(SELECT id FROM article ORDER BY counter DESC LIMIT 50) ORDER BY rand() LIMIT 10
+
+执行该语句，MySQL提示错误：
+
+#1235 - This version of MySQL doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
+
+ 
+
+无奈Google之，发现解决办法就是再子查询中再嵌套一层查询：
+
+SELECT * FROM article where id IN(select id from(SELECT id FROM article ORDER BY counter DESC LIMIT 50)) ORDER BY rand() LIMIT 10
+
+一测试居然可以，不由得感叹，人民群众真是智慧的群体啊，于是记录于此。
+```
+###[js格式转换](https://segmentfault.com/q/1010000008620305)
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<input type="" name="">
+<button>ok</button>
+<div></div>
+<script type="text/javascript">
+    //q1
+    (function() {
+        var ipt = document.getElementsByTagName('input')[0],
+                btn = document.getElementsByTagName('button')[0],
+                div = document.getElementsByTagName('div')[0],
+                obj = {};
+        document.addEventListener('keyup', function(e) {
+            if (e.keyCode === 13) {
+                btn.click();
+            }
+        });
+
+        btn.addEventListener('click', function(e) {
+            var temp; //增加
+            obj = temp ={};//增加
+            var v = ipt.value;
+            if (v === "") {
+                div.innerHTML = ('no input!');
+            } else {
+                var arr = v.split(/[, _]/);
+                console.log(arr);
+                for (var i = 0; i < arr.length; i++) {
+                    temp[arr[i]]={};//增加
+                    temp=temp[arr[i]];//增加
+                }
+                div.innerHTML = ('obj = ' + JSON.stringify(obj));
+            }
+        });
+    }());
+    //q2
+</script>
+</body>
+</html>
+
+    var str ="key3,key2,key3,key1";
+    var obj ={};
+    var strList = str.split(",");
+    for(var i = strList.length;i >= 0;--i){
+        var obj2={};
+        obj2[strList[i]]=obj;
+        obj = obj2;
+    }
+    console.log(obj);
+```
+###[没有延迟执行呢](https://segmentfault.com/q/1010000008623047)
+```js
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <script src="http://4g.ruxiancom.com/skin/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $(".nihao").click(
+                    function(){
+                        setTimeout("test()",50000); "test()" 改为 test
+                        function test(){
+                            $(".keyi").hide("slow",function(){
+                                alert("我要隐藏了");
+                            });
+                        }
+                    }
+                )
+            }
+        )
+    </script>
+</head>
+<body>
+    <div class="nihao">我可以点击一下吗</div>
+    <div class="keyi">你要是点击我就隐藏了</div>
+</body>
+
+参数需要一个回调函数, 即为setTimeout中, 你可以理解为setTimeout要执行的函数,
+test()//此处为立即调用了test, 如果test()有返回函数, 则在立即调用之后, setTimeout的回调函数为test()的返回值.
+例:
+
+function test(){
+  console.log("first");
+  return  function(){
+    console.log("secend");
+  }
+}
+setTimeout(test(), 1000)
+$(document).ready(function () {
+    $(".nihao").click(function () {
+        setTimeout(function() { test(); }, 1000);
+
+        function test() {
+            $(".keyi").hide("slow", function () {
+                alert("我要隐藏了");
+            });
+        }
+    })
+});
+</html>
+```
+###[关联查询的sql查询不全的问题](https://segmentfault.com/q/1010000008615512)
+SELECT attop_article_type.id,COUNT(attop_article.type)FROM attop_article_type LEFT JOIN attop_article ON attop_article_type.id=attop_article.type GROUP BY attop_article.type ORDER BY attop_article_type.id;
+
+select id,title,(select count(*) from attop_article where attop_article.type = attop_article_type.id) as count from attop_article_type;
+
+###[多行超出省略最好的解决办法](https://segmentfault.com/q/1010000008623091)
+```js
+p {
+    position:relative;
+    line-height:1.4em;
+    /*三倍line-height去显示三行*/
+    height:4.2em;
+    /*多余的隐藏*/
+    overflow:hidden;
+}
+p::after {
+    content:"...";
+    font-weight:bold;
+    position:absolute;
+    bottom:0;
+    right:0;
+    padding:0 20px 1px 45px;
+    background:url(http://css88.b0.upaiyun.com/css88/2014/09/ellipsis_bg.png) repeat-y;
+}
+text-overflow: ellipsis;
+```
+###[闭包](https://segmentfault.com/q/1010000008621480)
+
 ###[女神](https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgeticon?seq=666763777&username=@4f873dc74aadf84024d98e388ce128ca&skey=@crypt_62a633fb_209bfde195bcf54b88f99ce2646e0a1d&type=big)
 ###[求windows下git bash配色方案及方法](https://segmentfault.com/q/1010000008603023)
 $ cd ~
