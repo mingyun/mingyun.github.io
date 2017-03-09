@@ -1,3 +1,15 @@
+###[关于八进制的parseInt();](https://segmentfault.com/q/1010000008630344)
+070是个数，不是字符串，对解释器来说和写下56是一样的。这样做只是为了更适合人读代码，比如，有时候写0xF比15更易读懂。
+
+paseInt 第一个参数是字符串。
+第一个 070 即 56 --toString--> "56" --parseInt10--> 56
+第二个 070 即 56 --toString--> "56" --parseInt8--> 46
+parseInt(070, 8)不等于parseInt(70, 8)而是等于parseInt(parseInt(70, 8), 8)
+###[curl 如何传递多参数并进行urlencode](https://segmentfault.com/q/1010000008630196)
+curl -G --data-urlencode "port=4546" --data-urlencode "content=哈哈哈" www.test.com
+curl进行urlencode的方式为curl --data-urlencode "port=4546&content=hello" www.test.com
+
+但是这样服务器并不能正常获取port和content参数，反而获得的参数是port，值为4546&content=hello
 ###[php 在线打开word文档](https://segmentfault.com/q/1010000008623235)
 1.借助第三方：http://www.idocv.com/index.html http://www.officeweb365.com
 2.自己转换成swf http://www.print2flash.com
