@@ -1,3 +1,158 @@
+###[文件在线高清预览](https://segmentfault.com/q/1010000008638129)
+###[如何获取优酷的原网页地址](https://segmentfault.com/q/1010000008635649)
+###[http请求建立连接的时候为啥是tcp三次握手](https://segmentfault.com/q/1010000008631792)
+```js
+无论多少次握手都不能满足传输的绝对可靠。
+TCP的核心思想：保证数据可靠传输
+其次：保证传输效率。
+
+那么，就可以开始回答了：
+
+为什么要握手(为什么不是2次握手)？
+
+**为了保证传输的可靠。**
+第一次握手CLIENT告诉SERVER“我将要开始传输数据了”。
+第二次握手SERVER告诉CLIENT“我已经知道你将要传输数据了，我已经做好准备”。
+第三次握手CLIENT告诉SERVER“我已经知道你已经知道'我知道你已经做好准备'”，SERVER端收到这个信号，开始传输数据。
+但是此时CLIENT并不知道SERVER已经知道“CLIENT 已经知道SERVER已经知道”(有点绕，可以忽略这一句)。
+
+为什么是3次而不是4次?
+
+**为了提高传输的效率**
+总之不管多少次握手，总会有一方不知道对方已经知道。因此为了传输效率，只要3次握手就认为已经可以开始传输数据，三次握手之后，
+CLIENT和SERVER就进入ESTABLISHED状态，开始数据传输
+```
+###[Jquery的Ajax上传文件](https://www.blog8090.com/ru-he-yun-yong-jqueryde-ajaxshang-chuan-wen-jian/)
+```js
+<img src="{{url('/file.png')}}" id="pic" style="cursor: pointer;"/>
+
+<input type="file" name="photo" id="photo_upload" style="display: none;" />  
+<script type="text/javascript">  
+// 这里是Ajax 全局token
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+    // 图片上传
+    $('#pic').on('click', function(){
+
+      $('#photo_upload').trigger('click');
+
+      $('#photo_upload').on('change', function(){
+        var obj = this;
+        var formData = new FormData();
+        formData.append('photo', this.files[0]);
+        $.ajax({
+          url: 'upload',
+          type: 'post',
+          data: formData,
+          // 因为data值是FormData对象，不需要对数据做处理
+          processData: false,
+          contentType: false,
+          beforeSend:function(){
+              // 菊花转转图
+              $('#pic').attr('src', '/load.gif');
+          },
+          success: function(data){
+              if(data['ServerNo']=='200'){
+                // 如果成功
+              $('#pic').attr('src', '/uploads/'+data['ResultData']);
+                $('input[name=pic]').val(data);
+                $(obj).off('change');
+              }else{
+                // 如果失败
+                  alert(data['ResultData']);
+              }
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+                var number = XMLHttpRequest.status;
+                var info = "错误号"+number+"文件上传失败!";
+                // 将菊花换成原图
+                                $('#pic').attr('src', '/file.png');
+                alert(info);
+            },
+          async: true
+        });
+      });
+    });
+</script>  
+/**
+     * 文件上传 demo
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+        $file = $request->file('photo');
+        // 验证
+        $check = $this->checkFile($file);
+        if(!$check['status']){
+            return response()->json(['ServerNo' => '400','ResultData' => $check['msg']]);
+        }
+        // 获取文件路径
+        $transverse_pic = $file->getRealPath();
+        // public路径
+        $path = public_path('uploads');
+        // 获取后缀名
+        $postfix = $file->getClientOriginalExtension();
+        // 拼装文件名
+        $fileName = md5(time().rand(0,10000)).'.'.$postfix;
+        // 移动
+        if(!$file->move($path,$fileName)){
+            return response()->json(['ServerNo' => '400','ResultData' => '文件保存失败']);
+        }
+        // 这里处理 数据库逻辑
+        /**
+        *Store::uploadFile(['fileName'=>$fileName]);
+        **/
+        return response()->json(['ServerNo' => '200','ResultData' => $fileName]);
+    }
+
+
+    private function checkFile($file)
+    {
+        if (!$file->isValid()) {
+            return ['status' => false, 'msg' => '文件上传失败'];
+        }
+
+        if ($file->getClientSize() > $file->getMaxFilesize()) {
+            return ['status' => false, 'msg' => '文件大小不能大于2M'];
+        }
+
+        return ['status' => true];
+    }
+```
+###[vue](https://museui.github.io/#/radio)
+https://www.iviewui.com  
+###[这段JS代码的作用域为什么是window了](https://segmentfault.com/q/1010000008632480)
+```js
+//这个函数声明提升啦
+function f(){ console.log(3); }
+
+var a=1;
+var b={
+  a:2,
+  b:function(){
+    console.log(this.a);
+  }(), 
+  f:this.f=function(){
+    console.log(this.a);
+  }
+};
+//function f(){ console.log(3); }
+f();
+b.f();
+(b.f)();
+(0,b.f)();
+```
+###[转化成JSON格式](https://segmentfault.com/q/1010000008632520)
+var obj = '{ name :"hello", age:12}';
+var objJStr=obj.replace(/([{,])\s*(\w+)\s*:/g,'$1"$2":');
+console.log(JSON.parse(objJStr));//Object {name: "hello", age: 12}
+
 ###[关于八进制的parseInt();](https://segmentfault.com/q/1010000008630344)
 070是个数，不是字符串，对解释器来说和写下56是一样的。这样做只是为了更适合人读代码，比如，有时候写0xF比15更易读懂。
 
