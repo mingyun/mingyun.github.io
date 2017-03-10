@@ -1,3 +1,114 @@
+###[html5移动端音乐播放](https://segmentfault.com/q/1010000008641889)
+```js
+var music = document.getElementById("music");
+
+$(".start").click(function(){
+    setTimeout(function(){
+        music.play();
+    },5000);
+});
+var music = document.getElementById("music");
+
+$(".start").click(function(){
+    alert(1);
+    setTimeout(function(){
+        alert(2);
+        music.play();
+    },5000);
+});
+输出1，证明点击事件触发没问题
+输出2，证明定时器没问题
+```
+###[文档中的tab换为4个空格](https://segmentfault.com/q/1010000008641856)
+
+代码格式化工具吧～
+
+php的话，指定编码规范
+
+phpcfb [项目目录]
+
+例如：
+./vendor/bin/phpcbf --standard=PSR1,PSR2  ../path
+###[JS数组递归遍历](https://segmentfault.com/q/1010000008641909)
+```js
+var arr = [{
+                    "id": 35,
+                    "code": "110100",
+                    "name": "北京市",
+                    "type": 1,
+                    "regions": [{
+                        "id": 373,
+                        "code": "110101",
+                        "name": "东城区",
+                        "type": 2,
+                        "regions": [],
+                        "latitude": 0,
+                        "longitude": 0
+                    }],
+                    "latitude": 0,
+                    "longitude": 0
+                },
+                {
+                    "id": 36,
+                    "code": "120100",
+                    "name": "天津市",
+                    "type": 1,
+                    "regions": [{
+                        "id": 389,
+                        "code": "120101",
+                        "name": "和平区",
+                        "type": 2,
+                        "regions": [],
+                        "latitude": 0,
+                        "longitude": 0
+                    }],
+                    "latitude": 0,
+                    "longitude": 0
+                },
+                {
+                    "id": 37,
+                    "code": "130100",
+                    "name": "石家庄市",
+                    "type": 1,
+                    "regions": [{
+                        "id": 405,
+                        "code": "130102",
+                        "name": "长安区",
+                        "type": 2,
+                        "regions": [],
+                        "latitude": 0,
+                        "longitude": 0
+                    }],
+                    "latitude": 0,
+                    "longitude": 0
+                }
+            ];
+            var arr1 = [];
+            for(var i = 0, l = arr.length; i < l; i++) {
+                arr1[i] = {
+                    text: arr[i].name,
+                    value: arr[i].name,
+                    children: [{
+                        text: arr[i].regions[0].name,
+                        value: arr[i].regions[0].name
+                    }]
+                }
+            }
+            console.log(arr1)
+	function fnArr(a){
+        return a.length ? a.map(function(o){
+            var oNew = {
+                text : o.name,
+                value : o.name,
+                children : fnArr(o.regions) 
+            };
+            if (oNew.children === undefined) delete oNew.children;
+            return oNew;
+        }) : undefined;
+     }    
+	    
+	    
+```
 ###[文件在线高清预览](https://segmentfault.com/q/1010000008638129)
 ###[如何获取优酷的原网页地址](https://segmentfault.com/q/1010000008635649)
 ###[http请求建立连接的时候为啥是tcp三次握手](https://segmentfault.com/q/1010000008631792)
