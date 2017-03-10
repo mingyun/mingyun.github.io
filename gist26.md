@@ -1,3 +1,61 @@
+
+###[获取一个数组中的连续数字](https://segmentfault.com/q/1010000008646343)
+```js
+function fn(arr){
+  var result = [],
+      i = 0;
+  result[i] = [arr[0]];
+  arr.reduce(function(prev, cur){
+    cur-prev === 1 ? result[i].push(cur) : result[++i] = [cur];
+    return cur;
+  });
+  return result;
+}
+var oldArr = [1,2,3,7,8,9,15,17,18,19];
+var pre=undefined,arr=[],newArr=[];
+for(var i=0;i<oldArr.length;i++){
+    if(typeof pre == "undefined") {
+       arr.push(oldArr[i]);
+       pre = oldArr[i];
+       continue;
+    }
+    if(oldArr[i] === pre+1){
+       pre++;
+       arr.push(pre);
+    }else{
+       newArr.push(arr);
+       arr = [oldArr[i]];
+       pre = oldArr[i];
+    }
+}
+ newArr.push(arr);
+```
+###[js空字符串的问题](https://segmentfault.com/q/1010000008644024)
+```js
+elem.addEventListener("keyup", function(e) {
+    if (e.keyCode === 32) {
+        this.value = this.value.replace(/\s*/gi, "")
+    }
+});
+```
+###[关于冒泡排序可视化中的 JSON ](https://segmentfault.com/q/1010000008645992)
+```js
+for (var i = divs_value.length-1; i>0;i--) {
+    for (var j = 0; j < i; j++) {
+        if (divs_value[j] > divs_value[j+1]) {
+            var smaller = divs_value[j+1];
+            divs_value[j+1] = divs_value[j];
+            divs_value[j] =  smaller;
+            state.push(JSON.parse(JSON.stringify(divs_value)))
+            // state.push(divs_value)
+        }
+    }
+}
+```
+###[利用原生php配合html5做的实时聊天室](https://github.com/EastHuang/php-websocket-demo)
+###[练习写javascript的网站](https://segmentfault.com/q/1010000008645239)
+
+https://www.codewars.com/trainer/setup https://jsfiddle.net/
 ###[html5移动端音乐播放](https://segmentfault.com/q/1010000008641889)
 ```js
 var music = document.getElementById("music");
