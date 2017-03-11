@@ -1,4 +1,177 @@
 
+###[基于 4 个 8 撸了一个 CDN 友好的 DNS](https://www.v2ex.com/t/336726)
+https://github.com/lbp0200/PRCDNS  https://github.com/holyshawn/overture 
+###[离线版类 CodePen 的 Electron 应用， SketchCode](https://www.v2ex.com/t/339804)
+https://github.com/qingww/SketchCode 
+
+https://github.com/qingww/SketchCode/releases/
+收发微信消息的 bot 框架 https://github.com/blueset/ehForwarderBot 
+###[饥人谷出品：一个会动的简历](https://github.com/jirengu-inc/animating-resume)
+###[image-to-ascii](https://helloacm.com/tools/image-to-ascii/)
+###[Python 如何在图片上 添加 带格式的文本](https://www.v2ex.com/t/342171#reply3)
+使用 PIL 的 text 方法可以加文本，但无法对文本进行格式化 https://github.com/vbauer/manet   渲染成网页，然后用 PhantomJS 来截图
+###[ redis 的 RPOPLPUSH 实现安全队列](https://www.v2ex.com/t/341774#reply5)
+
+你队列中的某个 item 操作完了的时候 会删除 lpush 进的队列的数据,但是万一没有完成或者超时或者突然程序挂掉了呢?所以你需要另外一个操作,间隔一段时间读取下 lpush 进的那个队列,然后查看这些操作是否已经完成,如果完成,干掉,没完成,要不重新放入队列要不...看你业务咯
+存储在你的 node 中,比如说队列的这个 key 对应一个 hash,那么这个 hash 可以存储一个叫做 last_op 的时间戳,然后你的那个客户端判断时读取这个值
+###[数据爬取、Ajax 探讨](https://www.v2ex.com/t/342608#reply17)
+设定 Referer 就可以请求到数据 $ curl -se "https://detail.tmall.com/item.htm" "https://mdskip.taobao.com/core/initItemDetail.htm?itemId=543399704177&callback=setMdskip" | grep -Po "\"sellCount\":\d+," 
+"sellCount":8308, 
+![img](http://ww4.sinaimg.cn/large/0060lm7Tgy1fd0fa9fq35j31kw02u3z5.jpg)
+###[PHP 7.0, PHP 7.1.2, PHP -jit 的性能](https://www.v2ex.com/t/343299#reply9)
+```js
+$t1 = microtime(true);
+for ($i = 0; $i < 10000000; $i++) {
+    aaa($i);
+}
+$t2 = microtime(true);
+echo 'php time:' . ($t2 - $t1) * 1000 . "ms\n";
+function aaa($i) {
+    $a = $i + 1;
+    $b = 2.3;
+    $s = "abcdefkkbghisdfdfdsfds";
+
+    if ($a > $b) {
+        ++$a;
+    } else {
+        $b = $b + 1;
+    }
+
+    if ($a == $b) {
+        $b = $b + 1;
+    }
+    $c = $a * $b + $a / $b - pow($a, 2);
+    $d = substr($s, 0, strpos($s, 'kkb')) . strval($c);
+}
+https://github.com/php/php-src/blob/master/Zend/bench.php
+
+```
+###[console.log()结果的疑问](https://segmentfault.com/q/1010000008635507)
+```js
+function fn(){
+    console.log(1);
+}
+
+fn.toString = function(){
+    return 30;
+}
+
+console.log(fn);在浏览器里面console.log("%s",fn) 才会调用 toString
+
+console.log输出函数时调用其toString方法。因为你复写了函数的toString并return 30所以才会输出30呀。不然应该是function function。应该是前者表示类型后者表示值。console.log()参数如果是对象的话，会转化为字符串形式，也就是调用这个tostring方法
+```
+###[ Mysql group by 后对分组数据的处理问题](https://www.v2ex.com/t/340250#reply18)
+```js
+|id |col1|col2|col3|col4|
+|---|----|----|--- |----|
+| 1 |  1 |  1 |  1 |  1 |
+| 2 |  1 |  1 |  1 |  2 |
+| 3 |  1 |  1 |  1 |  1 |
+| 4 |  1 |  1 |  2 |  1 |
+| 5 |  1 |  1 |  2 |  2 |
+| 6 |  1 |  2 |  1 |  1 |
+| 7 |  1 |  2 |  1 |  1 |
+| 8 |  1 |  3 |  2 |  2 |
+| 9 |  1 |  3 |  2 |  2 |
+现在我需要按 col1 和 col2 对表进行分组，然后对每个分组进行统计，统计 col3=1,col4 不重复值的数量 ps:count(distinct(col4)), 统计 col3=2 ， col4 值的数量 ps:count(col4)
+
+即结果为
+
+|id |col1|col2|distinct(col4)|count(col4)|
+|---|----|----|--------------|-----------|
+| 1 |  1 |  1 |       2      |         2 |
+| 2 |  1 |  2 |       1      |         0 |
+| 3 |  1 |  3 |       0      |         2 |
+
+SELECT 
+col1, 
+col2, 
+count(DISTINCT if(col3 = 1, col4, NULL)), 
+count(if(col3 = 2, col4, NULL)) 
+FROM table 
+GROUP BY col1, col2 
+ORDER BY col2;
+SELECT 
+col1, col2, col4, COUNT(col4) 
+FROM 
+(SELECT DISTINCT 
+col1, col2, col3, col4 
+FROM 
+temp 
+WHERE 
+col3 = 1) T 
+GROUP BY col1 , col2
+```
+###[python-markdown2](https://github.com/trentm/python-markdown2)
+```js
+>>> import markdown2
+>>> markdown2.markdown("*boo!*")  # or use `html = markdown_path(PATH)`
+u'<p><em>boo!</em></p>\n'
+
+>>> from markdown2 import Markdown
+>>> markdowner = Markdown()
+>>> markdowner.convert("*boo!*")
+u'<p><em>boo!</em></p>\n'
+>>> markdowner.convert("**boom!**")
+u'<p><strong>boom!</strong></p>\n'
+
+python markdown2.py foo.md > foo.html
+
+```
+###[网页截屏](https://github.com/vbauer/manet)
+curl http://localhost:8891/?url=github.com > github.png
+curl -H "Content-Type: application/json" -d '{"url":"github.com"}' http://localhost:8891/ > github.png
+curl -H "Content-Type: application/x-www-form-urlencoded" -d 'url=github.com' http://localhost:8891/ > github.png
+wget http://localhost:8891/?url=github.com -O github.png
+
+
+###[检测网站链接有效性工具](https://www.v2ex.com/t/338598#reply18)
+curl -s -o /dev/null -w "%{http_code}" http://www.example.org/ 
+
+返回的值不是 200 可以判断为死链 http://tool.chinaz.com/links/
+加上-I, 只需要获取 header ，不需要下载整个页面 
+
+curl -sI -o /dev/null -w "%{http_code}" http://www.example.org/
+https://helloacm.com/tools/can-visit/ URL Status Checker with API support
+https://helloacm.com/api/can-visit/?url=https://helloacm.com/top
+It will return JSON-encoded data:
+{"result":true,"code":200}
+If $_GET parameter s is not specified, this API will use the $_POST variable s instead.
+curl -X POST https://helloacm.com/api/can-visit/ -d "url=https://codingforspeed.com"
+
+http://stackoverflow.com/questions/2804467/spider-a-website-and-return-urls-only 
+http://stackoverflow.com/questions/6136022/script-to-get-the-http-status-code-of-a-list-of-urls
+###[Python3 如何正确处理超时并重试](https://www.v2ex.com/t/342795#reply13)
+ https://pypi.python.org/pypi/retrying
+```js
+requests 有 timeout 和 retry 的配置。可以分别设置连接超时和读取超时。
+
+import random
+from retrying import retry
+
+@retry
+def do_something_unreliable():
+    if random.randint(0, 10) > 1:
+        raise IOError("Broken sauce, everything is hosed!!!111one")
+    else:
+        return "Awesome sauce!"
+
+print do_something_unreliable()
+
+a = 2**999999999999 
+
+这一行代码不到一秒钟就可以计算完毕。 
+但是如果你加上一行 
+print(a) 
+
+那么你需要等几个小时才能看到有东西显示出来。
+$ pip -V # 看看使用的 pip 对不对 
+
+$ pip show <installed-package> # 看看 Location 字段的值
+vim `which pip` -> 修改第一行指向的 python pip 本身就是个 python script 然后给了 x 权限而已
+```
+###[爬虫]( https://www.figotan.org/2016/08/10/pyspider-as-a-web-crawler-system/)
+
 ###[获取一个数组中的连续数字](https://segmentfault.com/q/1010000008646343)
 ```js
 function fn(arr){
