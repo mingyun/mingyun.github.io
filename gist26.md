@@ -1,3 +1,236 @@
+###一行代码可以看到所有页面元素
+```js
+[].forEach.call($$("*"),function(a){a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16)})
+[...document.querySelectorAll('*')].forEach( element => element.style.outline = `2px #${((Math.random()*0xFFFFFF)>>0).toString(16)} solid` )
+
+
+```
+###获取网页所有url
+```js
+$x('//a').map(function(i){return i.href})
+```
+###99乘法表
+```js
+//需要支持es6的浏览器
+document.write([1,2,3,4,5,6,7,8,9].map( e => Array.from({length:e}).map( (_e,i) => `${e} * ${i + 1} = ${e*(i+1)}`).join('&nbsp;&nbsp;&nbsp;') ).join('<br/>'));
+
+1 * 1 = 1
+2 * 1 = 2   2 * 2 = 4
+3 * 1 = 3   3 * 2 = 6   3 * 3 = 9
+4 * 1 = 4   4 * 2 = 8   4 * 3 = 12   4 * 4 = 16
+5 * 1 = 5   5 * 2 = 10   5 * 3 = 15   5 * 4 = 20   5 * 5 = 25
+6 * 1 = 6   6 * 2 = 12   6 * 3 = 18   6 * 4 = 24   6 * 5 = 30   6 * 6 = 36
+7 * 1 = 7   7 * 2 = 14   7 * 3 = 21   7 * 4 = 28   7 * 5 = 35   7 * 6 = 42   7 * 7 = 49
+8 * 1 = 8   8 * 2 = 16   8 * 3 = 24   8 * 4 = 32   8 * 5 = 40   8 * 6 = 48   8 * 7 = 56   8 * 8 = 64
+9 * 1 = 9   9 * 2 = 18   9 * 3 = 27   9 * 4 = 36   9 * 5 = 45   9 * 6 = 54   9 * 7 = 63   9 * 8 = 72   9 * 9 = 81
+ 
+```
+###获取浏览器记住的密码
+```js
+document.querySelectorAll("input[type=password]")[0].value
+```
+###任意修改网页
+```js
+document.body.setAttribute('contenteditable', true);
+document.body.contentEditable=true
+document.designMode='on'
+
+```
+###下载当前页面里的所有图片
+```js
+$$('img').forEach(item => Object.assign(document.createElement('a'),{href:item.src,download:"download"}).click());
+
+```
+###取消禁止复制
+```js
+[...document.getElementsByTagName('*')].forEach(x => x.oncopy = function(){})
+```
+###设默认值
+```js
+function foo(bar){
+    var foobar = bar || 'default'; 
+    //bar 为 undefined, null, "", 0, false, NaN 时最后都得到'default'
+}
+```
+###数组传递和复制
+```js
+var a = [1,2,3];
+var b = a;
+delete b[1];
+console.log(a);//[1, undefined × 1, 3]
+
+var a = [4,5,6];
+var b = a.slice(0);
+delete b[1];
+console.log(a);//[4,5,6]
+console.log(b);//[4, undefined × 1,6]
+```
+###switch代替if else
+```js
+switch (true) {  
+        case (a > 10):  
+            do_something();
+            break;
+        case (a < 100):  
+            others();  
+            break;  
+        default:
+            ;  
+            break;  
+    };
+```
+###数组重复
+```js
+['<table>', new Array(11).join(['<tr>', new Array(9).join('<td>-</td>'), '</tr>'].join('')), '</table>'].join('');
+"<table><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr><tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table>"
+```
+###类数组对象转数组
+```js
+
+var arr = Array.prototype.slice.call(arguments);
+var arr = [].slice.call(arguments);
+```
+###随机数
+```js
+Math.random().toString(16).substring(2);  
+Math.random().toString(36).substring(2);  
+```
+###合并数组
+```js
+var a = [1,2,3];
+var b = [4,5,6];
+Array.prototype.push.apply(a, b);
+console.log(a); //[1,2,3,4,5,6]
+```
+###界限
+```js
+function limit(number,min,max){
+    return  Math.min(max,Math.max(min,number));
+}
+limit(10, 0, 100);  //10
+limit(-7, 0, 100);  //0
+limit(110, 0, 100);  //100
+```
+###
+```js
+var a = JSON.parse(JSON.stringify(b)) 
+```
+###数组中的最大数
+```js
+var  numbers = [5, 458 , 120 , -215 , 228 , 400 , 122205, -85411];
+var maxNumber = Math.max.apply(null, numbers);
+console.log(maxNumber);
+
+```
+###数组求和
+function sum(arr){
+  return arr.reduce(function(s,n){
+     return s+n
+  });
+}
+
+var arr = new Array(1,2,3,4);
+console.log(sum(arr)); // 10
+去除数组中重复的值：
+function removeRepeat(arr){
+  return arr.filter(function(elem, pos) {
+    return arr.indexOf(elem) == pos;
+  });
+}
+
+var arr = new Array("1","2","3","4","4","4","4","5");
+var newArr = removeRepeat(arr);
+console.log(newArr); //1,2,3,4,5
+位移符的应用
+var num = 10 >> 1; // 相当于10 / 2，但是效率更高 
+console.log(num) // 5;
+
+var num = 2 << 3; // 2的四次方
+console.log(num) // 16;
+timeout中获取其作用域外的变量
+//以下这段无法取到正确的i结果
+for(var i = 0; i < 10; i++) {
+	setTimeout(function(){
+		console.log(i);
+	},100);
+}
+
+//修改后的代码
+for(var i = 0; i < 10; i++) {
+	(function(i){
+		setTimeout(function(){
+			console.log(i);
+		},100)
+	})(i);
+}
+function isArray(arr){
+    return arr ? Object.prototype.toString.call(arr) === '[object Array]' : false
+}
+得到这个变量对应的Boolean类型
+Person.prototype.isStudent = function () {
+    return !!this.studentId;
+};
+Person.prototype.isStudent = function () {
+    return this.studentId ? true : false;
+};
+Person.prototype.isStudent = function () {
+    if (this.studentId) {
+        return true;
+    }
+    return false;
+};
+数组最大和最小值
+Math.max.apply(Math, [1,2,3]); //3
+Math.min.apply(Math, [1,2,3]); //1
+data:text/html, <html contenteditable>
+
+交换值：
+a= [b, b=a][0];
+a=a+b;
+b=a-b;
+a=a-b;
+用0补全位数：
+function prefixInteger(num, length) {
+  return (num / Math.pow(10, length)).toFixed(length).substr(2);
+}
+
+https://link.zhihu.com/?target=http%3A//runjs.cn/  $(".count").trigger("click")
+
+$("[data-aid='16571841']").find("button.up").trigger("click")
+for(;$i<101;$i++)echo$i%15?$i%3?$i%5?$i:"Buzz":"Fizz":"FizzBuzz","\n";
+
+作者：天猪(刘勇)
+链接：https://www.zhihu.com/question/26483508/answer/32954811
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+“短”化你的代码
+Function("‍‌‌‍‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‍‍‍‌‌‍‌‌‌‍‌‍‌‍‌‌‍‌‌‍‌‍‌‌‍‍‌‍‌‍‌‌‍‌‌‌‍‍‌‌‌‍‌‍‍‍‍‌‍‌‌‌‍‍‌‌‌‍‍‍‌‍‌‌‌‍‌‍‌‍‌‌‍‍‌‍‌‍‌‌‌‍‍‌‍‍‌‌‌‌‍‍‌‍‌‍‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‌‍‌‌‍‍‍‌‌‍‍‌‍‌‍‌‌‍‍‍‌‌‍‌‌‌‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‌‍‍‌‍‍‍‌‍‌‍‍‍‍‍‌‍‍‍‌‍‍‌‌‍‍‌‍‍‍‌‌‍‌‍‍‌‍‌‌‌‍‌‌‍‍‌‍‌‌‍‌‌‍‌‌‍‍‌‍‍‍‌‌‍‍‍‍‌‍‌‌‌‍‌‍‍‍‌‌‍‍‍‍‌‍‍‌‍‌‌‍‌‍‌‌‍‍‍‍‌‍‌‌‍‌‍‍‌‍‌‌‍‍‌‍‍‍‍‌‌‌‌‍‌‍‌‍‌‌‌‍‍‍‍‌‍‍‍‌‍‍‍‌‌‌‍‍‍‍‍‌‌‍‌‍‌‍‍‌‌‍‌‌‍‍‍‌‌‌‍‍‍‍‍‌‌‍‌‌‍‍‍‌‌‍‌‍‍‍‍‌‌‍‍‍‌‍‌‍‌‌‌‍‍‍‍‌‍‍‍‌‍‍‌‍‌‌‌‍‌‍‍‌‍‍‍‍‍‍‌‌‍‍‍‌‍‍‌‌‌‍‌‍‌‍‌‌‌‍‌‍‍‍‌‌‌‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‍‌‌‌‍‍‍‌‍‌‌‌‍‍‌‌‌‍‌‍‌‍‌‌‌‍‍‍‍‍‌‍‌‌‍‌‌‍‌‌‍‍‍‍‌‍‌‌‌‍‍‌‍‍‌‌‍‌‍‍‌‍‌‌‍‍‍‍‌‍‍‌‍‌‌‍‌‍‌‌‌‍‍‍‍‍‌‌‌‍‍‌‍‍‌‌‍‍‌‍‌‍‌‌‌‍‍‌‌‍‌‌‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‌‍‍‌‍‍‍‍‌‌‌‌‍‌‍‌‌‍‍‌‌‍‍‌‌‍‍‍‍‌‍‌‌‍‌‌‍‍‍‌‌‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‍‌‌‌‍‌‍‍‌‍‍‍‌‍‍‍‌‍‌‍‍‌‍‍‌‍‌‌‌‍‍‌‌‍‍‍‌‌‍‌‌‍‌‌‍‍‍‌‌‍‌‍‍‌‍‌‌‍‍‍‌‌‍‌‌‍‌‍‌‌‍‍‌‍‌‍‍‍‍‍‌‍‌‍‍‌‍‍‌‌‌‍‌‌".replace(/.{8}/g,function(u){return String.fromCharCode(parseInt(u.replace(/\u200c/g,1).replace(/\u200d/g,0),2))}))();
+https://link.zhihu.com/?target=http%3A//ucren.com/blog/archives/549
+
+console.log("‍‌‌‍‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‍‍‍‌‌‍‌‌‌‍‌‍‌‍‌‌‍‌‌‍‌‍‌‌‍‍‌‍‌‍‌‌‍‌‌‌‍‍‌‌‌‍‌‍‍‍‍‌‍‌‌‌‍‍‌‌‌‍‍‍‌‍‌‌‌‍‌‍‌‍‌‌‍‍‌‍‌‍‌‌‌‍‍‌‍‍‌‌‌‌‍‍‌‍‌‍‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‌‍‌‌‍‍‍‌‌‍‍‌‍‌‍‌‌‍‍‍‌‌‍‌‌‌‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‌‍‍‌‍‍‍‌‍‌‍‍‍‍‍‌‍‍‍‌‍‍‌‌‍‍‌‍‍‍‌‌‍‌‍‍‌‍‌‌‌‍‌‌‍‍‌‍‌‌‍‌‌‍‌‌‍‍‌‍‍‍‌‌‍‍‍‍‌‍‌‌‌‍‌‍‍‍‌‌‍‍‍‍‌‍‍‌‍‌‌‍‌‍‌‌‍‍‍‍‌‍‌‌‍‌‍‍‌‍‌‌‍‍‌‍‍‍‍‌‌‌‌‍‌‍‌‍‌‌‌‍‍‍‍‌‍‍‍‌‍‍‍‌‌‌‍‍‍‍‍‌‌‍‌‍‌‍‍‌‌‍‌‌‍‍‍‌‌‌‍‍‍‍‍‌‌‍‌‌‍‍‍‌‌‍‌‍‍‍‍‌‌‍‍‍‌‍‌‍‌‌‌‍‍‍‍‌‍‍‍‌‍‍‌‍‌‌‌‍‌‍‍‌‍‍‍‍‍‍‌‌‍‍‍‌‍‍‌‌‌‍‌‍‌‍‌‌‌‍‌‍‍‍‌‌‌‍‌‍‍‍‌‌‍‌‌‌‌‍‌‌‍‌‌‌‍‍‍‌‍‌‌‌‍‍‌‌‌‍‌‍‌‍‌‌‌‍‍‍‍‍‌‍‌‌‍‌‌‍‌‌‍‍‍‍‌‍‌‌‌‍‍‌‍‍‌‌‍‌‍‍‌‍‌‌‍‍‍‍‌‍‍‌‍‌‌‍‌‍‌‌‌‍‍‍‍‍‌‌‌‍‍‌‍‍‌‌‍‍‌‍‌‍‌‌‌‍‍‌‌‍‌‌‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‌‍‍‌‍‍‍‍‌‌‌‌‍‌‍‌‌‍‍‌‌‍‍‌‌‍‍‍‍‌‍‌‌‍‌‌‍‍‍‌‌‌‍‍‌‌‍‌‌‍‍‌‍‌‍‌‍‌‌‌‍‌‍‍‌‍‍‍‌‍‍‍‌‍‌‍‍‌‍‍‌‍‌‌‌‍‍‌‌‍‍‍‌‌‍‌‌‍‌‌‍‍‍‌‌‍‌‍‍‌‍‌‌‍‍‍‌‌‍‌‌‍‌‍‌‌‍‍‌‍‌‍‍‍‍‍‌‍‌‍‍‌‍‍‌‌‌‍‌‌".length);
+ www.jsfuck.com/
+颜文字编码 http://utf-8.jp/public/aaencode.html
+https://link.zhihu.com/?target=http%3A//wtfjs.com/
+
+https://www.zhihu.com/question/27428135 
+
+'0'+date.slice(0,-2)
+
+http://blog.nokey.me/2015/01/07/JavaScript%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A745%E6%8B%9B/ 
+https://chensd.com/2015-01/45-useful-javascript-tips-tricks-and-best-practices.html 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###[基于 4 个 8 撸了一个 CDN 友好的 DNS](https://www.v2ex.com/t/336726)
 https://github.com/lbp0200/PRCDNS  https://github.com/holyshawn/overture 
@@ -46,6 +279,12 @@ function aaa($i) {
 https://github.com/php/php-src/blob/master/Zend/bench.php
 
 ```
+
+
+
+###[模拟桌面的前端框架了；](https://segmentfault.com/q/1010000008649281)
+NW.js：https://nwjs.io/ https://electron.atom.io/ https://github.com/os-js/OS.js
+
 ###[console.log()结果的疑问](https://segmentfault.com/q/1010000008635507)
 ```js
 function fn(){
