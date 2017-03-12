@@ -10,6 +10,110 @@ interface DateGlobal {
 }
 
 addExpireAt(DateGlobal::SECONDS_IN_A_DAY);
+###[28张相见恨晚的速查表（Cheat Sheet）——Python篇](https://zhuanlan.zhihu.com/p/25669434?group_id=823242843865894912)
+matplotlib:https://www.datacamp.com/community/blog/python-matplotlib-cheat-sheet
+scipy:https://www.datacamp.com/community/blog/python-scipy-cheat-sheet
+pandas:https://www.datacamp.com/community/blog/python-pandas-cheat-sheet
+numpy:https://www.datacamp.com/community/blog/python-numpy-cheat-sheet
+scikit-Learn:https://www.datacamp.com/community/blog/scikit-learn-cheat-sheet
+bokeh:https://www.datacamp.com/community/blog/bokeh-cheat-sheet-python
+python basic:https://www.datacamp.com/community/tutorials/python-data-science-cheat-sheet-basics
+###[历史爱好者福利—这个网站包含了6000年来的世界历史地图演变](https://zhuanlan.zhihu.com/p/25658582?group_id=823149310563713024)
+http://link.zhihu.com/?target=http%3A//x768.com/w/twha.zh-hans 
+###[循环体异步函数中循环变量i的保存](https://zhuanlan.zhihu.com/p/25647386?group_id=822928818560983040)
+```js
+for (var i=1; i<=5; i++) {
+    setTimeout( function timer() {
+        console.log(i);
+    }, i*1000 );
+}
+
+for (var i=1; i<=5; i++) {
+    (function(i){
+        setTimeout( function timer() {
+            console.log(i);
+        }, i*1000 );
+    })(i);
+}
+for (var i=1; i<=5; i++) {
+    setTimeout( (function(i){
+        return function timer() {
+            console.log(i);
+        }
+    })(i), i*1000 );
+}
+for (var i=1; i<=5; i++) {
+    setTimeout( function timer(i) {
+        console.log(i);
+    }, i*1000, i );
+}
+for (let i=1; i<=5; i++) {
+    setTimeout( function timer() {
+        console.log(i);
+    }, i*1000 );
+}
+```
+###[使用Python定制词云](https://zhuanlan.zhihu.com/p/25538157?group_id=822178793971126272)
+```js
+from os import path
+from wordcloud import WordCloud
+
+d = path.dirname(__file__)
+
+# Read the whole text.
+text = open(path.join(d, 'constitution.txt')).read()
+
+# Generate a word cloud image
+wordcloud = WordCloud().generate(text)
+
+ 
+import matplotlib.pyplot as plt
+plt.imshow(wordcloud)
+plt.axis("off")
+
+# lower max_font_size
+wordcloud = WordCloud(max_font_size=40).generate(text)
+plt.figure()
+plt.imshow(wordcloud)
+plt.axis("off")
+plt.show()
+https://link.zhihu.com/?target=https%3A//www.shiyanlou.com/courses/756 
+```
+###[Python教你用matplotlib画个心心撩妹](https://zhuanlan.zhihu.com/p/25575403?group_id=821786158840320000)
+```js
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+pi = math.pi
+t = np.arange(0,2*pi,0.001)
+r = np.frompyfunc(round,1,1)
+sin = np.frompyfunc(math.sin,1,1)
+cos = np.frompyfunc(math.cos,1,1)
+#y = sin(x)*(abs(cos(x)))**0.5/(sin(x)+1.4)-2*sin(x)+2
+'''
+y = 2*cos(t)-cos(2*t)
+x = 2*sin(t)-sin(2*t)
+'''
+x=sin(t)
+c=cos(t)
+p=x**2
+y=c+p**(1/3)
+plt.plot(x, y,color='r', linewidth=9)
+plt.fill(x,y,color='r')
+plt.title("my heart for you")
+ax = plt.subplot(111)
+ax.spines['right'].set_color('none')
+ax.spines['top'].set_color('none')
+ax.spines['bottom'].set_color('none')
+ax.spines['left'].set_color('none')
+plt.xlim(-1.2,1.2),plt.xticks([])
+plt.yticks([])
+plt.show()
+```
+###[总结一些前端的知识点 (一)](https://zhuanlan.zhihu.com/p/25351196?group_id=821810418736599040)
+
+###[用python实现微信聊天机器人](https://zhuanlan.zhihu.com/p/25682247?group_id=823517271958896640)
+
 ###[10行Python代码的词云](http://mp.weixin.qq.com/s/HysMAAPMY2zLilQVnTUE5A)
 ```js
 import matplotlib.pyplot as plt
