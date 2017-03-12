@@ -1,3 +1,242 @@
+###[饿了么大前端 Node.js 进阶教程](https://cnodejs.org/topic/58ad76db7872ea0864fedfcc#58b3bf27e418a986315f3959)
+###[Web服务器性能压力测试工具](http://biezhi.me/2015/12/03/webserver-performance-pressure-test-tool/)
+webbench  siege -c 100 -r 10 -f site.url
+###[新一代子域名爆破工具brutedns](http://www.freebuf.com/sectool/127099.html)
+我博客地址：https://www.yanxiuer.com。更多有关技术的细节会在上边更新。
+pyrhon3 brutedns.py -d target -l 1/2 -s low/medium/high
+工具地址：https://github.com/yanxiu0614/subdomain3
+interface DateGlobal {
+  const SECONDS_IN_A_DAY = 86400;
+}
+
+addExpireAt(DateGlobal::SECONDS_IN_A_DAY);
+###[10行Python代码的词云](http://mp.weixin.qq.com/s/HysMAAPMY2zLilQVnTUE5A)
+```js
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import jieba
+
+text_from_file_with_apath = open('/Users/hecom/23tips.txt').read()
+
+wordlist_after_jieba = jieba.cut(text_from_file_with_apath, cut_all = True)
+wl_space_split = " ".join(wordlist_after_jieba)
+
+my_wordcloud = WordCloud().generate(wl_space_split)
+
+plt.imshow(my_wordcloud)
+plt.axis("off")
+plt.show()
+直接进入wordcloud.py 的源码，找字体库相关的代码
+
+FONT_PATH = os.environ.get("FONT_PATH", os.path.join(os.path.dirname(__file__), "DroidSansMono.ttf"))
+wordcloud 默认使用了DroidSansMono.ttf 字体库，改一下换成一个支持中文的ttf 字库
+```
+###[JavaScript技巧](https://rockjins.js.org/2017/02/15/javascript-skill/)
+获取一个链接的绝对地址
+var getAbsoluteUrl = (function() {
+  var a;
+
+  return function(url) {
+    if(!a) a = document.createElement('a');
+    a.href = url;
+
+    return a.href;
+  };
+})();
+
+//使用
+getAbsoluteUrl("/something"); //https://rockjins.github.io/something
+上传图片预览功能
+<input type="file" name="file" onchange="showPreview(this)" />
+<img id="portrait" src="" width="70" height="75">
+function showPreview(source) {
+  var file = source.files[0];
+  if(window.FileReader) {
+      var fr = new FileReader();
+      fr.onloadend = function(e) {
+        document.getElementById("portrait").src = e.target.result;
+      };
+      fr.readAsDataURL(file);
+  }
+}
+Math.round函数的坑
+Math.round(-3.2) //-3
+
+Math.round(-3.5) //-3(这个就奇怪了)
+
+Math.round(-3.8) //-4
+
+//其实，Math.round(x)等同于：
+Math.floor(x + 0.5)
+const EPSILON = Math.pow(2, -53); //1.1102230246251565e-16
+
+function epsEqu(x,y) {
+  return Math.abs(x - y) < EPSILON;
+}
+
+epsEqu(0.1+0.2, 0.3) //true
+随机生成字母和数字组合的字符串
+Math.random().toString(36).substr(2);
+//un80usvvsgcpi0rffskf39pb9
+//02aoe605zgg5xqup6fdclnb3xr
+//ydzr1swdxjg3yolkb95p14i
+
+###[SQL，从入门到熟练](http://mp.weixin.qq.com/s/KqSpXIveVJsnMeye0bZ-WQ)
+###[你真的了解如何将Nginx配置为Web服务器吗](http://mp.weixin.qq.com/s/jYd9WkLOAvv6RfxfSa_PYg)
+###[再议数据库军规](http://mp.weixin.qq.com/s/8LHNXdpRcn_ehIdb8Q4EvA)
+###[Vue.js 的一些资源索引](https://github.com/jsfront/src/blob/master/vuejs.md)
+###[python 计算两个时间相差的分钟数](https://segmentfault.com/q/1010000008657761)
+```js
+import datetime
+
+t1 = datetime.datetime(2017,3,4,8,49,0)
+t2 = datetime.datetime(2017,3,5,8,50,30)
+
+min =(t2-t1).total_seconds()/60
+m = round(min)
+
+print(m)
+```
+###[Web全栈工程师](https://coin8086.gitbooks.io/getfullstack/content/)
+###[PHP软件指南](https://github.com/yangweijie/clean-code-php)
+###[前端面试题（一）：递归解析](http://mp.weixin.qq.com/s/-V-Vp0EqevA869vHuvpY6A)
+```js
+function fillArray(array,result){  
+    var count = array.length;
+    var i = 0; 
+    for(;i<count;++i){	
+        var temp = array[i];
+        if(Array.isArray(temp)){
+            fillArray(temp,result);
+	} else {		
+            result.push(array[i]);
+	}
+  }
+}
+var result = [];
+fillArray(meta,result);
+var resultMap = {};
+function fillArrayII(array,result){
+    var count = array.length;
+    var i = 0;
+    if (!count){
+        return [];
+    }
+    for(;i<count;++i){
+        var temp = array[i];
+        var g = resultMap[temp];
+        if(g){
+            result.push(g);
+	} else {
+            if (Array.isArray(temp)){
+                fillArrayII(temp,result);
+	    } else {
+                result.push(temp);
+	    }
+	}
+    }
+}
+var date1 = new Date();
+var time1 = date1.getTime();
+var r = [];
+fillArrayII(meta,r);
+var date2 = new Date();
+var time2 = date2.getTime();
+console.log('no cache time : ',time2 - time1);
+var date3 = new Date();
+var time3 = date3.getTime();
+var f = [];
+fillArrayII(meta,f);
+var date4 = new Date();
+var time4 = date4.getTime();
+console.log('cache time : ',time4 - time3);
+尾递归就是把计算结果放到调用者函数的尾部，顶部的返回值越简单越好，而尾巴的返回可能是越来越复杂的计算。
+
+```
+###[程序员证明自己智商的时候到了，一大波智力面试题正在靠近](http://mp.weixin.qq.com/s/yLcHLCfVkz5o4vsaC-4NEA)
+###[frp内网穿透配置](http://www.kkblog.me/notes/frp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E9%85%8D%E7%BD%AE)
+https://github.com/fatedier/frp
+###[如何让你的分库分表中间件支持emoji表情](http://www.jianshu.com/p/c01843ae82c7?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
+###[PHP实现微信开放平台扫码登录源码](https://dev.21ds.cn/article/36.html)
+###[Python微信智能回复](http://lafree317.github.io/2017/02/16/%E5%BE%AE%E4%BF%A1%E6%99%BA%E8%83%BD%E5%9B%9E%E5%A4%8D/)
+https://github.com/Lafree317/PythonChat 
+###[msyql in or效率](https://github.com/zhangyachen/zhangyachen.github.io/issues/60)
+select * from table where id in (xxx,xxx,xxx...,xxx)
+select * from table where id=xxx or id=xxx or id=xxx ... or id=xxx
+在InnoDB引擎下，in返回的顺序是按照主键排序的
+当id为主键时，两个sql效率差别不大，都运用了主键进行查询。但是当id上没有索引时，mysql会扫描整个表，对每一个元组的id去in的列表或者or的列表里进行查询 所以在没有索引时，in的效率会高于or。
+###[python读取excel](http://biezhi.me/2015/03/12/python-read-excel/)
+```js
+# -*- coding: utf-8 -*- 
+import  xdrlib ,sys
+import xlrd
+
+def open_excel(file= 'file.xls'):
+    try:
+        data = xlrd.open_workbook(file)
+        return data
+    except Exception,e:
+        print str(e)
+#根据索引获取Excel表格中的数据   参数:file：Excel文件路径     colnameindex：表头列名所在行的所以  ，by_index：表的索引
+def excel_table_byindex(file= 'file.xls',colnameindex=0,by_index=0):
+    data = open_excel(file)
+    table = data.sheets()[by_index]
+    nrows = table.nrows #行数
+    ncols = table.ncols #列数
+    colnames =  table.row_values(colnameindex) #某一行数据 
+    list =[]
+    for rownum in range(1,nrows):
+
+         row = table.row_values(rownum)
+         if row:
+             app = {}
+             for i in range(len(colnames)):
+                app[colnames[i]] = row[i] 
+             list.append(app)
+    return list
+
+#根据名称获取Excel表格中的数据   参数:file：Excel文件路径     colnameindex：表头列名所在行的所以  ，by_name：Sheet1名称
+def excel_table_byname(file= 'file.xls',colnameindex=0,by_name=u'Sheet1'):
+    data = open_excel(file)
+    table = data.sheet_by_name(by_name)
+    nrows = table.nrows #行数 
+    colnames =  table.row_values(colnameindex) #某一行数据 
+    list =[]
+    for rownum in range(1,nrows):
+         row = table.row_values(rownum)
+         if row:
+             app = {}
+             for i in range(len(colnames)):
+                app[colnames[i]] = row[i]
+             list.append(app)
+    return list
+
+def main():
+   tables = excel_table_byindex()
+   for row in tables:
+       print row
+
+   tables = excel_table_byname()
+   for row in tables:
+       print row
+
+if __name__=="__main__":
+    main()
+```
+https://github.com/ElemeFE/node-interview
+###[基于AIML的PHP聊天天机器人](https://github.com/kompasim/chatbot-utf8)
+###[mysqlDBA的40条军规](http://mp.weixin.qq.com/s/PtIaqAjs298uH6edEYb2xg)
+
+###[一款国产Nmap在线扫描系统](http://www.freebuf.com/sectool/127670.html)
+https://github.com/geekchannel/webmap 工具地址：http://nmap.pay.re
+TinyAnalytics：一个轻量级分析工具https://github.com/josephernest/TinyAnalytics
+###[PDFLayoutTextStripper：将PDF格式的文档转换成为TXT的纯文本文件](https://github.com/JonathanLink/PDFLayoutTextStripper)
+###[image to ascii 的生成器还蛮好玩的](http://lunatic.no/ol/img2aschtml.php)
+http://www.xilinjie.com/hao/ 
+日常代码审查工具https://github.com/softwaremill/codebrag
+
+
+
 ###[客户端身份认证](http://veryyoung.me/blog/2015/08/17/client-authentication.html)
 生成token：客户端发送用户名和密码，判断账户密码是否正确,如果正确，调用tokenService.storeToken(userId)来生成一个token，并把该token保存在redis中，同时返回给client。
 
