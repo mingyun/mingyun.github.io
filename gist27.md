@@ -1,3 +1,452 @@
+###[mySQL，从入门到熟练](https://mp.weixin.qq.com/s/KqSpXIveVJsnMeye0bZ-WQ  )
+ select if(industryField like '%电子商务%',1,0) from DataAnalyst  select city,
+          count(distinct positionId),
+          count(if(industryField like '%电子商务%',positionId,null)) 
+from DataAnalyst
+group by city  嵌套子查询 select left(salary,locate("k",salary)-1),salary from DataAnalyst
+2017-02-12 秦路 秦路 
+https://mp.weixin.qq.com/s?timestamp=1489318889&src=3&ver=1&signature=Np8VmcjEHxgPDeTDkQx55eGaIPfE-lJcUgusBUrG0NJGmLeafxDa3WomM6c4cyNYBJSACxg6D3IEunIXPCD-I238nLSTU74wxuXMuQiIBXAZ7IMhktb7n8rEsAGGbtQqbP7ZQ*2JeLBVgQ-rmSPxyjJUCw90iZQDfeoNgjaVmrg=  
+###[【Python爬虫实战】为啥学Python，BOSS告诉你](https://zhuanlan.zhihu.com/p/25641178)
+```js
+url = 'http://www.zhipin.com/job_detail/?query=Python&scity=101200100&source=2'
+headers = {
+	'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+	'Accept-Language':'zh-CN,zh;q=0.8',
+	'Host':'www.zhipin.com',
+	'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+}a = requests.get(url,headers=headers)
+soup = BeautifulSoup(a.text,'lxml')
+b = soup.find_all("span",class_="red")
+print(b)
+for i in b:
+	c = i.get_text("|", strip=True)
+	print(c) https://link.zhihu.com/?target=https%3A//github.com/zhangslob/-Python-Python-BOSS-/blob/master/test.py
+```
+###[用python实现微信聊天机器人](https://zhuanlan.zhihu.com/p/25682247?group_id=823517271958896640)
+```js
+import requests
+from wxpy import *
+import json
+
+
+#图灵机器人https://zhuanlan.zhihu.com/p/25692489
+def talks_robot(info = '你叫什么名字'):
+    api_url = 'http://www.tuling123.com/openapi/api'
+    apikey = 'APIKey'
+    data = {'key': apikey,
+                'info': info}
+    req = requests.post(api_url, data=data).text
+    replys = json.loads(req)['text']
+    return replys
+
+#微信自动回复
+robot = Robot()
+# 回复来自其他好友、群聊和公众号的消息
+@robot.register()
+def reply_my_friend(msg):
+    message = '{}'.format(msg.text)
+    replys = talks_robot(info=message)
+    return replys
+
+# 开始监听和自动处理消息
+robot.start()
+
+
+@robot.register() 
+def just_print(msg): 
+print(datetime.now().strftime("%I:%M:%S") + " " + msg.chat.nick_name + ":" + msg.text)
+# register不限定回复对象，匹配所有聊天对象（包括公众号，群），但是不做回复，只print收到的消息，这样不会打扰任何人。
+@robot.register(Friend, TEXT) 
+def auto_reply_by_tuling(msg): 
+print(datetime.now().strftime("%I:%M:%S") + " " + msg.chat.nick_name + ":" + msg.text) 
+return Tuling(api_key=Tuling_api_key).reply_text(msg)
+# register指定回复Friend对象，因为写在后面，所以受到来自好友的消息时，会优先按这个方法来处理。这里既做了打印又做了图灵机器人的自动回复。
+# 这样就不会打扰群里了。而且wxpy还支持群里有人@你了才回复
+```
+###[从自动化刷票说phantomjs和selenium](https://www.yanxiuer.com/phantomjsandselenium.html)
+###[ELK+redis搭建nginx日志分析平台](http://yanliu.org/2015/08/19/ELK-redis%E6%90%AD%E5%BB%BAnginx%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B9%B3%E5%8F%B0/)
+###[msyql 积分返还算法求解](https://segmentfault.com/q/1010000008652947)
+"select user from tablename where status=1 and time<'{$time}' limit 100";
+"update tablename set number=number-100 where status=1 and time<'{$time}'";
+"update tablename set status=0, time='当前时间' where status=1 and number=0;
+###[js可以替换或删掉选中文本](https://segmentfault.com/q/1010000008657235)
+// 1. 设置整个页面为可编辑状态
+document.body.setAttribute('contenteditable', true)
+// 2. 全选
+document.execCommand('selectAll')
+// 3. 剪切
+document.execCommand('cut')
+
+###[python爬虫爬取中证指数官网数据](https://segmentfault.com/q/1010000008619396)
+```js
+import requests
+from itertools import groupby
+
+url = 'http://www.csindex.com.cn/sseportal/ps/zhs/hqjt/csi/show_zsgz.js'
+r = requests.get(url)
+
+text = r.text.replace('"', '').replace('var zsgz','').split('\r\n')
+content = [_.split('=') for _ in text if _ and not _.startswith('00')]
+
+rows = []
+for _, lst in groupby(content, key=lambda x: int(x[0]) / 10):
+    row = tuple([v for k, v in lst])
+    rows.append(row)
+
+print rows
+```
+###[执行PHP文件会添加php命令路径](https://segmentfault.com/q/1010000008626259)
+php的安全机制。
+
+在安全模式下，只有在特定目录中的外部程序才可以被执行，对其它程序的调用将被拒绝。这个目录可以在php.ini文件中用 safe_mode_exec_dir指定，或在编译PHP是加上--with-exec-dir选项来指定，默认是 /usr/local/php/bin
+PHP里面执行whoami命令，但是执行时候会自动在 /usr/bin/whoami 前添加 /usr/local/php 路径导致出错
+###[Python 3.6中 'utf-8' codec can't decode byte invalid start byte](https://segmentfault.com/q/1010000008631001)
+```js
+网站返回的是gzip压缩过的数据，所以要进行解码
+Content-Encoding: gzip
+# coding=utf-8
+from io import BytesIO
+import gzip
+import urllib.request
+
+url = ('http://wthrcdn.etouch.cn/weather_mini?city=%E4%B8%8A%E6%B5%B7')
+resp = urllib.request.urlopen(url)
+content = resp.read() # content是压缩过的数据
+
+buff = BytesIO(content) # 把content转为文件对象
+f = gzip.GzipFile(fileobj=buff)
+res = f.read().decode('utf-8')
+print(res)
+```
+###[模拟滑动验证码](https://segmentfault.com/q/1010000008584470)
+```js
+# -*- coding:utf-8 -*-
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
+import PIL.Image as image
+import time,re, random
+import requests
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
+#爬虫模拟的浏览器头部信息
+agent = "Mozilla/5.0 (Windows NT 5.1; rv:33.0) Gecko/20100101 Firefox/33.0"
+headers = {
+        "User-Agent": agent
+        }
+
+# 根据位置对图片进行合并还原
+# filename:图片
+# location_list:图片位置
+#内部两个图片处理函数的介绍
+#crop函数带的参数为(起始点的横坐标，起始点的纵坐标，宽度，高度）
+#paste函数的参数为(需要修改的图片，粘贴的起始点的横坐标，粘贴的起始点的纵坐标）
+def get_merge_image(filename,location_list):
+    #打开图片文件
+    im = image.open(filename)
+    #创建新的图片,大小为260*116
+    new_im = image.new("RGB", (260,116))
+    im_list_upper=[]
+    im_list_down=[]
+    # 拷贝图片
+    for location in location_list:
+        #上面的图片
+        if location["y"]==-58:
+            im_list_upper.append(im.crop((abs(location["x"]),58,abs(location["x"])+10,166)))
+        #下面的图片
+        if location["y"]==0:
+            im_list_down.append(im.crop((abs(location["x"]),0,abs(location["x"])+10,58)))
+    new_im = image.new("RGB", (260,116))
+    x_offset = 0
+    #黏贴图片
+    for im in im_list_upper:
+        new_im.paste(im, (x_offset,0))
+        x_offset += im.size[0]
+    x_offset = 0
+    for im in im_list_down:
+        new_im.paste(im, (x_offset,58))
+        x_offset += im.size[0]
+    return new_im
+
+#下载并还原图片
+# driver:webdriver
+# div:图片的div
+def get_image(driver,div):
+    #找到图片所在的div
+    background_images=driver.find_elements_by_xpath(div)
+    location_list=[]
+    imageurl=""
+    #图片是被CSS按照位移的方式打乱的,我们需要找出这些位移,为后续还原做好准备
+    for background_image in background_images:
+        location={}
+        #在html里面解析出小图片的url地址，还有长高的数值
+        location["x"]=int(re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][1])
+        location["y"]=int(re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][2])
+        imageurl=re.findall("background-image: url\(\"(.*)\"\); background-position: (.*)px (.*)px;",background_image.get_attribute("style"))[0][0]
+        location_list.append(location)
+    #替换图片的后缀,获得图片的URL
+    imageurl=imageurl.replace("webp","jpg")
+    #获得图片的名字
+    imageName = imageurl.split("/")[-1]
+    #获得图片
+    session = requests.session()
+    r = session.get(imageurl, headers = headers, verify = False)
+    #下载图片
+    with open(imageName, "wb") as f:
+        f.write(r.content)
+        f.close()
+    #重新合并还原图片
+    image=get_merge_image(imageName, location_list)
+    return image
+
+#对比RGB值
+def is_similar(image1,image2,x,y):
+    pass
+    #获取指定位置的RGB值
+    pixel1=image1.getpixel((x,y))
+    pixel2=image2.getpixel((x,y))
+    for i in range(0,3):
+        # 如果相差超过50则就认为找到了缺口的位置
+        if abs(pixel1[i]-pixel2[i])>=50:
+            return False
+    return True
+
+#计算缺口的位置
+def get_diff_location(image1,image2):
+    i=0
+    # 两张原始图的大小都是相同的260*116
+    # 那就通过两个for循环依次对比每个像素点的RGB值
+    # 如果相差超过50则就认为找到了缺口的位置
+    for i in range(0,260):
+        for j in range(0,116):
+            if is_similar(image1,image2,i,j)==False:
+                return  i
+
+#根据缺口的位置模拟x轴移动的轨迹
+def get_track(length):
+    pass
+    list=[]
+    #间隔通过随机范围函数来获得,每次移动一步或者两步
+    x=random.randint(1,3)
+    #生成轨迹并保存到list内
+    while length-x>=5:
+        list.append(x)
+        length=length-x
+        x=random.randint(1,3)
+    #最后五步都是一步步移动
+    for i in range(length):
+        list.append(1)
+    return list
+
+#滑动验证码破解程序
+def main():
+    #打开火狐浏览器
+    driver = webdriver.Firefox()
+    #用火狐浏览器打开网页
+    driver.get("http://www.geetest.com/exp_embed")
+    #等待页面的上元素刷新出来
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_slider_knob gt_show"]").is_displayed())
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_cut_bg gt_show"]").is_displayed())
+    WebDriverWait(driver, 30).until(lambda the_driver: the_driver.find_element_by_xpath("//div[@class="gt_cut_fullbg gt_show"]").is_displayed())
+    #下载图片
+    image1=get_image(driver, "//div[@class="gt_cut_bg gt_show"]/div")
+    image2=get_image(driver, "//div[@class="gt_cut_fullbg gt_show"]/div")
+    #计算缺口位置
+    loc=get_diff_location(image1, image2)
+    #生成x的移动轨迹点
+    track_list=get_track(loc)
+    #找到滑动的圆球find_element_by_xpath('//div[@class="gt_slider_knob gt_show"]')
+    element=driver.find_element_by_xpath("//div[@class="gt_slider_knob gt_show"]")
+    location=element.location
+    #获得滑动圆球的高度
+    y=location["y"]
+    #鼠标点击元素并按住不放
+    print ("第一步,点击元素")
+    ActionChains(driver).click_and_hold(on_element=element).perform()
+    time.sleep(0.15)
+    print ("第二步，拖动元素")
+    track_string = ""
+    for track in track_list:
+        #不能移动太快,否则会被认为是程序执行
+        track_string = track_string + "{%d,%d}," % (track, y - 445)
+        #xoffset=track+22:这里的移动位置的值是相对于滑动圆球左上角的相对值，而轨迹变量里的是圆球的中心点，所以要加上圆球长度的一半。
+        #yoffset=y-445:这里也是一样的。不过要注意的是不同的浏览器渲染出来的结果是不一样的，要保证最终的计算后的值是22，也就是圆球高度的一半
+        ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=track+22, yoffset=y-445).perform()
+        #间隔时间也通过随机函数来获得,间隔不能太快,否则会被认为是程序执行
+        time.sleep(random.randint(10,50)/100)
+    print (track_string)
+    #xoffset=21，本质就是向后退一格。这里退了5格是因为圆球的位置和滑动条的左边缘有5格的距离
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    time.sleep(0.1)
+    ActionChains(driver).move_to_element_with_offset(to_element=element, xoffset=21, yoffset=y-445).perform()
+    print ("第三步，释放鼠标")
+    #释放鼠标
+    ActionChains(driver).release(on_element=element).perform()
+    time.sleep(3)
+    #点击验证
+    # submit = driver.find_element_by_xpath("//div[@class="gt_ajax_tip success"]")
+    # print(submit.location)
+    # time.sleep(5)
+    #关闭浏览器,为了演示方便,暂时注释掉.
+    #driver.quit()
+
+#主函数入口
+if __name__ == "__main__":
+    pass
+    main()
+```
+###[SQL中一个表的转换问题](https://segmentfault.com/q/1010000008591791)
+```js
+pandas的melt方法
+
+a = pd.DataFrame([[0101,1,2,3],[0202,4,5,6]],columns=['date','a','b','c'])
+   date  a  b  c
+0    65  1  2  3
+1   130  4  5  6
+pd.melt(a,id_vars=['date'],var_name='col1',value_name='col2')
+   date col1  col2
+0    65    a     1
+1   130    a     4
+2    65    b     2
+3   130    b     5
+4    65    c     3
+5   130    c     6
+```
+
+###[python如何进行socket连接](https://segmentfault.com/q/1010000008631917 )
+```js
+from websocket import create_connection
+
+
+ws = create_connection("ws://42.96.131.185:7575")
+print("Sending 'Hello, World'...")
+for i in range(10000):
+    ws.send(b"Hello, World")
+    print("Sent")
+print("Reeiving...")
+result = ws.recv()
+print("Received '%s'" % result)
+ws.close()
+```
+三级联动的生成器插件 https://microzz.com/2017/03/12/select-plugin/ 
+https://segmentfault.com/q/1010000008626085
+https://segmentfault.com/q/1010000008642343 php socket 是干嘛的 请用具体场景举例
+php 在线打开word文档https://segmentfault.com/q/1010000008623235
+借助第三方：http://www.idocv.com/index.html http://www.officeweb365.com
+2.自己转换成swf http://www.print2flash.com
+PHP如何判断每个月的每一周是几号到几号https://segmentfault.com/q/1010000008608311 
+###[PHP多维数组排序问题](https://segmentfault.com/q/1010000008605080)
+```js
+<?php
+
+$a = $b = $c = [];
+
+array_map(function( $value ) use ( &$a,&$b,&$c ){
+      array_push($a, $value['a']);
+      array_push($b, $value['b']);
+      array_push($c, $value['c']);
+} , $arr);
+
+$count = $arr;
+
+var_dump($count);
+array_multisort(
+    $a,SORT_ASC,
+    $b,SORT_ASC,
+    $c,SORT_ASC,
+    $arr
+);
+
+var_dump($arr);
+```
+
+###[字符串里的u'\u00a1'怎么打印成中文](https://segmentfault.com/q/1010000008601928)
+```js
+demo.decode('unicode-escape')
+当然限 Python 2，因为 Python 3 里边不会遇到这种字符串
+```
+###[mysql返回字符串](https://segmentfault.com/q/1010000008576315)
+```js
+用PDO的话：PDO::ATTR_STRINGIFY_FETCHES，例：
+
+$pdo = new PDO('...');
+$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+$stm = $pdo->prepare("select 1, 2.3, 'hello'");
+$stm->execute();
+$result = $stm->fetch(PDO::FETCH_NUM);
+```
+###[关联查询的sql查询不全的问题](https://segmentfault.com/q/1010000008615512)
+select id,title,(select count(*) from attop_article where attop_article.type = attop_article_type.id) as count from attop_article_type;
+
+
+###[mysql select 不取第一条和第二条怎么做到](https://segmentfault.com/q/1010000008599232)
+limit的第二个参数中放入 select count(*) from table 的值, 也可以用查询条件比如 where id > 2 这样筛选 
+###[Python中如何将爬取到的数据循环存入到csv](https://segmentfault.com/q/1010000008624695)
+```js
+#coding=utf-8
+
+import requests
+import json
+import time
+import csv
+import codecs
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.113 Safari/537.36'
+}
+url = 'https://sec.wedengta.com/getIntelliStock?action=IntelliSecPool&id=99970_56&_={0}'.format(time.time())
+r = requests.get(url, headers=headers)
+result = json.loads(r.text)
+
+rows = []
+for every in json.loads(result['content'])['vtDaySec']:
+    for company in every['vtSec']:
+        row = (
+            every['sOptime'].encode('utf-8'),
+            company['sChnName'].encode('utf-8'),
+            company['sDtCode'][4:].encode('utf-8')
+        )
+        rows.append(row)
+
+with codecs.open('company.csv', 'wb') as f:
+    f.write(codecs.BOM_UTF8)
+    writer = csv.writer(f)
+    writer.writerow(['date', 'stk_name', 'stk_num'])
+    writer.writerows(rows)
+
+```
+
+
+
+###[python3 脚本调用shell 指令如何获得返回值](https://segmentfault.com/q/1010000008624292)
+```js
+import os
+if(os.system('netstat -tnlp | grep nginx') == 0) {
+    print 'process nginx exists.'
+}
+import os
+if(os.popen('netstat -tnlp | grep nginx').read() != '') {
+    print 'process nginx exists.'
+}
+调用子程序更强大的是subprocess.Popen
+>>> subprocess.getstatusoutput('ls /bin/ls')
+(0, '/bin/ls')
+>>> subprocess.getstatusoutput('cat /bin/junk')
+(256, 'cat: /bin/junk: No such file or directory')
+>>> subprocess.getstatusoutput('/bin/junk')
+(256, 'sh: /bin/junk: not found')
+```
+###[几个有趣的javascript函数](http://gengliming.com/2015/06/05/some-funny-js-functions/)
+###[对登录中账号密码进行加密之后再传输的爆破的思路和方式](http://www.freebuf.com/articles/web/127888.html)
 ###[饿了么大前端 Node.js 进阶教程](https://cnodejs.org/topic/58ad76db7872ea0864fedfcc#58b3bf27e418a986315f3959)
 ###[Web服务器性能压力测试工具](http://biezhi.me/2015/12/03/webserver-performance-pressure-test-tool/)
 webbench  siege -c 100 -r 10 -f site.url
