@@ -25,6 +25,7 @@ document.write([1,2,3,4,5,6,7,8,9].map( e => Array.from({length:e}).map( (_e,i) 
 9 * 1 = 9   9 * 2 = 18   9 * 3 = 27   9 * 4 = 36   9 * 5 = 45   9 * 6 = 54   9 * 7 = 63   9 * 8 = 72   9 * 9 = 81
  
 ```
+###[python爬虫 ocr验证码识别api](http://chongdata.com/old/define_crawler.html)
 ###获取浏览器记住的密码
 ```js
 document.querySelectorAll("input[type=password]")[0].value
@@ -123,6 +124,7 @@ console.log(maxNumber);
 
 ```
 ###数组求和
+```js
 function sum(arr){
   return arr.reduce(function(s,n){
      return s+n
@@ -218,18 +220,7 @@ https://www.zhihu.com/question/27428135
 
 http://blog.nokey.me/2015/01/07/JavaScript%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A745%E6%8B%9B/ 
 https://chensd.com/2015-01/45-useful-javascript-tips-tricks-and-best-practices.html 
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 ###[基于 4 个 8 撸了一个 CDN 友好的 DNS](https://www.v2ex.com/t/336726)
@@ -936,6 +927,7 @@ $ cd ~
 
 $ vim .minttyrc https://github.com/mavnn/mintty-colors-solarized
 ###[TCP的三次握手和HTTP的返回状态](https://segmentfault.com/q/1010000008610755)
+```js
 1xx：请求收到，继续处理
 2xx：操作成功收到，分析、接受
 3xx：完成此请求必须进一步处理
@@ -951,7 +943,8 @@ TCP 的三次握手是为了保证通信的可靠性。HTTP 的状态码是对�
 HTTP 建立在 TCP 的基础上，TCP 建立了通信链路，HTTP 通过这个链路让服务器和浏览器通信。能进行HTTP通信了，就是说明 TCP 已经建立好了。
 
 如果 TCP 建立失败，浏览器显示的是无法找到找服务，或者是服务器响应时间过长。如果是服务器处理错误，浏览器显示的就是 HTTP 返回的内容，即服务器返回给浏览器的信息。
-###[]()
+```
+###[PyPDF2](https://github.com/mstamy2/PyPDF2)
 ```js
 pip install git+https://github.com/mstamy2/PyPDF2
 def getDataUsingPyPdf2(filename):  
