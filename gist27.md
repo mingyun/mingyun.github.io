@@ -1,3 +1,29 @@
+###[使用selenium webdriver从隐藏元素中获取文本](http://blog.csdn.net/vinson0526/article/details/51830650)
+```js
+from selenium import webdriver
+
+DEMO_PAGE = '''data:text/html,
+    <p>Demo page for how to get text from hidden elements using Selenium WebDriver.</p>
+    <div id='demo-div'>Demo div <p style='display:none'>with a hidden paragraph inside.</p><hr /><br /></div>'''
+
+driver = webdriver.PhantomJS()
+driver.get(DEMO_PAGE)
+
+demo_div = driver.find_element_by_id("demo-div")
+
+print demo_div.get_attribute('innerHTML')
+print driver.execute_script("return arguments[0].innerHTML", demo_div)
+
+print demo_div.get_attribute('textContent')
+print driver.execute_script("return arguments[0].textContent", demo_div)
+
+driver.quit
+```
+wxBot: https://github.com/liuwons/wxBot 
+图灵机器人: http://www.tuling123.com/ 
+
+
+
 ###[mySQL，从入门到熟练](https://mp.weixin.qq.com/s/KqSpXIveVJsnMeye0bZ-WQ  )
  select if(industryField like '%电子商务%',1,0) from DataAnalyst  select city,
           count(distinct positionId),
@@ -585,6 +611,7 @@ FONT_PATH = os.environ.get("FONT_PATH", os.path.join(os.path.dirname(__file__), 
 wordcloud 默认使用了DroidSansMono.ttf 字体库，改一下换成一个支持中文的ttf 字库
 ```
 ###[JavaScript技巧](https://rockjins.js.org/2017/02/15/javascript-skill/)
+```js
 获取一个链接的绝对地址
 var getAbsoluteUrl = (function() {
   var a;
@@ -633,7 +660,7 @@ Math.random().toString(36).substr(2);
 //un80usvvsgcpi0rffskf39pb9
 //02aoe605zgg5xqup6fdclnb3xr
 //ydzr1swdxjg3yolkb95p14i
-
+```
 ###[SQL，从入门到熟练](http://mp.weixin.qq.com/s/KqSpXIveVJsnMeye0bZ-WQ)
 ###[你真的了解如何将Nginx配置为Web服务器吗](http://mp.weixin.qq.com/s/jYd9WkLOAvv6RfxfSa_PYg)
 ###[再议数据库军规](http://mp.weixin.qq.com/s/8LHNXdpRcn_ehIdb8Q4EvA)
@@ -835,6 +862,7 @@ function myfunc($ch, $data){
 ###[微信支付（公众号）的流程以及各种坑](http://veryyoung.me/blog/2016/01/05/wechat-pay-is-fucking-shit.html)
 ###[JS 实现的 unix Terminal命令行，数据都记录在浏览器内存中](http://www.masswerk.at/jsuix/)
 ###[Mysql In 子查询慢](http://veryyoung.me/blog/2015/08/17/mysql-in-slow.html)
+```js
 SELECT * FROM table_a WHERE id IN (SELECT id FROM table_id_list)
 再把ID列表select一次
 
@@ -865,7 +893,9 @@ redis 127.0.0.1:6379> CONFIG GET dir
 1) "dir"
 2) "/usr/local/redis/bin"
 以上命令 CONFIG GET dir 输出的 redis 安装目录为 /usr/local/redis/bin
+```
 ###[为Nginx目录设置访问密码](http://biezhi.me/2015/05/20/set-access-password-for-nginx-directory/)
+```js
 http://trac.edgewall.org/export/10770/trunk/contrib/htpasswd.py
 执行命令：
 
@@ -881,6 +911,7 @@ location  ^~ / {
 	auth_basic "Password";
 	auth_basic_user_file /usr/local/nginx/conf/htpasswd;
 }
+```
 ###[协议分析（微信网页版 wx2.qq.com）](http://biezhi.me/2016/02/21/wechat-protocol-analysis/)
 Java版实现源码：https://github.com/biezhi/wechat-robot Python实现：https://github.com/Urinx/WeixinBot C#实现：https://github.com/sherlockchou86/WeChat.NET QT实现：https://github.com/xiangzhai/qwx
 ###[MySQL工具推荐 | 基于MySQL binlog的flashback工具，MySQL下的误操作有后悔药](http://t.cn/Ribd3Kk)
@@ -957,6 +988,7 @@ MySQL 每次查询一条数据查询十次与一次查询十条数据之间的�
 https://github.com/Germey/TouTiao/blob/master/spider.py
 ###[理解 TCP 和 UDP](https://github.com/JerryC8080/understand-tcp-udp?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
 ###[SQL删除重复记录](http://www.xiangguo.li/sql_and_nosql/2015/01/01/sql)
+```js
 select * from people
 where peopleId in (select  peopleId  from  people  group  by  peopleId  having  count(peopleId) > 1)
 select * from vitae a
@@ -969,6 +1001,7 @@ where (a.peopleId,a.seq) in  (select peopleId,seq from vitae group by peopleId,s
 
 select * from vitae a
 where (a.peopleId,a.seq) in  (select peopleId,seq from vitae group by peopleId,seq having count(*) > 1) and rowid not in (select min(rowid) from vitae group by peopleId,seq having count(*)>1)
+```
 ###[前端的甩锅指南](https://zhuanlan.zhihu.com/p/25649277)
 如果不在浏览器上，写爬虫脚本的话需要自己把 Cookie 这个 header 带上。很多的 web server 是借助 Cookie 作为用户会话的凭证的，比如存一个唯一的 sessionid 值到 Cookie，每次请求都带上，来判断是哪个用户。如果不用 Cookie 作为会话认证，还有其他方式吗？其实说到底认证就是需要传给服务端有个字段标识哪个用户，那我们可以在头里面加个 Authorization 的字段，其他名字也行，只要跟服务端商量好。
 加一些 http 的头也能有效的防御攻击，比如 csp(Content Security Policy)
@@ -1055,6 +1088,7 @@ echo $view->fetch();
 
 ```
 ###[Git基础(二)--常见撤销操作](http://goldenera.me/2017/02/23/Git%E5%9F%BA%E7%A1%80(%E4%BA%8C)--%E5%B8%B8%E8%A7%81%E6%92%A4%E9%94%80%E6%93%8D%E4%BD%9C/)
+```js
 撤销工作区文件
 
 git checkout filename
@@ -1080,6 +1114,7 @@ mv 文件(夹) /tmp
 使用了以下命令：brew install safe-rm
 echo 'alias rm=/usr/local/safe-rm' >> ~/.profile
 不过不是root应该还是删不掉/的吧，反正我没试过。 命令行的回收站，设置alias rm=trash
+```
 ###[Pandas速查手册中文版](https://zhuanlan.zhihu.com/p/25630700)
 ###[最新任意命令执行漏洞)批量检测工具精简版 ](https://zhuanlan.zhihu.com/p/25628971)
 ###[我所依赖的记忆方法](https://zhuanlan.zhihu.com/p/25603437)
@@ -1166,9 +1201,3 @@ cookies = {i.key:i.value for i in cookie.values()}
 '__utmb': '114157465.1.10.1477441810', '__utma': '114157465.1493803552.1477441810.1477441810.1477441810.1', 
 '__utmz': '114157465.1477441810.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'}
 ```
-
-
-
-
-
-
