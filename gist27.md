@@ -1,3 +1,82 @@
+###表分区
+ALTER TABLE users MODIFY COLUMN `id` bigint(20) unsigned NOT NULL;
+ALTER TABLE users DROP PRIMARY KEY;
+ALTER TABLE users ADD INDEX `id`(`id`);
+ALTER TABLE users PARTITION BY HASH(id) PARTITIONS 64;
+###[APP后端开发系列：登陆系统设计中的注意问题](https://helei112g.github.io/2016/07/12/1-APP%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E7%B3%BB%E5%88%97%EF%BC%9A%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E9%97%AE%E9%A2%98/)
+```js
+验证通过后，把用户uid+username+salt等md5后，作为token返回到客户端。
+对token加入时间戳，过期后客户端重新提交username + pwd验证后再发一个token到客户端
+服务端生成一个token后下发到客户端，客户端按照约定的规则加密后请求服务端
+参考oauth2.0，用户提交username + pwd后，服务端返回以下信息
+{
+    "access_token":"2YotnFZFEjr1zCsicMWpAA",
+    "expires_in":3600,
+    "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA"
+}
+access_token 是用来进行访问的接口的，expires_in 是他的过期时间，到达过期时间后，需要用 refresh_token 来请求服务端刷新 access_token。
+
+这里几个重点是：refresh_token 仅能使用一次，使用一次后，将被废弃。另外这个 access_token 只在 expires_in 有效期内有效。
+
+注意： 这里的 expires_in 仅返回秒数就好了。别返回时间戳。因为各个平台计算s的时间戳，不一致，这样子做更方便处理。
+token常用的一种生成方式：
+
+该用户的uid，如：8888
+该用户的口令，如： 123123
+用户对应的salt，如：abcd
+过期时间戳，如：1468293948
+把上面几部分拼接起来：888:123123:abcd:1468293948
+
+token = md5(‘888:123123:abcd:1468293948’);
+```
+###[Laravel --进阶篇 (单点登录)](https://www.blog8090.com/laravel-jin-jie-pian-dan-dian-deng-lu-sso/)
+```js
+if ($result) {  
+   # 登录成功
+   // 制作 token
+   $time = time();
+   // md5 加密
+   $singleToken = md5($request->getClientIp() . $result->guid . $time);
+   // 当前 time 存入 Redis
+   \Redis::set(STRING_SINGLETOKEN_ . $result->guid, $time);
+   // 用户信息存入 Session
+   \Session::put('user_login', $result);
+   // 跳转到首页, 并附带 Cookie
+   return response()->view('index')->withCookie('SINGLETOKEN', $singletoken);
+} else {
+   # 登录失败逻辑处理
+}
+获取我们登录之后发送给用户的 Cookie 在 Cookie 之中会有我们登录成功后传到客户端的 SINGLETOKEN 我们要做的事情就是重新获取存入 Redis 的时间戳, 取出来安顺序和 IP, Guid, time MD5 加密, 加密后和客户端得到的 Cookie 之中的 SINGLETOKEN 对比. 把之前的用户挤下去了
+public function handle($request, Closure $next)
+    {
+        $userInfo = \Session::get('user_login');
+        if ($userInfo) {
+            // 获取 Cookie 中的 token
+            $singletoken = $request->cookie('SINGLETOKEN');
+            if ($singletoken) {
+                // 从 Redis 获取 time
+                $redisTime = \Redis::get(STRING_SINGLETOKEN_ . $userInfo->guid);
+                // 重新获取加密参数加密
+                $ip = $request->getClientIp();
+                $secret = md5($ip . $userInfo->guid . $redisTime);
+                if ($singletoken != $secret) {              
+                    // 记录此次异常登录记录
+                    \DB::table('data_login_exception')->insert(['guid' => $userInfo->guid, 'ip' => $ip, 'addtime' => time()]);
+                    // 清除 session 数据
+                    \Session::forget('indexlogin');
+                    return view('/403')->with(['Msg' => '您的帐号在另一个地点登录..']);
+                }
+                return $next($request);
+            } else {
+                return redirect('/login');
+            }
+        } else {
+            return redirect('/login');
+        }
+    }
+    
+```
+
 ###[生成了词云图](https://github.com/NyanCat12/CrossinWeekly/blob/master/NovelWordCount.py)
 ```js
 # Crossin的编程教室 
@@ -222,13 +301,68 @@ def getListProxies():
 
 print getListProxies()
 ```
+###[MySQL 对于千万级的大表要怎么优化](https://www.zhihu.com/question/19719997)
+```js
+第一优化你的sql和索引；
 
+第二加缓存，memcached,redis；
 
+第三以上都做了后，还是慢，就做主从复制或主主复制，读写分离，可以在应用层做，效率高，也可以用三方工具，第三方工具推荐360的atlas,
 
+mysql自带分区表，先试试这个，对你的应用是透明的，无需更改代码,但是sql语句是需要针对分区表做优化的
+myisam读的效果好，写的效率差，这和它数据存储格式，索引的指针和锁的策略有关的，它的数据是顺序存储的（innodb数据存储方式是聚簇索引）
 
+表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。https://my.oschina.net/jasonultimate/blog/548745
+分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。 一个表最多只能有1024个分区
+show variables like '%partition%';
+常规Hash分区:使用取模算法 partition by hash(store_id) partitions 4;
+上面的语句，根据store_id对4取模，决定记录存储位置。 比如store_id = 234的记录，MOD(234,4)=2,所以会被存储在第二个分区。
 
-
-
+如果分区字段中有主键或者唯一索引的列，那么多有主键列和唯一索引列都必须包含进来。即：分区字段要么不包含主键或者索引列，要么包含全部主键和索引列。
+查询某张表一共有多少个分区
+mysql> select 
+ ->   partition_name,
+ ->   partition_expression,
+ ->   partition_description,
+ ->   table_rows
+ -> from 
+ ->   INFORMATION_SCHEMA.partitions
+ -> where
+ ->   table_schema='test'
+ ->   and table_name = 'emp';
++----------------+----------------------+-----------------------+------------+
+| partition_name | partition_expression | partition_description | table_rows |
++----------------+----------------------+-----------------------+------------+
+| p0             | store_id             | 10                    |          0 |
+| p1             | store_id             | 20                    |          1 |
++----------------+----------------------+-----------------------+------------+
+即，可以从information_schema.partitions表中查询。 表查询条件如果没有order by条件，mysql不再按自增主键正序排序
+mysql> select partition_name,partition_expression,table_rows from information_sc
+hema.partitions where table_schema='vhall' and table_name='webinar_user_regs';
++----------------+----------------------+------------+
+| partition_name | partition_expression | table_rows |
++----------------+----------------------+------------+
+| p0             | webinar_id           |       1461 |
+| p1             | webinar_id           |       1254 |
+| p2             | webinar_id           |       1957 |
+mysql> explain partitions select * from emp where store_id=10 \G;
+*************************** 1. row ***************************
+        id: 1
+select_type: SIMPLE
+     table: emp
+partitions: p1
+      type: system
+possible_keys: NULL
+       key: NULL
+   key_len: NULL
+       ref: NULL
+      rows: 1
+     Extra: 
+1 row in set (0.00 sec)
+上面的结果：partitions:p1 表示数据在p1分区进行检索
+查看redis-cli --help查看--eval的语法
+ 有redis-cli --eval myscript.lua key1 key2 , arg1 arg2 arg3
+```
 ###[使用selenium webdriver从隐藏元素中获取文本](http://blog.csdn.net/vinson0526/article/details/51830650)
 ```js
 from selenium import webdriver
@@ -256,13 +390,34 @@ wxBot: https://github.com/liuwons/wxBot
 
 
 ###[mySQL，从入门到熟练](https://mp.weixin.qq.com/s/KqSpXIveVJsnMeye0bZ-WQ  )
- select if(industryField like '%电子商务%',1,0) from DataAnalyst  select city,
+```js
+select if(industryField like '%电子商务%',1,0) from DataAnalyst  select city,
           count(distinct positionId),
           count(if(industryField like '%电子商务%',positionId,null)) 
 from DataAnalyst
 group by city  嵌套子查询 select left(salary,locate("k",salary)-1),salary from DataAnalyst
 2017-02-12 秦路 秦路 
-https://mp.weixin.qq.com/s?timestamp=1489318889&src=3&ver=1&signature=Np8VmcjEHxgPDeTDkQx55eGaIPfE-lJcUgusBUrG0NJGmLeafxDa3WomM6c4cyNYBJSACxg6D3IEunIXPCD-I238nLSTU74wxuXMuQiIBXAZ7IMhktb7n8rEsAGGbtQqbP7ZQ*2JeLBVgQ-rmSPxyjJUCw90iZQDfeoNgjaVmrg=  
+找出各个部门的最高薪水 
+select d.Id,  #这是部门ID
+           d.Name as Name,  #这是部门名字
+           max(e.Salary) as Salary  #这是最高薪水
+from Department d
+join Employee e
+on e.DepartmentId = d.Id
+group by d.Id
+
+当最高薪水非单个时，使用max会只保留第一个，而不是列举所有，所以我们需要更复杂的查询。 各部门最高薪水的数据，可以将它作为一张新表，用最高薪水关联雇员表，获得我们最终的答案。
+![img](http://mmbiz.qpic.cn/mmbiz_png/9WoCz1BTJSjNzwpRAsicrWlYYoFKKZDPbialSy5HKG00DwovDKsDqhIPXSAOnr7vGuCc1gxVUFXRNPHUKYGn7ycQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1)
+各部门薪水前三的数据。如果最高薪水只有两个，则输出两个。
+select * from Employee as e
+where  (
+    select count(distinct e1.Salary) 
+    from Employee e1
+    where e1.Salary > e.Salary
+    and e1.DepartmentId = e.DepartmentId
+    ) < 3
+
+```
 ###[【Python爬虫实战】为啥学Python，BOSS告诉你](https://zhuanlan.zhihu.com/p/25641178)
 ```js
 url = 'http://www.zhipin.com/job_detail/?query=Python&scity=101200100&source=2'
