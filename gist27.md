@@ -1,3 +1,234 @@
+###[生成了词云图](https://github.com/NyanCat12/CrossinWeekly/blob/master/NovelWordCount.py)
+```js
+# Crossin的编程教室 
+import re
+from collections import Counter
+from matplotlib import pyplot
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+def NovelRe(Novel):
+    content = open(Novel, 'r').read().lower()
+    words = []
+    pattern = r"(?<!')\b[a-zA-Z]{2}[a-zA-Z]+\b"
+    tmp = re.findall(pattern, content)
+    DropList = ['you','your','he','him','his','she','her','they','them','their','where','when','what','who','which','there','said','had','don','mer','for','jul','its','his','with','charles','elecbook','classics','charlotte','bront','aesop','fables','dickens','tale','and','the','that','was']
+    for word in DropList:
+        tmp = [x for x in tmp if x!=word]
+    for x in tmp:
+        words.append(x)
+    Count = Counter(words).most_common(100)
+    return Count
+'''
+#用不上
+def WordListToWordDict(WordList):
+    Dict = {}
+    for word in WordList:
+        Dict[word[0]] = word[1]
+    return Dict
+#用不上
+def FullWordList(OldList, AddDict):
+    for key in AddDict:
+        OldList.append(key)
+    NewList = list(set(OldList))
+    return NewList
+'''
+def Output():
+    NovelList = ['a tale of two cities(双城记).txt', 'Aesop’s Fables(伊索寓言).txt', 'Jane Eyre(简·爱).txt', 'Oliver Twist(雾都孤儿(孤星血泪)).txt', 'Romeo and Juliet(罗蜜欧和朱丽叶).txt']
+    for novel in NovelList:
+        print (novel[:-4]+'\n'+'========================================')
+        WordList = NovelRe(novel)
+        i = 1
+
+        wordsum = 0
+        for word in WordList:
+            wordsum += word[1]
+            
+        for word in WordList:
+            print (str(i) + '.'+'\t' + str(word[0]) + '\t' + str('%.5f%%' %(word[1]/wordsum)))
+            i += 1
+        print ('\n')
+'''
+#用不上
+def Freq(Dict):
+    WordSum = 0
+    for key in Dict:
+        WordSum += Dict[key]
+    for key in Dict:
+        Dict[key] = Dict[key]/WordSum#只是前100的单词出现总次数，不是文章总数
+    return Dict
+#用不上
+def Style():
+    NovelList = ['a tale of two cities(双城记).txt', 'Aesop’s Fables(伊索寓言).txt', 'Jane Eyre(简·爱).txt', 'Oliver Twist(雾都孤儿(孤星血泪)).txt', 'Romeo and Juliet(罗蜜欧和朱丽叶).txt']
+    Dict = {}
+    for novel in NovelList:
+        Dict[novel[:-4]] = Freq(WordListToWordDict(NovelRe(novel)))
+    WordList = []
+    for key in Dict:
+        WordList = FullWordList(WordList, Dict[key])
+    return (WordList, Dict)
+#用不上
+def WordVector(WordList, Dict):
+    vector = [x*0 for x in range(len(WordList))]
+    for index in range(len(WordList)):
+        try:
+            vector[index] = Dict[WordList[index]]
+        except:
+            vector[index] = 0
+    return vector
+#用不上
+def NovelVector():
+    WordList, Dict = Style()
+    NovelVectorDict = {}
+    for key in Dict:
+        NovelVectorDict[key] = WordVector(WordList, Dict[key])
+    return NovelVectorDict
+def Plot():
+    pass
+'''
+def OutputForWordCloud():
+    NovelList = ['a tale of two cities(双城记).txt', 'Aesop’s Fables(伊索寓言).txt', 'Jane Eyre(简·爱).txt', 'Oliver Twist(雾都孤儿(孤星血泪)).txt', 'Romeo and Juliet(罗蜜欧和朱丽叶).txt']
+    WordList = []
+    NovelName = []
+    for novel in NovelList:
+        WordList.append(NovelRe(novel))
+        NovelName.append(novel[:-4])
+    return NovelName, WordList
+
+def Wordcloud(name, freq):
+    wordcloud = WordCloud(max_font_size=40).fit_words(freq)
+
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.savefig(str(name)+".jpg")
+    return 0
+    
+
+
+if __name__ == '__main__':
+    Output()
+    print ('Generating wordclouds')
+    NovelName, WordList = OutputForWordCloud()
+    for novel, word in zip(NovelName, WordList):
+        Wordcloud(novel, word)
+    print ('Wordclouds saved')
+    #WordList, Dict = Style()
+
+>>> from collections import Counter
+>>> Counter('adffdsads')
+Counter({'d': 3, 'f': 2, 's': 2, 'a': 2})
+>>> c = Counter('adffdsads')
+>>> c.most_common(3)
+[('d', 3), ('a', 2), ('f', 2)]
+```
+###[现在有一文本文件 ‘abc.txt’，有 1000 行内容，现在需要在每一行的开头添加一个 ‘+’ 字符](http://mp.weixin.qq.com/s?timestamp=1489372072&src=3&ver=1&signature=qVVtrc2xfLjj-VcYj9yPBO3DHCDzca2ev2-Zxdd1Z8DgyzXERKux1dVNxpj7iVCgCfBFsrkcZzh4CTN1PkilExc6l6HO9nteOBHjoe09NJGUKa95IZzlPh66Iwy*63dHGs7z886SmdNiyPX8pXiVCG-ZSUqVw4P3ZGWdtp5IEXY=)
+```js
+text = 'The module provides some convenience functions'
+# 初始化“包装器” 文本包装 textwrap
+wrapper = textwrap.TextWrapper()
+# 每行最大长度
+wrapper.width = 20
+# 第一行词头
+wrapper.initial_indent = '+'
+# 非首行词头
+wrapper.subsequent_indent = '+'
+# 最后填充文本
+result = wrapper.fill(text)
+print(result)
+
+>>> text = 'module provides some convenience functions.'
+>>> print(textwrap.shorten(text, 20))
+module [...]
+# placeholder 参数修改结尾形式
+>>> print(textwrap.shorten(text, 20, placeholder='...'))
+module...
+finally 下的语句无论是否出现异常，均会被执行。
+
+try:
+  dfdg = xidfg  # 定义一个错误变量
+  f = 2/0  # 除0错误
+except ZeroDivisionError as e:
+  print(e)
+finally:
+  print('程序结束')
+  
+   raw_input 得到的输入是字符串，无法直接和数字去比较大小。但在python2里，你这样做了，也不会报错，而是产生不可预知的结果。在python3里，则会直接报错。
+
+Python2 中应改为：
+
+answer = input()
+Python3 中可使用：
+
+answer = eval(input())
+
+>>> [1, 2] == [2, 1]
+False
+>>> {'a':1, 'b':2} == {'b':2, 'a':1}
+True
+>>> from collections import OrderedDict
+d = OrderedDict()
+d['c'] = 3
+d['b'] = 2
+d['a'] = 1
+print(d)
+无论在什么环境下，输出结果都是：
+
+OrderedDict([('c', 3), ('b', 2), ('a', 1)])
+d = {'a': 2, 'b': 3, 'c': 1}
+# 以 value 值对 dic 排序
+sd = sorted(d.items(), key=lambda x: x[1])
+# 转换为有序字典
+od = OrderedDict(sd)
+print(od)
+
+```
+###[代理ip](https://github.com/twy93007/adult_novel_fenxi/blob/master/proxyip.py)
+```js
+# coding:utf-8
+import requests
+from bs4 import BeautifulSoup
+import re
+import os.path
+
+# 构造Header
+user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)'
+headers = {'User-Agent': user_agent}
+
+# 爬取代理
+def getListProxies():
+    # 获得页面
+    session = requests.session()
+    page = session.get("http://www.xicidaili.com/nn", headers=headers)
+    # soup解析
+    soup = BeautifulSoup(page.text, 'lxml')
+    proxyList = []
+    taglist = soup.find_all('tr', attrs={'class': re.compile("(odd)|()")})
+    # 构造代理信息
+    for trtag in taglist:
+        tdlist = trtag.find_all('td')
+        proxy = {'http': tdlist[1].string + ':' + tdlist[2].string,
+                 'https': tdlist[1].string + ':' + tdlist[2].string}
+        url = "http://ip.chinaz.com/getip.aspx"  # 用来测试IP是否可用的url
+        # 测试IP是否可用
+        try:
+            response = session.get(url, proxies=proxy, timeout=5)
+            proxyList.append(proxy)
+            if (len(proxyList) == 10):
+                break
+        except Exception, e:
+            continue
+
+    return proxyList
+
+print getListProxies()
+```
+
+
+
+
+
+
+
 ###[使用selenium webdriver从隐藏元素中获取文本](http://blog.csdn.net/vinson0526/article/details/51830650)
 ```js
 from selenium import webdriver
