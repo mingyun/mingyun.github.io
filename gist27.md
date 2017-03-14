@@ -19,6 +19,22 @@ $video
     ->save(new FFMpeg\Format\Video\WMV(), 'export-wmv.wmv')
     ->save(new FFMpeg\Format\Video\WebM(), 'export-webm.webm');
 ```
+###[lxml 解析 html 以爬取 豆瓣电影主页本周口碑榜](http://blog.csdn.net/tanzuozhev/article/details/50442243)
+```js
+import lxml.html
+str_url = 'http://movie.douban.com/'
+request = urllib.request.Request(str_url)
+html_text = urllib.request.urlopen(request).read()
+root = lxml.html.fromstring(html_text)
+# 获取本页面所有项目名称
+movies_list = [a.text for a in  root.cssselect('div.billboard-bd tr td a')]
+print(movies_list)
+# 获取所有电影超链接
+movies_href = [a.get('href') for a in  root.cssselect('div.billboard-bd tr td a')]
+print(movies_href)
+```
+
+
 ###[51job和智联招聘的自动刷新简历脚本](http://www.woowen.com/php/2014/09/20/51job%E5%92%8C%E6%99%BA%E8%81%94%E6%8B%9B%E8%81%98%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E7%AE%80%E5%8E%86%E8%84%9A%E6%9C%AC/)
 ```js
 dl("php_curl.dll");
@@ -359,6 +375,65 @@ Array_Shift()的复杂度为O(N)
 唯一性太差的字段不适合建立索引
 更新太频繁地字段不适合创建索引
 不会出现在where条件中的字段不该建立索引
+
+
+新增两个CSPRNG函数：random_int和random_bytes /dev/urandom 会被作为最后一个可使用的工具
+session_start([
+    'cache_limiter' => 'private',
+    'read_and_close' => true,
+]);
+覆盖写在 php.ini 中的 session 配置项。
+有了preg_replace_callback_array就可以让每个不同的表达式对应不同的回调函数。
+$subject = 'Aaaaaa Bbb';
+ 
+echo preg_replace_callback_array(
+    [
+        '~[a]+~i' => function ($match) {
+            return str_repeat('1', strlen($match[0]));
+        },
+        '~[b]+~i' => function ($match) {
+            return str_repeat('2', strlen($match[0]));
+        }
+    ],
+    $subject
+);
+使用 intdiv() 计算整数除法
+生成器支持 return
+$gen = (function() {
+    yield 1;
+    yield 2;
+ 
+    return 3;
+})();
+ 
+foreach ($gen as $val) {
+    echo $val, PHP_EOL;
+}
+ 
+echo $gen->getReturn(), PHP_EOL;
+class A {private $x = 1;}
+ 
+// Pre PHP 7 code
+$getXCB = function() {return $this->x;};
+$getX = $getXCB->bindTo(new A, A::class); // intermediate closure
+echo $getX();
+ 
+// PHP 7+ code
+$getX = function() {return $this->x;};
+echo $getX->call(new A);
+
+// converts all objects into __PHP_Incomplete_Class object
+$data = unserialize($foo, ["allowed_classes" => false]);
+ 
+// converts all objects into __PHP_Incomplete_Class object except those of MyClass and MyClass2
+$data = unserialize($foo, ["allowed_classes" => ["MyClass", "MyClass2"]);
+//emoji微笑
+echo "\u{1F603}";
+echo [1, 2, 3][0];
+echo 'string'[0];
+$result = isset($var) ? $var : 'none';
+ 
+$result = $var ?? 'none';  现在可以支持大于 2GB 的文件上传。
 ```
 ###[PHP 单例模式和工厂模式](http://www.woowen.com/php/2014/10/22/php%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/)
 这个类有且只有一个实例存在,这样可以方式被多个实例化,造成多个操作.或者操作同时进行,你可以将单例用在数据库类上,这样在同一时间只会有一个数据库实例存在,也就是只会有一个数据库连接的存在,这样避免的过多的数据库连接,和不必要的系统资源的浪费.
