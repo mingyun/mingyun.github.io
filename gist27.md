@@ -1,6 +1,250 @@
-###[]()
+###[遭遇php的in_array低性能08/28/2013](http://www.zendstudio.net/archives/php-in_array-s-low-performance/?utm_source=tool.lu)
+```js
+$y="1800";
+$x = array();
+for($j=0;$j&lt;2000;$j++){
+        $x[]= "{$j}";
+}
+ 
+for($i=0;$i&lt;3000;$i++){
+        if(in_array($y,$x)){
+                continue;
+        }
+}
+strace -ttt -o xxx /usr/local/php/bin/php test.php
+ltrace -c /usr/local/php/bin/php test.php
+
+in_array这种松比较，会将两个字符型数字串先转换为长整型再进行比较，却不知性能就耗在这上面了。
+最简单的就是为in_array加第三个参数为true，即变为严格比较，同时还要比较类型，这样避免了PHP自作聪明的转换类型
+面对大数组查询的时候，在PHP中应该尽量采用key查询而不是value查询。函数in_array的性能是不好的。
+所以文中的例子代码如果改为下面的，应该会快很多：
+<?php
+$y="1800";
+$x = array();
+for($j=0;$j<2000;$j++){
+$x[{$j}]= true;
+}
+for($i=0;$i
+总之，大数组查询，用in_array函数是个糟糕的选择。应该尽量用isset函数或array_key_exists函数来替代 。in_array函数的复杂度是O(n)，而isset函数的复杂度是O(1)。 大数据都不要用in_array，要么先array_flip,isset($arr[$key]),要么strpos
+
+$elemCount = 1000;
+$repeatCount = 1000000;
+ 
+$vArr = range(1, $elemCount);
+$kArr = array_flip($vArr);
+ 
+$start = microtime(true);
+for ($i = 0; $i < $repeatCount; $i++) {
+    in_array($i, $vArr);
+}
+$inArrTime = microtime(true) - $start;
+echo "in_array:{$inArrTime}<br>";
+ 
+$start = microtime(true);
+for ($i = 0; $i < $repeatCount; $i++) {
+    array_key_exists($i, $kArr);
+}
+$keyTime = microtime(true) - $start;
+echo "array_key_exists:{$keyTime}<br>";
+ 
+$start = microtime(true);
+for ($i = 0; $i < $repeatCount; $i++) {
+    isset($kArr[$i]);
+}
+$issetTime = microtime(true) - $start;
+echo "isset:{$issetTime}<br>";
+
+in_array:1.6679329872131
+array_key_exists:0.23828101158142
+isset:0.022069931030273
+```
+###[第三方微信登录和支付开发记录](https://blog.skyx.in/archives/348/)
+微信的网页应用、移动应用、公众号的上限都是10个，所有同一个账号下的应用获取到的 union_id 是相同的，open_id 不同，所以需注意应用数量是否会超过上限。
+微信登录目前只有APP登录、扫码登录和公众号登录三种登录方式，在微信浏览器内打开网页使用的是公众号登录的方式，其他浏览器只能使用扫码登录，换句话说目前移动端非微信浏览器打开的网页基本无法使用微信登录。 通过微信自带浏览器打开网页时唤起微信授权登录页面进行授权登录。
 
 
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa77178c0a05b6498&redirect_uri=http%3A%2F%2Fh5.2144.com%2Fsite%2Fauth%3Fauthclient%3Dweixin-mp&scope=snsapi_userinfo&response_type=code
+
+https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa77178c0a05b6498&response_type=code&redirect_uri=http%3A%2F%2Fh5.2144.com%2Fsite%2Fauth%3Fauthclient%3Dweixin-mp&scope=snsapi_userinfo
+
+上面两个链接除了参数的顺序不同之外完全相同，但是上面那个链接可以正常显示授权页面，下面那个则不可以
+###[PHP修改apk文件的comment实现](https://blog.skyx.in/archives/319/)
+```js
+$comment = '123测试';
+ 
+$file = fopen('R:\1.apk', 'r+');
+fseek($file, -2, SEEK_END);
+fwrite($file, pack('s', mb_strlen($comment, '8bit')));
+fwrite($file, $comment);
+fclose($file);
+ 
+$zip = new ZipArchive();
+ 
+$zip->open('R:\1.apk');
+var_dump($zip->getArchiveComment());
+//$zip->setArchiveComment($comment);
+//var_dump($zip->getArchiveComment());
+$zip->close();
+```
+###[使用phpbrew管理php版本](https://blog.skyx.in/archives/322/)
+curl -L -O https://github.com/phpbrew/phpbrew/raw/master/phpbrew
+chmod +x phpbrew
+sudo mv phpbrew /usr/bin/phpbrew
+###[开源一个简单轻量的高性能PHP路由实现](https://blog.skyx.in/archives/303/)
+```js
+Github:https://github.com/takashiki/cdo
+$do = new \Mis\Cdo();
+ 
+$do->get('/', function () {
+    echo 'hello world';
+});
+ 
+$do->post('/', function () {
+    $name = isset($_POST['name']) ? $_POST['name'] : 'world';
+    echo "hello {$name}";
+});
+ 
+$do->any('/(\d+)', function ($id) {
+    echo $id;
+});
+ 
+/**
+ * When using named subpattern, order of parameters is not matter.
+ * eg. /book/2
+ */
+$do->any('/(?P<type>\w+)/(?P<page>\d+)', function ($page, $type) {
+    echo $type.'<br>'.$page;
+});
+ 
+$do->run();
+```
+###[使用db2md生成表结构](https://blog.skyx.in/archives/275/)
+https://github.com/index0h/node-db2md
+```js
+这个简直是神器，写数据库文档再也不用头疼了。
+
+首先要安装node和npm，这就不多说了。然后使用npm安装db2md：
+npm install db2md -g
+安装完成后创建配置文件db2md.json，示例如下：
+
+{
+    "user": "root",
+    "pass": "123456",
+    "database": "test",
+    "tables": ".*"
+}
+配置完成后即可以开始导出：
+
+
+db2md -o tables.md
+```
+###[极简图床、sm.ms图床curl上传图片](https://blog.skyx.in/archives/164/)
+```js
+$data = base64_encode(file_get_contents('test.jpg'));
+ 
+$ch = curl_init('http://yotuku.cn/upload?name=');                                                                      
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);                                                                  
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+    'Content-Type: text/plain',                                                                                
+    'Content-Length: ' . strlen($data))                                                                       
+);                                                                                                                   
+ 
+$result = curl_exec($ch);
+echo $result;
+$url = 'https://sm.ms/index.php?act=upload';
+$image = curl_file_create(realpath('test.jpg'), 'image/jpg', 'test.jpg');
+ 
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, ['smfile' => $image]);
+$data = curl_exec($ch);
+curl_close($ch);
+echo $data;
+ 
+```
+###[linux服务器上mysql无法远程连接的可能原因](https://blog.skyx.in/archives/152/)
+```js
+grant all privileges on *.* to root@"%" identified by "password" with grant option;
+ 
+flush privileges;
+第一个代表数据库名；第二个代表表名。root：授予用户账号。“%”：表示授权的用户IP，%代表任意的IP地址都能访问。“password”：分配账号对应的密码。第二行命令是刷新权限信息
+如果telnet不通，我们先用netstat查看3306端口是否已监听所有ip地址的请求：
+
+
+netstat -an | grep 3306
+如果输出为
+
+
+tcp        0      0 127.0.0.1:3306            0.0.0.0:*               LISTEN
+则说明只监听了本地连接。解决方法：修改/etc/mysql/my.cnf文件。打开文件，找到下面内容：
+
+
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+bind-address  = 127.0.0.1
+把上面bind-address = 127.0.0.1这一行注释掉或者把127.0.0.1换成合适的IP。
+重新启动mysql再用netstat检测是否为：
+
+
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN
+如果这样之后还是telnet不通，那基本就是防火墙的问题了，查看iptables的rules文件里是否包含
+
+
+-A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT
+如果没有该规则的话加入该规则后重启iptables就可以了。
+```
+
+###[PHP解析\x22之类的十六进制字符串代码](https://blog.skyx.in/archives/192/)
+function parse_hex($string) {
+    return preg_replace_callback(
+        "(\\\\x([0-9a-f]{2}))i",
+        function($a) {return chr(hexdec($a[1]));},
+        $string
+    );
+}
+
+###[开源一个简单的短网址程序Ourls](https://blog.skyx.in/archives/183/)
+在线演示地址：http://skyx.in/。
+
+github地址：https://github.com/takashiki/Ourls
+###[php读写crx文件](https://blog.skyx.in/archives/264/)
+###[PHP Warning: Module 'modulename' already loaded in Unknown on line 0 产生原因及解决方法](https://blog.skyx.in/archives/288/)
+该扩展在编译 PHP 时已经 enable 了，但是在 php.ini 中又写了动态调用该扩展的 so 文件。
+
+这时候我们可以查看一下 phpinfo ：
+ 
+php -i | grep 'modulename'
+php -i | grep 'php.ini'
+然后去对应的 php.ini 文件中去掉该扩展即可
+###[PHPStorm中使用php-cs-fixer进行自动代码格式化](https://blog.skyx.in/archives/207/)
+composer global require fabpot/php-cs-fixer
+jsonp接口xss防范 
+只要在header里输出类型设置为javascript即可：
+
+header('Content-type: text/javascript;charset=utf-8');
+git config --global core.autocrlf false Windows下git commit时设置不自动将LF转换为CRLF
+
+*nix系统的换行符为LF(\n)，而Windows的换行符为CRLF(\r\n)，所以在Windows上的默认配置的Git会在git pull时将LF换行符换为CRLF，而git push时会再将换行符换回去。然而，当文件中含有中文时Git的这个功能会出现问题，pull时能正常转换，push时却无法正常执行，这时就会出现文件比对时整个文件内容都改变了，但肉眼却无法看出。
+
+解决方法很简单，直接执行以下命令进行全局配置就可以了：
+
+ 
+git config --global core.autocrlf false
+###[Fork过来的项目拉取源项目的更新](https://blog.skyx.in/archives/276/)
+git remote add upstream https://github.com/lj2007331/lnmp.git
+在每次 Pull Request 前做如下操作，即可实现和上游版本库的同步。
+
+ 
+git remote update upstream
+git rebase upstream/{branch name}
+注意的是在rebase操作之前，一定要将checkout到{branch name}所指定的branch
+git Push代码
+###[PHP源码阅读，PHP设计模式-胖胖的空间](http://www.phppan.com/2014/02/php-var-compare/?utm_source=tool.lu)
 ###[git发布脚本](http://stackoverflow.com/questions/279169/deploy-a-project-using-git-push?utm_source=tool.lu)
 ###[An object oriented PHP driver for FFMpeg binary](https://github.com/PHP-FFMpeg/PHP-FFMpeg?utm_source=tool.lu)
 $ composer require php-ffmpeg/php-ffmpeg
