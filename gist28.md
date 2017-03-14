@@ -59,8 +59,10 @@ array_key_exists:0.23828101158142
 isset:0.022069931030273
 ```
 ###[第三方微信登录和支付开发记录](https://blog.skyx.in/archives/348/)
+
 微信的网页应用、移动应用、公众号的上限都是10个，所有同一个账号下的应用获取到的 union_id 是相同的，open_id 不同，所以需注意应用数量是否会超过上限。
 微信登录目前只有APP登录、扫码登录和公众号登录三种登录方式，在微信浏览器内打开网页使用的是公众号登录的方式，其他浏览器只能使用扫码登录，换句话说目前移动端非微信浏览器打开的网页基本无法使用微信登录。 通过微信自带浏览器打开网页时唤起微信授权登录页面进行授权登录。
+
 
 
 https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa77178c0a05b6498&redirect_uri=http%3A%2F%2Fh5.2144.com%2Fsite%2Fauth%3Fauthclient%3Dweixin-mp&scope=snsapi_userinfo&response_type=code
@@ -68,6 +70,7 @@ https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa77178c0a05b6498&red
 https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa77178c0a05b6498&response_type=code&redirect_uri=http%3A%2F%2Fh5.2144.com%2Fsite%2Fauth%3Fauthclient%3Dweixin-mp&scope=snsapi_userinfo
 
 上面两个链接除了参数的顺序不同之外完全相同，但是上面那个链接可以正常显示授权页面，下面那个则不可以
+
 ###[PHP修改apk文件的comment实现](https://blog.skyx.in/archives/319/)
 ```js
 $comment = '123测试';
@@ -277,8 +280,6 @@ print(movies_list)
 movies_href = [a.get('href') for a in  root.cssselect('div.billboard-bd tr td a')]
 print(movies_href)
 ```
-
-
 ###[51job和智联招聘的自动刷新简历脚本](http://www.woowen.com/php/2014/09/20/51job%E5%92%8C%E6%99%BA%E8%81%94%E6%8B%9B%E8%81%98%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E7%AE%80%E5%8E%86%E8%84%9A%E6%9C%AC/)
 ```js
 dl("php_curl.dll");
@@ -399,6 +400,7 @@ function urlShort($url){
 echo urlShort("http://www.imsiren.com");
 ```
 ###[redis 应用场景](http://www.imsiren.com/archives/982)
+```js
 将redis的List用作队列，这个很轻量级，不用引入别的队列服务器，缺点是可能会丢失数据，因为其持久化方案是redis通用的aof或者rdb方式
 
 2.将排好序的实体id放到LIST中，然后以prefix 实体id为key，用hashtable存储具体的实体信息
@@ -416,6 +418,7 @@ echo urlShort("http://www.imsiren.com");
 8.排序好的id也可以用string的getRange和setRange命令来实现顺序访问
 
 用LIST不好的是其顺序已经确定，其删除操作耗时O(n)，顺序查找并删除，而且不支持union inter等操作，这些操作可以模拟and 和or这两种关系操作。
+```
 ###[php strtotime是否有bug](https://segmentfault.com/q/1010000002454116?utm_source=tool.lu)
 ```js
 $beginMon=strtotime("-1 week Monday");
