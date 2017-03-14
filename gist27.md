@@ -1,8 +1,167 @@
-###表分区
+###[git发布脚本](http://stackoverflow.com/questions/279169/deploy-a-project-using-git-push?utm_source=tool.lu)
+###[An object oriented PHP driver for FFMpeg binary](https://github.com/PHP-FFMpeg/PHP-FFMpeg?utm_source=tool.lu)
+$ composer require php-ffmpeg/php-ffmpeg
+###[php strtotime是否有bug](https://segmentfault.com/q/1010000002454116?utm_source=tool.lu)
+```js
+$beginMon=strtotime("-1 week Monday");
+$endMon=strtotime("-1 week Tuesday")-1;
+echo date("Y-m-d H:i:s", $beginMon);
+echo('<br/>');
+echo date("Y-m-d H:i:s", $endMon);
+echo("<br />");
+
+//上面是获取本周一的开始与结束时间戳
+//结果如下：
+//2015-01-05 00:00:00（错误）
+//2014-12-29 23:59:59（正确）
+
+$beginSun=strtotime("+0 week Sunday");
+$endSun=strtotime("+1 week Monday")-1;
+echo date("Y-m-d H:i:s", $beginSun)."<br />";
+echo date("Y-m-d H:i:s",$endSun)."<br />";
+
+//上面获取的是本周末的开始与结束时间戳
+//结果如下：
+//2015-01-04 00:00:00
+//2015-01-11 23:59:59(错误)
+
+//以上案例都是在今天测试(非周末 因为周末)
+http://php.net/manual/en/datetime.formats.relative.php 
+每星期的七天，'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun' 应该是以当前时间往后推 7 * 24 小时来考量的。本例中，如果你想特指本周的某个星期一，你可以使用 strtotime("-1 week Monday this week"); ，其它的天，类似地，指定是在哪个自然周内（本例即 this week 指定为本自然周），不要让系统自己按自己默认的逻辑处理即可。
+```
+
+###[表分区](http://www.jianshu.com/p/52843a98acda)
+```js
 ALTER TABLE users MODIFY COLUMN `id` bigint(20) unsigned NOT NULL;
 ALTER TABLE users DROP PRIMARY KEY;
 ALTER TABLE users ADD INDEX `id`(`id`);
 ALTER TABLE users PARTITION BY HASH(id) PARTITIONS 64;
+分区表限制：
+单表最多支持1024个分区
+MySQL5.1只能对数据表的整型列进行分区，或者数据列可以通过分区函数转化成整型列;
+MySQL5.5的RANGE LIST类型可以直接使用列进行分区
+如果分区字段中有主键或唯一索引的列，那么所有的主键列和唯一索引列都必须包含进来
+分区表无法使用外键约束
+分区必须使用相同的Engine
+对于MyISAM分区表，不能在使用LOAD INDEX INTO CACHE操作
+对于MyISAM分区表，使用时会打开更多的文件描述符（单个分区是一个独立的文件）
+t1#p#p0.ibd t1#p#p1.ibd
+mysql> show table status from vhall like 'webinar_user_regs'\G
+*************************** 1. row ***************************
+           Name: webinar_user_regs
+         Engine: InnoDB
+        Version: 10
+     Row_format: Compact
+           Rows: 728334
+ Avg_row_length: 174
+    Data_length: 126992384
+Max_data_length: 0
+   Index_length: 210354176
+      Data_free: 231735296
+ Auto_increment: NULL
+    Create_time: 2017-03-13 12:27:36
+    Update_time: NULL
+     Check_time: NULL
+      Collation: utf8_unicode_ci
+       Checksum: NULL
+ Create_options: partitioned
+        Comment:
+1 row in set (0.02 sec)
+无论创建何种类型的分区，如果表中存在主键或唯一索引时，分区列必须是唯一索引的一个组成部分
+在MySQL5.6中，可以使用清空一个分区数据：alter table operation_log truncate partition2014-01;
+清空该分区表所有分区数据：alter table operation_log truncate partition all;
+
+http://blog.csdn.net/tjcyjd/article/details/11194489 
+
+ALTER TABLE users ADD PARTITION PARTITIONS 8;  
+            将分区总数扩展到8个。
+	    
+CREATE TABLE ti2 (id INT, amount DECIMAL(7,2), tr_date DATE)  
+    ENGINE=myisam  
+    PARTITION BY HASH( MONTH(tr_date) )  
+    PARTITIONS 6;    
+默认分区限制分区字段必须是主键（PRIMARY KEY)的一部分，为了去除此
+限制：
+[方法1] 使用ID 
+[方法2] 将原有PK去掉生成新PK
+alter table results drop PRIMARY KEY;   
+```
+###[PHP二维码类库(phpqrcode.php)详解及应用](http://www.hoehub.com/PHP/176.html?utm_source=tool.lu)
+###[php文章索引](http://tool.lu/article/tag/php?page=2)
+###[说说 PHP 的 die 和 exit](http://0x1.im/blog/php/php-exit-die.html?utm_source=tool.lu)
+###[max/min 函数（PHP）的一个小 BUG](http://0x1.im/blog/php/bug-of-php-function-max.html?utm_source=tool.lu)
+>>> max(0, ceil(-0.5))
+=> 0
+>>> $a = ceil(-0.5)
+=> -0.0
+>>> max($a, 0)
+=> -0.0
+###[php的curl调用远程接口](https://my.oschina.net/u/222608/blog/808708?utm_source=tool.lu)
+改了curl一个参数CURLOPT_CONNECTTIMEOUT_MS
+strace -o output.txt -f -T -tt -e trace=all php test.php
+###[Differences between array_replace and array_merge in PHP](http://stackoverflow.com/questions/34367511/differences-between-array-replace-and-array-merge-in-php/34367698?utm_source=tool.lu)
+```js
+$a = array('a' => 'hello', 'b' => 'world');
+$b = array('a' => 'person', 'b' => 'thing', 'c'=>'other', '15'=>'x');
+
+print_r(array_merge($a, $b));
+/*Array
+(
+    [a] => person
+    [b] => thing
+    [c] => other
+    [0] => x
+)*/
+
+print_r(array_replace($a, $b));
+/*Array
+(
+    [a] => person
+    [b] => thing
+    [c] => other
+    [15] => x
+)*/
+$a = array('0'=>'a', '1'=>'c');
+$b = array('0'=>'b');
+
+print_r(array_merge($a, $b));
+/*Array
+(
+  [0] => a
+  [1] => c
+  [2] => b
+)*/
+
+print_r(array_replace($a, $b));
+/*Array
+(
+  [0] => b
+  [1] => c
+)*/
+```
+###[当cpu飙升时，找出php中可能有问题的代码行](http://www.bo56.com/%E5%BD%93cpu%E9%A3%99%E5%8D%87%E6%97%B6%EF%BC%8C%E6%89%BE%E5%87%BAphp%E4%B8%AD%E5%8F%AF%E8%83%BD%E6%9C%89%E9%97%AE%E9%A2%98%E7%9A%84%E4%BB%A3%E7%A0%81%E8%A1%8C/?spm=0.0.0.0.mlzm0G&utm_source=tool.lu)
+###[php命令行](http://www.phpsh.org/?utm_source=tool.lu)
+###[JavaScript + PHP(正则表达式)](http://amals.org/?id=1&utm_source=tool.lu)
+```js
+var pattern = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/,
+	str = '';
+        console.log(pattern.test(str));
+	
+ $str = '';
+        $isMatched = preg_match('/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/', $str, $matches);
+        var_dump($isMatched, $matches);
+匹配双字节字符(包含汉字)var pattern = /[^\x00-\xff]/,
+匹配时间(时:分:秒):var pattern = /([01]?\d|2[0-3]):[0-5]?\d:[0-5]?\d/,
+匹配身份证: var pattern = /\d{15}|\d{17}[0-9Xx]/,
+```
+###[php 实现同一个账号同时只能一个人登录](http://blog.51yip.com/php/1698.html?utm_source=tool.lu)
+实现原理
+1,用户在电脑A登录,session信息存放在redis当中，并将session_id存到mysql数据库中。
+2,同一用户在电脑B登录，验证完用户名和密码后，将该用户信息从数据库读出，取得用户在电脑A登录的session_id，然后在到redis中验证session是否过期。
+3,如果过期，不用openfire推送提示信息。如果没有过期，php利用openfire推送消息后，在将redis中用户在电脑A中登录的session删除掉，删除后，在将用户在电脑B登录的个人信息放到session中，并将电脑B登录的session_id更新到数据库中，在这里一定要先发送推送，然后在清空session，不然用户在电脑A收不到xmpp发过来的消息。
+https://phpbestpractices.org/?utm_source=tool.lu  https://phptrends.com/?utm_source=tool.lu
+###[Markdown Parser in PHP](http://parsedown.org/?utm_source=tool.lu)
+###[php安全](http://phpsecurity.readthedocs.io/en/latest/index.html?utm_source=tool.lu)
 ###[APP后端开发系列：登陆系统设计中的注意问题](https://helei112g.github.io/2016/07/12/1-APP%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E7%B3%BB%E5%88%97%EF%BC%9A%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E9%97%AE%E9%A2%98/)
 ```js
 验证通过后，把用户uid+username+salt等md5后，作为token返回到客户端。
