@@ -19,6 +19,51 @@ $video
     ->save(new FFMpeg\Format\Video\WMV(), 'export-wmv.wmv')
     ->save(new FFMpeg\Format\Video\WebM(), 'export-webm.webm');
 ```
+###[51job和智联招聘的自动刷新简历脚本](http://www.woowen.com/php/2014/09/20/51job%E5%92%8C%E6%99%BA%E8%81%94%E6%8B%9B%E8%81%98%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0%E7%AE%80%E5%8E%86%E8%84%9A%E6%9C%AC/)
+```js
+dl("php_curl.dll");
+
+$ifupdate = false;
+
+$rand = mt_rand(1, 5);
+
+if($rand == 5)
+$ifupdate = true;
+
+if($ifupdate)
+{
+//智联招聘
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "...填写刷新简历ajax链接...");
+
+curl_setopt($ch,CURLOPT_COOKIE,"JSpUserInfo=...填写cookie参数...");
+
+$result = curl_exec($ch);
+
+curl_close($ch);
+
+//前程无忧
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "...填写刷新简历ajax链接...");
+
+curl_setopt($ch,CURLOPT_COOKIE,"51job=...填写cookie参数...");
+
+$result = curl_exec($ch);
+
+curl_close($ch);
+
+}else
+{
+echo 'rand not hit';
+}
+
+在CURLOPT_URL参数中写上你刷新简历时访问的ajax url 的地址.
+在CURLOPT_COOKIE中写上你浏览器cookie中对应参数的value.
+然后在linux中使用将脚本1小时一次的执行起来就可以了.
+```
+
 ###[PHP内核](http://www.imsiren.com/archives/tag/php%e5%86%85%e6%a0%b8)
 ###[Nginx PHP 使用 limit_req,limit_conn 限制并发，外加白名单](http://www.imsiren.com/archives/1230)
 nginx/conf/limit/whiteip.conf 里面是你要忽略限制的白名单IP地址
@@ -306,7 +351,170 @@ http://www.woowen.com/php/2015/12/07/PHP7%20%E6%96%B0%E7%89%B9%E6%80%A7,%E6%94%B
 SELECT * FROM `module_images`  WHERE pid = 'xx' and appid = 'xx' and parent in (416,415,419,421,414) GROUP BY parent order by FIELD(parent,416,415,419,421,414)
 前面的In里面的顺序可以随便改变,但是后面的需要按照顺序书写. 关键就是这个Order By FIELD.另外不要忘记Group By 不然是会出错的.
 
+arrayshift 在使用arrayshift弹出一个非常大的数组的第一个元素的时候,执行效率会很低.
+Array_Pop()的复杂度为O(1)
+Array_Shift()的复杂度为O(N)
+当你执行一个非常大的数组的时候会随着数组庞大而降低效率.因此当你给一个非常大的数组执行弹出首元素操作的时候可以使用,Arrayreverse() 和 Arraypop()结合的方式.
+较频繁地作为查询条件的字段
+唯一性太差的字段不适合建立索引
+更新太频繁地字段不适合创建索引
+不会出现在where条件中的字段不该建立索引
 ```
+###[PHP 单例模式和工厂模式](http://www.woowen.com/php/2014/10/22/php%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E5%92%8C%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/)
+这个类有且只有一个实例存在,这样可以方式被多个实例化,造成多个操作.或者操作同时进行,你可以将单例用在数据库类上,这样在同一时间只会有一个数据库实例存在,也就是只会有一个数据库连接的存在,这样避免的过多的数据库连接,和不必要的系统资源的浪费.
+```js
+//单例模式
+class myClass{
+    static $__staticvar; //静态成员变量
+    private $_str; //私有的变量
+    private function __construct(){
+        $this->_str = '单例模式';
+    }
+    private function __clone(){} //重载clone方法
+    //由于单例不能被其他类所实例化,也就是不能使用$test = new myclass();
+    public static function getObject(){
+    //判断静态成员中是否有该对象如果没有就重新实例化.有就直接返回
+    if(!(self::$__staticvar instanceof self))
+    {
+        self::$__staticvar = new self();
+    }
+        return self::$__staticvar;
+    }
+    //单例的一个方法
+    public function getStr(){
+        return $this->_str;
+    }
+}
+
+$dl = myClass::getObject();
+print_r($dl->getStr());
+工厂模式,就是你定义一个接口,在接口中写下哪些方法可能会被用到.然后将每个特定的类起调用这个接口,并且重写里面的方法,在通过一个工厂类来根据判断而申明不同的类.工厂类必须返回一个对象,一般的命名规则为factory的静态方法.
+//工厂模式
+public static function factory($var){
+    switch($var){
+        case 'xx':
+        $test = new classname();
+        break;
+        case 'xxx':
+        $test = new classname1();
+        break;
+    }
+return $test;
+}
+
+```
+###[208.130.29.30-35这个IP段换成CIDR格式](http://mp.weixin.qq.com/s?__biz=MzAwMTEwNzEyOQ%3D%3D&mid=2650009231&idx=1&sn=6845ceb44d7ea6bf6464c3e5d4e0b75c&chksm=82d9fb59b5ae724f13346d784adb54b65378f94cf7f8c08000aecc93681f7e496c1c37b59697&scene=0&utm_source=tool.lu#wechat_redirect)
+```js
+# 确定起始和结尾IP，无论多复杂都可以转换
+startip = '208.130.29.30'
+endip = '208.130.29.35'
+cidrs = netaddr.iprange_to_cidrs(startip, endip)
+for k, v in enumerate(cidrs):
+    iplist = v
+    print iplist
+输出：
+208.130.29.30/31
+208.130.29.32/30
+
+反过来，CIDR也能直接转成IP地址段：
+
+from netaddr import *
+
+ip = IPNetwork('192.0.2.16/29')
+ip_list = list(ip)
+print(ip_list)
+```
+###[php缺点](https://www.toptal.com/php/10-most-common-mistakes-php-programmers-make?utm_source=tool.lu)
+
+```js
+$arr = array(1, 2, 3, 4);
+foreach ($arr as &$value) {
+    $value = $value * 2;
+}
+// $arr is now array(2, 4, 6, 8)
+unset($value);
+
+```
+###[Python 技巧总结](http://litaotao.github.io/python-materials?utm_source=tool.lu)
+###[字符型图片验证码识别完整过程及Python实现](http://www.cnblogs.com/beer/p/5672678.html?utm_source=tool.lu)
+###[python词云 wordcloud 入门](http://blog.csdn.net/tanzuozhev/article/details/50789226?utm_source=tool.lu)
+```js
+官网: https://amueller.github.io/word_cloud/ 
+github: https://github.com/amueller/word_cloud 
+wget  https://github.com/amueller/word_cloud/archive/master.zip
+unzip master.zip
+rm master.zip
+cd word_cloud-master
+pip install -r requirements.txt
+python setup.py install
+from os import path
+from scipy.misc import imread
+import matplotlib.pyplot as plt
+
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+
+# 获取当前文件路径
+# __file__ 为当前文件, 在ide中运行此行会报错,可改为
+# d = path.dirname('.')
+d = path.dirname(__file__)
+
+# 读取文本 alice.txt 在包文件的example目录下
+#内容为
+"""
+Project Gutenberg's Alice's Adventures in Wonderland, by Lewis Carroll
+
+This eBook is for the use of anyone anywhere at no cost and with
+almost no restrictions whatsoever.  You may copy it, give it away or
+re-use it under the terms of the Project Gutenberg License included
+with this eBook or online at www.gutenberg.org
+"""
+text = open(path.join(d, 'alice.txt')).read()
+
+# read the mask / color image
+# taken from http://jirkavinse.deviantart.com/art/quot-Real-Life-quot-Alice-282261010
+# 设置背景图片
+alice_coloring = imread(path.join(d, "alice_color.png"))
+
+wc = WordCloud(background_color="white", #背景颜色max_words=2000,# 词云显示的最大词数
+mask=alice_coloring,#设置背景图片
+stopwords=STOPWORDS.add("said"),
+max_font_size=40, #字体最大值
+random_state=42)
+# 生成词云, 可以用generate输入全部文本(中文不好分词),也可以我们计算好词频后使用generate_from_frequencies函数
+wc.generate(text)
+# wc.generate_from_frequencies(txt_freq)
+# txt_freq例子为[('词a', 100),('词b', 90),('词c', 80)]
+# 从背景图片生成颜色值
+image_colors = ImageColorGenerator(alice_coloring)
+
+# 以下代码显示图片
+plt.imshow(wc)
+plt.axis("off")
+# 绘制词云
+plt.figure()
+# recolor wordcloud and show
+# we could also give color_func=image_colors directly in the constructor
+plt.imshow(wc.recolor(color_func=image_colors))
+plt.axis("off")
+# 绘制背景图片为颜色的图片
+plt.figure()
+plt.imshow(alice_coloring, cmap=plt.cm.gray)
+plt.axis("off")
+plt.show()
+# 保存图片
+wc.to_file(path.join(d, "名称.png"))
+```
+###[python2,3对比](http://python-future.org/compatible_idioms.html?utm_source=tool.lu)
+###[python脚本集合](https://github.com/realpython/python-scripts?utm_source=tool.lu)
+###[Python列表对象实现原理](https://foofish.net/python-list-implements.html?utm_source=tool.lu)
+###[Php Imagick常用知识](http://www.woowen.com/php/2014/08/10/PHP%20Imagick%20%E8%B5%84%E6%96%99%E6%B1%87%E6%80%BB/)
+html->pdf->imgick->pic
+
+htmltopdf 有第三方公司提供接口http://pdfcrowd.com/
+
+###[数据库设计需要注意的地方](http://www.woowen.com/mysql/2014/10/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1%20%E6%B3%A8%E6%84%8F%E8%A6%81%E7%82%B9/)
+
+
 ###[多维数组根据键值排序](http://www.woowen.com/php/2014/10/28/php%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E6%8E%92%E5%BA%8F,%E5%AD%97%E7%AC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6%E5%8C%B9%E9%85%8D%E5%BA%A6/)
 ```js
 /**
