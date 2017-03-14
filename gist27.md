@@ -1,6 +1,116 @@
+###[]()
+
+
 ###[git发布脚本](http://stackoverflow.com/questions/279169/deploy-a-project-using-git-push?utm_source=tool.lu)
 ###[An object oriented PHP driver for FFMpeg binary](https://github.com/PHP-FFMpeg/PHP-FFMpeg?utm_source=tool.lu)
 $ composer require php-ffmpeg/php-ffmpeg
+```js
+$ffmpeg = FFMpeg\FFMpeg::create();
+$video = $ffmpeg->open('video.mpg');
+$video
+    ->filters()
+    ->resize(new FFMpeg\Coordinate\Dimension(320, 240))
+    ->synchronize();
+$video
+    ->frame(FFMpeg\Coordinate\TimeCode::fromSeconds(10))
+    ->save('frame.jpg');
+$video
+    ->save(new FFMpeg\Format\Video\X264(), 'export-x264.mp4')
+    ->save(new FFMpeg\Format\Video\WMV(), 'export-wmv.wmv')
+    ->save(new FFMpeg\Format\Video\WebM(), 'export-webm.webm');
+```
+###[PHP内核](http://www.imsiren.com/archives/tag/php%e5%86%85%e6%a0%b8)
+###[Nginx PHP 使用 limit_req,limit_conn 限制并发，外加白名单](http://www.imsiren.com/archives/1230)
+nginx/conf/limit/whiteip.conf 里面是你要忽略限制的白名单IP地址
+###[跨浏览器下PHP下载文件名中的中文乱码问题](http://www.cnblogs.com/jiji262/archive/2012/09/21/2697205.html?utm_source=tool.lu)
+```js
+$ua = $_SERVER["HTTP_USER_AGENT"];
+
+$filename = "中文 文件名.txt";
+$encoded_filename = urlencode($filename);
+$encoded_filename = str_replace("+", "%20", $encoded_filename);
+
+header('Content-Type: application/octet-stream');
+
+if (preg_match("/MSIE/", $ua)) {
+    header('Content-Disposition: attachment; filename="' . $encoded_filename . '"');
+} else if (preg_match("/Firefox/", $ua)) {
+    header('Content-Disposition: attachment; filename*="utf8\'\'' . $filename . '"');
+} else {
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+}
+
+print 'ABC';
+```
+###[JavaScript获取服务器时间](http://amals.org/?id=216)
+```js
+var xhr = null;
+if(window.XMLHttpRequest){
+   xhr = new window.XMLHttpRequest();
+}else{
+ // ie
+   xhr = new ActiveObject("Microsoft")
+}
+// 通过get的方式请求当前文件
+xhr.open("get","/");
+xhr.send(null);
+// 监听请求状态变化
+xhr.onreadystatechange = function(){
+   var time = null,curDate = null;
+   if(xhr.readyState===2){
+       // 获取响应头里的时间戳
+       time = xhr.getResponseHeader("Date");
+       console.log(xhr.getAllResponseHeaders())
+       curDate = new Date(time);
+       console.log("服务器时间："+curDate.getFullYear()+"-"+(curDate.getMonth()+1)+"-"+curDate.getDate()+" "+curDate.getHours()+":"+curDate.getMinutes()+":"+curDate.getSeconds());
+   }
+}
+```
+###[Laravel会成为最成功的PHP框架](http://www.hoehub.com/PHP/141.html?utm_source=tool.lu)
+模块化和可扩展性 中间件 各种集成 事件处理 对象关系化映射（ORM）
+
+
+###[PHP 实现 短URL](http://www.imsiren.com/archives/459)
+```js
+function base62($x){
+    $show='';
+    while($x>0){
+        $s=$x%62;
+        if($s>35){
+            $s=chr($s+61);
+        }elseif($s>9&&$s<=35){
+            $s=chr($s+55);
+        }
+        $show.=$s;
+        $x=floor($x/62);
+    }
+            return $show;
+}
+function urlShort($url){
+    $url=crc32($url);
+    $res=sprintf('%u',$url);
+    return base62($res);
+}
+echo urlShort("http://www.imsiren.com");
+```
+###[redis 应用场景](http://www.imsiren.com/archives/982)
+将redis的List用作队列，这个很轻量级，不用引入别的队列服务器，缺点是可能会丢失数据，因为其持久化方案是redis通用的aof或者rdb方式
+
+2.将排好序的实体id放到LIST中，然后以prefix 实体id为key，用hashtable存储具体的实体信息
+
+3.用ZSET存储排名和带有权重信息的一些实体id，缺点是内存占用太厉害了。
+
+4.用hashtable做一些映射，例如username=>user_id等
+
+5.set可以支持一些逻辑操作，但是排序的时间复杂度不佳，所以我选择了用list
+
+6.set用来做唯一性验证，如果验证某个用户是否已经对某篇文章进行了赞的操作
+
+7.使用redis用来优化内存hash-max-zipmap-entries等参数减少内存使用量
+
+8.排序好的id也可以用string的getRange和setRange命令来实现顺序访问
+
+用LIST不好的是其顺序已经确定，其删除操作耗时O(n)，顺序查找并删除，而且不支持union inter等操作，这些操作可以模拟and 和or这两种关系操作。
 ###[php strtotime是否有bug](https://segmentfault.com/q/1010000002454116?utm_source=tool.lu)
 ```js
 $beginMon=strtotime("-1 week Monday");
@@ -86,6 +196,161 @@ CREATE TABLE ti2 (id INT, amount DECIMAL(7,2), tr_date DATE)
 [方法2] 将原有PK去掉生成新PK
 alter table results drop PRIMARY KEY;   
 ```
+###[phptrace 是一个追踪（trace）PHP执行流程的工具](http://chuansong.me/n/1031743)
+Github：https://github.com/Qihoo360/phptrace
+```js
+$ ./phptrace -p 3130 -s 3130 为php-fpm的进程ID
+phptrace 0.1 demo, published by infra webcore team
+process id = 3130
+script_filename = /home/renyongquan/opt/nginx//webapp/block.php
+[0x7f27b9a99dc8]  sleep /home/renyongquan/opt/nginx/webapp/block.php:6
+[0x7f27b9a99d08]  say /home/renyongquan/opt/nginx/webapp/block.php:3
+[0x7f27b9a99c50]  run /home/renyongquan/opt/nginx/webapp/block.php:10
+-p 参数指定进程pid， -s表示我们需要获取stack信息； -p参数是必需的，并且只能是PHP相关进程（php,php-cli,php-fpm）的pid， 这很好理解，因为我们获取的是PHP的调用信息。-s 如果省略，则phptrace不会打印调用栈，而是实时获取PHP函数执行流程，即phptrace 的第二个功能，也是其主要功能。现在我们仍然回到stack上来。
+基础架构快报 
+程序输出的第一行，是版本信息，第二行显示了其进程PID，第三行是当前执行的PHP脚本，从第四行开始就是调用栈信息，从打印的 信息可以看出，最外层run函数调用了say函数，最终调用了sleep函数。
+```
+###[温故而知新之PHP手册](http://www.woowen.com/php/2015/01/21/%E6%B8%A9%E6%95%85%E8%80%8C%E7%9F%A5%E6%96%B0%E4%B9%8BPHP%E6%89%8B%E5%86%8C(1)/?utm_source=tool.lu)
+```js
+不要使用AND 和 OR 尽量使用 && 和 || 来替代,因为 && 和 || 的优先级比AND 和 OR要高,连 = 的优先级都比AND 和 OR要高.
+
+ //这个还是要记录下,虽然以前就知道.
+    $c = $a or $b 跟 ($c = $a) or $b 同义.
+    $c = $a || $b 跟 $c = ($a or $b) 同义.
+    不要对each() 中需要遍历的数组赋值 例如
+    $a = array('a','v','c');
+    while(list($b,$c) = each($a)){          
+        $e = $a;
+        echo $b;
+        echo $c;
+    }
+    //数组在赋值的时候会重置指针,上面代码会无限循环
+传递参数使用sub.x 的时候,PHP会自动转成subx因此应该使用$GET['sub_x']来获取值    
+   const BIT_5 = 1 << 5;  //PHP5.6之后可以这么做
+    define('BIT_5', 1 << 5);//一直可以
+    //define还可以这么写
+    for ($i = 0; $i < 32; ++$i) {
+        define('BIT_' . $i, 1 << $i);
+    }
+    //const不能这么定义
+    if(1){
+        const XX = 'xx';
+    }
+    //define可以
+    if(1){
+        define('XX','xx');
+    }  
+var_dump("10" == "1e1"); // 10 == 10 -> true
+    var_dump(100 == "1e2"); // 100 == 100 -> true   
+    数组比较,数组中的单元如果具有相同的键名和值则比较时相等
+    $a = array("apple", "banana");
+    $b = array(1 => "banana", "0" => "apple");
+
+    var_dump($a == $b); // bool(true)
+    var_dump($a === $b); // bool(false)
+    $a = 1;
+$b = 1.25;
+debug_zval_dump($a);
+debug_zval_dump($b);
+$array = [0];
+foreach ($array as &$val) {
+    var_dump($val);
+    $array[1] = 1;
+}
+PHP7之前，当数组通过 foreach 迭代时，数组指针会移动。现在开始，不再如此
+$array = [0, 1, 2];
+foreach ($array as &$val) {
+    var_dump(current($array)); 
+
+    // PHP7
+    // return int(0)
+
+    // PHP5
+    // return int(1),int(2),bool(false)
+}
+
+$a = '9d9';
+for ($i = 0; $i < 10; $i++) {
+    $a++;
+}
+var_dump($a);
+
+//echo 18
+当运行到9e0的时候 ,科学计数法转换成了9,那么后面++就成了数字了..
+
+$a = floor((0.1+0.7) * 10);
+//返回的结果并不是8,而是7
+$a = round((0.1+0.7) * 10);
+//返回的结果 = 8
+$a = 9 - 5.1;
+$b = 3.9;
+var_dump(round($a, 2) == round($b, 2));
+
+如果需要判断是否为空,可以使用Isset这种语句,而不要使用Isnull函数.或者使用===Null方法.速度跟Isset差不多,含义跟Isnull一致
+键值为数字时  使用 + : 会返回前一个数组的value
+使用 array_merge : 返回合并之后的一个数组,且重置键值
+键值为字符时 使用 + : 返回数组1的value
+使用 array_merge : 返回数组2的value
+键值重置 使用 + : 键值不会重置
+使用 array_merge : 数字键值会从0开始重置,且返回的合并数组的键值排序是按照先数组1,再数组2的次序来的
+
+当Errorreporting 设置 Notice之上的时候,Arraymerge函数第一个参数为Null也不会报错,但是确实不会返回任何数据了.
+
+个人开发本地/测试环境还是把Errorreporting设置成EALL吧.
+__FUNCTION__和METHOD的不同在于前者只会返回函数名称,后者会连类名一起返回
+PHP7中在switch语句中不能出现多个default,而php5可以,并且会执行最后一个 新增方法随机数字random_int
+ASP的元素标签被移除,不能再使用<% <%=以及<script language="php”> .新增方法随机字节random_bytes
+新增intdiv方法,取参数1 除以参数2 然后取整
+http://www.woowen.com/php/2015/12/07/PHP7%20%E6%96%B0%E7%89%B9%E6%80%A7,%E6%94%B9%E5%8F%98%E5%8F%98%E5%8C%96/ 
+
+SELECT * FROM `module_images`  WHERE pid = 'xx' and appid = 'xx' and parent in (416,415,419,421,414) GROUP BY parent order by FIELD(parent,416,415,419,421,414)
+前面的In里面的顺序可以随便改变,但是后面的需要按照顺序书写. 关键就是这个Order By FIELD.另外不要忘记Group By 不然是会出错的.
+
+```
+###[多维数组根据键值排序](http://www.woowen.com/php/2014/10/28/php%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84%E6%8E%92%E5%BA%8F,%E5%AD%97%E7%AC%A6%E7%9B%B8%E4%BC%BC%E5%BA%A6%E5%8C%B9%E9%85%8D%E5%BA%A6/)
+```js
+/**
+     * @param $array 需要排序的数组
+     * @param $keyName 数组键值名称
+     * @param int $order
+     * @return array
+     * @desc 多维数组根据键值排序,排序之后重置键值
+     * @明心 php 获取2个字符之间的相似度 similar_text()
+     */
+    public static function array_sort($array, $keyName, $order=SORT_ASC)
+    {
+        $new_array = array();
+        $sortable_array = array();
+        if (count($array) > 0) {
+            foreach ($array as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $k2 => $v2) {
+                        if ($k2 == $keyName) {
+                            $sortable_array[$k] = $v2;
+                        }
+                    }
+                } else {
+                    $sortable_array[$k] = $v;
+                }
+            }
+
+            switch ($order) {
+                case SORT_ASC:
+                    asort($sortable_array);
+                    break;
+                case SORT_DESC:
+                    arsort($sortable_array);
+                    break;
+            }
+            foreach ($sortable_array as $k => $v) {
+                $new_array[$k] = $array[$k];
+            }
+        }
+        //重置混乱键值
+        return array_values($new_array);
+    }
+```
+
 ###[PHP二维码类库(phpqrcode.php)详解及应用](http://www.hoehub.com/PHP/176.html?utm_source=tool.lu)
 ###[php文章索引](http://tool.lu/article/tag/php?page=2)
 ###[说说 PHP 的 die 和 exit](http://0x1.im/blog/php/php-exit-die.html?utm_source=tool.lu)
