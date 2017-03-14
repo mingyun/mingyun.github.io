@@ -1,5 +1,4 @@
-
-###[Laravel --进阶篇 (单点登录)](https://www.blog8090.com/laravel-jin-jie-pian-dan-dian-deng-lu-sso/)
+###[Laravel --进阶篇 单点登录](https://www.blog8090.com/laravel-jin-jie-pian-dan-dian-deng-lu-sso/)
 ```js
 if ($result) {  
    # 登录成功
@@ -46,7 +45,6 @@ public function handle($request, Closure $next)
     }
     
 ```
-
 ###[生成了词云图](https://github.com/NyanCat12/CrossinWeekly/blob/master/NovelWordCount.py)
 ```js
 # Crossin的编程教室 
