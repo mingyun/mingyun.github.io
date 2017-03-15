@@ -1,3 +1,609 @@
+###[MySQL大数据量表中删除重复记录](https://blog.skyx.in/archives/135/)
+```js
+CREATE TABLE `tmptable` AS (SELECT `title` FROM `info` GROUP BY `title` HAVING COUNT( `title` ) >1);
+CREATE TABLE `idtable` AS ( SELECT min(a.`id`) AS id, a.`title` FROM `info` a, `tmptable` t WHERE a.`title` = t.`title` GROUP BY a.`title`);
+DELETE a FROM `info` a,`idtable` t WHERE a.`id` = t.`id`;
+配置ssh免密码登录linux机器
+ssh-keygen -t rsa -C comment
+scp id_rsa.pub root@hostname:~/id_rsa.pub
+cat ~/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+用户量超过1亿：
+首先最核心是数据库表设计（扩展性一定要好，这个时候应该有DBA和运维工程师出场了）
+开发上 做好2点：数据服务器分离（laravel已经自带了，可配置读的数据源，写入的数据源……）
+还有session的分布式管理（比如redis，memcache等等）
+
+最后如果数据有压力了，查询要优化，DBA会叫开发一起优化调整。
+如果web有压力了，运维工程师，会把多台服务器负载均衡做好，项目代码部署到 多台服务器就行了，反正session已经独立出去统一管理了。
+mysql优化，一般就开启慢查询日志。
+经常要去分析的，这个最好是和运维一起搞。或者你项目已经开发完成，没多少事情干，才有时间去优化
+比如PHP异常和错误有什么区别？
+
+当线上有错误的时候如何检查？
+
+检查思路是什么？
+这种类似大数据的，一句话：分而治之。
+高并发的：优化业务流程，启用多级缓存等
+```
+###最近几天数据
+```js
+fixData(['2017-01-01=>100','2017-01-11=>100',],strtotime(date('Y-m-d'))-86400*7,strtotime(date('Y-m-d')),'day');
+
+function fixData(&$data,$startTime,$endTime,$granularity){
+        switch ($granularity){
+            case 'minute':
+                $step=60;
+                $format='Y-m-d H:i:s';
+                break;
+            case 'hour':
+                $step=3600;
+                $format='Y-m-d H:i:s';
+                break;
+            case 'day':
+                $step=86400;
+                $format='Y-m-d';
+                break;
+            case 'week': // be unused so far
+                $step=86400*7;
+                $format='Y-m-d';
+                break;
+            default:
+                $step=86400;
+                $format='Y-m-d';
+        }
+        for($i=$startTime;$i<$endTime;$i+=$step){
+            $date=date($format,$i);
+            if(!isset($data[$date])){
+                $data[$date]=0;
+            }
+        }
+        ksort($data);
+
+        return $data;
+    }
+```
+###[php几率算法问题](https://www.zendstudio.net/archives/heartbreak-for-php-probability-algorithm/)
+```js
+//初始化数组 几率生成一颗（50%）、两颗（16%）和三颗（2%）宝石
+$stone_arr = array( 
+		array( 'num' => 1, 'prob' => '50%' ),
+		array( 'num' => 2, 'prob' => '16%' ),
+		array( 'num' => 3, 'prob' => '2%' )
+		 );
+//随机获得一个幸运数字
+$luck_num = mt_rand( 0, 99 );
+//初始化几率区间和最终宝石生产数目
+$lucky_range = $made_num = 0;
+ 
+foreach( $stone_arr as $sa ){
+	$prob = intval( $sa['prob'] );
+	if( $luck_num >= $lucky_range && $luck_num < $lucky_range + $prob ){
+		$made_num = $sa['num'];
+		break;
+	}
+	else{
+		$lucky_range += $prob;
+	}
+}
+ 
+for( $i = 0; $i < $made_num; $i++ ){
+	//生产宝石的逻辑
+}
+
+$a = array_fill(0,50, 1);
+$b = array_fill(0,16, 2);
+$c = array_fill(0,2, 3);
+$d = array_fill(0,32, 0);
+$arr = array_merge($a, $b, $c);
+//var_dump($arr);
+$d = mt_rand(0,99);
+echo $arr[$d];
+function a(){
+$n = mt_rand(0,99);
+$result = 0;
+if($n >= 0 && $n = 0 && $n = 2 && $n = 50 && $n <= 99){
+$result = 1;
+}
+return $result;
+}
+$seed = mt_rand(1,100);
+if($seed>0 and $seed50 and $seed<67){
+$re =2;
+}else if($seed==67 or $seed == 68){
+$re =3;
+}else{
+$re =0;
+}
+
+function a(){
+$n = mt_rand(0,99);
+$result = 0;
+if($n >= 0 && $n = 1){
+$result = 1;
+}
+if($n >=2 && $n = 50 && $n <=99){
+$result = 3;
+}
+return $result;
+}
+```
+###[将被撤回的微信消息发送到文件传输助手](https://gist.github.com/youfou/e1ccbb4dea75790daaabac2b19ccd802)
+```js
+from xml.etree import ElementTree as ETree
+from wxpy import *
+
+bot = Bot()
+
+@bot.register(msg_types=NOTE)
+def get_revoked(msg):
+    revoked = ETree.fromstring(msg.raw['Content']).find('revokemsg')
+    if revoked:
+        revoked_msg = bot.messages.search(id=int(revoked.find('msgid').text))[0]
+        bot.file_helper.send(revoked_msg)
+
+bot.start()
+#利用wxpy内置的图灵机器人自动回复指定好友
+from wxpy import *
+
+bot = Bot()
+
+tuling = Tuling('你的 API KEY (http://www.tuling123.com/)')
+my_friend = ensure_one(bot.friends().search('好友的名称'))
+
+
+@bot.register(my_friend, TEXT)
+def tuling_reply(msg):
+    tuling.do_reply(msg)
+
+
+bot.start()
+
+```
+
+
+###[博大精深的农历算法PHP代码](https://www.zendstudio.net/archives/php-code-of-lunarcalendar/)
+一个下划线引发的IE6不能登录的问题
+后台的地址/xxxx_xxxx/login.php，居然成了/xxxx%5Fxxxx/login.php，即被urlencode了，哦！问题就出在这里了，因为我们的登录验证会严格判断登录来源，显然xxxx_xxxx不等于xxxx%5Fxxxx，所以，就认为非法用户登录了，被踢！后来，经过测试，我们在后台进行urldecode，以期不再出现%5F的情况，事实上，问题并不是出现在这里，而是IE6，该死的IE6会自作聪明的进行编码，即将下划线转成%5F
+###[MYSQL性能优化分享](https://www.zendstudio.net/archives/mysql-performance-optimization-trivial/)
+```js
+有一个1000多万条记录的用户表members,查询起来非常之慢，同事的做法是将其散列到100个表中，分别从members0到members99，然后根据mid分发记录到这些表中
+for($i=0;$i< 100; $i++ ){
+	//echo "CREATE TABLE db2.members{$i} LIKE db1.members<br>";
+	echo "INSERT INTO members{$i} SELECT * FROM members WHERE mid%100={$i}<br>";
+}
+不停机修改mysql表结构
+建一个临时表：
+
+/*创建临时表*/
+CREATE TABLE members_tmp LIKE members
+然后修改members_tmp的表结构为新结构，接着使用上面那个for循环来导出数据，因为1000万的数据一次性导出是不对的，mid是主键，一个区间一个区间的导，基本是一次导出5万条吧，这里略去了
+接着重命名将新表替换上去：
+
+/*这是个颇为经典的语句哈*/
+RENAME TABLE members TO members_bak,members_tmp TO members;
+
+分表的话 mysql 的partition功能就是干这个的，对代码是透明的；在代码层面去实现貌似是不合理的
+```
+###[php设计](https://eev.ee/blog/2012/04/09/php-a-fractal-of-bad-design/?utm_source=tool.lu)
+"foo" == TRUE, and "foo" == 0… but, of course, TRUE != 0
+123 == "123foo"… although "123" != "123foo"
+"6" == " 6", "4.2" == "4.20", and "133" == "0133". But note that 133 != 0133, because 0133 is octal. But "0x10" == "16" and "1e3" == "1000"
+ (++) a NULL produces 1. Decrementing (--) a NULL produces NULL
+ array("foo", "bar") != array("bar", "foo")
+array("foo" => 1, "bar" => 2) == array("bar" => 2, "foo" => 1)
+ Argument order: array_filter($input, $callback) versus array_map($callback, $input), strpos($haystack, $needle) versus array_search($needle, $haystack)
+ https://www.toptal.com/php/10-most-common-mistakes-php-programmers-make?utm_source=tool.lu
+ 
+ for ($i = ord('a'); $i <= ord('z'); $i++) {
+    echo chr($i) . "\n";
+}$letters = range('a', 'z');
+
+for ($i = 0; $i < count($letters); $i++) {
+    echo $letters[$i] . "\n";
+}
+
+###[PHP四种基础算法详解：冒泡，选择，插入和快速排序法](http://www.hoehub.com/PHP/168.html?utm_source=tool.lu)
+```js
+$arr=array(1,43,54,62,21,66,32,78,36,76,39);
+function bubbleSort ($arr)
+{
+    $len = count($arr);
+    //该层循环控制 需要冒泡的轮数
+    for ($i=1; $i<$len; $i++) {
+        //该层循环用来控制每轮 冒出一个数 需要比较的次数
+        for ($k=0; $k<$len-$i; $k++) {
+            if($arr[$k] > $arr[$k+1]) {
+                $tmp       = $arr[$k+1]; // 声明一个临时变量
+                $arr[$k+1] = $arr[$k];
+                $arr[$k]   = $tmp;
+            }
+        }
+    }
+    return $arr;
+}
+
+
+```
+###[微信公众号JS-SDK类库](http://www.hoehub.com/PHP/183.html)
+```js
+class JSSDK
+{
+    private $appId;
+    private $appSecret;
+ 
+    public function __construct($appId, $appSecret)
+    {
+        $this->appId = $appId;
+        $this->appSecret = $appSecret;
+    }
+ 
+    public function getSignPackage()
+    {
+        $jsapiTicket = $this->getJsApiTicket();
+        // 注意 URL 一定要动态获取，不能 hardcode.
+        $protocol = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443 ? "https://" : "http://";
+        $url = "{$protocol}{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+        $timestamp = time();
+        $nonceStr = $this->createNonceStr();
+        // 这里参数的顺序要按照 key 值 ASCII 码升序排序
+        $string = "jsapi_ticket={$jsapiTicket}&noncestr={$nonceStr}&timestamp={$timestamp}&url={$url}";
+        $signature = sha1($string);
+        $signPackage = array("appId" => $this->appId, "nonceStr" => $nonceStr, "timestamp" => $timestamp, "url" => $url, "signature" => $signature, "rawString" => $string);
+        return $signPackage;
+    }
+ 
+    private function createNonceStr($length = 16)
+    {
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $str = "";
+        for ($i = 0; $i < $length; $i++) {
+            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        }
+        return $str;
+    }
+ 
+    private function getJsApiTicket()
+    {
+        // jsapi_ticket 应该全局存储与更新，以下代码以写入到文件中做示例
+        $data = json_decode(file_get_contents("wxjs/jsapi_ticket.json"));
+        if ($data->expire_time < time()) {
+            $accessToken = $this->getAccessToken();
+            // 如果是企业号用以下 URL 获取 ticket
+            // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
+            $url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token={$accessToken}";
+            $res = json_decode($this->httpGet($url));
+            $ticket = $res->ticket;
+            if ($ticket) {
+                $data->expire_time = time() + 7000;
+                $data->jsapi_ticket = $ticket;
+                $fp = fopen("wxjs/jsapi_ticket.json", "w");
+                fwrite($fp, json_encode($data));
+                fclose($fp);
+            }
+        } else {
+            $ticket = $data->jsapi_ticket;
+        }
+        return $ticket;
+    }
+ 
+    private function getAccessToken()
+    {
+        // access_token 应该全局存储与更新，以下代码以写入到文件中做示例
+        $data = json_decode(file_get_contents("wxjs/access_token.json"));
+        if ($data->expire_time < time()) {
+            // 如果是企业号用以下URL获取access_token
+            // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
+            $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$this->appId}&secret={$this->appSecret}";
+            $res = json_decode($this->httpGet($url));
+            $access_token = $res->access_token;
+            if ($access_token) {
+                $data->expire_time = time() + 7000;
+                $data->access_token = $access_token;
+                $fp = fopen("wxjs/access_token.json", "w");
+                fwrite($fp, json_encode($data));
+                fclose($fp);
+            }
+        } else {
+            $access_token = $data->access_token;
+        }
+        return $access_token;
+    }
+ 
+    private function httpGet($url)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 500);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $res = curl_exec($curl);
+        curl_close($curl);
+        return $res;
+    }
+}
+
+$appid       = '这是appid';
+$appsecret   = '这是appsecret';
+$jssdk       = new JSSDK( $appid, $appsecret );
+$signPackage = $jssdk->GetSignPackage();
+ 
+wx.config({
+    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appId:     '<?php echo $signPackage["appId"];?>',     // 必填，公众号的唯一标识
+    timestamp: '<?php echo $signPackage["timestamp"];?>', // 必填，生成签名的时间戳
+    nonceStr:  '<?php echo $signPackage["nonceStr"];?>',  // 必填，生成签名的随机串
+    signature: '<?php echo $signPackage["signature"];?>', // 必填，签名，见附录1
+    jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+});
+```
+###[天才绝招！21张GIF动图让你轻松了解各种数学概念！](http://www.hoehub.com/choice/62.html)
+###[javaScript 简单实现根据身份证号码识别性别年龄生日](http://www.hoehub.com/JavaScript/43.html)
+```js
+   function discriCard(){ 
+        //获取输入身份证号码 
+        var UUserCard = "XXXXXXXXXXXXXXXXXX"; 
+        //获取出生日期 
+        UUserCard.substring(6, 10) + "-" + UUserCard.substring(10, 12) + "-" + UUserCard.substring(12, 14); 
+        //获取性别 
+        if (parseInt(UUserCard.substr(16, 1)) % 2 == 1) { 
+            alert("男"); 
+        } else { 
+            alert("女"); 
+        } 
+        //获取年龄 
+        var myDate = new Date(); 
+        var month = myDate.getMonth() + 1; 
+        var day = myDate.getDate(); 
+        var age = myDate.getFullYear() - UUserCard.substring(6, 10) - 1; 
+        if (UUserCard.substring(10, 12) < month || UUserCard.substring(10, 12) == month && UUserCard.substring(12, 14) <= day) { 
+            age++; 
+        } 
+        alert(age); 
+        //年龄 age 
+    } 
+```
+###[CentOS安装crontab及使用方法](http://www.hoehub.com/Linux/40.html)
+```js
+第1列表示分钟1～59 每分钟用或者 /1表示
+第2列表示小时1～23（0表示0点）
+第3列表示日期1～31
+第4列表示月份1～12
+第5列标识号星期0～6（0表示星期天）
+第6列要运行的命令
+30 21 * * * /usr/local/etc/rc.d/lighttpd restart
+// 上面的例子表示每晚的21:30重启apache。
+ 
+45 4 1,10,22 * * /usr/local/etc/rc.d/lighttpd restart
+// 上面的例子表示每月1、10、22日的4 : 45重启apache。
+ 
+10 1 * * 6,0 /usr/local/etc/rc.d/lighttpd restart
+//上面的例子表示每周六、周日的1 : 10重启apache。
+ 
+0,30 18-23 * * * /usr/local/etc/rc.d/lighttpd restart
+// 上面的例子表示在每天18 : 00至23 : 00之间每隔30分钟重启apache。
+ 
+0 23 * * 6 /usr/local/etc/rc.d/lighttpd restart
+// 上面的例子表示每星期六的11 : 00 pm重启apache。
+ 
+* */1 * * * /usr/local/etc/rc.d/lighttpd restart
+// 每一小时重启apache
+ 
+* 23-7/1 * * * /usr/local/etc/rc.d/lighttpd restart
+// 晚上11点到早上7点之间，每隔一小时重启apache
+ 
+0 11 4 * mon-wed /usr/local/etc/rc.d/lighttpd restart
+// 每月的4号与每周一到周三的11点重启apache
+ 
+0 4 1 jan * /usr/local/etc/rc.d/lighttpd restart
+// 一月一号的4点重启apache
+ 
+*/30 * * * * /usr/sbin/ntpdate 210.72.145.44
+// 每半小时同步一下时间
+```
+###[十张GIFs让你弄懂递归等概念](http://www.hoehub.com/PHP/recursion.html)
+
+
+
+###[PHP修改PNG图片DPI](https://my.oschina.net/xiaoshuo/blog/209349?utm_source=tool.lu)
+```js
+$filename = 'img/example.png';
+// ob_start();
+// $im = imagecreatefrompng($filename);
+// imagepng($im);
+// $file = ob_get_contents();
+// ob_end_clean();
+$file = file_get_contents($filename);
+
+//数据块长度为9
+$len = pack("N", 9);
+//数据块类型标志为pHYs
+$sign = pack("A*", "pHYs");
+//X方向和Y方向的分辨率均为300DPI（1像素/英寸=39.37像素/米），单位为米（0为未知，1为米）
+$data = pack("NNC", 300 * 39.37, 300 * 39.37, 0x01);
+//CRC检验码由数据块符号和数据域计算得到
+$checksum = pack("N", crc32($sign . $data));
+$phys = $len . $sign . $data . $checksum;
+
+$pos = strpos($file, "pHYs");
+if ($pos > 0) {
+	//修改pHYs数据块
+	$file = substr_replace($file, $phys, $pos - 4, 21);
+} else {
+	//IHDR结束位置（PNG头固定长度为8，IHDR固定长度为25）
+	$pos = 33;
+	//将pHYs数据块插入到IHDR之后
+	$file = substr_replace($file, $phys, $pos, 0);
+}
+
+header("Content-type: image/png");
+header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+echo $file;
+```
+###[php中的foreach问题（1）](http://www.cnblogs.com/driftcloudy/p/3142013.html)
+```js
+ foreach($arr as $k => $v) 结构隐含了如下操作，分别将数组当前的'键'和当前的'值'赋给变量k和k和v。具体展开形如：
+
+foreach($arr as $k => $v){ 
+    //在用户代码执行之前隐含了2个赋值操作
+    $v = currentVal(); 
+    $k = currentKey();
+
+    //继续运行用户代码
+    ……
+}
+根据上述理论，现在我们重新来分析下第一个foreach：
+
+第1遍循环，由于$v是一个引用，因此$v = &$arr[0]，$v=$v*2相当于$arr[0]*2，因此$arr变成2,2,3
+
+第2遍循环，$v = &$arr[1]，$arr变成2,4,3
+
+第3遍循环，$v = &$arr[2]，$arr变成2,4,6
+ 
+
+随后代码进入了第二个foreach：
+
+第1遍循环，隐含操作$v=$arr[0]被触发，由于此时$v仍然是$arr[2]的引用，即相当于$arr[2]=$arr[0]，$arr变成2,4,2
+
+第2遍循环，$v=$arr[1]，即$arr[2]=$arr[1]，$arr变成2,4,4
+
+第3遍循环，$v=$arr[2]，即$arr[2]=$arr[2]，$arr变成2,4,4
+
+$arr = array('a','b','c');
+
+foreach($arr as $k => $v) {
+    echo key($arr), "=>", current($arr);
+}
+
+// 打印 1=>b 1=>b 1=>b
+$arr = array(1, 2, 3);
+$tmp = $arr;
+foreach($tmp as $k => &$v){
+    $v *= 2;
+}
+var_dump($arr, $tmp); 
+创建了数组arr，随后将该数组赋给了arr，随后将该数组赋给了tmp，在接下来的foreach循环中，对v进行修改会作用于数组v进行修改会作用于数组tmp上，但是却并不作用到$arr。
+从PHP5起，对象的便总是默认通过引用进行赋值，举例来说：
+
+class A{
+    public $foo = 1;
+}
+$a1 = $a2 = new A;
+$a1->foo=100;
+echo $a2->foo; // 输出100，$a1与$a2其实为同一个对象的引用
+
+```
+
+###[bmp图片转成jpg图片](https://blog.skyx.in/archives/123/)
+```js
+/**
+ * BMP 创建函数
+ * @author simon
+ * @modified by 天心流水
+ * @param string $filename path of bmp file
+ * @example who use,who knows
+ * @return resource of GD
+ */
+function imagecreatefrombmp( $filename ) {
+    if ( !$f1 = fopen( $filename, "rb" ) )
+        return FALSE;
+ 
+    $FILE = unpack( "vfile_type/Vfile_size/Vreserved/Vbitmap_offset", fread( $f1, 14 ) );
+    if ( $FILE['file_type'] != 19778 )
+        return FALSE;
+ 
+    $BMP = unpack( 'Vheader_size/Vwidth/Vheight/vplanes/vbits_per_pixel' . '/Vcompression/Vsize_bitmap/Vhoriz_resolution' . '/Vvert_resolution/Vcolors_used/Vcolors_important', fread( $f1, 40 ) );
+    $BMP['colors'] = pow( 2, $BMP['bits_per_pixel'] );
+    if ( $BMP['size_bitmap'] == 0 )
+        $BMP['size_bitmap'] = $FILE['file_size'] - $FILE['bitmap_offset'];
+    $BMP['bytes_per_pixel'] = $BMP['bits_per_pixel'] / 8;
+    $BMP['bytes_per_pixel2'] = ceil( $BMP['bytes_per_pixel'] );
+    $BMP['decal'] = ($BMP['width'] * $BMP['bytes_per_pixel'] / 4);
+    $BMP['decal'] -= floor( $BMP['width'] * $BMP['bytes_per_pixel'] / 4 );
+    $BMP['decal'] = 4 - (4 * $BMP['decal']);
+    if ( $BMP['decal'] == 4 )
+        $BMP['decal'] = 0;
+ 
+    $PALETTE = array();
+  if ($BMP['colors'] < 16777216 && $BMP['colors'] != 65536)
+  {
+    $PALETTE = unpack('V'.$BMP['colors'], fread($f1,$BMP['colors']*4));
+  }
+ 
+    $IMG = fread( $f1, $BMP['size_bitmap'] );
+    $VIDE = chr( 0 );
+ 
+    $res = imagecreatetruecolor( $BMP['width'], $BMP['height'] );
+    $P = 0;
+    $Y = $BMP['height'] - 1;
+    while( $Y >= 0 ){
+        $X = 0;
+        while( $X < $BMP['width'] ){
+            if ( $BMP['bits_per_pixel'] == 32 ){
+                $COLOR = unpack( "V", substr( $IMG, $P, 3 ) );
+                $B = ord(substr($IMG, $P,1));
+                $G = ord(substr($IMG, $P+1,1));
+                $R = ord(substr($IMG, $P+2,1));
+                $color = imagecolorexact( $res, $R, $G, $B );
+                if ( $color == -1 )
+                    $color = imagecolorallocate( $res, $R, $G, $B );
+                $COLOR[0] = $R*256*256+$G*256+$B;
+                $COLOR[1] = $color;
+            } elseif ( $BMP['bits_per_pixel'] == 24 ) {
+                $COLOR = unpack( "V", substr( $IMG, $P, 3 ) . $VIDE );
+      } elseif ( $BMP['bits_per_pixel'] == 16 ){
+        $COLOR = unpack("v",substr($IMG,$P,2));
+        $blue  = (($COLOR[1] & 0x001f) << 3) + 7;
+        $green = (($COLOR[1] & 0x03e0) >> 2) + 7;
+        $red   = (($COLOR[1] & 0xfc00) >> 7) + 7;
+        $COLOR[1] = $red * 65536 + $green * 256 + $blue;
+            } elseif ( $BMP['bits_per_pixel'] == 8 ){
+                $COLOR = unpack( "n", $VIDE . substr( $IMG, $P, 1 ) );
+                $COLOR[1] = $PALETTE[$COLOR[1] + 1];
+            } elseif ( $BMP['bits_per_pixel'] == 4 ){
+                $COLOR = unpack( "n", $VIDE . substr( $IMG, floor( $P ), 1 ) );
+                if ( ($P * 2) % 2 == 0 )
+                    $COLOR[1] = ($COLOR[1] >> 4);
+                else
+                    $COLOR[1] = ($COLOR[1] & 0x0F);
+                $COLOR[1] = $PALETTE[$COLOR[1] + 1];
+            } elseif ( $BMP['bits_per_pixel'] == 1 ){
+                $COLOR = unpack( "n", $VIDE . substr( $IMG, floor( $P ), 1 ) );
+                if ( ($P * 8) % 8 == 0 )
+                    $COLOR[1] = $COLOR[1] >> 7;
+                elseif ( ($P * 8) % 8 == 1 )
+                    $COLOR[1] = ($COLOR[1] & 0x40) >> 6;
+                elseif ( ($P * 8) % 8 == 2 )
+                    $COLOR[1] = ($COLOR[1] & 0x20) >> 5;
+                elseif ( ($P * 8) % 8 == 3 )
+                    $COLOR[1] = ($COLOR[1] & 0x10) >> 4;
+                elseif ( ($P * 8) % 8 == 4 )
+                    $COLOR[1] = ($COLOR[1] & 0x8) >> 3;
+                elseif ( ($P * 8) % 8 == 5 )
+                    $COLOR[1] = ($COLOR[1] & 0x4) >> 2;
+                elseif ( ($P * 8) % 8 == 6 )
+                    $COLOR[1] = ($COLOR[1] & 0x2) >> 1;
+                elseif ( ($P * 8) % 8 == 7 )
+                    $COLOR[1] = ($COLOR[1] & 0x1);
+                $COLOR[1] = $PALETTE[$COLOR[1] + 1];
+            }else
+                return FALSE;
+            imagesetpixel( $res, $X, $Y, $COLOR[1] );
+            $X++;
+            $P += $BMP['bytes_per_pixel'];
+        }
+        $Y--;
+        $P += $BMP['decal'];
+    }
+    fclose( $f1 );
+ 
+    return $res;
+}
+```
+
+
+
 ###[遭遇php的in_array低性能08/28/2013](http://www.zendstudio.net/archives/php-in_array-s-low-performance/?utm_source=tool.lu)
 ```js
 $y="1800";
