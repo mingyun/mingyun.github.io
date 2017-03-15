@@ -1,3 +1,19 @@
+###[nginx上，http状态200响应，PHP空白返回的问题](http://www.cnxct.com/php-return-empty-result-on-nginx-without-script_filename/?utm_source=tool.lu)
+在nginx配置的 fastcgt_params中加上SCRIPT_FILENAME的配置（在ubuntu的apt-get形式安装nginx配置中，默认是有这条的），比如
+
+ 
+fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+###[eval gzinflate base64_decode pack gzuncompress 等php函数在线解密](http://decode.cnxct.com/)
+###[正则表达式与数学](http://www.cnxct.com/%e6%ad%a3%e5%88%99%e8%a1%a8%e8%be%be%e5%bc%8f%e4%b8%8e%e6%95%b0%e5%ad%a6/)
+```js
+^1?$|^(11+?)\1+$ 可以判断素数（换成n个1的形式，n为数字的大小。比如5转换为11111；3转换为111；2转换为11。）
+if (preg_match('/^1?$|^(11+?)\1+$/i', $subject)) {
+    #不是素数
+} else {
+    # 是素数
+}
+```
+###[PPT下载：web开发与运维安全浅见PPT下载](http://www.cnxct.com/web-development-security-ppt/)
 ###[MySQL大数据量表中删除重复记录](https://blog.skyx.in/archives/135/)
 ```js
 CREATE TABLE `tmptable` AS (SELECT `title` FROM `info` GROUP BY `title` HAVING COUNT( `title` ) >1);
