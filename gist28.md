@@ -1,3 +1,135 @@
+[网页游戏常见安全问题、防御方式与挽救措施](http://www.cnxct.com/experience-with-webgame-of-security-and-defense/)
+```js
+充值接口的验证方式
+// 返回参数列表
+$signKey = array('openid','appid','ts','payitem','token','billno','version','zoneid','providetype','amt','payamt_coins','pubacct_payamt_coins');
+$sign = array();
+//从GET参数中，对比找出上面参数的值
+foreach($signKey as $key ) {
+    if (isset($data[$key]))
+    {
+    $sign[$key] = $data[$key];  //只有 GET里有的参数，才参与sig的计算
+    }
+}
+######开始生成签名############
+//1: URL编码 URI
+$url = rawurlencode($url);
+//2:按照key进行字典升序排列
+ksort($sign);
+//3: &拼接，并URL编码
+$arrQuery = array();
+foreach ($sign as $key => $val ) 
+{ 
+    $arrQuery[] = $key . '=' . str_replace('-','%2D',$val);
+}   
+$query_string = join('&', $arrQuery);
+//4 以POST方式拼接 1、3 以及URL
+$src = 'GET&'.$url.'&'.rawurlencode($query_string);
+// ## 构造密钥
+$key = $this->config->get('qq_appkey').'&';
+//### 生成签名
+$sig = base64_encode(hash_hmac("sha1", $src, strtr($key, '-_', '+/'), true));
+if ( $sig != $data['sig'] ) {
+    $return['ret'] = 4;
+    $return['msg'] = '请求参数错误：（sig）';
+    $this->output->set(json_encode($return));
+    return ;
+}
+
+$a = 162.95;
+$b = 16295;
+
+$c = (int)($a*100);
+
+if($c!=(int)$b)
+{
+	
+	echo "不相等,c=".$c.",b=".$b;
+	
+}else{
+	
+	echo "相等";
+	
+}
+$a = 162.95;
+        $b = 16295;
+        if ( round($a * 100, 2) != round($b, 2)){
+
+反正先统一取2位小数，或者四舍五入再比较。
+16295 转int类型就变成16294了
+用户并发请求锁的实现，php中session以文件形式存储时，php会对session文件加锁，不释放(如果不特意执行session_write_close)，知道当前响应完成。另外一个线程才可以正常读取，这简介的形成了单个用户的并发请求锁，但是，后面的进程一直处于等待状态，也会占用一个php-fpm进程，阻塞其他用户的正常请求对php线程的使用。为此，我们使用NOSQL的K-V形式结构，以user_name为key的形式，实现用户并发请求锁，比如 redis的setnx接口，原子性判断操作有则返回false，，没有就添加一个，返回true。那么，对于下一个请求，setnx时，返回false，有这个key了，那么立刻抛出异常，结束响应，FLASH根据异常内容，提醒用户不要进行恶意操作。即不会发生并发请求，又不会阻塞请求处理。同时，在请求结束的析构函数里，对这个锁进行删除操作，不影响下一个正常请求。若因为程序异常，发生语法错误，导致析构函数没法执行，没有删除用户锁时，可以在生成锁的时候，设置过期时间，比如5秒，甚至2秒，利用nosql的过期机制，实现用户解锁，避免用户长时间无法正常游戏。
+把UPDATE语句改为UPDATE `role_gold` SET gold = gold + 100 WHERE role_id = 1或者UPDATE `role_gold` SET gold = 150 WHERE role_id = 1 AND gold = 100来解决，但这种多个事务同时操作修改多个表的多条记录时，还容易引发死锁问题，比如《webgame中Mysql Deadlock ERROR 1213 (40001)错误的排查历程》。而且，当条件为跨表内数据是否存在，或者另外条件不在MYSQL中，而在其他网络接口的响应中时，如何做呢？
+```
+###[对CSRF（跨站请求伪造）的理解](https://my.oschina.net/jasonultimate/blog/212554)
+```js
+从一个网站A中发起一个到网站B的请求，而这个请求是经过了伪装的，伪装操作达到的目的就是让请求看起来像是从网站B中发起的，也就是说，让B网站所在的服务器端误以为该请求是从自己网站发起的，而不是从A网站发起的。当然，请求一般都是恶意的。
+之所以要伪装成从B网站发起的，是因为Cookie是不能跨域发送的。结合上面这个例子来说就是：如果从A网站直接发送请求到B网站服务器的话，是无法将B网站中产生的Cookie一起发给B服务器的。
+
+为什么非要发送Cookie呢？这是因为服务器在用户登录后会将用户的一些信息放到Cookie中返回给客户端，然后客户端在请求一些需要认证的资源的时候会把Cookie一起发给服务器，服务器通过读取Cookie中的信息来进行用户认证，认证通过后才会做出正确的响应。 攻击者盗用了你的身份，以你的名义发送恶意请求。
+受害者必须依次完成两个步骤：
+
+1.登录受信任网站A，并在本地生成Cookie。
+
+2.在不登出A的情况下，访问危险网站B。
+
+cookie是在你计算机里的一个文件 (看得见实物总比抽象的概念来得容易理解)， 它记录了你的用户ID，密码、浏览过的网页、停留的时间等信息，当你再次来到该网站时，网站通过读取Cookie，得知你的相关信息，就可以做出相应的动作，如在页面显示欢迎你的标语，或者让你不用输入ID、密码就直接登录等等。 Cookie就是作用解决HTTP协议无状态的缺陷提出的一种方案。值得注意的是对比Session这个概念，Cookie机制是保存客户端状态的方案，而Session是保存服务端状态的方案。
+session机制都使用会话cookie来保存session id，而关闭浏览器后这个session id就消失了，再次连接服务器时也就无法找到原来的session。如果服务器设置的cookie被保存到硬盘上，或者使用某种手段改写浏览器发出的 HTTP请求头，把原来的session id发送给服务器，则再次打开浏览器仍然能够找到原来的session。
+
+　　恰恰是由于关闭浏览器不会导致session被删除，迫使服务器为seesion设置了一个失效时间，当距离客户端上一次使用session的时间超过这个失效时间时，服务器就可以认为客户端已经停止了活动，才会把session删除以节省存储空间。
+
+存在CSRF漏洞Html代码：
+<form action="Transfer.php" method="POST">
+　　　　<p>ToBankId: <input type="text" name="toBankId" /></p>
+　　　　<p>Money: <input type="text" name="money" /></p>
+　　　　<p><input type="submit" value="Transfer" /></p>
+</form>
+
+以上漏洞的攻击代码：
+<form method="POST" action="http://www.Bank.com/Transfer.php">
+<input type="hidden" name="toBankId" value="hyddd">
+<input type="hidden" name="money" value="10000">
+</form>
+<script>
+document.usr_form.submit();
+</script>
+
+ 
+
+      如果用户在登陆www.Bank.com后，访问带有以上攻击代码的页面，该用户会在毫不知情下，给hyddd转账10000块。这就是CSRF攻击。
+
+2.包含不同域的Js脚本【隐患】
+```
+###[Selenium私房菜系列--总章](http://www.cnblogs.com/hyddd/archive/2009/05/30/1492536.html)
+
+###[Ajax跨域](https://my.oschina.net/jasonultimate/blog/550737)
+```js
+客户端请求通过Nginx转发
+
+原理：客户端的所有请求都直接发到客户端所在域名下，但是在客户端服务器增加一台nginx服务器，作为代理，如果是后端的url，直接代理转发到服务端，这样就不存在前端的跨域问题了。
+举例：
+
+server {
+    listen       80;
+    server_name  static.demo.com;    #可配置多个主机头
+    charset utf-8,gbk,gb2312,gb18030; #可以实现多种编码识别
+
+    location / {
+        root   /home/wy/www/static.demo.com/ROOT;  #网站文件路径
+
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_localtime on;
+        index  default.html;
+    }
+    #所有/server/开头的请求都会走这里
+    location /server/ {
+            proxy_pass http://server.demo.com:8080;  ##转发到server
+            proxy_set_header    Host             $host;
+            proxy_set_header    X-Real-IP        $remote_addr;
+            proxy_set_header    X-Forwarded-For  $proxy_add_x_forwarded_for;
+        }
+}
+```
 ###[nginx上，http状态200响应，PHP空白返回的问题](http://www.cnxct.com/php-return-empty-result-on-nginx-without-script_filename/?utm_source=tool.lu)
 在nginx配置的 fastcgt_params中加上SCRIPT_FILENAME的配置（在ubuntu的apt-get形式安装nginx配置中，默认是有这条的），比如
 
