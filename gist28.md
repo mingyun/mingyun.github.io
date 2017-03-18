@@ -1,3 +1,15 @@
+[图片转字符](https://helloacm.com/tools/image-to-ascii/)
+[发送日志到微信](http://sc.ftqq.com/3.version)
+https://www.v2ex.com/t/348105  Sentry 短信+邮件+内部 APP
+常用告警方式邮件、短信、语音、钉钉、微信大概这些，都有接口调用的方式
+ 参考 mojo-weixin github 上有这个项目
+[利用 [微信公众号通知] 给你的网站加上异常提醒吧](https://laravel-china.org/articles/3854/the-use-of-wechat-public-notice-to-your-web-site-with-unusual-reminder)
+https://github.com/HanSon/wechat-notice  https://github.com/sjdy521/Mojo-Weixin  使用Perl语言（不会没关系）编写的微信/weixin/wechat客户端框架
+[DBA的40条军规](https://mp.weixin.qq.com/s/PtIaqAjs298uH6edEYb2xg)
+
+
+
+
 [php中用redis存储session](https://segmentfault.com/q/1010000008721376)
 ```js
 php的session确实是会在一次完整的http请求结束后，才会设置session，下面是我根据redis自带的monitor监控了一下redis的状态
