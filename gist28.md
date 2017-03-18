@@ -1,3 +1,18 @@
+[php中用redis存储session](https://segmentfault.com/q/1010000008721376)
+```js
+php的session确实是会在一次完整的http请求结束后，才会设置session，下面是我根据redis自带的monitor监控了一下redis的状态
+session_start();
+$redis->auth(123456);
+
+http请求完成以后redis中有一个setex命令，其实这个就是php内核告诉redis写入session，这是一个自动的过程，session之所以第一次没有打印出来，也是因为第一次http请求结果后，php才会把session写入redis中，第二次请求的时候session已经成功写入
+session要等你请求走完了才会去写的，你要是想设置了就去写可以session_write_close ,不过这样session也就结束了
+```
+![imh](https://segmentfault.com/img/bVKM1o?w=806&h=273)
+![o](https://segmentfault.com/img/bVKM1H?w=648&h=116)
+
+
+
+
 [网页游戏常见安全问题、防御方式与挽救措施](http://www.cnxct.com/experience-with-webgame-of-security-and-defense/)
 ```js
 充值接口的验证方式
