@@ -1,4 +1,5 @@
 [图片转字符](https://helloacm.com/tools/image-to-ascii/)
+
 [发送日志到微信](http://sc.ftqq.com/3.version)
 https://www.v2ex.com/t/348105  Sentry 短信+邮件+内部 APP
 常用告警方式邮件、短信、语音、钉钉、微信大概这些，都有接口调用的方式
@@ -6,8 +7,74 @@ https://www.v2ex.com/t/348105  Sentry 短信+邮件+内部 APP
 [利用 [微信公众号通知] 给你的网站加上异常提醒吧](https://laravel-china.org/articles/3854/the-use-of-wechat-public-notice-to-your-web-site-with-unusual-reminder)
 https://github.com/HanSon/wechat-notice  https://github.com/sjdy521/Mojo-Weixin  使用Perl语言（不会没关系）编写的微信/weixin/wechat客户端框架
 [DBA的40条军规](https://mp.weixin.qq.com/s/PtIaqAjs298uH6edEYb2xg)
+```js
+删除默认空密码账号。
 
+delete from mysql.user where user='' and password='';
+flush privileges;
 
+使用InnoDB存储引擎。
+
+支持事务，行级锁，更好的恢复性，高并发下性能更好。
+InnoDB表避免使用COUNT(*)操作，因内部没有计数器，需要一行一行累加计算，计数统计实时要求较强可以使用memcache或者Redis。
+所有表和字段都需要添加中文注释。 避免使用外键，外键用来保护参照完整性，可在业务端实现。
+
+外键会导致父表和子表之间耦合，十分影响SQL性能，出现过多的锁等待，甚至会造成死锁。
+禁止使用分区表。查询的字段必须是分区键，否则会遍历所有的分区表，并不会带来性能上的提升。此外，分区表在物理结构上仍旧是一张表，此时我们更改表结构，一样不会带来性能上的提升。所以应采用切表的形式做拆分，如程序上需要对历史数据做查询，可通过union all的方式关联查询。
+
+用DECIMAL代替FLOAT和DOUBLE存储精确浮点数。
+mysql> CREATE TABLE t3 (c1 float(10,2),c2 decimal(10,2));       
+Query OK, 0 rows affected (0.05 sec)
+>mysql> insert into t3 values (999998.02, 999998.02);    
+Query OK, 1 row affected (0.01 sec)
+>mysql> select * from t3;
++-----------+-----------+
+| c1        | c2        |
++-----------+-----------+
+| 999998.00 | 999998.02 |
+采用tinyint完全可以满足需要，int占用的是4字节，而tinyint才占用1个字节。
+int(10)和int(1)没有什么区别，10和1仅是宽度而已，在设置了zerofill扩展属性的时候有用
+create table test(id int(10) zerofill,id2 int(1));insert into test values(1,1);
+insert into test values(1000000000,1000000000);
+select * from test;
++------------+------------+
+| id         | id2        |
++------------+------------+
+| 0000000001 |          1 |
+| 1000000000 | 1000000000 |
+查询的字段必须创建索引。
+
+如：1、SELECT、UPDATE、DELETE语句的WHERE条件列；2、多表JOIN的字段。
+低效查询
+  SELECT * FROM t WHERE name LIKE '%de%';
+  ----->
+  高效查询
+  SELECT * FROM t WHERE name LIKE 'de%';
+联合索引IX_a_b_c(a,b,c) 相当于 (a) 、(a,b) 、(a,b,c)，那么索引 (a) 、(a,b) 就是多余的。
+不使用SELECT *，只获取必要的字段。
+
+消耗CPU和IO、消耗网络带宽；
+无法使用覆盖索引。
+36、用IN来替换OR。
+
+低效查询
+SELECT * FROM t WHERE LOC_ID = 10 OR LOC_ID = 20 OR LOC_ID = 30;
+----->
+高效查询
+SELECT * FROM t WHERE LOC_IN IN (10,20,30);
+在MySQL 5.7开始会在初始化后随即生成一个初始密码，可以在初始化日志中查找。内容类似下面的形式：
+
+error.log:2017-02-15T15:47:15.132874+08:001 [Note] A temporary password is generated for root@localhost: Y9srj<pdn9Lj
+
+3、在mysql.user中默认值为mysql_native_password，不再支持mysql_old_password。
+
+>select distinct plugin from mysql.user;
++-----------------------+
+|plugin                |
++-----------------------+
+|mysql_native_password |
++-----------------------+
+```
 
 
 [php中用redis存储session](https://segmentfault.com/q/1010000008721376)
