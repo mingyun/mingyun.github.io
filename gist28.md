@@ -1,3 +1,212 @@
+[猎聘 requests post ](https://www.zhihu.com/question/54320433)
+```js
+作者：陈二白
+链接：https://www.zhihu.com/question/54320433/answer/140348520
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+from requests import Session
+
+import md5
+
+passwd = "passwod"
+username = "username"
+
+mpass = md5.new()
+mpass.update(passwd)
+passwd = mpass.hexdigest()
+
+session = Session()
+headers = {'Host': 'passport.liepin.com',
+           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0',
+           'Accept': 'application/json, text/javascript, */*; q=0.01',
+           'Accept-Language': 'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+           'Accept-Encoding': 'gzip, deflate, br',
+           'Content-Type': 'application/x-www-form-urlencoded',
+           'X-Alt-Referer': 'https://www.liepin.com/',
+           'X-Requested-With': 'XMLHttpRequest',
+           'Referer': 'https://passport.liepin.com/ajaxproxy.html',
+           'Content-Length': '117',
+           'Cookie': '',
+           'Connection': 'keep-alive'
+           }
+
+需要导出一下他的 证书文件，这个请网上搜索
+content = session.post("https://passport.liepin.com/c/login.json?__mn__=user_login",
+                       data=dict(layer_from='wwwindex_rightbox_new',
+                                 user_login=username,
+                                 user_pwd=passwd,
+                                 chk_remember_pwd="on"), verify="/path/to/veryfy.crt",
+                       headers=headers)
+print content.text
+```
+[干货 | 28 张相见恨晚的速查表（完整版）——（ Python 速查表 | 机器学习、R 、概率论、大数据速查表）](https://zhuanlan.zhihu.com/p/25778895)
+http://link.zhihu.com/?target=https%3A//pan.baidu.com/s/1cCdC8Q 
+[itchat+pillow实现微信好友头像爬取和拼接](https://zhuanlan.zhihu.com/p/25782937)
+http://link.zhihu.com/?target=https%3A//github.com/15331094/wxImage  
+```js
+from numpy import *
+import itchat
+import urllib
+import requests
+import os
+
+import PIL.Image as Image
+from os import listdir
+import math
+
+itchat.auto_login(enableCmdQR=True)
+
+friends = itchat.get_friends(update=True)[0:]
+
+user = friends[0]["UserName"]
+
+print(user)
+
+os.mkdir(user)
+
+num = 0
+
+for i in friends:
+    img = itchat.get_head_img(userName=i["UserName"])
+    fileImage = open(user + "/" + str(num) + ".jpg",'wb')
+    fileImage.write(img)
+    fileImage.close()
+    num += 1
+
+pics = listdir(user)
+
+numPic = len(pics)
+
+print(numPic)
+
+eachsize = int(math.sqrt(float(640 * 640) / numPic))
+
+print(eachsize)
+
+numline = int(640 / eachsize)
+
+toImage = Image.new('RGBA', (640, 640))
+
+
+print(numline)
+
+x = 0
+y = 0
+
+for i in pics:
+    try:
+        #打开图片
+        img = Image.open(user + "/" + i)
+    except IOError:
+        print("Error: 没有找到文件或读取文件失败")
+    else:
+        #缩小图片
+        img = img.resize((eachsize, eachsize), Image.ANTIALIAS)
+        #拼接图片
+        toImage.paste(img, (x * eachsize, y * eachsize))
+        x += 1
+        if x == numline:
+            x = 0
+            y += 1
+
+
+toImage.save(user + ".jpg")
+
+
+itchat.send_image(user + ".jpg", 'filehelper')
+```
+[Python爬虫实战入门六：提高爬虫效率—并发爬取智联招聘](https://zhuanlan.zhihu.com/p/24930071)
+```js
+import requests
+from bs4 import BeautifulSoup
+import re
+
+url = 'http://sou.zhaopin.com/jobs/searchresult.ashx?jl=全国&kw=python&p=1&kt=3'
+wbdata = requests.get(url).content
+soup = BeautifulSoup(wbdata, 'lxml')
+
+items = soup.select("div#newlist_list_content_table > table")
+count = len(items) - 1
+# 每页职位信息数量
+print(count)
+
+job_count = re.findall(r"共<em>(.*?)</em>个职位满足条件", str(soup))[0]
+# 搜索结果页数
+pages = (int(job_count) // count) + 1
+print(pages)
+
+import requests
+from bs4 import BeautifulSoup
+from multiprocessing import Pool
+
+def get_zhaopin(page):
+    url = 'http://sou.zhaopin.com/jobs/searchresult.ashx?jl=全国&kw=python&p={0}&kt=3'.format(page)
+    print("第{0}页".format(page))
+    wbdata = requests.get(url).content
+    soup = BeautifulSoup(wbdata,'lxml')
+
+    job_name = soup.select("table.newlist > tr > td.zwmc > div > a")
+    salarys = soup.select("table.newlist > tr > td.zwyx")
+    locations = soup.select("table.newlist > tr > td.gzdd")
+    times = soup.select("table.newlist > tr > td.gxsj > span")
+
+    for name, salary, location, time in zip(job_name, salarys, locations, times):
+        data = {
+            'name': name.get_text(),
+            'salary': salary.get_text(),
+            'location': location.get_text(),
+            'time': time.get_text(),
+        }
+        print(data)
+http://zmister.com/  https://www.zhihu.com/people/zmister/pins/posts
+if __name__ == '__main__':
+    pool = Pool(processes=2) 实例化一个进程池，设置进程为2；
+    pool.map_async(get_zhaopin,range(1,pages+1))调用进程池的map_async()方法，接收一个函数(爬虫函数)和一个列表(url列表)
+    pool.close()
+    pool.join()
+```
+[wxpy: 优雅的微信个人号](https://www.v2ex.com/t/343685)
+```js
+WebQQ 不过 tody.ml/webqq/ 用来做广西联通流量自动充值
+@hug.get('/send_msg')
+def private_msg(content, username:hug.types.text="filehelper"):
+nameArr = username.split()
+name = '';
+for i in range(len(nameArr)):
+name = nameArr[i]
+print("users:{name} content : {content}".format(**locals()))
+itchat.send_msg(content, toUserName=name)
+return '{"result":1}'
+hug 可实现 api 接口了，这样通用性更好，可以给其他服务调用，非常简洁 双开 APP ，一天开一下小号就行 
+无责任推荐双开工具: http://parallel-app.com/  PHP 版本的 https://www.v2ex.com/t/335534
+itchat 的用例，有一些只需要修改变量就可以直接使用了，比如直接加群主填写特定验证信息自动邀请加群的。 
+https://github.com/discountry/itchat-examples 
+希望楼主有空研究研究怎么处理红包或其他特殊类消息。
+from wxpy import get_wechat_logger
+
+# 获得 Logger
+logger = get_wechat_logger()
+
+# 发送警告
+logger.warning('这是一条 WARNING 等级的日志！')
+
+# 捕获可能存在的异常，并发送
+try:
+    1 / 0
+except:
+    logger.exception('又出错啦！')
+```
+
+[用微信控制深度学习训练：中国特色的keras插件](https://zhuanlan.zhihu.com/p/25670072)
+http://link.zhihu.com/?target=https%3A//github.com/QuantumLiu/wechat_callback  
+[构建一个pip安装的车辆路径显示的Python包](https://zhuanlan.zhihu.com/p/25857134)
+  pip install carpathview -i https://pypi.python.org/pypi
+[google sheet excel](https://www.zhihu.com/question/47883186/answer/151846965)
+实现抓取的函数是：=IMPORTXML(“URL”,”Xpath expression”)
+常见的函数：=IMPORTHTML(“URL”,”QUERY”, Index)
+![xx](https://pic3.zhimg.com/v2-e76fef9a28340d80ebe6754100f8db26_b.png)
+其中，Xpath expression就是你粘贴过来的那部分代码，需要注意的是，代码中“”号需要变成‘’号：
 [图片转字符](https://helloacm.com/tools/image-to-ascii/)
 [Python 安装库的姿势](https://www.v2ex.com/t/348386#reply36)
 去 Pypi 下载.whl 文件  pandas 就够了
