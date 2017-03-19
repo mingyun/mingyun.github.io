@@ -1,4 +1,187 @@
 [图片转字符](https://helloacm.com/tools/image-to-ascii/)
+[Python 安装库的姿势](https://www.v2ex.com/t/348386#reply36)
+去 Pypi 下载.whl 文件  pandas 就够了
+然后 pip install *.whl 可以选择 Anaconda ，作为一个独立的 Python 发行版，它有巨大的预编译仓库。
+http://www.lfd.uci.edu/~gohlke/pythonlibs/ windows 老老实实 anaconda  apt install (python-lxml | python3-lxml) 
+弱类型：
+> "1"+2
+'12'
+强类型：
+>>> "1"+2
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: cannot concatenate 'str' and 'int' objects
+动态类型：
+>>> a = 1
+>>> type(a)
+<type 'int'>
+>>> a = "s"
+>>> type(a)
+<type 'str'>
+静态类型：
+Prelude> let a = "123" :: Int
+
+<interactive>:2:9:
+    Couldn't match expected type `Int' with actual type `[Char]'
+    In the expression: "123" :: Int
+    In an equation for `a': a = "123" :: Int
+###[在微信中监控你的 Python 程序](https://zhuanlan.zhihu.com/p/25768417)
+```js
+from wxpy import get_wechat_logger
+
+# 获得 Logger
+logger = get_wechat_logger()
+
+# 发送警告
+logger.warning('这是一条 WARNING 等级的日志！')
+
+# 捕获可能发生的异常，并发送
+try:
+    1 / 0
+except:
+    logger.exception('又出错啦！')
+
+ 
+```
+[零基础如何学爬虫技术？](https://www.zhihu.com/question/47883186/answer/151959866)
+双击图标，打开Excel，  依次点击，数据-从网站 在弹出的对话框中，输入目标网址，Games sales https://link.zhihu.com/?target=https%3A//steamspy.com/   ，点击转到，go  等待网页加载，点击你需要的数据区域，点击导入，import
+然后会弹出一个数据存放区域的对话框，随便找个地方，点击ok
+知乎数据爬取的部分采用了github repo: 7sDream/zhihu-oauth  https://link.zhihu.com/?target=https%3A//github.com/7sDream/zhihu-oauth
+
+https://link.zhihu.com/?target=https%3A//gephi.org/  数据可视化，随手找了个开源软件 图像生成采用了Gephi
+[效率君推荐|五个超级实用的政府网站](https://zhuanlan.zhihu.com/p/25814366)
+[如何批量下载 A 股招股说明书？](https://www.zhihu.com/question/21872457/answer/152010418)
+https://github.com/tsauliu/ipofiles/blob/master/pyscrapy.py
+```js
+#-*-coding:utf-8 -*-
+import sys
+import pprint
+reload(sys)
+sys.setdefaultencoding('utf-8')
+import requests
+urldict={}
+import os
+try:
+    os.mkdir('./output')
+except:
+    pass
+
+#从巨潮资讯解析出pdf的真实下载地址
+f=open('stkcd.csv','r')
+fout=open('./output/urls.csv','w')
+for line in f:
+    stkcd = str(line[:6])
+    # 这一行把“招股说明书”换成　“年报”　“半年报”　之类的，即可批量下载其他的公告
+    response=requests.get('http://www.cninfo.com.cn/cninfo-new/fulltextSearch/full?searchkey='+stkcd+'+招股说明书&sdate=&edate=&isfulltext=false&sortName=nothing&sortType=desc&pageNum=1')
+    dict=response.json()
+    for i in dict['announcements']:
+        if '摘要'.decode('utf-8') not in i['announcementTitle']:
+            print i['announcementTitle']
+            url='http://www.cninfo.com.cn/'+i['adjunctUrl']
+            print url
+            secname=i['secName']
+            date=i['adjunctUrl'][10:20]
+            urldict.update({stkcd+'-'+secname+'-'+date:url})
+            csvtowrite=stkcd+','+secname+','+date+','+url+'\n'
+            fout.write(csvtowrite.encode('gbk'))
+pprint.pprint(urldict)
+fout.close()
+
+#根据解析出的pdf地址下载到output，并重命名成有规律的文件
+import urllib2
+for name in urldict:
+    url=urldict[name]
+    response = urllib2.urlopen(url)
+    file = open('./output/'+name+".pdf", 'wb')
+    file.write(response.read())
+    file.close()
+    print name
+```
+[如何找到适合需求的 Python 库?](https://www.zhihu.com/question/26909125/answer/152114857)
+https://awesome-python.com/
+[腾讯QQ号被永久冻结，怎么办？](https://www.zhihu.com/question/26416069/answer/129736018)
+嘿嘿，幸亏遇到我，告诉你一个百分百解决方法。首先冻结了不要对腾讯公司有任何解冻的幻想，打电话都是机器人自动录音的。找人工得花几百块电话费还是解决不了问题。骂死客服一整天，他们依然不会解决冻结。客服根本没有权利，只是训练好话术的拒绝你解决奴隶而已。你可以买车票飞机票去腾讯公司解决有可能解冻，这样太浪费钱了。告诉你一个百分百解冻方法 ，如果你的QQ有付费业务最好，没有开通业务就充个QQ会员一个月。然后直接打工信部电话或者工信部邮箱或者网站投诉，投诉他们要求退QQ付费业务款项，或者说我的苹果手机锁了，需要QQ邮箱进不了，苹果手机永久不能使用了，然后你反馈上去，腾讯吃不了兜着走。反正我的就是通过工信部网站投诉，腾讯立刻解冻，官大一级压死腾讯了。不投诉白不投诉，老百姓血汗钱整天难道容他们在办公室聊天，上网，喝茶，喝咖啡，看报纸吗。
+[Python 程序如何高效地调试？](https://www.zhihu.com/question/21572891/answer/26046582)
+import sys
+
+class ExceptionHook:
+    instance = None
+
+    def __call__(self, *args, **kwargs):
+        if self.instance is None:
+            from IPython.core import ultratb
+            self.instance = ultratb.FormattedTB(mode='Plain',
+                 color_scheme='Linux', call_pdb=1)
+        return self.instance(*args, **kwargs)
+
+sys.excepthook = ExceptionHook()
+然后在你的项目代码某个地方 import crash_on_ipy 就可以了
+[程序员必备的好网站有哪些？](https://www.zhihu.com/question/20783828/answer/152069059)
+清华大学开源软件镜像站 https://link.zhihu.com/?target=https%3A//mirrors.tuna.tsinghua.edu.cn/
+[python小甜点-----100行代码实现个性化翻译](https://zhuanlan.zhihu.com/p/25818996)
+```js
+pip install translate pip install translate-html Windows 可以试试 Python -m translate
+>translate "<div>my</div><table name='this is a name' style='width: 100px;color:blue'>The style property ins
+ide the tag  won't be translate</table>"
+
+<div>我的</div><table name='this is a name' style='width: 100px;color: blue'>标签内的样式属性不会被翻译</table>
+translate -pl proxy_list -pa user:password name
+名称
+# proxy_list是一个文件地址，里面每一行是一个代理，可以配置多个代理，格式如下
+192.168.1.12:12345
+192.168.2.12:12345
+...
+# pa 参数指的代理的用户验证，没有可以不写。
+>>> from translate import Translate
+>>> t = Translate()
+>>> t.translate("name")
+'名称'
+```
+[实时展示Github排名](https://link.zhihu.com/?target=http%3A//awesomegithub.com)
+https://link.zhihu.com/?target=https%3A//github.com/hating/AwesomeGithub
+[识别山寨不再难！快用Python爬评论，无需再等315](https://zhuanlan.zhihu.com/p/25786182)
+```js
+作者：[已重置]
+链接：https://zhuanlan.zhihu.com/p/25786182
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+import requests
+import json
+import time
+import simplejson
+
+headers = {
+'Connection': 'keep-alive',
+'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:51.0) Gecko/20100101 Firefox/51.0'
+}
+base_url = 'https://rate.tmall.com/list_detail_rate.htm?itemId=38975978198&' \
+'spuId=279689783&sellerId=92889104&order=3&callback=jsonp698'
+#在base_url后面添加&currentPage=1就可以访问不同页码的评论
+
+for i in range(2, 98, 1):
+url = base_url + '&currentPage=%s' % str(i)
+#将响应内容的文本取出
+tb_req = requests.get(base_url, headers=headers).text[12:-1]
+print(tb_req)
+
+#将str格式的文本格式化为字典
+tb_dict = simplejson.loads(tb_req)
+
+#编码： 将字典内容转化为json格式对象
+tb_json = json.dumps(tb_dict, indent=2) #indent参数为缩紧，这样打印出来是树形json结构，方便直观
+#print(type(tb_json))
+
+#print(tb_json)
+#解码： 将json格式字符串转化为python对象
+review_j = json.loads(tb_json)
+for p in range(1, 20, 1):
+print(review_j["rateDetail"]["rateList"][p]['rateContent'])
+time.sleep(1)
+
+
+```
+
 
 [发送日志到微信](http://sc.ftqq.com/3.version)
 https://www.v2ex.com/t/348105  Sentry 短信+邮件+内部 APP
