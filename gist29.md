@@ -1,5 +1,32 @@
-[微信公众平台开发工具集](http://www.cnblogs.com/txw1958/p/weixin-tools-list.html)
+PHP设计模式问题https://segmentfault.com/q/1010000008736793
+最好用的是phpfmt sublime
+php 怎么获取当前月份往前24个月中的每个月的订单总和https://segmentfault.com/q/1010000008734802
+https://segmentfault.com/q/1010000008357070  背包算法PHP或Javascript实现方案
+php中static当实例化方法用是什么意思https://segmentfault.com/q/1010000008715451
+无限级分类，tp_user 应该新增一个字段 path 。path值为 0-1、0-1-2 等等。
 
+然后，sql查询：select id,name, parent_id,path,concat(path,'-',id) as bpath, from tp_user order by bpathhttps://segmentfault.com/q/1010000008537364
+[微信公众平台开发工具集](http://www.cnblogs.com/txw1958/p/weixin-tools-list.html)
+PHP怎么获取每个月的最后一个周五日期https://segmentfault.com/q/1010000008708171
+在curl请求的url上加一个XDEBUG_SESSION_START=1就可以了。 xdebug helper也就是加的这个参数. 如果url里有这个参数，并且也不需要xdebug helper trace等功能的话,完全就可以不用helper了.
+https://segmentfault.com/q/1010000008704638
+订单拆分成子订单问题求教https://segmentfault.com/q/1010000008703173
+判定前端调用后端接口超时？https://segmentfault.com/q/1010000008684983
+2038年的问题https://segmentfault.com/q/1010000008671369
+遍历目录并下载文件 https://segmentfault.com/q/1010000008675464
+https://segmentfault.com/q/1010000008682636
+sublime中PHP有调用模型https://segmentfault.com/q/1010000008681529
+msyql的锁机制，解锁是自动解锁吗https://segmentfault.com/q/1010000008683232
+高并发抢单时,锁表的疑惑？https://segmentfault.com/q/1010000008676397
+preg_match的理解https://segmentfault.com/q/1010000008635436
+https://segmentfault.com/q/1010000008661892  https://segmentfault.com/q/1010000008668318
+var iframe = document.getElementById('test')
+// 取到 iframe 内的 document 对象，然后用这个对象去查找里面的表单
+var iframeDoc = iframe.contentWindow.document  
+https://segmentfault.com/q/1010000008691659  基于 session 和基于 token 的用户认证方式到底该如何选择？
+二维数组合并成三维数组https://segmentfault.com/q/1010000008691370
+
+DateTime对象可以用时间戳的哦 203v问题是由于整数溢出造成的，32位整数就会遇到，64位就不会。这和你的程序架构有关，如果你运行的是32位PHP的话就会溢出。
 ###[生成自己的词性词典](邓旭东 天善大数据http://mp.weixin.qq.com/s?src=3&timestamp=1489907873&ver=1&signature=mPVOF3R4tcsLs1L1Phi9*juQlHCeGtA4kbe8bgSyrJVW7msRydAK1ggmQMUBfPJ5ti-82g9Edo33VwXGCwnoSKdefoxNNYd4NOC1whlrQOA3owzlgqS-P4TQaIuvvNQLCZNs5s-Nz5VySSIOnCy9iMrdxmtGBZFKoPzIuVZjnpU=)
 ```js
 import re
