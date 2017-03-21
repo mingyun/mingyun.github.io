@@ -7,7 +7,193 @@ FDC原则。
 细节：你的眼睫毛特别长。你的眼睛特别明亮。
 感受：看到你的笑，我心都软了。
 对比：你刚才走进来，让整个餐厅的人都黯然失色。
+[动画片图片搜索](https://github.com/soruly/whatanime.ga)
+ var oUl=document.getElementById('ul'); oUl.setAttribute('style', 'height: 200px;');
+[URL重写](https://segmentfault.com/q/1010000008774702)
+```js
+如果是apache就不会出现这问题了.因为apache支持.htaccess,在.htaccess中TP官方已经帮你写好了重写规则
 
+但是在Nginx中不支持.htaccess只能自己去写重写规则.
+
+可以用try_files来实现URL重写.下面这是我的laravel项目重写,你可以参考下!
+
+ location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+        server
+    {
+        listen 80;
+    #listen [::]:80;
+    server_name yourdomain.com;
+        index index.php index.html index.htm  default.html default.htm default.php;
+        root  /home;#你的项目下能直接访问到Index.php入口文件的目录
+        #如我的index.php在/home/index.php则这里配置到/home;
+
+        include other.conf;
+        #error_page   404   /404.html;
+        include enable-php.conf;
+
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+            expires      12h;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+        }
+
+        access_log /home/access.log; #成功访问日志地址如:/home/access.log;
+    }
+
+```
+[微信扫码登录](https://segmentfault.com/q/1010000008770313)
+截图是jsonp，而不是ajax，当然用ajax也可以
+pending是请求发出后，等待服务端返回数据的过程，跟js无关
+是的，本质上是服务端轮询本地资源，是否到达可以返回数据的状态，否则就继续循环，循环的过程中为了避免cpu消耗过高，会进行sleep。 不过对于事件驱动的服务端语言比如nodejs，有更方便的实现
+在返回的接送字符串中返回了不可见的字符，例如BOM头，试试如下处理，
+$info = json_decode(trim($info,chr(239).chr(187).chr(191)),true);
+本地跑也是没有问题的，但是在服务器跑 从 file_get_contents('php://input') 解析就会出错 错误编号$ret = json_last_error();是4
+
+
+[在input 输入框前加个 ¥ 符号，然后输入框的字从后往前](https://segmentfault.com/q/1010000008771120)
+```js
+//placeholder默认事件
+<input type="text" placeholder="¥"  dir="rtl"/>
+//因为input不支持:after:before 所以可以用bgimg
+input{ background-image: url(...) }
+
+<style>
+    div{
+      position: relative;
+    }
+    input{
+      position: relative;
+      background-color: rgba(0,0,0,0)
+    }
+    .back{
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      display: inline-block;
+      color: rgba(1,1,1,0.5)
+    }
+</style>
+<div>
+    <input type="text"/>
+    <div class="back">¥</div>
+</div>
+```
+[页面追加内容的最好方法是什么](https://segmentfault.com/q/1010000008773167)
+```js
+<button onclick="add(this)"></button>
+<script> 
+    function add(obj)
+    { 
+        $("<div>我是追加的内容</div>").after($(obj))
+    }   
+</script>
+var tpl = [
+    '<div class="datepicker ui-d-n">',
+    '    <div class="datepicker__mask"></div>',
+    '    <div class="datepicker__main">',
+    '        <div class="datepicker__footer">',
+    '            <div class="datepicker__btn" id="_j_confirm_btn">确定</div>',
+    '            <div class="datepicker__btn" id="_j_cancel_btn">取消</div>',
+    '        </div>',
+    '    </div>',
+    '</div>'
+].join("");
+js数组不失为一种上佳选择。
+```
+
+[删除txt文件内所有<>里面的内容包括<>本身](https://segmentfault.com/q/1010000008773191)
+```js
+# python3 code https://github.com/dokelung/Python-QA
+
+import re
+
+# for example
+s = '123<><here>#$%@#$%^<123>::<a class="haha" href="http://www.hello.com">haha'
+print(re.sub('<[^>]*>', '', s))
+
+# read txt and remove all <...>
+with open('your.txt', 'r') as reader:
+    for line in reader:
+        line = line.strip()
+        print(re.sub('<[^>]*>', '', line))
+```
+
+[手机和电脑是同时连着公司的同一个wifi](https://segmentfault.com/q/1010000008772829)
+我觉得必须是你自己电脑开的wifi才可以这么玩，因为你的localhost是你在本机上启用的服务器，单纯处于一个公用wifi应该是不行的，你怎么通过公用wifi访问本机服务器呢？
+手机和电脑要用同一个wifi,然后打开cmd, ipconfig 看下ip是什么，把这个本机的192.168.0.102换掉，端口号仍然需要的，然后在手机端浏览器中输入新的地址
+[service mysql.server start 启动失败](https://segmentfault.com/q/1010000008771837)
+```js
+讲道理mysql应该是从
+--defaults-file 指定的地址去读取配置文件
+其次读取
+--defaults-file-extra 指定的地方读取配置文件
+
+这两者我都没有指定过，那么，读取的顺序应该是：
+
+/etc/my.cnf
+
+/etc/mysql/my.cnf
+
+~/mysql/my.cnf
+
+..
+逐步去读取配置文件，但是启动一直报错pid文件目录找不到。
+然而，我/etc/my.cnf指定的pid是
+文件是 $base_dir目录，报错却不是这个目录。
+因此我估计是配置文件的读取顺序和步骤跟我想象的不一样，所以我删除了其它目录的my.cnf文件。
+即：删除了 /etc/mysql[my.cnf]目录
+
+fixed。
+
+结果解决了，但是留下一个问题，为什么首先读取的配置文件不是/etc/my.cnf文件。待了解。
+```
+
+
+[JS如何实现类似Jquery的siblings功能？](https://segmentfault.com/q/1010000008773218)
+```js
+Element.prototype.siblings = function(callback){
+    var siblingElement = [];
+    var parentAllElement = [];
+    if( ! this.parentNode ){
+        return siblingElement;
+    };
+    parentAllElement = this.parentNode.getElementsByTagName(this.tagName);
+    for( var i = 0; i < parentAllElement.length ; i++ ){
+        if( parentAllElement[i] != this ){
+            siblingElement.push(parentAllElement[i]);
+            typeof callback == "function" && callback.call(parentAllElement[i]);
+        }
+    }
+    return siblingElement;
+};
+然后就可以向 jQuery 一样使用 siblings() 了。
+
+var link = document.getElementsByTagName("a");
+for (var i = 0; i < link.length; i++) {
+    link[i].addEventListener("click", function() {
+        this.style.backgroundColor = "#000";
+        var siblings = this.siblings(function(){
+            this.style.backgroundColor = "#FFF";
+        });
+        console.log(siblings[0].siblings());
+    })
+}
+```
 查看redis-cli --help查看--eval的语法
  有redis-cli --eval myscript.lua key1 key2 , arg1 arg2 arg3
 https://redis.io/commands/eval itchatmp&itchat 结合使用
