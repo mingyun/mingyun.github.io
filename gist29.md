@@ -1,3 +1,45 @@
+[男生送给女生特别用心的礼物](https://www.zhihu.com/question/27581416)
+我看过的最感动的一封信，不是写给我的，是我朋友的。她老公在和她恋爱的时候，给她写的。具体的肯定不记得，大概是这样：我不知道我跟她能不能走到最后，如果没有，请后面的你看看，好好的照顾她。如果你和她逛超市看到毛茸茸的玩具，她会抱一抱，但是放心，她不会要你买，她只是喜欢抱一抱。如果你和她一起吃饭，记得先把餐具用水洗一洗，她喜欢干净。如果吃完饭，她执意要付钱，请不要和她争，她好强。如果她做PPT，请以一定要耐心教，她总是记不住那些到底是什么。如果和她出去玩，记得拉好她的手，她不记得路的。如果……如果…… 欲获得本书《如何让美少女来追你》完整版的朋友可关注我们的 微信公众号 Smileblgg 回复 “书籍” 即可获得相关的书籍下载方式
+FDC原则。
+感受+细节+对比。
+
+你真美。
+细节：你的眼睫毛特别长。你的眼睛特别明亮。
+感受：看到你的笑，我心都软了。
+对比：你刚才走进来，让整个餐厅的人都黯然失色。
+
+查看redis-cli --help查看--eval的语法
+ 有redis-cli --eval myscript.lua key1 key2 , arg1 arg2 arg3
+https://redis.io/commands/eval itchatmp&itchat 结合使用
+https://zhuanlan.zhihu.com/p/23742990 
+[一个用Go写的微信机器人](https://github.com/KevinGong2013/ggbot)
+https://github.com/KevinGong2013/wechat
+[python生成固定长度的随机字符串](https://www.oschina.net/code/snippet_153443_4752)
+```js
+import random, string
+def random_str(randomlength=8):
+    a = list(string.ascii_letters)
+    random.shuffle(a)
+    return ''.join(a[:randomlength])
+
+salt = ''.join(random.sample(string.ascii_letters + string.digits, 8)) random.randint(1000,9999)
+seed = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+=-"
+sa = []
+for i in range(8):
+    sa.append(random.choice(seed))
+salt = ''.join(sa)
+from random import Random
+def random_str(randomlength=8):
+    str = ''
+    chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789'
+    length = len(chars) - 1
+    random = Random()
+    for i in range(randomlength):
+        str+=chars[random.randint(0, length)]
+    return str
+print(uuid.uuid1())
+```
+
 PHP设计模式问题https://segmentfault.com/q/1010000008736793
 最好用的是phpfmt sublime
 php 怎么获取当前月份往前24个月中的每个月的订单总和https://segmentfault.com/q/1010000008734802
