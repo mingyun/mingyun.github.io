@@ -1,4 +1,99 @@
 
+[API GET和POST测试工具(支持需要登录的接口调用:高级功能->填写cookie)在线执行代码](http://coolaf.com/)
+https://glot.io  https://github.com/prasmussen/glot 
+[开放现代的Web组件化框架](https://github.com/AlloyTeam/omi)
+[Sublime Text 3 格式代码插件 codeFormatter](http://www.cnblogs.com/xp796/p/5715510.html)
+默认快捷键ctrl+alt+F，默认可以对html、js、css格式代码， 如果想对PHP格式化，需要PHP5.6以上版本，而且需要配置sublime的(package setttings > codeFormatter > settings user)中设定php.exe的路径
+[golang 抓取网页信息（用goquery）](http://coolaf.com/article/25.html)
+```js
+package main
+
+import (
+  "fmt"
+  "log"
+
+  "github.com/PuerkitoBio/goquery"
+)
+
+func ExampleScrape() {
+  doc, err := goquery.NewDocument("http://metalsucks.net") 
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  doc.Find(".reviews-wrap article .review-rhs").Each(func(i int, s *goquery.Selection) {
+    band := s.Find("h3").Text()
+    title := s.Find("i").Text()
+    fmt.Printf("Review %d: %s - %s\n", i, band, title)
+  })
+}
+
+func main() {
+  ExampleScrape()
+}
+
+import (
+    "crypto/md5"
+    "encoding/hex"
+    "fmt"
+    "testing"
+)
+
+func Test_md5(t *testing.T) {
+
+    str := "帮我做下md5"
+    //用直接用md5中sum函数加密
+    m1 := md5.Sum([]byte(str))
+    fmt.Printf("%s", hex.EncodeToString(m1[:]))
+    fmt.Println()
+    //这个是通过md5包中的new方法，产生一个hash,利用hash中的sum生成md5
+    m2 := md5.New()
+    m2.Write([]byte(str))
+    s := hex.EncodeToString(m2.Sum(nil))
+    fmt.Println(s)
+
+}
+
+```
+[php 导出excel ](http://coolaf.com/article/84.html)
+```js
+with open('massive-body') as f:
+    requests.post('http://some.url/streamed', data=f)
+s = requests.Session()
+s.headers.update({'x-test': 'true'})
+function excel($filename, $title=array(), $content=array()) {
+
+
+	$filename = empty($filename) ? date('Ymd') . rand(1, 100000) : $filename;
+	$filename = iconv("utf-8", "gb2312", $filename);
+	header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+	header("Pragma: public");
+	header("Expires: 0");
+	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	header("Content-Type: application/force-download");
+	header("Content-Type: application/octet-stream");
+	header("Content-Type: application/download");
+	header("Content-Disposition: attachment;filename={$filename}.xls ");
+	header("Content-Transfer-Encoding: binary ");
+	if (!empty($title)) {
+		foreach ($title as $key => $value) {
+			echo iconv("utf-8", "gb2312", $value) . "\t";
+		}
+		echo "\n";
+	}
+	if (!empty($content)) {
+		foreach ($content as $key => $value) {
+			foreach ($value as $k => $v) {
+				echo iconv("utf-8", "gb2312", $v) . "\t";
+			}
+			echo "\n";
+		}
+		return true;
+	}
+}
+```
+
+
 ###根据每分钟的数据统计每天最大的数据
 ```js
 $arr=[
