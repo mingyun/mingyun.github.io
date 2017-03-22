@@ -1,4 +1,204 @@
 
+[redis配置文件redis.conf参数说明](http://coolaf.com/article/80.html)
+```js
+统计项目的java代码总行数 http://coolaf.com/article/67.html
+
+
+Bash代码
+
+wc -l $(find . -type f -name '*.java')
+[root@rac1 redis-2.6.8]# vi /etc/redis_master.conf
+# 快照保存规则，如
+save 900 1 #900秒内如果超过1个key被修改，则发起快照保存
+save 300 10 #300秒内容如超过10个key被修改，则发起快照保存
+save 60 10000
+# 最多使用数据库的个数
+databases 16
+# 快照文件的名字
+dbfilename dump.rdb
+# 快照存放的目录
+dir /opt/redis-2.6.8
+# 数据文件是否要压缩。（为了方便查看数据文件内容，设置成no）
+rdbcompression no
+# redis操作的口令
+# requirepass foobared
+# Append Only File 功能被关闭（注意：为了更好测试快照功能，此功能最好关闭）
+appendonly no
+# daemonize：指定Redis是否后台运行
+daemonize yes
+redis-server /etc/redis_master.conf > redis_master.log 2>&1 &
+再次重启redis，加载快照，发现未save保存的ddd丢失
+
+实现AOF功能只需要修改配置参数appendonly yes
+-查看日志文件
+[root@rac1 redis-2.6.8]# cat appendonly.aof
+```
+[Composer进阶使用之常用命令和版本约束](http://cuiqingcai.com/3494.html)
+```js
+Composer会先找到合适的版本，然后更新composer.json文件，在require那添加monolog/monolog包的相关信息，再把相关的依赖下载下来进行安装，最后更新composer.lock文件并生成php的自动加载文件。
+$ composer update
+ 
+# 更新指定的包
+$ composer update monolog/monolog
+ 
+# 更新指定的多个包
+$ composer update monolog/monolog symfony/dependency-injection
+ 
+# 还可以通过通配符匹配包
+$ composer update monolog/monolog symfony/*
+# 列出所有已经安装的包
+$ composer show
+
+# 可以通过通配符进行筛选
+$ composer show monolog/*
+
+# 显示具体某个包的信息
+$ composer show monolog/monolog
+$ composer require monolog/monolog:1.19
+
+# 或者
+$ composer require monolog/monolog=1.19
+
+# 或者
+$composer require monolog/monolog 1.19
+
+^0.3会被当作>=0.3.0 <0.4.0对待 1.0.*相当于>=1.0 <1.1。
+```
+[极验验证码(Geetest) Laravel 5 集成开发包, 滑动二维码让验证更安全  ](http://cuiqingcai.com/2988.html)
+[Mac下升级PHP版本至7.1](http://cuiqingcai.com/3992.html)
+[使用Python收集获取Linux系统主机信息](http://cuiqingcai.com/3801.html)
+```js
+#!/usr/bin/env python
+#encoding: utf-8
+
+'''
+收集主机的信息：
+主机名称、IP、系统版本、服务器厂商、型号、序列号、CPU信息、内存信息
+'''
+
+from subprocess import Popen, PIPE
+import os,sys
+
+''' 获取 ifconfig 命令的输出 '''
+def getIfconfig():
+    p = Popen(['ifconfig'], stdout = PIPE)
+    data = p.stdout.read()
+    return data
+
+''' 获取 dmidecode 命令的输出 '''
+def getDmi():
+    p = Popen(['dmidecode'], stdout = PIPE)
+    data = p.stdout.read()
+    return data
+
+''' 根据空行分段落 返回段落列表'''
+def parseData(data):
+    parsed_data = []
+    new_line = ''
+    data = [i for i in data.split('\n') if i]
+    for line in data:
+        if line[0].strip():
+            parsed_data.append(new_line)
+            new_line = line + '\n'
+        else:
+            new_line += line + '\n'
+    parsed_data.append(new_line)
+    return [i for i in parsed_data if i]
+
+''' 根据输入的段落数据分析出ifconfig的每个网卡ip信息 '''
+def parseIfconfig(parsed_data):
+    dic = {}
+    parsed_data = [i for i in parsed_data if not i.startswith('lo')]
+    for lines in parsed_data:
+        line_list = lines.split('\n')
+        devname = line_list[0].split()[0]
+        macaddr = line_list[0].split()[-1]
+        ipaddr  = line_list[1].split()[1].split(':')[1]
+        break
+    dic['ip'] = ipaddr
+    return dic
+
+''' 根据输入的dmi段落数据 分析出指定参数 '''
+def parseDmi(parsed_data):
+    dic = {}
+    parsed_data = [i for i in parsed_data if i.startswith('System Information')]
+    parsed_data = [i for i in parsed_data[0].split('\n')[1:] if i]
+    dmi_dic = dict([i.strip().split(':') for i in parsed_data])
+    dic['vender'] = dmi_dic['Manufacturer'].strip()
+    dic['product'] = dmi_dic['Product Name'].strip()
+    dic['sn'] = dmi_dic['Serial Number'].strip()
+    return dic
+
+''' 获取Linux系统主机名称 '''
+def getHostname():
+    with open('/etc/sysconfig/network') as fd:
+        for line in fd:
+            if line.startswith('HOSTNAME'):
+                hostname = line.split('=')[1].strip()
+                break
+    return {'hostname':hostname}
+
+''' 获取Linux系统的版本信息 '''
+def getOsVersion():
+    with open('/etc/issue') as fd:
+        for line in fd:
+            osver = line.strip()
+            break
+    return {'osver':osver}
+
+''' 获取CPU的型号和CPU的核心数 '''
+def getCpu():
+    num = 0
+    with open('/proc/cpuinfo') as fd:
+        for line in fd:
+            if line.startswith('processor'):
+                num += 1
+            if line.startswith('model name'):
+                cpu_model = line.split(':')[1].strip().split()
+                cpu_model = cpu_model[0] + ' ' + cpu_model[2]  + ' ' + cpu_model[-1]
+    return {'cpu_num':num, 'cpu_model':cpu_model}
+
+''' 获取Linux系统的总物理内存 '''
+def getMemory():
+    with open('/proc/meminfo') as fd:
+        for line in fd:
+            if line.startswith('MemTotal'):
+                mem = int(line.split()[1].strip())
+                break
+    mem = '%.f' % (mem / 1024.0) + ' MB'
+    return {'Memory':mem}
+
+if __name__ == '__main__':
+    dic = {}
+    data_ip = getIfconfig()
+    parsed_data_ip = parseData(data_ip)
+    ip = parseIfconfig(parsed_data_ip)
+    
+    data_dmi = getDmi()
+    parsed_data_dmi = parseData(data_dmi)
+    dmi = parseDmi(parsed_data_dmi)
+
+    hostname = getHostname()
+    osver = getOsVersion()
+    cpu = getCpu()
+    mem = getMemory()
+    
+    dic.update(ip)
+    dic.update(dmi)
+    dic.update(hostname)
+    dic.update(osver)
+    dic.update(cpu)
+    dic.update(mem)
+
+    ''' 将获取到的所有数据信息并按简单格式对齐显示 '''
+    for k,v in dic.items():
+        print '%-10s:%s' % (k, v)
+```
+Fastcgi会先启一个master，解析配置文件，初始化执行环境，然后再启动多个worker。当请求过来时，master会传递给一个worker，然后立即可以接受下一个请求。这样就避免了重复的劳动，效率自然是高。而且当worker不够用时，master可以根据配置预先启动几个worker等着；当然空闲worker太多时，也会停掉一些，这样就提高了性能，也节约了资源。这就是fastcgi的对进程的管理。
+ PHP的解释器是php-cgi。php-cgi只是个CGI程序，他自己本身只能解析请求，返回结果，不会进程管理（皇上，臣妾真的做不到啊！）所以就出现了一些能够调度php-cgi进程的程序，比如说由lighthttpd分离出来的spawn-fcgi。好了PHP-FPM也是这么个东东 php-fpm的管理对象是php-cgi。但不能说php-fpm是fastcgi进程的管理器，因为前面说了fastcgi是个协议 PHP内核集成了PHP-FPM之后就方便多了，使用--enalbe-fpm这个编译参数即可
+brew install homebrew/php/php71
+brew install homebrew/php/php71-mcrypt
+ln -s /usr/local/opt/php71/sbin/php-fpm /usr/local/bin/php-fpm
 [Laravel maatwebsite/excel 数字自动转为科学记数法](https://segmentfault.com/q/1010000008780156)
 开发了一个xavxsl的excel插件，最终吧所有字段都以字符串的形式读取出来了https://git.oschina.net/xavier007/Xavxls
 [前端学习项目实践练手](https://segmentfault.com/q/1010000008594563)
