@@ -1,4 +1,149 @@
 
+[Laravel maatwebsite/excel 数字自动转为科学记数法](https://segmentfault.com/q/1010000008780156)
+开发了一个xavxsl的excel插件，最终吧所有字段都以字符串的形式读取出来了https://git.oschina.net/xavier007/Xavxls
+[前端学习项目实践练手](https://segmentfault.com/q/1010000008594563)
+[Python 遍历文件夹，统计所有不同后缀的文件数量与比例](https://segmentfault.com/q/1010000008779929)
+```js
+#coding: utf-8
+
+import os
+from itertools import groupby
+
+file_lst = []
+for path, dir, files in os.walk('./'):
+    file_lst += files
+
+file_count = len(file_lst) * 1.0
+
+for key, lst in groupby(file_lst, key=lambda x: os.path.splitext(x)[1]):
+    print key, round(len(list(lst))/file_count, 2)
+#看第二种：
+
+#coding: utf-8
+
+import os
+from collections import defaultdict
+
+file_count = 1.0
+res = defaultdict()
+for path, dir, files in os.walk('./'):
+    file_count += len(files)
+    for file in files:
+        suf = os.path.splitext(file)[1]
+        res[suf] = res.setdefault(suf, 0) + 1
+
+for k, v in res.iteritems():
+    print k, round(v/file_count, 4) * 100
+file_lst = []
+for path, dir, files in os.walk('./'):
+    file_lst += files
+file_count = len(file_lst) * 1.0
+for key, lst in groupby(file_lst, key=lambda x: os.path.splitext(x)[0]):
+    if cmp(key, 'tvmticket') == 0:
+      pass
+
+```
+[js 数组分组？](https://segmentfault.com/q/1010000008789413)
+```js
+var obj = {};
+var list = ['1-10','1-20','1-22','2-2','2-3','2-4','3-1','3-5','4-6','5-10'];
+list.forEach(function(e){
+  var index = e.split('-')[0];
+  if(!obj[index]){
+    obj[index] = [];
+  }
+  obj[index].push(e);
+
+})
+如：1-* 为第一组；
+   2-* 为第二组；
+   ....
+以此类推
+lodash https://lodash.com/docs/4.17.4
+
+const ret = _.groupBy(list, e => e.split('-')[0])
+https://segmentfault.com/q/1010000008789660
+function rule3(v, vmin, vmax, tmin, tmax) {
+    var nv = Math.max(Math.min(v, vmax), vmin);
+    var dv = vmax - vmin;
+    var pc = (nv - vmin) / dv;
+    var dt = tmax - tmin;
+    var tv = tmin + (pc * dt);
+    return tv;
+}
+
+```
+[php 根据给定字符串时间获取时区](https://segmentfault.com/q/1010000008705799)
+```js
+$dt = new DateTime($datetime); //用你提供的时间字符串创建对象
+$tz = $dt->getTimezone(); //获取时区对象
+echo $tz->getName(); //输出时区名称
+$tz2 = new DateTimeZone('GMT'); //新建时区对象
+$dz->setTimezone($tz2); //设置新时区
+echo $dz->format('c'); //输出ISO 8601格式的时间，就是你上面提供的那种格式
+```
+
+[redis配置文件redis.conf参数说明](http://coolaf.com/article/80.html)
+[file_get_contents 通过get或者post携带的参数，在地址所在的那个方法里获取不到get或post数据](https://segmentfault.com/q/1010000008777693)
+```js
+$postdata = http_build_query($post_data);    
+      $options = array(    
+            'http' => array(    
+                'method' => 'get',    
+                'header' => 'Content-type:application/x-www-form-urlencoded',    
+                'content' => $postdata,    
+                'timeout' => 15 * 60 // 超时时间（单位:s）    
+            )    
+        );    
+        $context = stream_context_create($options);    
+        $result = file_get_contents($url, false, $context);             
+        return $result;    
+	那么原因就很简单了：
+'method' => 'get', 这个地方指定HTTP METHOD的时候要使用大写的。
+
+比如 'method' => 'GET', , 或者 'method' => 'POST', .
+
+修改后亲测有效。
+```
+[Update query wrong in MySQL](https://segmentfault.com/q/1010000008784044)
+```js
+ #!/bin/bash
+    mysql -u root -pPassword <<rc
+    use rc;
+    SELECT *,
+           CASE 
+             WHEN cutoff_dt IS NULL
+           THEN 
+             UPDATE rc SET cutoff_dt = '2017-03-21 00:00:00.0'
+             ELSE 'NOT NULL'
+          END
+    from rc
+    WHERE business_date = '2017-03-21 16:50:29.032';
+    rc
+```
+
+
+[正则表达式匹配多次出现的内容](https://segmentfault.com/q/1010000008783787)
+```js
+var body = '<img src="file:///storage/emulated/0/DCIM/Screenshots/Screenshot_hahaha.png" alt=""><img src="file:///storage/emulated/0/DCIM/Screenshots/Screenshot_lalala.png" alt="">'
+
+var sources = []
+var imgReg = /<img src=\"(.*?)\"/g
+var match
+while((match = imgReg.exec(body))){
+    sources.push(match[1])
+}
+console.log(sources)
+
+$imgreg = "/<img src=\"(.*?)\"/";
+if(preg_match_all($imgreg, $body, $matches)){
+    var_dump($matches[1]);
+}
+```
+
+
+
+
 [API GET和POST测试工具(支持需要登录的接口调用:高级功能->填写cookie)在线执行代码](http://coolaf.com/)
 https://glot.io  https://github.com/prasmussen/glot 
 [开放现代的Web组件化框架](https://github.com/AlloyTeam/omi)
