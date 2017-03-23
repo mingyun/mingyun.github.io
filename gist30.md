@@ -1,3 +1,162 @@
+[清博指数的API接口](https://segmentfault.com/q/1010000008796281)
+清博指数获取公众号文章API
+[算法问题，2个数组，数组a保存1000W条手机号，数组b保存5000W条，找出两个数组相同的手机号](https://segmentfault.com/q/1010000008169527)
+[假定有json数据多条记录，如何根据KEY的值返回一条记录](https://segmentfault.com/q/1010000008793933)
+```js
+s = """
+[
+  {
+    "Name": "A1", 
+    "No": "3111", 
+    "createDate": "9999/12/31 00:00:00", 
+    "lastUpdDate": "9999/12/31 00:00:00"
+  }, 
+  {
+    "Name": "B2", 
+    "No": "2222", 
+    "createDate": "9999/12/31 00:00:00", 
+    "lastUpdDate": "9999/12/31 00:00:00"
+  }, 
+  {
+    "Name": "C3", 
+    "No": "1444", 
+    "createDate": "9999/12/31 00:00:00", 
+    "lastUpdDate": "9999/12/31 00:00:00"
+  }, 
+  {
+    "Name": "C4", 
+    "No": "0542", 
+    "createDate": "9999/12/31 00:00:00", 
+    "lastUpdDate": "9999/12/31 00:00:00"
+  }
+]
+"""
+# code for python3
+
+import json
+
+def search(json_str, no):
+    return [datum for datum in json.loads(s) if datum['No']==no]
+
+datum = search(s, '0542')
+print(datum)
+```
+[微信中，复制内容添加到剪贴板！](https://segmentfault.com/q/1010000008789082)
+clipboard实际是调用 document.execCommand('copy'); 来达到复制的目的。
+
+而对于微信内的浏览器嘛，你自己看移去端的兼容性吧，IOS下并不支持，总之支持的极少。
+[document mouseup 事件](https://segmentfault.com/q/1010000008794799)
+```js
+ 你每按下一次鼠标就加了一个mouseup事件，然后就越来越多越来越多。
+可以在mouseup的回调里把mouseup事件绑定解除了。
+
+或者这样,做个简单的判断
+
+document.addEventListener('mousedown',function(){
+    if(document.eventMouseup){
+        return false
+    }else{
+        document.addEventListener('mouseup',(event)=>{
+            console.log(1);
+        },false);
+        document.eventMouseup = true;
+    }   
+},false)
+
+```
+[如何判断浏览器是否支持localstorage](https://segmentfault.com/q/1010000008793630)
+```js
+typeof localStorage 和 if(window.localstorage) 的检测都太弱
+假如我就故意设置 window.localStorage = {} 一样没有存储效果。
+
+另外据说Safari隐私模式下 localStorage 依然有效但是无法存储，没验证过，有mac的同学可以验证一下我的道听途说。
+
+window.localStorage && (window.localStorage.setItem('a', 123) , window.localStorage.getItem('a') == 123)
+```
+[Sql union 操作](https://segmentfault.com/q/1010000008793674)
+```js
+(select  du.day,du.apptoken ,du.version, du.channel,du.city,du.count,concat(apptoken, 
+
+version,channel,city) as joinkey from day_new_users_count du where day='20170319') as dayUsers 
+
+ union 
+
+(select tu.day,tu.apptoken,tu.version,tu.channel,tu.city,tu.count,concat(apptoken,version,channel,city) as joinkey from total_users tu where day='20170318') as toUsers
+
+select  du.day,du.apptoken ,du.version, du.channel,du.city,du.count,concat(apptoken, version,channel,city) as joinkey from day_new_users_count du where day='20170319'
+ union 
+
+select tu.day,tu.apptoken,tu.version,tu.channel,tu.city,tu.count,concat(apptoken,version,channel,city) as joinkey from total_users tu where day='20170318'
+
+select * from (
+select
+du.day, du.apptoken , du.version, du.channel, du.city, du.count,
+concat(apptoken, version,channel,city) as joinkey
+from day_new_users_count du
+where day='20170319'
+) as dayUsers
+union
+select * from (
+select
+tu.day,  tu.apptoken, tu.version, tu.channel, tu.city, tu.count,
+concat(apptoken,version,channel,city) as joinkey
+from total_users tu
+where day='20170318'
+) as toUsers
+```
+[php 登录界面session问题](https://segmentfault.com/q/1010000008793648)
+```js
+$.ajax({
+   url : 'functions/php/login.php?action=get_login_info',
+   type : 'get',
+   success : function(data){
+     if( '' != data){
+       //更新导航
+       $(".user-menu").append(data);
+     }
+   }
+});
+functions/php/login.php 中：
+
+if( isset($_GET['action']) && 'get_login_info' == $_GET['action'] ){
+    if( isset($_SESSION['id']) ){
+        //链接数据库
+        $sql = "SELECT * FROM user WHERE email= '" . $_SESSION['id'] . "'";
+        //查找用户信息
+        
+        //你的代码，输出登陆后的导航
+    }
+    die();
+}
+```
+[]()
+
+
+[前端图片压缩成base64文件上传问题](https://segmentfault.com/q/1010000008790807)
+```js
+var canvas = document.getElementById("canvas");
+
+canvas.toBlob(function(blob) {
+  var formData = new FormData();
+  formData.append('img', blob, 'canvas.jpg');
+  //然后把这个formData扔给ajax就好了。babababa
+});https://www.noway.pub/p/94.html
+```
+
+[js从数组中取出来数组的一半让他们的和最接近整个数组的和的一半](https://segmentfault.com/q/1010000008789474)
+https://www.zhihu.com/question/27896075
+[浏览器的两个页面之间通信的问题](https://segmentfault.com/q/1010000008792568)
+postMessage API
+支持两个页面跨域；只能传递字符串数据；参考 window.open；
+
+直接引用
+适用于两个页面在同一域；可以传递对象数据（对象数据使用 instanceof 做类型判断时有坑）；参考 window.open；
+
+WebSocket 服务器中转
+需要页面都与服务器建立 WebSockets 连接；支持跨域；参考 WebSocket
+
+localStorage 事件
+要求两页面在同一域；数据可以通过 localStorage 传递；参考 localStorage 的 'storage' 事件；
 [为什么递归里 return后方法会继续循环,用dd打印反倒是可以输出正确的数组形式?](https://segmentfault.com/q/1010000008755555)
 
 ```js
