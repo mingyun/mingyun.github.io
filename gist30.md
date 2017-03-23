@@ -1,3 +1,53 @@
+[php 函数参数过多](https://segmentfault.com/q/1010000008749617)
+```js
+    /**
+     * @see 可变数量的参数列表
+     * 因函数调用顺序和类型，需要使用可变参数类型的传入形式，或者直接使用func_get_args
+     *
+     * @link http://php.net/manual/zh/functions.arguments.php#functions.variable-arg-list
+     *
+     * @param array ...$_p 可变参数列表
+     * @return mixed
+     * @throws Exception
+     */
+    protected function request(...$_p)
+    {
+        // 无效请求
+        if (!count($_p)) {
+            throw new Exception("empty params\n");
+        }
+
+        $actionName = array_shift($_p);
+
+        // 记录日志用
+        $p_ = implode(',', $_p);
+        do {
+            try {
+                $response = json_decode(call_user_func_array([self::$_client, $actionName], $_p), true);
+                if (isset($response['code']) && $response['code'] == 0) {
+                    return $response['data'];
+                }
+                error_log("{$this->serviceName}->{$actionName}({$p_}) Error Times({$this->times}) Message: {$response['message']}");
+            } catch (Exception $e) {
+                error_log("Exception Times({$this->times}), {$this->serviceName}->{$actionName}({$p_}): {$e->getMessage()}");
+                sleep(2);
+            }
+        } while ($this->times--);
+        throw new Exception("{$this->serviceName}->{$actionName}({$p_}) Repeat Failed\n");
+    }
+    fn( [
+  'name' => '',
+  'age' => 10,
+  'sex' => MALE,
+  'height' => 180,
+  'weight' => 110,
+  ....
+]);
+```
+[sql问题（店铺 商家 活动的sql）](https://segmentfault.com/q/1010000008744776)
+
+select shopname,level,group_concat(actname) from(select shop.shopname,user.level,activity.actname from shop inner join user on shop.shopid = user.shopid inner join activity on shop.shopid = activity.shopid) group by shopname,level
+
 [一道关于集合的算法问题](https://segmentfault.com/q/1010000008780141)
 [git 本地项目上传到远程仓库出错](https://segmentfault.com/q/1010000008587914)
 远程remote master有更新，先执行 git pull origin master
@@ -122,6 +172,112 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
 注意
 默认情况下 安装MySQL的 validate_password插件。这将要求密码至少包含一个大写字母，一个小写字母，一个数字和一个特殊字符，并且总密码长度至少为8个字符。
 ```
+[背包算法问题。运用动态规划就可以解决](https://segmentfault.com/q/1010000008804655)
+```js
+<?php
+
+$bag     = array();
+$objects = array(
+    array('w' => 100, 'p' => 100),
+    array('w' => 200, 'p' => 200),
+    array('w' => 300, 'p' => 300),
+    array('w' => 400, 'p' => 400),
+    array('w' => 500, 'p' => 500)
+);
+
+//初始化包的状态,-1没有组合成这个大小的包的组合方案
+for ($i = 1; $i <= 1000; $i++) {
+    $bag[$i] = -1;
+}
+
+//空包肯定是存在解决方案的,放入0件物品
+$bag[0] = 0;
+for ($i = 0; $i <= 4; $i++) {
+    for ($j = 1000; $j >= $objects[$i]['w']; $j--) {
+        //假如$bag[$j - $objects[$i]['w']]存在组合方案,那就与当前$bag[$j]的组合方案比较,取其中物品件数较多的那种
+        if($bag[$j - $objects[$i]['w']] != -1) {
+            $bag[$j] = $bag[$j - $objects[$i]['w']] + 1 > $bag[$j] ? $bag[$j - $objects[$i]['w']] + 1 : $bag[$j];
+        }
+    }
+}
+
+echo $bag[1000] == -1 ? "不存在装满包的解决方案" : "在保证装满的前提下,最多可以装{$bag[1000]}件物品";
+```
+[PHP:用Face++ 接口人脸识别](https://segmentfault.com/q/1010000008807273/a-1020000008808251)
+```js
+$api_key = "cK25pkbERhS8UoPWw2dBKWsNnGPdn6vG";
+$api_secret = "oo8swPRXW3bwV_JxSBGO6sjK-b-wemyI";
+
+$detect_api_url  ="https://api-cn.faceplusplus.com/facepp/v3/detect";
+
+//image_url 
+$image_url = "https://bj-mc-prod-asset.oss-cn-beijing.aliyuncs.com/mc-official/images/demo/demo-pic11.jpg";
+
+//image_file
+$image_file = "chen.jpg";
+// $image_info = getimagesize($image_file);
+// $image_data = fread(fopen($image_file, 'r'), filesize($image_file));
+// $image_file = base64_encode($image_data);
+
+$return_landmark = "1";
+$return_attributes="gender";
+
+$url = "{$detect_api_url}";
+
+$data = [
+    "api_key" => "{$api_key}",
+    "api_secret" => "{$api_secret}",
+    "image_url" => "$image_url",
+    // "image_file" => "$image_file",
+    "image_file" => new CURLFile(realpath($image_file)),
+    "return_landmark" => "{$return_landmark}",
+    "return_attributes" => "{$return_attributes}"
+];
+// $data= http_build_query($data);
+//初始化一个cURL会话
+$ch = curl_init();
+
+//
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // 从证书中检查SSL加密算法是否存在
+
+//设置请求选项
+curl_setopt($ch, CURLOPT_URL, $detect_api_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HEADER,0);
+
+//这是请求类型
+curl_setopt($ch, CURLOPT_POST, TRUE);
+//添加post数据到请求中
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+$response = curl_exec($ch);
+
+//错误处理
+if($response == FALSE){
+    echo "错误信息:".curl_error($ch)."<br/>";
+}
+//获取curl请求的具体信息
+$curl_info = curl_getinfo($ch);
+echo "收到的http回复的code:".$curl_info["http_code"]."<br/>";
+//
+
+echo '<pre>';
+curl_close($ch);
+//输出返回信息
+print_r(json_decode($response,1));
+```
+
+
+[json文本换行 \n符](https://segmentfault.com/q/1010000008807399)
+分清字符串“\n”和换行符\n，在原始的字符串中，\n表示一个字符，一个换行符，而你在用正则匹配的是一个字符串“\n”，自然匹配失败
+
+var content="纤云弄巧，飞星传恨，银汉迢迢暗度。\n金风玉露一相逢，便胜却、人间无数。";
+console.log(content.replace(/\n/g,'<br />'));
+//纤云弄巧，飞星传恨，银汉迢迢暗度。<br />金风玉露一相逢，便胜却、人间无数。
+//不过得到的是普通字符串哦
+
+
 定时跑数据，每次1000
 ```js
 $lastKey = 'lastid';
