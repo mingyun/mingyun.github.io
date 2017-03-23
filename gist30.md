@@ -1,4 +1,112 @@
+[一道关于集合的算法问题](https://segmentfault.com/q/1010000008780141)
+[git 本地项目上传到远程仓库出错](https://segmentfault.com/q/1010000008587914)
+远程remote master有更新，先执行 git pull origin master
+rebase 代码有冲突
+
+先git status 看看冲突的文件，核对下，解决掉冲突
+
+再git rebase --continue
+
+再git pull origin master
+
+再git push origin master
+退出之前的rebase过程
+
+git rebase --abort
+[如何在不使用ajax的情况下，使用原生js实现对服务器的请求？](https://segmentfault.com/q/1010000008724115)
+你了解AJAX是怎么兴起的就会明白了，远古时代的程序员不使用ajax如何异步的从服务器获取数据？答案很简单，就是使用隐藏iframe技术，正是这种技术的广泛使用才产生了XMLHttpRequest。
+
+你只需要动态创建一个iframe，改变他的src为请求地址，在服务器返回响应后，通过innerHTML等js操作获取响应内容即可。
+
+在ajax2.0出来之前，它是不支持上传文件的，而当时许多流行的异步文件上传jQuery插件就是动态创建iframe结点，等返回响应后再将其删除。现在因为一些兼容性的问题，这些插件仍然在大量使用。相关的资料可
+[这么优美的代码格式](https://segmentfault.com/q/1010000008709847)
+```js
+1.多个参数用逗号分隔，且逗号后加一个空格；参数的结束括号和大括号之间加一个空格；运算符前后各加一个空格。
+
+function testFunc(arg1, arg2) {
+    return arg1 + arg2;
+}
+2.同行内的分号后加一个空格
+
+for(var i = 0; i < 10; i++) {
+    console.log('Index:', i);
+}
+3.如果使用ES6的解构取值，在大括号内的两边各一个空格
+
+import React, { Component, PropTypes } from 'react';
+
+const { params } = this.props;
+4.Object对象的key、value书写的时候，在“:”后加一个空格
+
+const obj = {
+    loading: false,
+    params: {
+        page: 1,
+        page_size: 20,
+        keyword: ''
+    }
+};
+5.Object对象的key、value写在同一行时
+
+const obj = { loading: false, params: { page: 1, page_size:20, keyword: '' } };
+```
+[js小数相加问题](https://segmentfault.com/q/1010000008724656)
+```js
+假设十进制数字为整数10，在计算机中表示方式为 : 1010,二进制转换十进制的方法为:
+
+1 * 2^3 + 0 * 2^2 + 1* 2^1 + 0* 2^0 = 10
+即为：
+
+8 + 0 + 2 + 0 = 10
+那么小数的表示方法,假设10进制数为0.5，在计算机中表示为0.1，因为计算机只有0和1这两位，而换算方法为:
+
+1 * 2^-1 = 0.5
+同理可见计算机能表示的浮点数有哪些 ：
+
+    0.5 = 1 * 2^-1
+    0.75 = 1 * 2^-1 ＋1 * 2^-2
+    0.25 = 0 * 2^-1 ＋1 * 2^-2
+    0.875 = 1 * 2^-1 ＋1 * 2^-2 + 1 * 2^-3
+    0.9375 = 1 * 2^-1 ＋1 * 2^-2 + 1 * 2^-3 + 1 * 2^-4 
+同理可见，0.2在计算机中表示为 :
+
+ 0.00110011000110...  后续位数你可以自己算，所以在计算机中0.2的表示方法只是一个无线接近于0.2的小数，但永远无法精确的表示出0.2，所以0.2 + 0.1 ≈ 0.3，而永远不会等于0.3
+```
+
+[腾讯alloyteam团队前端代码规范](http://www.kancloud.cn/digest/code-guide/42600)
+[PHP打印预览](https://segmentfault.com/q/1010000008728432)
+http://www.lodop.net/LodopDemo.html
+[npm install [-g] prettier](https://github.com/prettier/prettier)
+
+
+[go语言可以用来做桌面软件](https://segmentfault.com/q/1010000007518617)
+如果只兼容windows，那么只有一个选择：
+
+https://github.com/lxn/walk
+[php session redis](https://segmentfault.com/q/1010000008721376)
+[2个空数组相加会得到一个空字符串](https://segmentfault.com/q/1010000008707667)
+```js
+[] + [] = "";
+[] + [] * 5 = "0";
+[]+[]=''        在+运算中 []被转化为''
+1+'1'='11'
+1+'n'='1n'
++在进行默认转化时，会往字符串转化，简单来说就是能转字符串的通通都转化成字符串，所以在运算时小心+号。
+因为这是一个表现独特的运算符。（毕竟js获取到的用户输入通常都是字符串，容易误操作）
+
+[]-[]=0        在-，*运算中[]被转化为0
+1-[]=0
+1*[]=0
+'1'-0=1
+'n'-1=NaN
+'1'*1=1
+上面可以看出来，-号*号啊等其他一些常用运算符，都会进行偏向数字的转化。
+所以通常还能用n*1或n-0进行字符串转数字。
+
+在其他地方，比如 if 中，[]因为是一个对象，所以会转化成true.
+```
 [PHP设计模式(二)：抽象类和接口](https://segmentfault.com/a/1190000004699158)
+
 https://segmentfault.com/q/1010000008801822
 [mysql5.7 安装后无法设置密码](https://segmentfault.com/q/1010000008801677)
 ```js
