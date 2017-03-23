@@ -1,3 +1,63 @@
+[PHP设计模式(二)：抽象类和接口](https://segmentfault.com/a/1190000004699158)
+https://segmentfault.com/q/1010000008801822
+[mysql5.7 安装后无法设置密码](https://segmentfault.com/q/1010000008801677)
+```js
+对于MySQL 5.7：在服务器的初始启动时，出现以下情况，假定服务器的数据目录为空：
+服务器已初始化。
+SSL证书和密钥文件在数据目录中生成。
+该 validate_password插件安装并启用。
+'root'@'localhost' 创建 超级用户帐户。超级用户的密码被设置并存储在错误日志文件中。要显示它，请使用以下命令：
+shell> sudo grep 'temporary password' /var/log/mysqld.log
+通过使用生成的临时密码登录并为超级用户帐户设置自定义密码，尽快更改root密码：
+shell> mysql -uroot -p 
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
+注意
+默认情况下 安装MySQL的 validate_password插件。这将要求密码至少包含一个大写字母，一个小写字母，一个数字和一个特殊字符，并且总密码长度至少为8个字符。
+```
+定时跑数据，每次1000
+```js
+$lastKey = 'lastid';
+$minId = \RedisFacade::get($lastKey);
+        if (!$minId) {
+            $minId = 0;
+            \RedisFacade::set($lastKey, $minId);
+        }
+while (true) {
+            $demands = user::where('id', '>', $minId)->where('user_id', 14)
+                ->select('id', 'vid', 'user_id')
+                ->orderBy('id')
+                ->take($limit)
+                ->get();
+
+            $selectCount = count($demands);
+            if (!$selectCount) {
+                \RedisFacade::set($lastKey, $minId);
+                break;
+            }
+
+            foreach ($demands as $value) {
+            	// if (!($record = RedisFacade::get('demand:records:push:'. $value['id']))) {
+                	\Queue::push(new DemandRecords($value['vid'], $value['baoli']['baoli_id'], $value['baoli']['secretkey']));
+                	// RedisFacade::setEx('demand:records:push:'. $value['id'], 86400, $value['id']);
+            	// }
+            }
+
+            if ($selectCount < $limit) {
+                break;
+            }
+
+            $minId = $demands->last()->id;
+            unset($demands);
+
+            if ($usleep > 0) {
+                usleep($usleep);
+            }
+        }
+
+```
+
+
+
 [清博指数的API接口](https://segmentfault.com/q/1010000008796281)
 清博指数获取公众号文章API
 [算法问题，2个数组，数组a保存1000W条手机号，数组b保存5000W条，找出两个数组相同的手机号](https://segmentfault.com/q/1010000008169527)
