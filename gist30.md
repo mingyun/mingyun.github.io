@@ -1,3 +1,123 @@
+[JavaScript中的位运算符如|和&，有啥应用场景吗](https://segmentfault.com/q/1010000008810893)
+```js
+判断奇偶
+
+//一般都是(i % 2 !== 0)来判断奇数
+if(i & 1) {
+    //奇数需要进行的事情
+} else {
+    //
+}
+交换数字
+
+var temp = a;
+var a = b;
+var b = temp;
+
+//可以用位操作符实现交换不需要中间变量
+
+a ^= b; //a = a ^ b
+b ^= a; //b = b ^ a = b ^ a ^ b = a (b = a)
+a ^= b; //a = a ^ b = a ^ b ^ a = b;
+
+-- bad
+arr.indexOf(2) === -1
+-- good
+~arr.indexOf(2)
+-- 订单状态判断，例如：1、2、4、8，表示四种状态，判断当前订单是否为1和2状态
+-- bad
+status === FLAG_1 || status === FLAG_2
+-- good
+(FLAG_1 | FLAG_2) & status
+```
+[JavaScript代码的解释：有关base64编码](https://segmentfault.com/q/1010000008811603)
+
+Buffer.from("\x6a\x8a\x69\x65\xa1\x7d\xac\xae", 'binary').toString('base64')
+>>> s = "\x6a\x8a\x69\x65\xa1\x7d\xac\xae"
+>>> import base64
+>>> base64.encodebytes(bytes(s,'utf8'))
+b'asKKaWXCoX3CrMKu\n'
+>>> base64.encodebytes(bytes(s,'l1'))
+b'aoppZaF9rK4=\n'
+[React比Vue.js好在哪？](https://segmentfault.com/q/1010000008810414)
+[数据库查询排序问题，如何按字符串中的数字排序](https://segmentfault.com/q/1010000008762633)
+ORDER BY CONVERT(SUBSTR(column, 6), SIGNED INTEGER) 
+[关于 RESTful API 的设计](https://segmentfault.com/q/1010000008811387)
+https://segmentfault.com/a/1190000008697972 
+[javascript 匿名函数](https://segmentfault.com/q/1010000008810316)
+```js
+var trs = document.getElementsByTagName("tr");
+for(var i = 0;i < trs.length;i++){
+    (function changeColor(tr){
+        tr.onmouseover = function(){
+            tr.style.backgroundColor = 'grey';
+        }
+        tr.onmouseout = function(){
+            tr.style.backgroundColor = 'white';
+        }
+    })(trs[i]);
+}
+```
+[js怎样通过arr3把arr2变成arr4](https://segmentfault.com/q/1010000008809418)
+```js
+var arr2 = [{1: '1'}, {2: '2'}, {3: '3'}, {5: '5'}];
+
+var arr3 = [{1: '1'}, {2: '2'}, {3: '3'}, {4: '4'}, {5: '5'}, {6: '6'}];
+
+var arr4 = [];
+
+var obj = {};
+for (var i=0; i<arr2.length; i++) {
+    var temp = arr2[i];
+    for (var key in temp) {
+        obj[key] = temp[key];
+    }
+}
+for (var j=0; j<arr3.length; j++) {
+    var temp = arr3[j];
+    for (var key in temp) {
+        if (obj[key]) {
+            var subobj = {};
+            subobj[key] = obj[key];
+            arr4.push(subobj)
+        } else {
+            var subobj = {};
+            subobj[key] = '0';
+            arr4.push(subobj)
+        }
+    }
+}
+```
+[JavaScript 俩数组,个数一样,怎么a数组升序对另一个数组排序?](https://segmentfault.com/q/1010000008812492)
+```js
+var a = [ 0 , 89 ,2 , 3];
+
+var b = [ "san" , "si" , "wu" , "liu"];
+
+var merge = a.map(function(ai, i){
+    return {a:ai, b:b[i]};
+})
+merge.sort(function(am1, am2){
+    return am1.a - am2.a
+})
+// 允许生成新的数组引用就用map, 要是不允许生成新的数组引用，就挨个赋值
+b = merge.map(function(ab, i){
+    return ab.b
+}) 
+console.log(b);
+
+a.map(function(value,index){
+    return {
+        key:b[index],
+        value:value
+    }
+}).sort(function(pre,next){
+    return pre.value - next.value
+}).map(function(value,index){
+    return value.value;
+});
+```
+
 [php 函数参数过多](https://segmentfault.com/q/1010000008749617)
 ```js
     /**
