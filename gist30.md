@@ -3,6 +3,282 @@ ALTER TABLE webinar_user_regs MODIFY COLUMN `id` bigint(20) unsigned NOT NULL;
 ALTER TABLE webinar_user_regs DROP PRIMARY KEY;
 ALTER TABLE webinar_user_regs ADD INDEX `id`(`id`);
 ALTER TABLE webinar_user_regs PARTITION BY HASH(webinar_id) PARTITIONS 64;
+[php 二维码 加水印图片 支持ios,android,win8](http://blog.51yip.com/php/1600.html)
+[apache2nginx 安装和使用](http://blog.51yip.com/apachenginx/1455.html)
+
+wget https://github.com/downloads/nhnc-nginx/apache2nginx/apache2nginx-1.0.0-bin.i386.tar.bz2 //下载  
+tar jxvf apache2nginx-1.0.0-bin.i386.tar.bz2   //解压  
+cp ./apache2nginx /usr/sbin   //放到环境变量目录下面  
+apache2nginx -f /etc/httpd/conf/httpd.conf  //apache配置文件转换成nginx  
+[crontab执行不了php的解决方法](http://blog.51yip.com/php/1346.html)
+php文件有没有执行权限
+chmod +x ./del_redis.php  
+*/10 * * * * /usr/local/php/bin/php /var/www/cron/del_redis.php >> /home/zhangy/cron.txt  
+3，用crontab来执行php，是不走apache,nginx，所以$_SERVER,$_ENV这类变量根本用不了。所以检查一下php代码中有没有这类变量，如果有拿掉。
+4，php的相对路径问题
+
+include_once'./mysql.php';  
+当php代码中，用的是相对路径时，只有进入到那个目录下执行/usr/local/php/bin/php /var/www/cron/level_rank.php才能生效。这个问题我遇到过至少二次，但是再遇到时还是想不起来。
+解决方法如下:
+ 
+*/10 * * * * cd /var/www/cron && /usr/local/php/bin/php /var/www/cron/level_rank.php  
+或者
+在php代码中用绝对路径
+
+[redis php sort 函数](http://blog.51yip.com/cache/1441.html)
+```js
+$redis = new redis();  
+$redis->connect('192.168.1.108', 6379);  
+$redis->flushall();  
+$redis->lpush('test', 'a');  
+$redis->lpush('test', 'd');  
+$redis->lpush('test', 'b');  
+  
+print_r($redis->sort('test')); //结果：Array ( [0] => b [1] => d [2] => a )  
+  
+print_r($redis->sort('test',array('ALPHA'=>TRUE))); //结果：Array ( [0] => a [1] => b [2] => d )  
+$array = array('LIMIT'=>array(0,3),"SORT"=>'DESC');  
+print_r($redis->sort('test',$array));  //结果：Array ( [0] => 31 [1] => 23 [2] => 5 )  
+
+$redis->lpush('id', 1);  
+$redis->set('name_1', 'tank');  
+$redis->set('score_1',89);  
+  
+$redis->lpush('id', 2);  
+$redis->set('name_2', 'zhang');  
+$redis->set('score_2', 40);  
+  
+$redis->lpush('id', 4);  
+$redis->set('name_4','ying');  
+$redis->set('score_4', 70);  
+  
+$redis->lpush('id', 3);  
+$redis->set('name_3', 'fXXK');  
+$redis->set('score_3', 90);  
+  
+/** 
+ * 按score从大到小排序,取得id 
+ */  
+$sort=array('BY'=>'score_*',  
+            'SORT'=>'DESC'  
+            );  
+print_r($redis->sort('id',$sort)); //结果:Array ( [0] => 3 [1] => 1 [2] => 4 [3] => 2 )   
+  
+/** 
+ * 按score从大到小排序,取得name 
+ */  
+$sort=array('BY'=>'score_*',  
+            'SORT'=>'DESC',  
+            'GET'=>'name_*'  
+            );  
+print_r($redis->sort('id',$sort)); //结果:Array ( [0] => fXXK [1] => tank [2] => ying [3] => zhang )    
+  
+/** 
+ * 按score从小到大排序,取得name，score 
+ */  
+$sort=array('BY'=>'score_*',  
+            'SORT'=>'DESC',  
+            'GET'=>array('name_*','score_*')  
+            );  
+print_r($redis->sort('id',$sort));  
+/** 
+ *结果:Array 
+        ( 
+            [0] => fXXK 
+            [1] => 90 
+            [2] => tank 
+            [3] => 89 
+            [4] => ying 
+            [5] => 70 
+            [6] => zhang 
+            [7] => 40 
+        )) 
+ */  
+```
+
+
+[innodb 共享表空间 转 独立表空间 详细说明，以及遇到的问题](http://blog.51yip.com/mysql/1368.html)
+
+
+
+
+```js
+mysql> show variables like '%per_table%';  
++-----------------------+-------+  
+| Variable_name         | Value |  
++-----------------------+-------+  
+| innodb_file_per_table | OFF   |  
++-----------------------+-------+  
+1 row in set (0.00 sec)  
+如果是OFF，肯定不是独立表空间。如果是ON的话，也不一定是独立表空间。最直接的方法就是查看硬盘上的文件，独立表空间，每个表都对应了一个空间。
+[root@localhost tg]# ll  
+总用量 64  
+-rw-rw----. 1 mysql mysql   65 12月 30 20:09 db.opt  
+-rw-rw----. 1 mysql mysql 8658 12月 30 23:17 gb.frm  
+-rw-rw----. 1 mysql mysql 8658 12月 30 23:19 qr.frm  
+-rw-rw----. 1 mysql mysql 8658 12月 30 23:19 qy.frm  
+-rw-rw----. 1 mysql mysql 8658 12月 30 23:19 tg.frm  
+-rw-rw----. 1 mysql mysql 8658 12月 30 23:19 xcy.frm  
+tg是一个数据库名，里面的都是innodb的。像这种情况就是共享表空间。
+从这里可以看出，每一张表都对应有一个.ibd的文件，根共享表空间是不一样的。到这儿就完全配置好了。
+```
+
+
+[redis session 存储 同步](http://blog.51yip.com/cache/1434.html)
+```js
+session.save_handler = redis  
+session.save_path = "tcp://127.0.0.1:6379"  
+session_start();  
+$_SESSION['redis'] = "aaaaaa";  
+echo session_id();  
+echo "<br>";  
+echo $_SESSION['redis'];  
+echo "<br>";  
+$redis = new redis();  
+$redis->connect('192.168.1.108', 6379);  
+echo $redis->get("PHPREDIS_SESSION:ruk5i2vlu2hvtmfr5hig4l55f6");//这个key我是通过telnet到redis查的。  
+
+echo session_id();显示出来是ruk5i2vlu2hvtmfr5hig4l55f6，开始的时候，echo $redis->get("ruk5i2vlu2hvtmfr5hig4l55f6");不管怎么样都取不到值，因为memcache这样是可以取到值的，所以我就想redis估计也是这样。telnet到redis看了一下，原来命名key值的方式是不一样的
+copy一下redis.conf，生成一个从机的配置
+cp /usr/local/redis/redis.conf /usr/local/redis/redis_slave.conf
+2，修改主服务器的配置redis.conf
+bind 127.0.0.1
+3，修改从服务器的配置redis_slave.conf
+pidfile /usr/local/redis/var/redis_slave.pid
+port 10002
+bind 127.0.0.1
+logfile /usr/local/redis/var/redis_slave.log
+dbfilename dump_slave.rdb
+slaveof 127.0.0.1 6379
+4，启动主服务器，从服务器
+redis-server /usr/local/redis/redis.conf
+redis-server /usr/local/redis/redis_slave.conf
+root@ubuntu:/usr/local/redis# ps -e|grep redis
+3774 ? 00:00:00 redis-server
+4148 ? 00:00:00 redis-server
+
+```
+php函数  几个小时前
+```js
+function timeFromNow($dateline) {  
+    if(emptyempty($dateline)) return false;  
+    $seconds = time() - $dateline;  
+    if ($seconds < 60){  
+        return "1分钟前";  
+    }elseif($seconds < 3600){  
+        return floor($seconds/60)."分钟前";  
+    }elseif($seconds  < 24*3600){  
+        return floor($seconds/3600)."小时前";  
+    }elseif($seconds < 48*3600){  
+        return date("昨天 H:i", $dateline)."";  
+    }else{  
+        return date('Y-m-d', $dateline);  
+    }  
+}  
+  
+echo timeFromNow(strtotime("2012-07-07 14:15:13")); //昨天 14:15  
+echo timeFromNow(strtotime("2012-07-08 14:15:13")); //1小前  
+```
+[nginx 报 504 Gateway Time-out 解决方法](http://blog.51yip.com/apachenginx/1475.html)
+
+用pkill php-cgi的时候，根本杀不掉，当时我想到是php-cgi进程死了，急着解决问题，没有演示一下查看僵尸进程。下面有二个方法查看。
+第一种：ps查看
+[root@localhost ~]# ps -ef |grep defunc  
+第二种，top查看zombie，如果 != 0，就是僵尸进程
+
+源码下载：https://github.com/t0k4rt/phpqrcode http://blog.51yip.com/demo/phpqrcode/test.php
+[ffmpeg 安装 分割 截图 转换 加水印](http://blog.51yip.com/linux/1584.html)
+```js
+视频截图
+# ffmpeg -i test.mp4 -y -f mjpeg -ss 3 -t 1  test1.jpg  
+  
+# ffmpeg -i test.mp4 -y -f image2 -ss 3 -vframes 1 test1.jpg  
+上面二个例子都表示，在第三秒的时候，截图。
+3，获取视频时间
+查看复制打印?
+[root@localhost test]# ffmpeg -i test.mp4 2>&1 | grep 'Duration' | cut -d ' ' -f 4 | sed s/,//  
+00:00:33.73  
+4，视频转换
+视频的格式有很多，以mp4和flv为例子
+查看复制打印?
+# ffmpeg -i test.mp4 -ab 56 -ar 22050 -qmin 2 -qmax 16 -b 320k -r 15 -s 320x240 outputfile.flv   //mp4 转 flv  
+  
+# ffmpeg -i outputfile.flv -copyts -strict -2 test.mp4  //flv 转 mp4  
+5，视频加水印
+查看复制打印?
+#ffmpeg -y -i test.mp4 -acodec copy -vf "movie=uwsgi.jpg [logo]; [in][logo] overlay=10:10:1 [out]" test2.mp4  
+overlay=10:10:1，后三个数据表示是距离左边的距离，距离上边的距离，是否透明，1表示透明。上例我用的是jpg，当然不可能透明。
+查看复制打印?
+# ffmpeg -y -i test.mp4 -acodec copy -vf "movie=uwsgi.jpg [logo]; [in][logo] overlay=enable='lte(t,1)' [out]" test2.mp4  
+overlay=enable='lte(t,1)' ，这个参数表示，水印在前一秒显示。
+```
+
+
+```js
+
+php excelreader操作excel的php类，生成，读取excel等。功能很强大。
+下载地址：http://sourceforge.net/projects/phpexcelreader/
+解压后，里面有很多例子，调用方法简单。
+2，phpdocx操作word的php类
+下载地址：http://www.phpdocx.com/
+在线演示地址：http://www.phpdocx.com/demo/sample-word-report
+3，tcpdf操作pdf的php类
+下载地址：http://sourceforge.net/projects/html2fpdf/?source=recommended
+在线演示地址：http://www.tcpdf.org/examples.php
+$logo = 'logo.png';  
+  
+if(is_file($logo))  
+{  
+    $QR = imagecreatefromstring(file_get_contents($filename));  
+    $logo = imagecreatefromstring(file_get_contents($logo));  
+    $QR_width = imagesx($QR);  
+    $QR_height = imagesy($QR);  
+    $logo_width = imagesx($logo);  
+    $logo_height = imagesy($logo);  
+    $logo_qr_width = $QR_width / 5;  
+    $scale = $logo_width / $logo_qr_width;  
+    $logo_qr_height = $logo_height / $scale;  
+    $from_width = ($QR_width - $logo_qr_width) / 2;  
+    imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width, $logo_qr_height, $logo_width, $logo_height);  
+    imagepng($QR,$filename);  
+}  
+```
+
+[Linux命令查找](http://linux.51yip.com/search/crontab)
+[redis 导出 导入 详解](http://blog.51yip.com/nosql/1656.html)
+```js
+[root@localhost tank]# telnet 127.0.0.1 6379 //telnet到redis  
+Trying 127.0.0.1...  
+Connected to 127.0.0.1.  
+Escape character is '^]'.  
+set test 11 //设置一个值  
++OK  
+get test //取值  
+$2  
+11  
+  
+[root@localhost tank]# redis-dump -u 127.0.0.1:6379 >test.json //导出数据
+[root@localhost tank]# telnet 127.0.0.1 6379 //telnet到redis  
+Trying 127.0.0.1...  
+Connected to 127.0.0.1.  
+Escape character is '^]'.  
+flushall //请空所有数据  
++OK  
+keys * //查看已清空  
+*0  
+  
+[root@localhost tank]# < test.json redis-load //导入数据  
+  
+[root@localhost tank]# telnet 127.0.0.1 6379  
+Trying 127.0.0.1...  
+Connected to 127.0.0.1.  
+Escape character is '^]'.  
+keys * //已导入成功  
+*1  
+$4  
+test  
+```
+
 [根据用户职级关系展示数据如何设计更合理](https://segmentfault.com/q/1010000008741101)
 ```js
 --管理员表
