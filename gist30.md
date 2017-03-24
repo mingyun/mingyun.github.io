@@ -1,3 +1,310 @@
+mysql分区
+ALTER TABLE webinar_user_regs MODIFY COLUMN `id` bigint(20) unsigned NOT NULL;
+ALTER TABLE webinar_user_regs DROP PRIMARY KEY;
+ALTER TABLE webinar_user_regs ADD INDEX `id`(`id`);
+ALTER TABLE webinar_user_regs PARTITION BY HASH(webinar_id) PARTITIONS 64;
+[根据用户职级关系展示数据如何设计更合理](https://segmentfault.com/q/1010000008741101)
+```js
+--管理员表
+CREATE TABLE `mango16_manager` (
+  `mg_id` int(11) NOT NULL AUTO_INCREMENT,
+  `mg_name` varchar(32) NOT NULL,
+  `mg_pwd` varchar(32) NOT NULL,
+  `mg_time` int(10) unsigned NOT NULL COMMENT '时间',
+  `mg_role_id` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '角色id',
+  PRIMARY KEY (`mg_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+ 
+--权限表
+CREATE TABLE `mango16_auth` (
+  `auth_id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
+  `auth_name` varchar(20) NOT NULL COMMENT '权限名称',
+  `auth_pid` smallint(6) unsigned NOT NULL COMMENT '父id',
+  `auth_c` varchar(32) NOT NULL DEFAULT '' COMMENT '控制器',
+  `auth_a` varchar(32) NOT NULL DEFAULT '' COMMENT '操作方法',
+  `auth_path` varchar(32) NOT NULL COMMENT '全路径',
+  `auth_level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '权限级别，从0开始计数',
+  PRIMARY KEY (`auth_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+ 
+--角色表
+CREATE TABLE `mango16_role` (
+  `role_id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(20) NOT NULL COMMENT '角色名称',
+  `role_auth_ids` varchar(128) NOT NULL DEFAULT '' COMMENT '权限ids,1,2,5',
+  `role_auth_ac` text COMMENT '控制器-操作,控制器-操作,控制器-操作',
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+ 
+ 
+角色：
+    品牌经理
+    店长
+    销售
+
+```
+[apidoc 生成api文档](http://blog.51yip.com/other/1847.html)
+# npm install apidoc@0.12 -g 
+```js
+class UserController{  
+  
+ /** 
+ * @api {POST} /api/user/getUserInfo 
+ * @apiName 取得用户信息 api 
+ * @apiGroup 用户组 
+ * @apiVersion 1.0.1 
+ * @apiDescription 取得用户信息 
+ * @apiPermission 登录用户 
+ * @apiSampleRequest http://api.test.com/api/user/getUserInfo 
+ * @apiParam {int} [id] any id 
+ * @apiParamExample {json} 请求例子: 
+ * { 
+ * "id": 4711 
+ * } 
+ * @apiSuccess (200) {String} msg 信息 
+ * @apiSuccess (200) {int} code 200 
+ * @apiSuccess (200) {String} name 真实姓名 
+ * @apiSuccess (200) {String} mobile 手机号 
+ * @apiSuccess (200) {String} birthday 生日 
+ * @apiSuccess (200) {String} email 邮箱 
+ * @apiSuccessExample {json} 返回样例: 
+ * { 
+ * "code": 200, 
+ * "msg": "", 
+ * "name": "真实姓名", 
+ * "mobile": 12345678901, 
+ * "birthday": "1980-03-05", 
+ * "email": "test@gamil.com" 
+ * } 
+ * @apiErrorExample {json} 错误返回: 
+ * { 
+ * "code": 14695 
+ * "msg": "数据出错" 
+ * } 
+ */  
+ public function getUserInfo(){  
+  
+ }  
+}  
+[root@localhost mytest]# cat apidoc.json  
+{  
+    "name": "我的测试",  
+    "version": "1.0.0",  
+    "description": "测试",  
+    "title": "测试",  
+    "url" : "https://api.test.com"  
+}  
+  
+# apidoc -i mytest/ -o ./doc  
+```
+[centos7 安装 shadowsocks](http://blog.51yip.com/linux/1839.html)
+```js
+# mkdir -p /etc/shadowsocks  
+# vim /etc/shadowsocks/config.json  
+  
+{  
+"server":"118.61.***.***",  
+"port_password":{  
+ "18381":"*********",  
+ "18382":"*********",  
+ "18383":"*********",  
+ "18385":"*********",  
+ "18384":"*********"  
+ },  
+"timeout":300,  
+"method":"rc4-md5",  
+"fast_open":false,  
+"workers":1  
+}  
+# systemctl start shadowsocks-server.service  
+# systemctl enable shadowsocks-server.service  
+# systemctl disable shadowsocks-server.service  
+# firewall-cmd --permanent --add-port=18381-18385/tcp  
+# firewall-cmd --reload  
+centos7用的firewalld，比直接用iptables要简单，好用。
+
+alter如果很慢，优化一下my.cnf，[mysqld]加上以下内容，并重新加载。
+innodb_buffer_pool_size=1G  
+innodb_file_io_threads=4  
+innodb_file_io_threads常规配置，小于等CPU核数。innodb_buffer_pool_size小于等于物理内存的1/2，原则上够用就好。
+
+```
+[nginx php-fpm 小VPS 优化](http://blog.51yip.com/apachenginx/1792.html)
+```js
+[root@xxxxxx nginx]# free -m  
+              total       used       free     shared    buffers     cached  
+Mem:           994        815        179          0         43        118  
+-/+ buffers/cache:        453        540  
+Swap:            0          0          0  
+  
+[root@xxxxxx nginx]# cat /proc/cpuinfo
+pm = dynamic                      //进程数，动态分配  
+pm.max_children = 24              //最大进程数  
+pm.start_servers = 8              //刚启动时的进程数  
+pm.min_spare_servers = 8          //服务器空闲时的最小进程数  
+pm.max_spare_servers = 24         //服务器空闲时的最大进程数  
+  
+php_flag[display_errors] = off    //运行一段时间后，将错误提示信息关闭掉  
+php-fpm一个进程占了20M-30M之间，top看一下php-fpm占的内存百分比，估算一下就知道了。max_children，max_spare_servers不是越大越好
+nginx.cnf
+worker_processes auto;      //设置auto，nginx进程动态分配  
+  
+# access_log    //注释掉，减少I/O  
+# log_format    //注释掉，减少I/O  
+  
+gzip on;          //开启gzip  
+gzip_min_length  1k;  
+gzip_buffers     4 16k;  
+gzip_http_version 1.1;  
+gzip_comp_level 5;       //1-9,越大压缩越好，消耗资源越大  
+gzip_types       text/plain application/x-javascript text/css application/xml;  
+gzip_vary on;  
+
+```
+
+[munin 监控 redis](http://blog.51yip.com/server/1695.html)
+[munin 监控 php-fpm](http://blog.51yip.com/server/1694.html)
+```js
+# vim /etc/php-fpm.d/www.conf  
+  
+pm.status_path = /status     //把前面注释去掉  
+  
+# /etc/init.d/php-fpm restart   //重启 
+# vim /etc/nginx/conf.d/munin.conf   //添加以下内容  
+  
+location ~ ^/(status|ping)$ {  
+ include fastcgi_params;  
+ fastcgi_pass 127.0.0.1:9000;  
+ fastcgi_param SCRIPT_FILENAME $fastcgi_script_name;  
+ allow 127.0.0.1;  
+ #allow 192.168.1.101;  
+ #allow munin.51yip.com;  
+ deny all;  
+}  
+  
+# /etc/init.d/nginx restart  //重启
+访问http://xxxxx.com/status，如果出现以下内容，说明nginx和php-fpm配置对了
+pool:                 www
+process manager:      dynamic
+start time:           14/Jan/2015:09:26:23 +0800
+start since:          28796
+accepted conn:        261
+listen queue:         0
+max listen queue:     0
+listen queue len:     128
+idle processes:       6
+active processes:     1
+total processes:      7
+max active processes: 4
+max children reached: 0
+3,下载munin的php-fpm插件
+https://github.com/tjstein/php5-fpm-munin-plugins
+```
+
+
+下载munin redis插件
+https://github.com/bpineau/redis-munin
+[php word html](http://blog.51yip.com/php/1708.html)
+[nginx php curl 访问 不正常](http://blog.51yip.com/apachenginx/1736.html)
+
+导致php curl 不正常的原因是我将php-fpm的启动用户改成了root，启动方法改为，
+sudo nohup /usr/sbin/php-fpm -R >/dev/null 2>&1 &
+解决办法是，将，vim /etc/php-fpm.d/www.conf里面的，group和user改成非root账号，通过service php-fpm start或者是/etc/init.d/php-fpm start来启动。
+
+[nginx php 上传文件大小 设置](http://blog.51yip.com/apachenginx/1751.html)
+```js
+nginx php设置上传文件大小，有三个地方需要改。
+1，nginx.conf
+client_max_body_size默认是2M的，如果通过http上传超过2M，会报413 Request Entity Too Large错误
+解决办法，将client_max_body_size改大就行了。
+2，php.ini
+upload_max_filesize = 20M     #文件上传的最大值
+post_max_size = 30M   #post数据的最大值
+这二个有什么区别呢，post数据，常用的就是form表单了，表单数据不光有文件，还可以有其他数据，所以一般情况下，post_max_size设置的会比upload_max_filesize大,大多少，看需要了，如果一个form表单要传多个文件，那就要设置很大了。
+如果不用post，而用socket协议来上传文件，那么post_max_size设置就没有用处了。
+```
+
+
+[输入pip list时提示Unable to create process using '"'](https://segmentfault.com/q/1010000008816667)
+你安装了个python3环境,然而你的pip是python2的版本,对此你要将原先的python3卸载了,然后安装的时候勾选pip即可.
+[php用htmlentities转换引号时，为什么双引号转换成了实体名称，单引号却转换成了实体编号？](https://segmentfault.com/q/1010000008816915)
+这个转义的映射关系可以通过这函数来获取：get_html_translation_table(HTML_ENTITIES) 可以看到里面没有单引号。所以单引号就被转换为&#039;的形式。
+[mysql innodb #145 错误解决](http://blog.51yip.com/mysql/1790.html)
+check table user_order_logs;  
+repair table user_order_logs;  
+[redis突然挂掉后，无法启动，查看log日志，发现报Short read or OOM loading DB. Unrecoverable error, aborting now](http://blog.51yip.com/nosql/1791.html)
+
+[root@localhost ~]# rm -f /var/lib/redis/dump.rdb  
+[root@localhost ~]# rm -f /var/run/redis.pid  
+[root@localhost ~]# service redis start  
+[php 字符串算术表达式计算](http://blog.51yip.com/php/1846.html)
+
+$aa = "{1}*{2}-{3}";  
+$farr = array('/\{1\}/','/\{2\}/','/\{3\}/');  
+$tarr = array(3,4,10);  
+$str = preg_replace( $farr,$tarr,$aa);  
+echo $str;        //结果：3*4-10  
+echo eval('return '.$str.';');   //结果:2  
+[mysql分区功能详细介绍，以及实例](http://blog.51yip.com/mysql/1013.html)
+//到存放数据库表文件的地方看一下，my.cnf里面有配置，datadir后面就是  
+[root@BlackGhost test]# ls |grep user |xargs du -sh  
+4.0K    user#P#p0.MYD  
+4.0K    user#P#p0.MYI  
+4.0K    user#P#p1.MYD  
+4.0K    user#P#p1.MYI  
+4.0K    user#P#p2.MYD  
+4.0K    user#P#p2.MYI  
+4.0K    user#P#p3.MYD  
+4.0K    user#P#p3.MYI  
+4.0K    user#P#p4.MYD  
+4.0K    user#P#p4.MYI  
+12K    user.frm  
+4.0K    user.par  
+HASH分区主要用来确保数据在预先确定数目的分区中平均分布，你所要做的只是基于将要被哈希的列值指定一个列值或表达式，以 及指定被分区的表将要被分割成的分区数量。
+
+1，分区可以分在多个磁盘，存储更大一点
+2，根据查找条件，也就是where后面的条件，查找只查找相应的分区不用全部查找了
+3，进行大数据搜索时可以进行并行处理。
+4，跨多个磁盘来分散数据查询，来获得更大的查询吞吐量
+[python Anaconda使用总结](http://python.jobbole.com/86236/)
+[Python > 小白进阶之Scrapy第一篇](http://cuiqingcai.com/3472.html)
+
+[把数组里的数按照指定的顺序重新排序](https://segmentfault.com/q/1010000008815093)
+```js
+https://xss.haozi.me/tools/xss-encode/
+$arr1 = [0,1,3,7,9];
+
+$arr2 = [1,0,9,3,7];
+
+$arr3 = [];
+
+for ($i=0; $i < count($arr1); $i++) { 
+    for ($j=0; $j < count($arr2); $j++) { 
+        if ($arr2[$j] == $arr1[$i]) {
+            $arr3[$i] = $arr2[$j];
+        }
+    }
+}
+
+var_dump($arr3);
+$a = array('a','b','c','d','e','f');
+
+$b = array('b','a','e','c');
+
+$c = [];
+
+for ($i=0; $i < count($b); $i++) { 
+    for ($j=0; $j < count($a); $j++) { 
+        if ($a[$j] == $b[$i]) {
+            $c[$i] = $a[$j];
+        }
+    }
+}
+
+var_dump($c);
+```
+[PHP设计模式问题](https://segmentfault.com/q/1010000008736793)
+
 [JavaScript中的位运算符如|和&，有啥应用场景吗](https://segmentfault.com/q/1010000008810893)
 ```js
 判断奇偶
