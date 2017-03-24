@@ -4,6 +4,129 @@ ALTER TABLE webinar_user_regs DROP PRIMARY KEY;
 ALTER TABLE webinar_user_regs ADD INDEX `id`(`id`);
 ALTER TABLE webinar_user_regs PARTITION BY HASH(webinar_id) PARTITIONS 64;
 [php 二维码 加水印图片 支持ios,android,win8](http://blog.51yip.com/php/1600.html)
+[php xml与json间的相互转换](http://blog.51yip.com/php/660.html)
+```js
+public function xml_to_json($source) {  
+    if(is_file($source)){             //传的是文件，还是xml的string的判断  
+        $xml_array=simplexml_load_file($source);  
+    }else{  
+        $xml_array=simplexml_load_string($source);  
+    }  
+    $json = json_encode($xml_array);  //php5，以及以上，如果是更早版本，請下載JSON.php  
+    return $json;  
+}  
+
+public function json_to_xml($source,$charset='utf8') {  
+    if(emptyempty($source)){  
+        return false;  
+    }  
+    $array = json_decode($source);  //php5，以及以上，如果是更早版本，請下載JSON.php  
+    $xml  ='<!--l version="1.0" encoding="'.$charset.'-->';  
+    $xml .= $this->change($array);  
+    return $xml;  
+}  
+  
+public function change($source) {  
+    $string=""; 
+    foreach($source as $k=>$v){ 
+        $string .="<".$k.">"; 
+        if(is_array($v) || is_object($v)){       //判断是否是数组，或者，对像 
+            $string .= $this->change($v);        //是数组或者对像就的递归调用 
+        }else{ 
+            $string .=$v;                        //取得标签数据 
+        } 
+        $string .="";  
+    }  
+    return $string;  
+}  
+
+ $list = WebinarTrack::where('webinar_id',$webinar_id)->where('created_at','>=',$start)->where('created_at','<=',$end)->whereRaw('`created_at` = `updated_at`')->get()->toArray();
+ $redisCacheKey = 'cache:user:info:'.$id;
+            $data = \RedisFacade::get($redisCacheKey);
+            if($data){
+                return unserialize($data);
+            }
+MySQL忘记密码
+ps -e|grep mysql |xargs killall  
+mysqld_safe --user=root --skip-grant-tables  
+mysql -u root  
+use mysql  
+update user set password=password("new_pass") where user="root";  
+flush privileges;
+开启profile
+mysql> set profiling=1;
+Query OK, 0 rows affected (0.00 sec) show profile for query 1;
+update comment set content=replace(content,'1111','2222')  where c_id = '2';
+SELECT CASE u_id  
+WHEN 1  
+THEN '张映'  
+WHEN 2  
+THEN 'tank'  
+ELSE 'no'  
+END AS uname, name  
+FROM COMMENT  
+SELECT CASE  
+WHEN u_id =1  
+THEN '张映'  
+WHEN u_id =2  
+THEN 'tank'  
+ELSE 'no'  
+END AS uname, name  
+FROM COMMENT   SELECT if( u_id =1, '张映', 'tank' ) AS uname,name FROM `comment`  
+
+```
+推荐注册手机号的好友 关注
+```js
+$mobileList=[['mobile'=>111111,'name'=>'xxx']]
+$mobiles = array_column($mobileList, 'mobile');
+        unset($mobileList);
+        foreach ($mobiles as $i => &$mobile) {
+            $mobile = str_replace(' ', '', $mobile);
+            if (substr_compare('+86', $mobile, 0, 3) === 0) {
+                $mobile = substr($mobile, 3);
+            }
+
+            $mobile = (int)$mobile;
+            if (!$mobile || $mobile < 10000) {
+                unset($mobiles[$i]);
+            }
+        }
+
+        if (!$mobiles) {
+            $this->delete();
+            return;
+        }
+
+        $redis->pipeline(function($pipe) use($userId, $mobiles) {
+            foreach ($mobiles as $mobile) {
+                // 订阅所有的通讯录中的手机号
+                $pipe->sAdd('mobile:sub:users:' . $mobile, $userId);
+            }
+        });
+
+        $users = User::whereIn('phone', $mobiles)->lists('id');
+        $redis->pipeline(function($pipe) use($userId, $users) {
+            foreach ($users as $user) {
+                // 将通讯录已注册的用户推荐给我
+                $pipe->sAdd('user:sub:otherUser:' . $userId, $user);
+                // 将我推荐给通讯录中已注册的用户
+                $pipe->sAdd('user:sub:otherUser:' . $user, $userId);
+            }
+        });
+
+$userIds = $redis->sMembers('user:sub:otherUser:' . $userId);
+        $followList = $redis->hKeys('user:follows:list:' . $userId);
+        $knowIds = array_diff($userIds, $followList, [$userId]);
+
+        if (!$knowIds) return [];
+
+        RedisFacade::set('app:mayknow:'. $userId, count($knowIds));
+        $result = $this->model->mgetBascInfo(array_slice($knowIds, $offset, $limit));//分页
+        return array_filter(array_values($result));
+```
+
+
+
 [apache2nginx 安装和使用](http://blog.51yip.com/apachenginx/1455.html)
 
 wget https://github.com/downloads/nhnc-nginx/apache2nginx/apache2nginx-1.0.0-bin.i386.tar.bz2 //下载  
@@ -11,7 +134,8 @@ tar jxvf apache2nginx-1.0.0-bin.i386.tar.bz2   //解压
 cp ./apache2nginx /usr/sbin   //放到环境变量目录下面  
 apache2nginx -f /etc/httpd/conf/httpd.conf  //apache配置文件转换成nginx  
 [crontab执行不了php的解决方法](http://blog.51yip.com/php/1346.html)
-php文件有没有执行权限
+
+```jsphp文件有没有执行权限
 chmod +x ./del_redis.php  
 */10 * * * * /usr/local/php/bin/php /var/www/cron/del_redis.php >> /home/zhangy/cron.txt  
 3，用crontab来执行php，是不走apache,nginx，所以$_SERVER,$_ENV这类变量根本用不了。所以检查一下php代码中有没有这类变量，如果有拿掉。
@@ -24,6 +148,19 @@ include_once'./mysql.php';
 */10 * * * * cd /var/www/cron && /usr/local/php/bin/php /var/www/cron/level_rank.php  
 或者
 在php代码中用绝对路径
+```
+group_concat的存在的问题
+1，如果想合并的列是int型的，合并出来提示[BLOB - 7 B]或者[BLOB - 7 字节]，这个时候要GROUP_CONCAT( cast( id AS char ) ) AS id 而不能GROUP_CONCAT( id  ) AS id，cast是一个转换函数
+2，group_concat对长度是有限制的，mysql默认的是1024字节，
+查看复制打印?
+mysql> show variables like "%concat%";  
++----------------------+-------+  
+| Variable_name        | Value |  
++----------------------+-------+  
+| group_concat_max_len | 1024  |  
++----------------------+-------+  
+1 row in set (0.00 sec)  
+
 
 [redis php sort 函数](http://blog.51yip.com/cache/1441.html)
 ```js
