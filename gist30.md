@@ -4,6 +4,21 @@ ALTER TABLE webinar_user_regs DROP PRIMARY KEY;
 ALTER TABLE webinar_user_regs ADD INDEX `id`(`id`);
 ALTER TABLE webinar_user_regs PARTITION BY HASH(webinar_id) PARTITIONS 64;
 [php 二维码 加水印图片 支持ios,android,win8](http://blog.51yip.com/php/1600.html)
+[js数据结构转换](https://segmentfault.com/q/1010000008820540)
+```js
+var data = [{obj0:"2016-12-01",obj1:"交通事故",obj2:"218"},{obj0:"2016-12-01",obj1:"医疗事故",obj2:"1"},{obj0:"2016-12-02",obj1:"交通事故",obj2:"200"},{obj0:"2016-12-02",obj1:"医疗事故",obj2:"5"}];
+var res = {};//字典
+data.forEach(function(item){
+  if(!res[item.obj0]){//如果不存在对应的键值对，则创建一个
+    res[item.obj0]=[];
+   }
+   var obj = {}; 
+   obj[item.obj1] = item.obj2;
+   res[item.obj0].push(obj);
+});
+```
+[js中单双引号的嵌套问题](https://segmentfault.com/q/1010000008820413)
+
 [php xml与json间的相互转换](http://blog.51yip.com/php/660.html)
 ```js
 public function xml_to_json($source) {  
@@ -75,6 +90,39 @@ END AS uname, name
 FROM COMMENT   SELECT if( u_id =1, '张映', 'tank' ) AS uname,name FROM `comment`  
 
 ```
+[php的json_decode有bug](http://blog.51yip.com/php/934.html)
+```js
+$string = '{"skus" : [ 
+                     { 
+                        "SHADENAME" : null, 
+                        "HEX_VALUE_STRING" : "", 
+                        "SKU_BASE_ID" : 5912, 
+                        "pricePlusTax" : 8400, 
+                        "PRODUCT_SIZE" : "220g", 
+                        "PRICE" : 8000, 
+                        "SKU_ID" : "SKU5912", 
+                        "INVENTORY_STATUS" : 2, 
+                        "PRODUCT_CODE" : 016500 
+                     } 
+                  ], 
+                "shaded" : 0, 
+                "PROD_CAT_IMAGE_NAME" : 0165, 
+                "SKINTYPE_DESC" : "", 
+                "PRODUCT_ID" : "PROD2158" 
+             } 
+';  
+  
+//下面的正则是把0615这样数据，转换成"0615"  
+$pattern = "/:(\s*)0(\d+)/ui";  
+$replacement = ':\\1"0\\2"';  
+$string = preg_replace($pattern, $replacement, $string);  
+  
+$result = json_decode($string, true);  
+print_r($result);  
+如果我把正则的东西拿掉的话，print_r($result);根本显示不了任何东西，问题就出在016500这样的数据上，他搞不清楚，这样的数据到底是字符串类型，还是数值类型。加上双引号就好了。
+2，我把数组又重新$string = json_encode($result);并把json字符串打印出来，发现在json_encode会把016500加上双引号，由此可以断定，php代码中的那段json字符串是手动生成的。
+```
+
 推荐注册手机号的好友 关注
 ```js
 $mobileList=[['mobile'=>111111,'name'=>'xxx']]
@@ -99,8 +147,8 @@ $mobiles = array_column($mobileList, 'mobile');
 
         $redis->pipeline(function($pipe) use($userId, $mobiles) {
             foreach ($mobiles as $mobile) {
-                // 订阅所有的通讯录中的手机号
-                $pipe->sAdd('mobile:sub:users:' . $mobile, $userId);
+                // 订阅所有的通讯录中的手机号 $userIds = RedisFacade::sMembers('mobile:sub:users:' . $phone); 用于这个手机号注册时通知通讯录有他们的人
+                $pipe->sAdd('mobile:sub:users:' . $mobile, $userId);
             }
         });
 
