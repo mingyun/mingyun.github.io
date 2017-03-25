@@ -1,3 +1,190 @@
+如何向开源项目提交无法解答的问题 https://zhuanlan.zhihu.com/p/25795393 我为莆田系代言-把这款插件推广到五湖四海https://zhuanlan.zhihu.com/p/25963120  http://link.zhihu.com/?target=https%3A//chrome.google.com/webstore/detail/%25E8%258E%2586%25E7%2594%25B0%25E7%25B3%25BB%25E5%258C%25BB%25E9%2599%25A2%25E7%25BD%2591%25E7%25AB%2599%25E6%258F%2590%25E9%2586%2592/pihadmdiehanenijehoohjnpiaofmmng  http://link.zhihu.com/?target=http%3A//open-power-workgroup.github.io/Hospital/data/draft1/html/hospitals.html  
+LAMP兄弟连视频下载地址：免费PHP视频教程下载-LAMP兄弟连PHP培训教程学习网；
+
+传智播客视频下载地址：免费php视频教程下载；
+
+后盾网视频下载地址：后盾网论坛-php培训-php教程；
+
+自学it网下载地址：PHP视频教程 自学it网
+[爬虫神器-selenium](https://zhuanlan.zhihu.com/p/25981552)
+```js
+from selenium import webdriver
+
+from bs4 import BeautifulSoup
+
+初始化浏览器
+
+driver = webdriver.Firefox()
+
+打开某个网址
+
+driver.get(url)
+
+如果网站需要输入登录账号密码
+
+这里用到firepath找到目标位置的xpath
+
+找到输入账号框，清除框内信息，再输入你的账号
+
+driver.find_element_by_xpath(xpath).clear()
+
+driver.find_element_by_xpath(xpath).send_keys("你的账号")
+
+找到输入密码框，清除框内信息，再输入你的密码
+
+driver.find_element_by_xpath(xpath).clear()
+
+driver.find_element_by_xpath(xpath).send_keys("你的密码")
+
+定位“点击登录”框的位置的xpath，执行登录
+
+driver.find_element_by_xpath(xpath).click()
+
+访问你想爬的网页的网址
+
+driver.get(url)
+
+获取该网页的源码
+
+html = driver.page_source
+
+BeautifulSoup定位标签  视频地址http://v.qq.com/vplus/bd8acb3d0418431a6f356522325b0902
+bsObj = BeautifulSoup（html，‘html.parser’）
+```
+[Python爬虫—破解JS加密的Cookie](https://zhuanlan.zhihu.com/p/25957793)
+```js
+首次请求没有Cookie，服务端回返回一段生成Cookie并自动刷新的JS代码。浏览器拿到代码能够成功执行，带着新的Cookie再次请求获取数据。而Python拿到这段代码就只能停留在第一步。
+作者：Jerry
+链接：https://zhuanlan.zhihu.com/p/25957793
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+
+import re
+import PyV8
+import requests
+
+TARGET_URL = "http://www.kuaidaili.com/proxylist/1/"
+
+def getHtml(url, cookie=None):
+    header = {
+        "Host": "www.kuaidaili.com",
+        'Connection': 'keep-alive',
+        'Cache-Control': 'max-age=0',
+        'Upgrade-Insecure-Requests': '1',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, sdch',
+        'Accept-Language': 'zh-CN,zh;q=0.8',
+    }
+    html = requests.get(url=url, headers=header, timeout=30, cookies=cookie).content
+    return html
+
+def executeJS(js_func_string, arg):
+    ctxt = PyV8.JSContext()
+    ctxt.enter()
+    func = ctxt.eval("({js})".format(js=js_func_string))
+    return func(arg)
+
+def parseCookie(string):
+    string = string.replace("document.cookie='", "")
+    clearance = string.split(';')[0]
+    return {clearance.split('=')[0]: clearance.split('=')[1]}
+
+# 第一次访问获取动态加密的JS
+first_html = getHtml(TARGET_URL)
+
+# first_html = """
+# <html><body><script language="javascript"> window.onload=setTimeout("lu(158)", 200); function lu(OE) {var qo, mo="", no="", oo = [0x64,0xaa,0x98,0x3d,0x56,0x64,0x8b,0xb0,0x88,0xe1,0x0d,0xf4,0x99,0x31,0xd8,0xb6,0x5d,0x73,0x98,0xc3,0xc4,0x7a,0x1e,0x38,0x9d,0xe8,0x8d,0xe4,0x0a,0x2e,0x6c,0x45,0x69,0x41,0xe5,0xd0,0xe5,0x11,0x0b,0x35,0x7b,0xe4,0x09,0xb1,0x2b,0x6d,0x82,0x7c,0x25,0xdd,0x70,0x5a,0xc4,0xaa,0xd3,0x74,0x98,0x42,0x3c,0x60,0x2d,0x42,0x66,0xe0,0x0a,0x2e,0x96,0xbb,0xe2,0x1d,0x38,0xdc,0xb1,0xd6,0x0e,0x0d,0x76,0xae,0xc3,0xa9,0x3b,0x62,0x47,0x40,0x15,0x93,0xb7,0xee,0xc3,0x3e,0xfd,0xd3,0x0d,0xf6,0x61,0xdc,0xf1,0x2c,0x54,0x8c,0x90,0xfa,0x24,0x5b,0x83,0x0c,0x75,0xaf,0x18,0x01,0x7e,0x68,0xe0,0x0a,0x72,0x1e,0x88,0x33,0xa7,0xcc,0x31,0x9b,0xf3,0x1a,0xf2,0x9a,0xbf,0x58,0x83,0xe4,0x87,0xed,0x07,0x7e,0xe2,0x00,0xe9,0x92,0xc9,0xe8,0x59,0x7d,0x56,0x8d,0xb5,0xb2,0x6c,0xe0,0x49,0x73,0xfc,0xe7,0x20,0x49,0x34,0x09,0x71,0xeb,0x60,0xfd,0x8e,0xad,0x0f,0xb9,0x2e,0x77,0xdc,0x74,0x9b,0xbf,0x8f,0xa5,0x8d,0xb8,0xb0,0x06,0xac,0xc5,0xe9,0x10,0x12,0x77,0x9b,0xb1,0x19,0x4e,0x64,0x5c,0x00,0x98,0xc6,0xed,0x98,0x0d,0x65,0x11,0x35,0x9e,0xf4,0x30,0x93,0x4b,0x00,0xab,0x20,0x8f,0x29,0x4f,0x27,0x8c,0xc2,0x6a,0x04,0xfb,0x51,0xa3,0x4b,0xef,0x09,0x30,0x28,0x4d,0x25,0x8e,0x76,0x58,0xbf,0x57,0xfb,0x20,0x78,0xd1,0xf7,0x9f,0x77,0x0f,0x3a,0x9f,0x37,0xdb,0xd3,0xfc,0x14,0x39,0x11,0x3b,0x94,0x8c,0xad,0x8e,0x5c,0xd3,0x3b];qo = "qo=251; do{oo[qo]=(-oo[qo])&0xff; oo[qo]=(((oo[qo]>>4)|((oo[qo]<<4)&0xff))-0)&0xff;} while(--qo>=2);"; eval(qo);qo = 250; do { oo[qo] = (oo[qo] - oo[qo - 1]) & 0xff; } while (-- qo >= 3 );qo = 1; for (;;) { if (qo > 250) break; oo[qo] = ((((((oo[qo] + 200) & 0xff) + 121) & 0xff) << 6) & 0xff) | (((((oo[qo] + 200) & 0xff) + 121) & 0xff) >> 2); qo++;}po = ""; for (qo = 1; qo < oo.length - 1; qo++) if (qo % 5) po += String.fromCharCode(oo[qo] ^ OE);eval("qo=eval;qo(po);");} </script> </body></html>
+# """
+
+# 提取其中的JS加密函数
+js_func = ''.join(re.findall(r'(function .*?)</script>', first_html))
+
+print 'get js func:\n', js_func
+
+# 提取其中执行JS函数的参数
+js_arg = ''.join(re.findall(r'setTimeout\(\"\D+\((\d+)\)\"', first_html))
+
+print 'get ja arg:\n', js_arg
+
+# 修改JS函数，使其返回Cookie内容
+js_func = js_func.replace('eval("qo=eval;qo(po);")', 'return po')
+
+# 执行JS获取Cookie
+cookie_str = executeJS(js_func, js_arg)
+
+# 将Cookie转换为字典格式
+cookie = parseCookie(cookie_str)
+
+print cookie
+
+# 带上Cookie再次访问url,获取正确数据
+print getHtml(TARGET_URL, cookie)[0:500]
+
+
+```
+[想知道大家都用python写过哪些有趣的脚本?](https://www.zhihu.com/question/28661987/answer/152739366)
+https://link.zhihu.com/?target=https%3A//github.com/lzjun567/crawler_html2pdf/blob/master/pdf/crawler.py
+[23家互联网名企的300多篇精华笔经面经，免费领取](https://zhuanlan.zhihu.com/p/25863996)
+[35岁HR告诉你，如何正确的写简历（附12款精美模板）](https://zhuanlan.zhihu.com/p/25953536)
+[国内有没有适合青少年观看的性教育视频？](https://www.zhihu.com/question/47016153/answer/104716432)
+[提问的智慧 - 中文版](https://link.zhihu.com/?target=http%3A//doc.zengrong.net/smart-questions/cn.html)
+https://link.zhihu.com/?target=https%3A//ryancao.gitbooks.io/php-developer-prepares/content/assets/smart-questions-cn.jpg
+https://link.zhihu.com/?target=http%3A//study.163.com/topics/sexuality-education/
+[10分钟python图表绘制 | seaborn入门（四）：回归模型lmplot](https://zhuanlan.zhihu.com/p/25909753)
+pip install seaborn 
+```js
+
+import seaborn as sns
+sns.set_style("whitegrid")
+tips = sns.load_dataset("tips") #载入自带数据集
+#研究小费tips与总消费金额total_bill在吸烟与不吸烟人之间的关系
+
+g = sns.lmplot(x="total_bill", y="tip", hue="smoker", data=tips,palette="Set1")
+
+#继续研究pokemon数据集
+import pandas as pd
+import seaborn as sns
+pokemon=pd.read_csv('H:/zhihu/Pokemon.csv')
+pokemon.head()
+```
+
+[奇舞学院 推出的视频](https://link.zhihu.com/?target=http%3A//t.75team.com/video)
+[知乎看片-指日可待 ： 如何优雅的“轮带逛”初级篇——获取单张图片](https://zhuanlan.zhihu.com/p/25936300)
+[Python 程序如何高效地调试？](https://www.zhihu.com/question/21572891/answer/153088414)
+```js
+有两种不同的方法启动Python调试器，一种直接在命令行参数指定使用pdb模块启动Python文件，如下所示：
+
+python -m pdb test_pdb.py 
+另一种方法是在Python代码中，调用pdb模块的set_trace方法设置一个断点，当程序运行自此时，将会暂停执行并打开pdb调试器。
+
+#/usr/bin/python
+from __future__ import print_function
+import pdb
+
+def sum_nums(n):
+    s=0
+    for i in range(n):
+        pdb.set_trace()
+        s += i
+        print(s)
+
+if __name__ == '__main__':
+    sum_nums(5)
+```
+[深度学习方面的学术交流平台？](https://link.zhihu.com/?target=https%3A//jizhi.im/community)
+今天上线了新功能，社区帖子中也可以插入在线Python运行环境，这样在交流PY的时候，不仅可以show me the code，还可以run the code, see the output https://www.zhihu.com/question/54749093/answer/153175713  
+[快来get新技能--抓包+cookie,爬微博不再是梦](https://mp.weixin.qq.com/s?__biz=MzI1MTE2ODg4MA==&mid=2650068076&idx=1&sn=9306af74c6fc6edc98906101c3d8c1ee&chksm=f1f76573c680ec652e4a3a313535e1e16c28b6b4484a9b35bc55e8bcb132f8194893d28170da&scene=21#wechat_redirect)
+r  = requests.get(url,cookiess = Cookie)
+[记忆转换工具](https://faded12.github.io/conversion/)
+https://zhuanlan.zhihu.com/p/25865945 
+[有哪些好看的婚礼请柬？](https://www.zhihu.com/question/22406901/answer/152969274)
+
+[求职必胜，提升面试成功率靠谱攻略](https://zhuanlan.zhihu.com/p/25975370)
+[新媒体运营工具盘点](https://zhuanlan.zhihu.com/p/25477198)
+
+[用python实现简单的文本情感分析](https://mp.weixin.qq.com/s?__biz=MzI1MTE2ODg4MA==&mid=2650067952&idx=1&sn=4dc4b061db10b68f9154eadc4fe24e51&chksm=f1f762efc680ebf9ba3c92b731bbe56272a3513c0608d83bc4c2350f6f3abadd894bc2fc7ce6&scene=21#wechat_redirect)
+
 [计算中文混合字符串长度（二）](http://blog.csdn.net/zhouzme/article/details/18909553)
 ```js
 将字符串转换为 一个中文为 1，一个英文、数字 为 0.5 ，取最大整数长度值，类似腾讯微博计算字数长度方式
