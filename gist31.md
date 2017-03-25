@@ -6,6 +6,84 @@ LAMP兄弟连视频下载地址：免费PHP视频教程下载-LAMP兄弟连PHP�
 后盾网视频下载地址：后盾网论坛-php培训-php教程；
 
 自学it网下载地址：PHP视频教程 自学it网
+[10行Python代码的词云](https://mp.weixin.qq.com/s?src=3&timestamp=1490443479&ver=1&signature=lhZ*wr*weZ9H-AfJ8rGBjnr2vX5sf3CjTNRB3tsnZy1B4eblmctUb6dOzThK56vllCncngSLMbNnDwoMpKFdAAsH4Q8uc61emzAvBsgfqf6qNoOrPhqlegYQ3Fa8Pxh0TZbq6X4WToGETo4tSLoKwzP5r0gwbQinfBjtujmfxu8=)
+老曹 喔家ArchiSelf
+```js
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+import jieba
+
+text_from_file_with_apath = open('/Users/hecom/23tips.txt').read()
+
+wordlist_after_jieba = jieba.cut(text_from_file_with_apath, cut_all = True)
+wl_space_split = " ".join(wordlist_after_jieba)
+
+my_wordcloud = WordCloud().generate(wl_space_split)
+
+plt.imshow(my_wordcloud)
+plt.axis("off")
+plt.show()
+
+直接进入wordcloud.py 的源码，找字体库相关的代码
+
+FONT_PATH = os.environ.get("FONT_PATH", os.path.join(os.path.dirname(__file__), "DroidSansMono.ttf"))
+wordcloud 默认使用了DroidSansMono.ttf 字体库，改一下换成一个支持中文的ttf 字库
+
+from PIL import Image
+import numpy as np
+abel_mask = np.array(Image.open("/Users/hecom/chw.png"))
+在构造函数的时候，将mask传递进去即可：
+
+background_color="black", mask=abel_mask
+```
+[Python批量判断IP地址所属地区]()
+```js
+from random import randrange
+from netaddr import IPRange
+
+def ipRangeTest(ipAddr, ipRange):
+    # 遍历IP地址与地区分布对应关系字典
+    # 如果ipAddr在某个地区的IP段内
+    # 返回该地区名称
+    for key, value in ipRange.items():
+        if ipAddr in value:
+            return key
+    return 'unknown'
+
+# 可以根据实际情况替换这个字典的内容
+# 或从IP地址库中读入信息
+ipRange = {'area1':IPRange('10.2.1.0', '10.2.1.255'),
+           'area2':IPRange('10.2.2.0', '10.2.2.255'),
+           'area3':IPRange('10.3.0.0', '10.3.255.50'),
+           'area4':IPRange('11.1.0.0', '11.1.0.255')}
+
+# 测试
+for _ in range(10):
+    a = randrange(9,12)
+    b = randrange(1,4)
+    c = randrange(4)
+    d = randrange(256)
+    ipAddr = '.'.join(map(str, (a,b,c,d)))
+    print(ipAddr, ipRangeTest(ipAddr,ipRange))
+
+部分运行结果：
+9.2.3.40 unknown
+10.1.3.67 unknown
+11.1.1.54 unknown
+9.1.2.243 unknown
+9.3.2.182 unknown
+10.3.0.30 area3
+9.1.1.58 unknown
+11.1.2.205 unknown
+10.3.2.179 area3
+11.3.1.240 unknown
+```
+浮点数 
+>>>from decimal import *
+# 设置精度为 7 位
+>>>getcontext().prec = 7
+>>>Decimal(1) / Decimal(7)
+Decimal('0.1428571')
 [爬虫神器-selenium](https://zhuanlan.zhihu.com/p/25981552)
 ```js
 from selenium import webdriver
