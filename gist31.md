@@ -1,3 +1,295 @@
+[计算中文混合字符串长度（二）](http://blog.csdn.net/zhouzme/article/details/18909553)
+```js
+将字符串转换为 一个中文为 1，一个英文、数字 为 0.5 ，取最大整数长度值，类似腾讯微博计算字数长度方式
+function asGbkLength($str, $fromEncode = 'utf-8')  
+{  
+    return ceil(strlen(mb_convert_encoding($str, 'gbk', $fromEncode))/2);  
+}  
+$str = 'abcd计算字符串长度12345';  
+echo $str;  
+echo '<br>';  
+echo asGbkLength($str); // 12  
+/** 
+ * 计算字符串的字符长度，默认为 utf-8 编码, 一个中文算 3个字符长度, gbk 则是 2个字符长度 
+ * @param string str 检测的字符串 
+ * @param integer step 字符编码长度, utf-8 为3 , gbk 为 2 
+ * @return integer 
+ */  
+function myStrlen(str, step) {   
+    var len = str.length;   
+    var reLen = 0;  
+    step = step ? step : 3;  
+    for (var i = 0; i < len; i++) {          
+        if (str.charCodeAt(i) < 27 || str.charCodeAt(i) > 126) {   
+            reLen += step; // 全角  
+        } else {   
+            reLen++;   
+        }   
+    }   
+    return reLen;  
+}  
+function asGbkLength(str)  
+{  
+    return Math.ceil(myStrlen(str, 2)/2);  
+}  
+计算包含中文的混合字符串长度，一个中文、英文、数字 均为 1
+function resolveContainCn($string, $charset = 'utf-8')  
+{  
+    if ($string == '') {  
+        return '';  
+    }  
+           
+    if ($charset == 'utf-8') {  
+        $pa = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/";  
+    }  
+    else {  
+        $pa = "/[\x01-\x7f]|[\xa1-\xff][\xa1-\xff]/";  
+    }  
+    $matches = array();  
+    preg_match_all($pa, $string, $matches);  
+    return $matches[0];  
+}  
+function strlenCn($string, $charset = 'utf-8')  
+{  
+    if (function_exists('mb_strlen')) {  
+        return mb_strlen($string, $charset);  
+    }  
+    return count(resolveContainCn($string, $charset));  
+}  
+$str = 'abcd计算字符串长度12345';  
+echo $str;  
+echo '<br>';  
+echo strlenCn($str); // 16 
+```
+[PHP高效获取远程图片尺寸和大小](http://blog.csdn.net/zhouzme/article/details/18902113)
+```js
+function myGetImageSize($url, $type = 'curl', $isGetFilesize = false)   
+{  
+    // 若需要获取图片体积大小则默认使用 fread 方式  
+    $type = $isGetFilesize ? 'fread' : $type;  
+   
+     if ($type == 'fread') {  
+        // 或者使用 socket 二进制方式读取, 需要获取图片体积大小最好使用此方法  
+        $handle = fopen($url, 'rb');  
+   
+        if (! $handle) return false;  
+   
+        // 只取头部固定长度168字节数据  
+        $dataBlock = fread($handle, 168);  
+    }  
+    else {  
+        // 据说 CURL 能缓存DNS 效率比 socket 高  
+        $ch = curl_init($url);  
+        // 超时设置  
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);  
+        // 取前面 168 个字符 通过四张测试图读取宽高结果都没有问题,若获取不到数据可适当加大数值  
+        curl_setopt($ch, CURLOPT_RANGE, '0-167');  
+        // 跟踪301跳转  
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);  
+        // 返回结果  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+   
+        $dataBlock = curl_exec($ch);  
+   
+        curl_close($ch);  
+   
+        if (! $dataBlock) return false;  
+    }  
+   
+    // 将读取的图片信息转化为图片路径并获取图片信息,经测试,这里的转化设置 jpeg 对获取png,gif的信息没有影响,无须分别设置  
+    // 有些图片虽然可以在浏览器查看但实际已被损坏可能无法解析信息   
+    $size = getimagesize('data://image/jpeg;base64,'. base64_encode($dataBlock));  
+    if (empty($size)) {  
+        return false;  
+    }  
+   
+    $result['width'] = $size[0];  
+    $result['height'] = $size[1];  
+   
+    // 是否获取图片体积大小  
+    if ($isGetFilesize) {  
+        // 获取文件数据流信息  
+        $meta = stream_get_meta_data($handle);  
+        // nginx 的信息保存在 headers 里，apache 则直接在 wrapper_data   
+        $dataInfo = isset($meta['wrapper_data']['headers']) ? $meta['wrapper_data']['headers'] : $meta['wrapper_data'];  
+   
+        foreach ($dataInfo as $va) {  
+            if ( preg_match('/length/iU', $va)) {  
+                $ts = explode(':', $va);  
+                $result['size'] = trim(array_pop($ts));  
+                break;  
+            }  
+        }  
+    }  
+   
+    if ($type == 'fread') fclose($handle);  
+   
+    return $result;  
+}  
+   
+// 测试的图片链接  
+echo '<pre>';  
+$result = myGetImageSize('http://s6.mogujie.cn/b7/bao/120630/2kpa6_kqywusdel5bfqrlwgfjeg5sckzsew_345x483.jpg_225x999.jpg', 'curl');  
+print_r($result); 
+```
+[MySQL字段自增自减的SQL语句](http://blog.csdn.net/zhouzme/article/details/18909469)
+通常情况下是可以类似上面自增的方法 把 +号 改成 -号 就行了，但问题是如果当前 comments 统计数值为 0 时 再做减法将会变成该字段类型的最大数值 65535
+update `info` set `comments` = IF(`comments`< 1,0,`comments`-1) WHERE `id` = 32  
+update `info` set `comments` = IF(`comments`<1, 0, `comments`-1) WHERE `id` = 32  
+[给 phper 出一道基本的面试题](https://www.v2ex.com/t/349774)
+```js
+echo '6+5' . 9+7; 13 实际 计算为 6+7 
+和 “ 123abc ” +1 输出结果为 int 124 一个性质  // ‘ 6+59 ’+7=6+7=13
+例子里的 ((int)'6+1') == intval('6+1') == 6 。从其他语言的叫都上来看完全属于设计不合理，因为会导致混乱。 
+
+试想如果你想严格判断整数输入的话，只能在 intval 转换前再加上一些格式判断，否则甚至可能就会导致安全问题（比如 var_dump('0e1' == '0e2') => true ）。
+class A{ 
+public $bar = 1; 
+public $c = 2; 
+} 
+$a = new A(); 
+$bar = ['baz'=>'c']; 
+echo $a->$bar['baz']; 
+
+@moult 
+js 嘛，坑多了去了 
+比如这个 
+if([]){alert(0);}; 
+if([]==false){alert(1);}; 
+if(![]==false){alert(2);};
+1. 126 
+
+php -r 'echo '6+5' . 9 + 7;' 
+
+相当于 intval('11' . '9') + 7 
+
+
+2. 13 
+
+php -r "echo '6+5' . 9 + 7;" 
+
+相当于 '6+59' + 7 = 6 + 7 ，运行会报警 Notice: A non well formed numeric value encountered ，说明有碰到这种非预期的数值转化，可能有 bug 。 
+
+
+3. syntax error 
+
+php -r "echo '6+5'.9 + 7;" 
+
+报错 PHP Parse error: syntax error, unexpected '.9' (T_DNUMBER), expecting ',' or ';' in Command line code on line 1 
+『.9 』 被当成符号了， echo 后面只支持 『,』和『;』
+
+
+```
+[ 将int，bigint整型数值可逆转换字符串](http://blog.csdn.net/zhouzme/article/details/51098101)
+如： 9223372036854775807 => aZl8N0y58M7
+```js
+class Convert
+{
+    /**
+     * 默认密钥字符串
+     * @var string
+     */
+    const KEY = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    /**
+     * 将 Int 类型十进制数值转换为指定进制编码
+     * @param int|string $num 取值范围 0 ~ 2147483647 之间
+     * @return string
+     */
+    public static function encodeInt($num) {
+        $str = '';
+        if ($num <= 0)
+            $str = substr(self::KEY, 0, 1);
+        while ($num > 0) {
+            $val = intval($num / 62);
+            $mod = $num % 62;
+            $str = substr(self::KEY, $mod, 1) . $str;
+            $num = $val;
+        }
+        return $str;
+    }
+
+    /**
+     * 将编码字符串转换为 Int 类整型数值
+     * @param string $code
+     * @return int
+     */
+    public static function decodeInt($code){
+        $result = null;
+        $len = strlen($code);
+        for ($i = 1; $i <= $len; $i++) {
+            $char = substr($code, $i - 1, 1);
+            $result += intval(strpos(self::KEY, $char)) * pow(62, $len - $i);
+        }
+        return $result;
+    }
+
+    /**
+     * 支持15位长度的整型，超过则精度大幅降低
+     * @param int $num
+     * @return string
+     */
+    public static function encodeInt2($num) {
+        $out = '';
+        for ($t = floor(log10($num)/log10(62)); $t >= 0; $t--) {
+            $a = floor($num/bcpow(62, $t));
+            $out = $out . substr(self::KEY, $a, 1);
+            $num = $num - $a * pow(62, $t);
+        }
+        return $out;
+    }
+
+    /**
+     * 支持最大15位整型字符串的解码
+     * @param string $num
+     * @return string
+     */
+    public static function decodeInt2($num) {
+        $out = 0;
+        $len = strlen($num) - 1;
+        for ($t = 0; $t <= $len; $t++) {
+            $out = $out + strpos(self::KEY, substr( $num, $t, 1 )) * pow(62, $len - $t);
+        }
+        return $out;
+    }
+
+    /**
+     * 将 BigInt 类型的数值转换为指定进制值
+     * @param int|string $num
+     * @return string
+     */
+    public static function encodeBigInt($num) {
+        bcscale(0);
+        $str = '';
+        if ($num <= 0)
+            $str = substr(self::KEY, 0, 1);
+        while ($num > 0) {
+            $div = bcdiv($num, 62);
+            $mod = bcmod($num, 62);
+            $str = substr(self::KEY, $mod, 1) . $str;
+            $num = $div;
+        }
+        return $str;
+    }
+
+    /**
+     * 将编码字符串转换为 BigInt 类整型数值
+     * @param string $code
+     * @return string
+     */
+    public static function decodeBigInt($code) {
+        bcscale(0);
+        $result = '';
+        $len = strlen($code);
+        for ($i = 1; $i <= $len; $i++) {
+            $char = substr($code, $i - 1, 1);
+            $result = bcadd(bcmul(strpos(self::KEY, $char), bcpow(62, $len - $i)), $result);
+        }
+        return $result;
+    }
+}
+```
+
 [PHP不使用递归的无限级分类](http://blog.csdn.net/zhouzme/article/details/50097669)
 ```js
 
