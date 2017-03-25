@@ -1,3 +1,109 @@
+[Python 有哪些好玩的语法糖？](https://www.zhihu.com/question/57470958)
+```js
+ c = [b,a][a>b]   
+ [P1, P2, P3, ...Pn].sort(key=lambda x: (x.grade, x.height))
+把需要排序的属性拿出来作为一个 tuple，主要的放前面，次要的放后面。因为 Python 在比较 tuple 大小的时候正是按字典序进行的
+
+lst = [1, -2, 10, -12, -4, -5, 9, 2]
+还是排序，我们希望把正的放前面，负的放后面，并且分别按绝对值从小到大。即输出：[1, 2, 9, 10, -2, -4, -5, -12]
+最简单的方法是：lst.sort(key=lambda x: (x < 0, abs(x)))
+对于列表形如list_1 = [[1, 2], [3, 4, 5], [6, 7], [8], [9]]转化成列表list_2 = [1, 2, 3, 4, 5, 6, 7, 8, 9]的问题。一般方法list_1 = [[1, 2], [3, 4, 5], [6, 7], [8], [9]]
+list_2 = []
+for _ in list_1:
+    list_2 += _
+print(list_2)
+list_1 = [[1, 2], [3, 4, 5], [6, 7], [8], [9]]
+[i for k in list_1 for i in k]
+ list_1 = [[1, 2], [3, 4, 5], [6, 7], [8], [9]]
+sum(list_1, [])
+ itertools.chain(*list_1)
+ from numpy import array
+array(list_1).flatten().tolist()
+ 
+ 去除小写字母
+
+s=filter(lambda x:not str(x).islower(),"asdasfAsfBsdfC")
+for ch in s:
+    print(ch)
+map函数接受的参数类型与filter类似，它用于把函数作用于可遍历对象的每一个元素。类似于数学中映射的概念。
+
+例：
+
+求y=2x+1（偷偷用了一下range函数生成定义域）
+
+s=map(lambda x:2*x+1,range(6))
+for x in s:
+    print(x)
+reduce函数对每个元素作累计操作，它接受的第一个参数必须是有两个参数的函数。
+
+例：
+
+求和
+
+from functools import reduce
+s=reduce(lambda x,y:x+y,range(1,6))
+print(s)
+求乘积（第三个可选参数表示累计变量的初值）
+
+from functools import reduce
+s=reduce(lambda x,y:x*y,range(1,6),1)
+print(s)
+柯里化(curry)函数
+如果一个函数需要２个参数，而你只传入一个参数，那么你就可以得到一个柯里化的函数，这是函数式编程语言的重要特性之一，遗憾的是，python并不能在语法层面支持柯里化调用，但它在库中提供了接口。
+
+例：
+
+*3函数
+
+f_mul=lambda x,y:x*y
+from functools import partial
+mul3=partial(f_mul,3)
+print(mul3(1))
+print(mul3(6))
+打包与解包
+有点类似于函数式中的模式匹配，略牵强。
+
+t=(1,2,3)
+x,y,z=t
+列表生成式
+这个也有点牵强，不知道严格意义上讲属不属于函数式风格。
+
+例：生成奇数序列
+
+l=[2*x+1 for x in range(10)]
+for i in l:
+    print(i)
+最后来一个彩蛋（以前某答主提到的用调分函数来美颜的算法，忘了出处了，侵删）
+
+from PIL import Image
+from math import sqrt
+
+im = Image.open("a.jpg")
+ret= im.convert(mode="RGB")
+ret = ret.point(lambda x:sqrt(x)*sqrt(255))
+ret.save("b.jpg")
+把点坐标拆成两个list，matpotlib有的时候画图很有用
+
+例如(x1,y1),(x2,y2),...变成(x1,x2,x3....)和(y1,y2,y3,...)
+
+x,y=zip(*original_list)
+numbers = [1, 2, 3, 4, 5]
+one, *_, five = numbers
+if cond1:
+    res = expr1
+elif cond2:
+    res = expr2
+else:
+    res = expr3
+这样冗长的代码结构可以使用a if cond else b 加上 \ 续行化简得非常优雅。
+
+res = \
+    expr1 if cond1 else \
+    expr2 if cond2 else \
+    expr3
+```
+[苹果核 - 揭秘 Github 上那些开源项目的 star 数](http://pingguohe.net/2017/03/19/counting-stars-on-github.html?utm_source=tuicool&utm_medium=referral)
+https://github.com/longerian/github_stat 
 如何向开源项目提交无法解答的问题 https://zhuanlan.zhihu.com/p/25795393 我为莆田系代言-把这款插件推广到五湖四海https://zhuanlan.zhihu.com/p/25963120  http://link.zhihu.com/?target=https%3A//chrome.google.com/webstore/detail/%25E8%258E%2586%25E7%2594%25B0%25E7%25B3%25BB%25E5%258C%25BB%25E9%2599%25A2%25E7%25BD%2591%25E7%25AB%2599%25E6%258F%2590%25E9%2586%2592/pihadmdiehanenijehoohjnpiaofmmng  http://link.zhihu.com/?target=http%3A//open-power-workgroup.github.io/Hospital/data/draft1/html/hospitals.html  
 LAMP兄弟连视频下载地址：免费PHP视频教程下载-LAMP兄弟连PHP培训教程学习网；
 
