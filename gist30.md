@@ -1,3 +1,209 @@
+[this的值要等到代码真正执行时才能确定](https://segmentfault.com/q/1010000008651855)
+```js
+var obj ={
+    a:1,
+    b:function () {
+         alert(this.a)
+}}; 
+var fun =obj.b; 
+fun();
+
+this的行为有时候会显得极其诡异，让人感到困惑，但只需要记住 this的值要等到代码真正执行时才能确定
+同时this的值具体有以下几种情况：
+
+new 调用时指的是被构造的对象
+call、apply调用，指向我们指定的对象
+对象调用，如执行obj.b()，this指向obj
+默认的，指向全局变量window(相当于执行window.fun())
+这样看来，当你执行fun()的时候，以上1,2点均不满足。
+第3点,因为this是运行时确定的，而我们执行fun()，等同于windown.fun()(与obj没有任何关系)，自然的this指向window，而window没有定义变量a，结果是undefined。
+```
+[php数字键名会被强转成整型的问题](https://segmentfault.com/q/1010000008822020)
+```js
+
+$result = [
+    '12w'=>'大扫除',
+    '3.3'=>' 搜索 ',
+    '456' => '333',
+    789 => 1266
+];
+
+var_dump($result);
+
+/*
+result is :
+*********************
+array(4) {
+  ["12w"]=>
+  string(9) "大扫除"
+  ["3.3"]=>
+  string(8) " 搜索 "
+  [456]=>
+  string(3) "333"
+  [789]=>
+  int(1266)
+}
+*/
+键名长度只能在 int 长度范围内，超过int 范围后将会出现覆盖等混乱情况
+②在键名长度为 int 范围内存取值时，PHP会强制将数字键名转换为 int 数值型
+③数字键名长度大于19位时，将变成 0 PHP 数组可以同时含有 integer 和 string 类型的键名，因为 PHP 实际并不区分索引数组和关联数组
+$i = 126545165;  
+$arr['126545165'] = 'abc';  
+$arr[126545165] = 'uio';  
+var_dump($arr);  
+echo '<br>';  
+var_dump(isset($arr[$i]));
+
+$i = 1000000000147483649;  
+$arr['1000000000147483649'] = 'abc';  
+$arr[1000000000147483649] = 'uio';  
+var_dump($arr);  
+echo '<br>';  
+var_dump(isset($arr[$i]));  
+$i = 123123123123123123123123123123;  
+var_dump($i);  
+echo '<br>';  
+$arr[123123123123123123123123123123] = 'abc';  
+$arr[strval(123123123123123123123123123123)] = 'abc';  
+var_dump($arr);  
+echo '<br>';  
+var_dump(isset($arr[$i]));  
+echo '<br>';  
+var_dump(isset($arr[strval($i)]));  
+echo '<br>';  
+var_dump(array_keys($arr));  
+
+$i = 123123123123123123123123123123;  
+$j = '123123123123123123123123123123';  
+$arr1[strval($i)] = 'abc';  
+$arr2[$j] = 'abc';  
+var_dump($arr1);  
+echo '<br>';  
+var_dump($arr2);  
+array(1) {
+  [126545165]=>
+  string(3) "uio"
+}
+
+bool(true)
+array(2) {
+  [126545165]=>
+  string(3) "uio"
+  [1000000000147483649]=>
+  string(3) "uio"
+}
+
+bool(true)
+float(1.2312312312312E+29)
+
+array(4) {
+  [126545165]=>
+  string(3) "uio"
+  [1000000000147483649]=>
+  string(3) "uio"
+  [-6188579206704660480]=>
+  string(3) "abc"
+  ["1.2312312312312E+29"]=>
+  string(3) "abc"
+}
+
+bool(true)
+
+bool(true)
+
+array(4) {
+  [0]=>
+  int(126545165)
+  [1]=>
+  int(1000000000147483649)
+  [2]=>
+  int(-6188579206704660480)
+  [3]=>
+  string(19) "1.2312312312312E+29"
+}
+array(1) {
+  ["1.2312312312312E+29"]=>
+  string(3) "abc"
+}
+
+array(1) {
+  ["123123123123123123123123123123"]=>
+  string(3) "abc"
+}
+```
+[ Redis 使用 Eval 多个键值自增操作示例](http://blog.csdn.net/zhouzme/article/details/47950137)
+```js
+$set['money'] = $this->redis->hIncrByFloat($key, $hour .'_money', $data['money']);
+$set['ip'] = $this->redis->hIncrBy($key, $hour .'_ip', $data['ip']);
+$set['uv'] = $this->redis->hIncrBy($key, $hour .'_uv', $data['uv']);
+$set['pv'] = $this->redis->hIncrBy($key, $hour .'_pv', $data['pv']);
+$this->redis->hSet($key, $hour, array($data['money'], $data['ip'], $data['uv'], $data['pv']));
+$script  = 'local money = redis.call("hIncrByFloat", KEYS[1], ARGV[1], ARGV[2]);';
+$script .= 'local ip = redis.call("hIncrBy", KEYS[1], ARGV[3], ARGV[4]);';
+$script .= 'local uv = redis.call("hIncrBy", KEYS[1], ARGV[5], ARGV[6]);';
+$script .= 'local pv = redis.call("hIncrBy", KEYS[1], ARGV[7], ARGV[8]);';
+$script .= 'local val = money ..",".. ip ..",".. uv ..",".. pv;';
+$script .= 'redis.call("hSet", KEYS[1], ARGV[2], val);';
+$script .= 'return val;';
+$result = $this->redis->evaluate($script, [$key, $hour, $hour .'_money', $data['money'], $hour .'_ip', $data['ip'], $hour .'_uv', $data['uv'], $hour .'_pv', $data['pv']], 2);
+var_dump($result);
+```
+
+[php array_merge的坑，数字键名不会覆盖前值](http://blog.csdn.net/sky_zhe/article/details/9005477)
+```js
+$a1 = array(1=>'abc', 3=>10);  
+$a2 = array(1=>'efg', 3=>20);  
+print_r(array_merge($a1, $a2));  
+如果输入的数组中有相同的字符串键名，则该键名后面的值将覆盖前一个值。然而，如果数组包含数字键名，后面的值将不会覆盖原来的值，而是附加到后面。
+如果只给了一个数组并且该数组是数字索引的，则键名会以连续方式重新索引
+
+
+```
+
+
+
+[回复 TD 退订](https://www.v2ex.com/t/350101#reply26)
+一般都发三条： TD 、 TD 退订、回复 TD 退订 直接回四个 0
+https://www.12321.cn/ 
+举报
+[自动签到脚本 以及 部署方案 ](https://www.v2ex.com/t/349919#reply26)
+https://www.v2ex.com/t/349919#reply26  https://github.com/Ligp/python-v2ex-sign
+https://github.com/bonfy/qiandao
+```js
+import requests,re
+class v2ex:
+    s=requests.Session()
+    def login(self):
+        loginpage = self.s.get("https://www.v2ex.com/signin", verify=False).text
+        payload={
+            re.findall('type="text" class="sl" name="([a-f0-9]{64,64})"', loginpage)[0]:self.u,
+            re.findall('type="password" class="sl" name="([a-f0-9]{64,64})"', loginpage)[0]:self.p,
+            "next":"/",
+            "once":re.findall('value="(\d+)" name="once"',loginpage)[0]
+            }
+        signin=self.s.post("https://www.v2ex.com/signin",data=payload,headers={'Referer': 'https://www.v2ex.com/signin'}, verify=False)
+        if signin.text.find("signout")==-1:
+            print self.u+" 登录失败！"
+        else:
+            print self.u+" 登录成功！"
+            self.sign()
+    def sign(self):
+        if self.s.get("https://www.v2ex.com/mission/daily", verify=False).text.find("fa-ok-sign")!=-1:
+            print self.u+" 已领取过奖励!"
+        else:
+            try:
+                daily=re.findall('(/mission/daily/redeem\?once=\d+)',self.s.get("https://www.v2ex.com/mission/daily", verify=False).text)[0]
+                a=self.s.get("https://www.v2ex.com"+daily,headers={"Referer":"https://www.v2ex.com/mission/daily"}, verify=False)
+                print self.u+" 签到成功！"
+            except:
+                print self.u+" 签到失败！"
+    def __init__(self,u,p):
+        self.u=u
+        self.p=p
+        self.login()
+v2ex("username","password")
+```
+
 mysql分区
 ALTER TABLE webinar_user_regs MODIFY COLUMN `id` bigint(20) unsigned NOT NULL;
 ALTER TABLE webinar_user_regs DROP PRIMARY KEY;
