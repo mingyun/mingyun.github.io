@@ -1,3 +1,223 @@
+[php中用redis存储session，为什么第一次打印出来的session为空？](https://segmentfault.com/q/1010000008721376)
+根据redis自带的monitor监控了一下redis的状态
+$_session['test']=[1,23]
+echo $redis->get('PHPREDIS_SESSION'.session_id());
+[(转)22个免费的数据可视化和分析工具推荐](https://zhuanlan.zhihu.com/p/26002147)
+[我为莆田系代言-把这款插件推广到五湖四海](https://zhuanlan.zhihu.com/p/25963120)
+[在bilibili学科学数学视频课程](https://zhuanlan.zhihu.com/p/25990210)
+[详解 Cookie 纪要](https://zhuanlan.zhihu.com/p/25793137)
+[阿里的编码规范里面写超过三张表禁止join 这是为什么？这样的话那sql要怎么写](https://www.zhihu.com/question/56236190/answer/153450286)
+[推荐给职场人士的实用网站](https://zhuanlan.zhihu.com/p/25990764?group_id=829290980518805504)
+草料二维码是国内最大的二维码在线服务网
+Ezgif是一款在线GIF动画转化工具
+http://link.zhihu.com/?target=http%3A//TAGUL.com  Tagul是一款文字云制作工具
+ProcessOn是一个在线协作绘图平台,为用户提供最强大
+下载一个acrobat pro也可以pdf转word
+[【神技】将文字隐藏到图片中 - 知乎专栏](https://zhuanlan.zhihu.com/p/25924908?group_id=827872454067240960)
+新建文件夹，把图片命名为1.jpg，种子压缩为1.rar copy/b 1.jpg+1.rar =output.jpg
+http://link.zhihu.com/?target=http%3A//www.shuidi.im/  
+[一大波爬虫素材袭来！衣食住行工作学习招聘娱乐资讯一应俱全！](https://zhuanlan.zhihu.com/p/25911479?group_id=827586112770957312)
+[试windows的一项功能，那就是任务计](https://zhuanlan.zhihu.com/p/25900491?group_id=827496543505502208)
+[FastStone Capture—一款可以长截图的电脑软件](https://zhuanlan.zhihu.com/p/25971084?group_id=828583081584771072)
+[Python爬虫学习系列教程](https://zhuanlan.zhihu.com/p/25949099?group_id=828237833503408128)
+[爬虫入门到精通-网页的解析（xpath） - 知乎专栏](https://zhuanlan.zhihu.com/p/25887452)
+豆瓣爬虫微博
+https://github.com/kimg1234/pachong  https://github.com/GentlyGuitar/web-crawlers 
+```js
+session与cookie的区别：
+
+
+1，session 在服务器端，cookie 在客户端（浏览器）
+
+2，session 存在在服务器的一个文件里（默认），不是内存
+
+3，session 的运行依赖 session id，而 session id 是存在 cookie 中的，也就是说，如果 浏览器禁用了 cookie ，同时 session 也会失效（当然也可以在 url 中传递）
+
+4，session 可以放在 文件，数据库，或内存中都可以。
+
+5，用户验证这种场合一般会用 session
+
+因此，维持一个会话的核心就是客户端的唯一标识，即 session id
+```
+https://zhuanlan.zhihu.com/p/25887452
+
+[全栈数据工程师养成攻略系列视频教程](https://github.com/Honlan/fullstack-data-engineer)
+http://study.163.com/course/introduction.htm?courseId=1003520028#/courseDetail 
+[cookie机制采用的是在客户端保持状态的方案，而session机制采用的是在服务器端保持状态的方案。 ](https://www.zhihu.com/question/57444302)
+```js
+生命周期
+
+cookie如果没有设置过期时间，那么称为会话cookie， 生命期为浏览器会话期间，关闭浏览器窗口，cookie就消失。 
+
+如果设置过期时间， 浏览器就会把cookie保存到硬盘上，关闭后再次打开浏览器，这些cookie仍然有效直到超过设定的过期时间。存储在硬盘上的cookie可以在不同的浏览器进程间共享，比如两个IE窗口。而对于保存在内存里的cookie，不同的浏览器有不同的处理方式 。生命周期为创建至设定的过期时间。
+
+
+session 则是服务器使用一种类似于散列表的结构（也可能就是使用散列表）来保存信息。  当程序需要为某个客户端的请求创建一个session时，服务器首先检查这个客户端的请求里是否已包含了一个session标识（称为session id），如果已包含则说明以前已经为此客户端创建过session，服务器就按照session id把这个session检索出来使用（检索不到，会新建一个），如果客户端请求不包含session id，则为此客户端创建一个session并且生成一个与此session相关联的sessionid，session id的值应该是一个既不会重复，又不容易被找到规律以仿造的字符串，这个session id将被在本次响应中返回给客户端保存。保存这个session id的方式可以采用cookie，这样在交互过程中浏览器可以自动的按照规则把这个标识发送给服务器。一般这个cookie的名字都是类似于SEEESIONID。但cookie可以被人为的禁止，则必须有其他机制以便在cookie被禁止时仍然能够把session id传递回服务器。 
+
+
+服务器共享
+
+如上所示，可以看到每个session都会有一个对应的、唯一的session id，通过session id可以取到相应的session值，那么如何取到呢。首先我们要了解session是保存在什么地方的。
+
+
+ SESSION 的数据保存在哪里呢？当然是在服务器端，但不是保存在内存中，而是保存在文件或数据库中。默认情况下，php.ini 中设置的 SESSION 保存方式是 files（session.save_handler = files），即使用读写文件的方式保存 SESSION 数据，而 SESSION 文件保存的目录由 session.save_path 指定，文件名以 sess_ 为前缀，后跟 SESSION ID，如：sess_c72665af28a8b14c0fe11afe3b59b51b。文件中的数据即是序列化之后的 SESSION 数据了。如果访问量大，可能产生的 SESSION 文件会比较多，这时可以设置分级目录进行 SESSION 文件的保存，效率会提高很多，设置方法为：session.save_path="N;/save_path"，N 为分级的级数，save_path 为开始目录。当写入 SESSION 数据的时候，PHP 会获取到客户端的 SESSION_ID，然后根据这个 SESSION ID 到指定的 SESSION 文件保存目录中找到相应的 SESSION 文件，不存在则创建之，最后将数据序列化之后写入文件。读取 SESSION 数据是也是类似的操作流程，对读出来的数据需要进行解序列化，生成相应的 SESSION 变量。 
+
+
+因为是保存在文件而不是内存中，那么我们就可以在同服务器的不同进程和应用中使用。如果在不同服务器上使用那就需要session信息的保存需要多个服务器可以同时存取。同时因为服务器是根据客户端cookie中的 PHPSESSID 来读取对应的session信息，那么就需要不同服务器对同一客户端产生相同的cookie
+
+
+第一个问题，可以通过mysql来保存session信息。主要依靠 session_set_save_handle() 函数，此函数有六个参数： session_set_save_handler ( string open, string close, string read, string write, string destroy, string gc )各个参数为各项操作的函数名，这些操作依次是：打开、关闭、读取、写入、销毁、垃圾回收。PHP 手册中有详细的例子，在这里我们使用 OO 的方式来实现这些操作，详细代码如下： 
+
+<?php  
+ session_module_name('user');   //设置按用户设定方式操作session
+define('MY_SESS_TIME', 3600);   //SESSION 生存时长 
+//类定义 
+class My_Sess  
+{  
+function init()  
+    {  
+$domain = '.infor96.com';  
+//不使用 GET/POST 变量方式 
+ini_set('session.use_trans_sid',    0);  
+//设置垃圾回收最大生存时间 
+ini_set('session.gc_maxlifetime',   MY_SESS_TIME);  
+//使用 COOKIE 保存 SESSION ID 的方式 
+ini_set('session.use_cookies',      1);  
+ini_set('session.cookie_path',      '/');  
+//多主机共享保存 SESSION ID 的 COOKIE 
+ini_set('session.cookie_domain',    $domain);  
+//将 session.save_handler 设置为 user，而不是默认的 files 
+        session_module_name('user');  
+//定义 SESSION 各项操作所对应的方法名： 
+        session_set_save_handler(  
+array('My_Sess', 'open'),   //对应于静态方法 My_Sess::open()，下同。 
+array('My_Sess', 'close'),  
+array('My_Sess', 'read'),  
+array('My_Sess', 'write'),  
+array('My_Sess', 'destroy'),  
+array('My_Sess', 'gc')  
+        );  
+    }   //end function 
+function open($save_path, $session_name) {  
+return true;  
+    }   //end function 
+function close() {  
+global $MY_SESS_CONN;  
+if ($MY_SESS_CONN) {    //关闭数据库连接 
+$MY_SESS_CONN->Close();  
+        }  
+return true;  
+    }   //end function 
+function read($sesskey) {  
+global $MY_SESS_CONN;  
+$sql = 'SELECT data FROM sess WHERE sesskey=' . $MY_SESS_CONN->qstr($sesskey) . ' AND expiry>=' . time();  
+$rs =& $MY_SESS_CONN->Execute($sql);  
+if ($rs) {  
+if ($rs->EOF) {  
+return ";  
+            } else {    //读取到对应于 SESSION ID 的 SESSION 数据 
+$v = $rs->fields[0];  
+$rs->Close();  
+return $v;  
+            }   //end if 
+        }   //end if 
+return ";  
+    }   //end function 
+function write($sesskey, $data) {  
+global $MY_SESS_CONN;  
+$qkey = $MY_SESS_CONN->qstr($sesskey);  
+$expiry = time() + My_SESS_TIME;    //设置过期时间 
+//写入 SESSION 
+$arr = array(  
+'sesskey' => $qkey,  
+'expiry'  => $expiry,  
+'data'    => $data);  
+$MY_SESS_CONN->Replace('sess', $arr, 'sesskey', $autoQuote = true);  
+return true;  
+    }   //end function 
+function destroy($sesskey) {  
+global $MY_SESS_CONN;  
+$sql = 'DELETE FROM sess WHERE sesskey=' . $MY_SESS_CONN->qstr($sesskey);  
+$rs =& $MY_SESS_CONN->Execute($sql);  
+return true;  
+    }   //end function 
+function gc($maxlifetime = null) {  
+global $MY_SESS_CONN;  
+$sql = 'DELETE FROM sess WHERE expiry<' . time();  
+$MY_SESS_CONN->Execute($sql);  
+//由于经常性的对表 sess 做删除操作，容易产生碎片， 
+//所以在垃圾回收中对该表进行优化操作。 
+$sql = 'OPTIMIZE TABLE sess';  
+$MY_SESS_CONN->Execute($sql);  
+return true;  
+    }   //end function 
+}   ///:~ 
+//使用 ADOdb 作为数据库抽象层。 
+require_once('adodb/adodb.inc.php');  
+//数据库配置项，可放入配置文件中（如：config.inc.php）。 
+$db_type = 'mysql';  
+$db_host = '192.168.212.1';  
+$db_user = 'sess_user';  
+$db_pass = 'sess_pass';  
+$db_name = 'sess_db';  
+//创建数据库连接，这是一个全局变量。 
+$GLOBALS['MY_SESS_CONN'] =& ADONewConnection($db_type);  
+$GLOBALS['MY_SESS_CONN']->Connect( $db_host, $db_user, $db_pass, $db_name);  
+//初始化 SESSION 设置，必须在 session_start() 之前运行！！ 
+My_Sess::init();  
+?>  
+
+第二个问题，需要对cookie的域进行设置， 默认情况下，COOKIE 的域是当前服务器的域名/IP 地址，而域不同的话，各个服务器所设置的 COOKIE 是不能相互访问的，如 www.aaa.com 的服务器是不能读写 www.bbb.com 服务器设置的 COOKIE 的。这里我们所说的同一网站的服务器有其特殊性，那就是他们同属于同一个一级域。
+
+
+<?php  
+ini_set('session.cookie_domain', 'a.com');  
+?>  
+这样即可设置程序中的cookie域统一为http://a.com
+```
+[逆天的量化交易分析库-tushare](http://mp.weixin.qq.com/s?timestamp=1490513733&src=3&ver=1&signature=nJT*vnzBLuHO*WXF7liSKhDMPrRE2*GI8qjPL-WcMzGkC54wsfjYRn3s0Yo*mShbut1h-t5wZ6rObADXBxf0HLmWuyV85i14iEqKZb0s*0D*AcCZH7YjEDq0s0LbQIzi777ZM7Iq8oNUKXRMBRARiGq1lkUT0m6l265aDtLNp5I=)
+ 大邓 大邓带你玩python获取个股历史交易数据（包括均线数据）
+import tushare as ts
+#获得格力电器（000651）的历史交易数据
+ts.get_hist_data('000651') #获取  格力电器  月k线图数据
+ts.get_hist_data('000651',ktype='M')
+[Python 编码为什么那么蛋疼](https://mp.weixin.qq.com/s?__biz=MjM5MzgyODQxMQ==&mid=2650366836&idx=1&sn=da43cd0208b6bb7b1c51c5ced3ac1027&chksm=be9cd82089eb5136830ba25a54ae57a5fc1ca105b68718fcf4d9f100ddb1ea18120990c47816&mpshare=1&scene=1&srcid=0322qLLgwIialacWUum1Na3P&pass_ticket=3YDDPMla3NLdWBObiZjW%2FWHyR8mvcOpq8zaEHFmLVa95m661cMsN7dyQ49FT96Du#rd)
+```js
+key 不存在时，get 默认返回 None
+Python3 一共有33个关键字。
+>>> import __hello__
+Hello World...
+
+>>> import keyword
+>>> print(keyword.kwlist)
+['False', 'None', 'True', 'and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not', 'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield']
+刘志军 Python之禅
+用编辑器打开的文本，看到的一个个字符，最终保存在磁盘的时候都是以二进制字节序列形式存起来的。那么从字符到字节的转换过程就叫做编码（encode），反过来叫做解码（decode），两者是一个可逆的过程。编码是为了存储传输，解码是为了方便显示阅读。Python2 使用 ASCII 字符编码作为默认编码方式，而 ASCII 不能处理中文，
+Python2 把字符串分为 unicode 和 str 两种类型。本质上 str 是一串二进制字节序列，下面的示例代码可以看出 str 类型的 “禅” 打印出来是十六进制的 \xec\xf8 ，对应的二进制字节序列就是 ‘11101100 11111000’。
+
+>>> s = '禅'
+>>> s
+'\xec\xf8'
+>>> type(s)
+<type 'str'>
+而 unicode 类型的 u”禅” 对应的 unicode 符号是 u’\u7985’
+
+>>> u = u"禅"
+>>> u
+u'\u7985'
+>>> type(u)
+<type 'unicode'>
+我们要把 unicode 符号保存到文件或者传输到网络就需要经过编码处理转换成 str 类型，于是 python 提供了 encode 方法，从 unicode 转换到 str，反之亦然。
+str 本质上其实是一串二进制数据，而 unicode 是字符（符号），编码（encode）就是把字符（符号）转换为 二进制数据的过程，因此 unicode 到 str 的转换要用 encode 方法，反过来就是用 decode 方法。
+# -*- coding:utf-8 -*-
+def main():
+    name = u'Python之禅'
+    f = open("output.txt", "w")
+    f.write(name)
+>>> u"Python之禅".encode("ascii")
+
+```
+
 [Python 有哪些好玩的语法糖？](https://www.zhihu.com/question/57470958)
 ```js
  c = [b,a][a>b]   
