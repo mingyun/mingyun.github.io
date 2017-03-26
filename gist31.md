@@ -1,3 +1,160 @@
+[根据一个数组元素，删除另一个数组中的对象](https://segmentfault.com/q/1010000008836875)
+```js
+
+var a = [{ id: 15 }, { id: -1 }, { id: 0 }, { id: 3 }, { id: 12.2 }];
+var b = [15, 3];
+for (let i = 0; i < b.length; i++) {
+  for (let j in a) {
+    if (a[j].id == b[i]) {
+      a.splice(j,1);
+    }
+  }
+}
+console.log(a);
+var a = [{ id: 15 }, { id: -1 }, { id: 0 }, { id: 3 }, { id: 12.2 }];
+var b = [15, 3];
+for(index in a){
+    if(b.indexOf(a[index]["id"])>=0)
+        a.splice(index,1);
+}
+console.log(a);
+a.filter(item => { return b.indexOf(item.id) === -1; });
+```
+[PHP队列执行任务的时候,如何防止进程之间抢夺资源](https://segmentfault.com/q/1010000008732536)
+[SQL语句 把每个用户的每个月的任务数 和实际完成数](https://segmentfault.com/q/1010000008797237)
+select a.user_id,mission,a.cc count_order,date from (select user_id,count(1) cc,DATE_FORMAT(FROM_UNIXTIME(order_time),'%Y-%m') odr_mn from order group by user_id, odr_mn) a join task b on a.user_id=b.user_id and a.odr_mn=DATE_FORMAT(FROM_UNIXTIME(b.date),'%Y-%m');
+select a.user_id,a.mission,a.date, (select count(*)  from order b where a.user_id=b.user_id and DATE_FORMAT(FROM_UNIXTIME(a.date),'%Y-%m-%d') = DATE_FORMAT(FROM_UNIXTIME(b.order_time),'%Y-%m-%d')) count_order from task a;
+
+[数据库查询排序问题，如何按字符串中的数字排序](https://segmentfault.com/q/1010000008762633)
+ORDER BY CONVERT(SUBSTR(column, 6), SIGNED INTEGER)
+
+[一个列表当中有一个日期的值，我想求这个日期里面当天最大时间的那一条](https://segmentfault.com/q/1010000008822123)
+```js
+from collections import defaultdict
+grouped = defaultdict(list)
+
+for d in s:
+    grouped[(d['create_time'].split()[0], d['level'])].append((d['create_time'], d['count']))
+summed = {k : max(grouped[k]) for k in grouped}
+s = [{'count': summed[k][1], 'create_time': summed[k][0], 'level': k[1]} for k in summed]
+
+from itertools import groupby
+
+data = [...]
+fun_group = lambda x: x['level']
+fun_max = lambda x: x['create_time']
+lst = [max(list(g), key=fun_max) for k, g in groupby(sorted(data, key=fun_group), fun_group)]
+print lst
+```
+
+[JavaScript数组系列问题：数组差集https://segmentfault.com/q/1010000008825206]()
+```js
+var a = generateRandomArray(5, 10);
+var b = generateRandomArray(10, 10);
+
+// 不去重
+var result = {
+    a: a.filter(el => !b.includes(el)),
+    b: b.filter(el => !a.includes(el))
+}
+
+// 去重
+var result2 = {
+    a: [...new Set(a)].filter(el => !b.includes(el)),
+    b: [...new Set(b)].filter(el => !a.includes(el))
+}
+
+// 合并一下
+function diffSet(a, b, noDup) {
+    if (noDup) {
+        a = [...new Set(a)];
+        b = [...new Set(b)];
+    }
+    return {
+        a: a.filter(el => !b.includes(el)),
+        b: b.filter(el => !a.includes(el))
+    }
+}
+```
+
+[php如何解决redis的存取乱码](https://segmentfault.com/q/1010000008827412)
+在存储前，先把存储的字符串转码。
+
+$string = iconv('UTF-8','GBK',$string);
+这时候存储在redis中的中文就是GBK字符集的，读取的时候不是乱码了。原理是window大部分系统上支持GBK字符集
+[php数字键名会被强转成整型的问题](https://segmentfault.com/q/1010000008822020)
+如果你的这个数组的key全都是string类型的，可以考虑通过 stdClass 转换下
+```js
+$result = new stdClass();
+$result->{'12w'} = '大扫除';
+$result->{'3.3'} = ' 搜索 ';
+$result->{'456'} = '333';
+$result->{789} = 1266;
+
+var_dump($result);
+// 输出：(可以看到键全都是string类型的)
+// object(stdClass)#1 (4) {
+//   ["12w"]=>
+//   string(9) "大扫除"
+//   ["3.3"]=>
+//   string(8) " 搜索 "
+//   ["456"]=>
+//   string(3) "333"
+//   ["789"]=>
+//   int(1266)
+// }
+
+// 转换为array：
+var_dump((array)$result);
+$arr1 = [1,4,2,6];
+$arr2 = [
+    ['field_name' => '这是场地1','field_id' => 'd9','create_time' => 1489734050],
+    ['field_name' => '这是场地2','field_id' => 'd10','create_time' => 1489734050],
+    ['field_name' => '这是场地3','field_id' => 'd11','create_time' => 1489734050],
+    ['field_name' => '这是场地4','field_id' => 'd12','create_time' => 1489734050]
+];
+
+array_walk(
+    $arr2,
+    function (&$v, $k) use ($arr1) { $v['number'] = $arr1[$k]; }
+);
+```
+[python 复杂表格合并excel](https://segmentfault.com/q/1010000008778429)
+```js
+# coding: utf-8
+from __future__ import unicode_literals
+
+import pandas as pd
+lst = [
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色1", "数量": "1", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色2", "数量": "20", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色3", "数量": "3", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色4", "数量": "4", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色5", "数量": "5", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色6", "数量": "6", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色7", "数量": "30", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色8", "数量": "8", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色9", "数量": "9", },
+    {"ID": "1", "订单号": "123456", "用户名": "路人甲", "产品": "XX用品", "颜色": "色10", "数量": "40", },
+    {"ID": "2", "订单号": "456789", "用户名": "路人乙", "产品": "XXX用品", "颜色": "红色", "数量": "100", },
+    {"ID": "3", "订单号": "123456789", "用户名": "路人丙", "产品": "XXXX用品", "颜色": "金色", "数量": "300", },
+    {"ID": "3", "订单号": "987654321", "用户名": "路人丙", "产品": "XXXX用品", "颜色": "紫色", "数量": "100", }
+]
+
+df = pd.DataFrame(lst)
+df["数量"] = df["数量"].apply(lambda x: int(x))
+df["备注"] = ''
+df1 = df.groupby(["ID","用户名","产品", '备注',"订单号","颜色"]).sum()
+
+#导出到excel
+df1.to_excel('test.xlsx')
+
+#输出html
+print df1.to_html()
+```
+[Python3安装selenium后下载chormdriver](https://segmentfault.com/q/1010000008831619)
+https://chromedriver.storage.googleapis.com/index.html?path=2.28/  chromedriver 从来都没有win64的，不过win32的在64位下也可以跑
+
 [php中用redis存储session，为什么第一次打印出来的session为空？](https://segmentfault.com/q/1010000008721376)
 根据redis自带的monitor监控了一下redis的状态
 $_session['test']=[1,23]
