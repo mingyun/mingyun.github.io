@@ -15,14 +15,33 @@ mysql> select count(*) from users;
 
 ```
 [Python 招聘信息爬取及可视化](http://bigborg.github.io/2016/09/12/Scrapy-Pythonjobs/)
+```js
 https://github.com/BigBorg/Scrapy-playground
-rpub是一个专门用于发布R语言分析报告的网站http://7xshuq.com1.z0.glb.clouddn.com//githubrepo/scrapy/RAnalysis.html ggplot可以是R语言可视化最著名的包 https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/windows/base/R-3.3.3-win.exe 
+rpub是一个专门用于发布R语言分析报告的网站http://7xshuq.com1.z0.glb.clouddn.com//githubrepo/scrapy/RAnalysis.html ggplot可以是R语言可视化最著名的包 https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/windows/base/R-3.3.3-win.exe  https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/ 
 age <- c(1,3,5,2,11,9,3,9,12,3)
 weight <- c(4.4,5.3,7.2,5.2,8.5,7.3,6.0,10.4,10.2,6.1)
 mean(weight)
 plot(age,weight)
 q()
 http://www.cnblogs.com/shyustc/p/4003225.html http://vdisk.weibo.com/s/yVFSlzgEVkvFA
+
+desc select id,user_id,created_at,sum(nums) a,count(*) s from webinar_onlines where id>10000 and id<20000 group by user_id,created_at order by id \G
+http://music.163.com/#/playlist?id=564322156
+导入sql文件
+load data infile 'd:/soft/wamp/www/laravel_web/saas_user_onlines.sql' into table user_onlines_bak fields terminated by ',' (user_id,parent_id,nums,online_min,online_hour,online_day,online_week) ; 
+// $str = "insert into vhall_webinar.user_onlines_bak(user_id,nums,parent_id,online_min,online_hour,online_day,online_week) values({$row['user_id']},{$row['nums']},{$row['parent_id']},{$row['online_min']},{$row['online_hour']},{$row['online_day']},{$row['online_week']});".PHP_EOL;
+                    // \Storage::disk('local_static')->append(date('Y-m-d').'onlines.sql', $str);
+                    $s = "{$row['user_id']},{$row['parent_id']},{$row['nums']},{$row['online_min']},{$row['online_hour']},{$row['online_day']},{$row['online_week']}".PHP_EOL;
+                    // file_put_contents(storage_path().'/'.date('Y-m-d-H').'onlines.sql',$str,FILE_APPEND);
+                    file_put_contents(storage_path().'/onlines.sql',$s,FILE_APPEND);
+
+//先排序后分组  获取每个分组最后的id
+select id,user_id,created_at,sum(nums) from (select *from webinar_onlines
+ order by id desc) a where id>40 and id<110 group by user_id,created_at order by id;
+            // $lastCount = WebinarOnline::where(['user_id' => $data[$rowCount-1]->user_id, 'created_at' => $data[$rowCount-1]->created_at])->count();
+            // $lastWebinarId = $data[$rowCount-1]->id+$lastCount-1;
+
+```
 [mysql笔记](http://bigborg.github.io/2016/09/29/mysql-notes/)
 [pandas出毛病了](https://segmentfault.com/q/1010000008762657)
 推荐使用Python的发行版Anaconda，自带各种数据处理包，不用额外安装
