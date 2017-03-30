@@ -12,8 +12,74 @@ mysql> select count(*) from users;
 |  5008300 |
 +----------+
 1 row in set (1.25 sec)
-
+不翻墙  avtb123  后缀自己想去吧 https://oneinstack.com   我用的这个
 ```
+[Simple browser detection for PHP ](http://www.flamecore.org)
+[ip本地库解析地理位置](https://packagist.org/packages/geoip2/geoip2)
+```js
+/**
+     * ip本地库解析地理位置
+     * @param $ip
+     * @return array|bool
+     */
+    public static function geoIp($ip){
+        try{
+            $file = base_path('storage').'/ipdata/GeoLite2-City.mmdb';
+            $reader = new Reader($file);
+            $record = $reader->city($ip);
+            if(empty($record)){
+                throw new \Exception('ip解析失败',5000);
+            }
+            $cityName = '';
+            if(!empty($record->city->names)){
+                $cityName = !empty($record->city->names['zh-CN']) ? $record->city->names['zh-CN'] : $record->city->names['en'];
+            }
+            $countryName = $record->country->names['zh-CN'];
+            $areaName = !empty($record->subdivisions[0]->names['zh-CN']) ? $record->subdivisions[0]->names['zh-CN'] : $countryName;
+            if(!empty($cityName) && !empty($countryName)){
+                if(in_array($countryName,['台湾','澳门','香港'])){
+                    $countryName = '中国';
+                }
+                return ['country' => $countryName, 'area' => $areaName, 'region' =>$areaName, 'city' => $cityName, 'isp' => '未知'];
+            }else{
+                return false;
+            }
+        }catch (\Exception $e){
+            //print_r($e->getMessage());
+        }
+        return false;
+    }
+$reader = new Reader('/usr/local/share/GeoIP/GeoIP2-City.mmdb');//下载地址https://www.maxmind.com/en/geoip2-city
+
+// Replace "city" with the appropriate method for your database, e.g.,
+// "country".
+$record = $reader->city('128.101.101.101');
+
+print($record->country->isoCode . "\n"); // 'US'
+print($record->country->name . "\n"); // 'United States'
+print($record->country->names['zh-CN'] . "\n"); // '美国'    
+// http://geoip2.readthedocs.io/en/latest/  http://dev.maxmind.com/zh-hans/geoip/geoip2/geolite2-%e5%bc%80%e6%ba%90%e6%95%b0%e6%8d%ae%e5%ba%93/
+>>> import geoip2.database
+>>>
+>>> # This creates a Reader object. You should use the same object
+>>> # across multiple requests as creation of it is expensive.
+>>> reader = geoip2.database.Reader('/path/to/GeoLite2-City.mmdb')
+>>>
+>>> # Replace "city" with the method corresponding to the database
+>>> # that you are using, e.g., "country".
+>>> response = reader.city('128.101.101.101')
+
+>>> r=reader.city('1.119.129.17')
+>>> print r.country.names['zh-CN']
+中国
+>>> print r.city.name
+Beijing
+>>> print r.city.names['zh-CN']
+北京
+
+redis队列用6379端口 因为用 keys * 
+```
+
 [Python 招聘信息爬取及可视化](http://bigborg.github.io/2016/09/12/Scrapy-Pythonjobs/)
 ```js
 https://github.com/BigBorg/Scrapy-playground
