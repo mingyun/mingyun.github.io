@@ -1,3 +1,23 @@
+[mysql中select distinct 多列的用法](https://wujunze.com/mysql_distint.jsp)
+select distinct test1, id from test
+SELECT id, group_concat( DISTINCT test1 ) FROM test GROUP BY test1
+id group_concat( distinct test1 )
+1 a
+5 b
+select *, count(distinct test1) from test group by test1
+id test1 test2 count( distinct test1 )
+1 a 1 1
+5 b 1 1
+[MySQL导入数据load data infile用法](http://blog.csdn.net/vbloveshllm/article/details/42965317)
+[让MySQL数据库里的主键ID重新排序](https://wujunze.com/mysql_id_sort.jsp)
+ALTER TABLE 【表名字】 DROP 【列名称】
+
+ALTER TABLE `riskmanage_info_university` DROP COLUMN `id`;
+然后再创建列
+ALTER TABLE 【表名字】 ADD 【列名称】 INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST
+
+ALTER TABLE `riskmanage_info_university` ADD `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
 [在线手册学习网站请前往](http://www.shouce.ren)
 ```js
 执行1000用户并发时就出现502或504错误，若用户数较多时，App上相关功能会大大受影响
