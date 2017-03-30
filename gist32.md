@@ -14,6 +14,208 @@ mysql> select count(*) from users;
 1 row in set (1.25 sec)
 不翻墙  avtb123  后缀自己想去吧 https://oneinstack.com   我用的这个
 ```
+[Redis 的三种启动方式 （转）](https://www.insp.top/article/three-kinds-of-start-ways-for-redis)
+```js
+# 加上 `&` 号使 redis 以后台程序方式运行
+./redis-server &
+# 检测后台进程是否存在
+ps -ef |grep redis
+ 
+# 检测 6379 端口是否在监听
+netstat -lntp | grep 6379
+ 
+# 使用`redis-cli`客户端检测连接是否正常
+./redis-cli
+127.0.0.1:6379> keys *
+(empty list or set)
+# 使用客户端
+redis-cli shutdown
+# 因为Redis可以妥善处理 SIGTERM 信号，所以直接 kill -9 也是可以的
+kill -9 PID
+redis-server ./redis.conf
+#如果更改了端口，使用 `redis-cli` 客户端连接时，也需要指定端口，例如：
+redis-cli -p 6380
+```
+[匿名函数的那些事儿](https://www.insp.top/article/we-need-to-know-something-about-closure)
+```js
+class foo
+{
+    public function exec(Closure $callback)
+    {
+        echo $callback();
+    }
+}
+ 
+$name = 'nick';
+ 
+(new foo)->exec(function() use ($name) {
+    return 'hi, '. $name;
+}); // 输出: hi, nick
+/**
+ * 一个简单的IoC容器
+ */
+class Container
+{
+    protected static $bindings;
+ 
+    public static function bind($abstract, Closure $concrete)
+    {
+        static::$bindings[$abstract] = $concrete;
+    }
+ 
+    public static function make($abstract)
+    {
+        return call_user_func(static::$bindings[$abstract]);
+    }
+}
+ 
+/**
+ * 示例用的 talk 类
+ */
+class talk
+{
+    public function greet($target)
+    {
+        echo 'hi, ' . $target->getName();
+    }
+}
+ 
+/**
+ * 示例用的 A 类
+ */
+class A
+{
+    public function getName()
+    {
+        return 'Nick';
+    }
+}
+ 
+/**
+ * 示例用的 B 类
+ */
+class B
+{
+    public function getName()
+    {
+        return 'Amy';
+    }
+}
+ 
+// 以下代码是主要示例代码
+ 
+// 创建一个talk类的实例
+$talk = new talk;
+ 
+// 将A类绑定至容器，命名为foo
+Container::bind('foo', function() {
+    return new A;
+});
+ 
+// 将B类绑定至容器，命名为bar
+Container::bind('bar', function() {
+    return new B;
+});
+ 
+// 通过容器取出实例
+$talk->greet(Container::make('foo')); // hi, Nick
+$talk->greet(Container::make('bar')); // hi, Amy
+```
+
+[laravel 学习笔记 —— 神奇的服务容器](https://www.insp.top/article/learn-laravel-container)
+```js
+class Container
+{
+    protected $binds;
+ 
+    protected $instances;
+ 
+    public function bind($abstract, $concrete)
+    {
+        if ($concrete instanceof Closure) {
+            $this->binds[$abstract] = $concrete;
+        } else {
+            $this->instances[$abstract] = $concrete;
+        }
+    }
+ 
+    public function make($abstract, $parameters = [])
+    {
+        if (isset($this->instances[$abstract])) {
+            return $this->instances[$abstract];
+        }
+ 
+        array_unshift($parameters, $this);
+ 
+        return call_user_func_array($this->binds[$abstract], $parameters);
+    }
+}
+```
+[laravel 学习笔记——请求与响应](https://www.insp.top/article/learn-laravel-request-and-response)
+
+控制器和路由闭包中返回的数据，最终会交由 laravel 的 HTTP 组件的 Response（响应）类处理，而直接输出是由 php 引擎处理，php 会以默认的文件格式、响应头输出，除非使用 header 函数改变。因此与其自己去调取 header() 调整响应头还是其他，都不如 laravel 的 Response 来的简洁实惠。
+[闭包——藏在代码中的“房间”](https://www.insp.top/article/what-is-closure)
+```js
+function foo()
+{
+    $i = 0;
+    $bar = function() use (&$i) {
+        return ++$i;
+    }
+    return $bar;
+}
+ 
+$closure = foo(); 说$closure就是一个闭包。
+ 
+echo $closure(); // 1
+echo $closure(); // 2
+全局变量 $closure 接收了 foo 函数返回的匿名函数，我们通过 $closure() 这一方式调用了这一个匿名函数，由于该匿名函数看似是在外部被调用，但实际上而言，匿名函数在定义的时候引用了它当时所处的上下文的变量 $i，而该匿名函数最终又被赋予了全局变量 $closure，假如全局变量 $closure 不被释放，则 $i 里面的值将会一直保留而不会被 GC（垃圾回收机制）所释放，因此，每一次调用该匿名函数的结果都是在上一次运算结果的基础上累加。
+闭包有一个很有用的功能就是保证了内部变量不被释放。这在 javascript 里很有用。
+php 里你可以通过 static 将变量声明为静态，在整个程序执行期间，这个静态变量会一直保存在内存中而不会被释放，而 javascript 为了保证一些变量不被释放，只能保持其引用状态，这时候就可以利用闭包。
+function foo()
+{
+    var i = 0;
+    var bar = function() {
+        return ++i;
+    }
+    return bar;
+}
+ 
+closure = foo();
+ 
+alert(closure()); // 1
+alert(closure()); // 2
+function foo()
+{
+    var i = 0;
+    return ++i;
+}
+ 
+alert(foo()); // 1
+alert(foo()); // 1
+
+ 不过php要通过匿名函数引用内部变量需要使用use，而且引用传值要求变量名前面必须要加&，这是和javascript不一样的地方。
+```
+[HTTP 中的幂等操作](https://www.insp.top/article/idempotent-operation-in-http-protocol)
+
+幂等通俗来说是指不管进重复多少次操作，其结果都一样。 GET、PUT、DELTE、HEAD 都是幂等操作，而 POST 则不是
+创建一个资源的时候，我们用的最多的就是 POST，但是，当我们无法确认一个 POST 请求是否发送成功，我们并不能随意再次发出同样请求，因为这可能不经意创建出多个东西出来（每次请求都会产生新的东西或者说产生不同结果）。
+
+当其再次发起一次 POST 请求，该请求中的数据和之前记录的关键数据一致时，则提示其可能存在重复提交的可能。
+
+限制一段时间内的请求也是种比较好的办法。对于同一个客户，由于其正常操作流程最快也会需要小段时间，可以此作为限制手段。
+[四舍六入五成双浮点数](https://www.insp.top/article/how-to-ensure-accurate-for-digital-transformation)
+
+舍去位的数值小于5时，直接舍去；
+舍去位的数值大于等于6时，进位后舍去；
+当舍去位的数值等于5时，分两种情况：5后面还有其他数字（非0），则进位后舍去；若5后面是0（即5是最后一位），则根据5前一位数的奇偶性来判断是否需要进位，奇数进位，偶数舍去。
+舍去位，当小于 5，即 0 ~ 4.999999…… 则舍去，大于 6，即 6 ~ 10 则进位，则中间区间那个数字，5 ~ 5.999999…… ，只要使该区间内存在的数字平均分布，即可保证取舍概率相等。于是得到上述算法。
+
+按上述规则，之前的 2.55 + 3.45 = 6 得出的结果如下：
+
+2.6 + 3.4 = 6
+[使用 xunsearch 构建全文搜索功能](https://www.insp.top/article/use-xunsearch-to-build-fulltext-search-function) 
+https://github.com/chongyi/inspirer 博客源码
 [Simple browser detection for PHP ](http://www.flamecore.org)
 [ip本地库解析地理位置](https://packagist.org/packages/geoip2/geoip2)
 ```js
