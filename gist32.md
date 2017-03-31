@@ -1,3 +1,5 @@
+[图普科技图像识别开放平台图片识别ocr](https://www.tuputech.com/api)
+
 [mysql中select distinct 多列的用法](https://wujunze.com/mysql_distint.jsp)
 select distinct test1, id from test
 SELECT id, group_concat( DISTINCT test1 ) FROM test GROUP BY test1
@@ -17,7 +19,71 @@ ALTER TABLE `riskmanage_info_university` DROP COLUMN `id`;
 ALTER TABLE 【表名字】 ADD 【列名称】 INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST
 
 ALTER TABLE `riskmanage_info_university` ADD `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+laravel 多 where ->where([
+['field', 'value'],
+['field2', 'value2']
+])
+[javascript递归](https://segmentfault.com/q/1010000007997849)
+```js
+var arr = ['A','B','C','D',"E","F","G"];
+其次这个函数目的就是算阶乘.
+!arr.length/!(arr.length - 5) 叹号为阶乘
+function show(arr,num){
+    debugger
+    var resultNum = 0;
+    var iNow = 1;
+    
+    if(num==1){
+        return arr.length;
+    }
+    
+    function change(arr,iNow){
+        
+        for(var i=0;i<arr.length;i++){
+            
+            var result = arr.concat();
+            result.splice(i,1);
 
+            if( iNow == num ){
+                resultNum += result.length;
+            }else{
+                change(result,iNow+1);
+            }
+        }
+    }
+    change(arr,iNow+1);
+    return resultNum;
+}
+
+console.log(show(arr,5));
+```
+[nodejs socket.io在线聊天](https://github.com/nswbmw/N-chat/wiki/%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E7%94%A8%E6%88%B7%E4%B8%8A%E7%BA%BF)
+[文字对比工具](http://www.bejson.com/othertools/finddif/)
+http://www.atool.org/   http://www.easyapi.com/?from=sojson.com 
+[api接口测试工具](http://www.sojson.com/httpRequest/)
+[python杨慧三角 2017-03-10 马超 公众号 DeveloperPython]()
+```js
+杨慧三角
+
+         1
+        1   1
+      1   2   1
+    1   3   3   1
+  1   4   6   4   1
+1   5   10  10  5   1
+def yanghu(n):
+    L=[1]
+    while 1:
+        yeild L
+        L = [L[x] + L[x+1] for x in range(len(L) -1)]
+        L.insert(0,1)
+        L.append(1)
+        if len(L)>n:
+            break
+for n in yanghu(10):
+    print n
+ cookie登录    bilibili
+```
 [在线手册学习网站请前往](http://www.shouce.ren)
 ```js
 执行1000用户并发时就出现502或504错误，若用户数较多时，App上相关功能会大大受影响
