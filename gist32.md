@@ -1,3 +1,127 @@
+[SegmentFault 年度内容盘点 - 2016](https://summary.segmentfault.com/2016/#/)
+[策略模式适用情况是你已经知道了某个算法。](http://www.cnblogs.com/yjf512/p/6546490.html)
+```js
+abstract Database
+{
+    abstract public function showTables();
+
+    abstract public function showEngine();
+}
+
+class Content
+{
+    private $dabatase;
+
+    public function setDatabase(Database $database) {
+        $this->database = $database;
+    }
+
+    public function Print() {
+        $tables = $this->database->showTables();
+        $engine = $this->database->showEngine();
+        return [
+            'table' => $tables,
+            'engine' => $engine
+        ];
+    }
+}
+
+
+class MysqlDatabase implements Database
+{
+    public function showTables() {
+        return ['mysql1', 'mysql2'];
+    }
+
+    public function showEngine() {
+        return ['innodb', 'myisam'];
+    }
+
+}
+
+class PgDatabase implements Database
+{
+    public function showTables() {
+        return ['pg1', 'pg2'];
+    }
+
+    public function showEngine() {
+        return ['pginno1', 'pginno2'];
+    }
+
+}
+
+$content = new Content();
+$content->setDatabase(new MysqlDatabase());
+$content->Print();
+```
+[1分钟实现“延迟消息”功能](http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651959961&idx=1&sn=afec02c8dc6db9445ce40821b5336736&chksm=bd2d07458a5a8e5314560620c240b1c4cf3bbf801fc0ab524bd5e8aa8b8ef036cf755d7eb0f6&mpshare=1&scene=1&srcid=0316rh7QmkSKJH06XFENtsgw#rd)
+[API的防重放机制](http://www.cnblogs.com/yjf512/p/6590890.html)
+```js
+防止重放的机制是使用timestamp和nonce来做的重放机制。
+每个请求带的时间戳不能和当前时间超过一定规定的时间。比如60s。这样，这个请求即使被截取了，你也只能在60s内进行重放攻击。过期失效。
+
+但是这样也是不够的，还有给攻击者60s的时间。所以我们就需要使用一个nonce，随机数。
+
+nonce是由客户端根据足够随机的情况生成的，比如 md5(timestamp+rand(0, 1000)); 它就有一个要求，正常情况下，在短时间内（比如60s）连续生成两个相同nonce的情况几乎为0。
+
+服务端第一次在接收到这个nonce的时候做下面行为：
+1 去redis中查找是否有key为nonce:{nonce}的string
+2 如果没有，则创建这个key，把这个key失效的时间和验证timestamp失效的时间一致，比如是60s。
+3 如果有，说明这个key在60s内已经被使用了，那么这个请求就可以判断为重放请求。
+请求：
+
+http://a.com?uid=123&timestamp=1480556543&nonce=43f34f33&sign=80b886d71449cb33355d017893720666
+
+这个请求中国的uid是我们真正需要传递的有意义的参数
+
+timestamp，nonce，sign都是为了签名和防重放使用。
+
+timestamp是发送接口的时间，nonce是随机串，sign是对uid，timestamp,nonce(对于一些rest风格的api，我建议也把url放入sign签名)。签名的方法可以是md5({秘要}key1=val1&key2=val2&key3=val3...)
+
+服务端接到这个请求：
+1 先验证sign签名是否合理，证明请求参数没有被中途篡改
+2 再验证timestamp是否过期，证明请求是在最近60s被发出的
+3 最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求
+这个是没有办法防止DDOS的，但是有办法防止比如一个接口是增加积分，你恶意拦截自己的接口，然后重新调用来增加自己的积分
+
+```
+[php利用yield写一个简单中间件](http://blog.csdn.net/qq_20329253/article/details/52202811)
+```js
+function xrange($start, $end, $step = 1) {  
+    for ($i = $start; $i <= $end; $i += $step) {  
+        yield $i;  
+    }  
+}  
+
+foreach (xrange(1, 1000) as $num) {  
+    echo $num, "\n";  
+}  
+/* 
+ * 1 
+ * 2 
+ * ... 
+ * 1000 
+ */  
+ 数据库连接.....
+$sql = "select * from `user` limit 0,500000000";
+$stat = $pdo->query($sql);
+$data = $stat->fetchAll();  //mysql buffered query遍历巨大的查询结果导致的内存溢出
+
+var_dump($data);
+function get(){
+    $sql = "select * from `user` limit 0,500000000";
+    $stat = $pdo->query($sql);
+    while ($row = $stat->fetch()) {
+        yield $row;
+    }
+}
+
+foreach (get() as $row) {
+    var_dump($row);
+}
+```
+
 [图普科技图像识别开放平台图片识别ocr](https://www.tuputech.com/api)
 
 [mysql中select distinct 多列的用法](https://wujunze.com/mysql_distint.jsp)
