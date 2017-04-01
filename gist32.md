@@ -55,7 +55,64 @@ $content = new Content();
 $content->setDatabase(new MysqlDatabase());
 $content->Print();
 ```
+[Python的编码与解码问题](https://segmentfault.com/q/1010000008912870)
+```js
+import urllib
+
+
+def get_data(ip):
+    url = "http://ip.taobao.com/service/getIpInfo.php?ip=" + ip
+    data = urllib.urlopen(url).read()
+
+    return data
+
+
+if __name__ == "__main__":
+    result = get_data("59.151.5.5")
+    print(result)
+    >>> import unicodedata as u
+
+# 这段字符串是来自你给提供的内容
+>>> s = "\u5317\u4eac\u5e02"
+>>> s1 = ''
+>>> for i in s:
+        s1 += u.lookup(u.name(i))
+
+# 输出结果    
+>>> s1
+'北京市'
+
+
+if __name__ == "__main__":
+    result = get_data("59.151.5.5")
+    print(eval(result))
+    
+result = get_data("59.151.5.5").decode('raw_unicode_escape')    
+import json
+print json.dumps(json.loads(result), indent=2)    
+```
+
+
+[给数组中增加内容](https://segmentfault.com/q/1010000008914818)
+var arr = ["1", "2", "3", "4"].map(item => `第${item}季度`);
+[1,2,3,4].map(function(val){ return "第"+val+"季度" })
+[就是这么迅猛的实现搜索需求](http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651959917&idx=1&sn=8faeae7419a756b0c355af2b30c255df&chksm=bd2d07b18a5a8ea75f16f7e98ea897c7e7f47a0441c64bdaef8445a2100e0bdd2a7de99786c0&scene=21#wechat_redirect)
+select tid from t_tiezi where content like ‘%天通苑%’
+ElasticSearch 完全能满足10亿数据量，5k吞吐量的常见搜索业务需求，强烈推荐。
+
+
 [1分钟实现“延迟消息”功能](http://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651959961&idx=1&sn=afec02c8dc6db9445ce40821b5336736&chksm=bd2d07458a5a8e5314560620c240b1c4cf3bbf801fc0ab524bd5e8aa8b8ef036cf755d7eb0f6&mpshare=1&scene=1&srcid=0316rh7QmkSKJH06XFENtsgw#rd)
+一般来说怎么实现这类“48小时后自动评价为5星”需求呢？
+ 
+常见方案：启动一个cron定时任务，每小时跑一次，将完成时间超过48小时的订单取出，置为5星，并把评价状态置为已评价。
+假设订单表的结构为：t_order(oid, finish_time, stars, status, …)，更具体的，定时任务每隔一个小时会这么做一次：
+select oid from t_order where finish_time > 48hours and status=0;
+update t_order set stars=5 and status=1 where oid in[…];
+如果数据量很大，需要分页查询，分页update，这将会是一个for循环
+高效延时消息，包含两个重要的数据结构：
+（1）环形队列，例如可以创建一个包含3600个slot的环形队列（本质是个数组）
+（2）任务集合，环上每一个slot是一个Set<Task>
+
 [API的防重放机制](http://www.cnblogs.com/yjf512/p/6590890.html)
 ```js
 防止重放的机制是使用timestamp和nonce来做的重放机制。
