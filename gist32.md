@@ -1,3 +1,239 @@
+[nodejs客服聊天系统](https://segmentfault.com/q/1010000008018196)
+https://gist.github.com/martinsik/2031681
+
+[php7静态调用一个非静态方法, 会在静态调用中被提示未定义 $this, 并会报错](https://segmentfault.com/q/1010000007433025)
+[PHP 7 的非向下兼容的里面可以找到](http://php.net/manual/zh/migration70.incompatible.php)
+```js
+// PHP 5 时代的代码将会出现问题
+function handler(Exception $e) { ... }
+set_exception_handler('handler');
+
+// 兼容 PHP 5 和 7
+function handler($e) { ... }
+
+// 仅支持 PHP 7
+function handler(Throwable $e) { ... }
+在 INI 文件中，不再支持以 # 开始的注释行， 请使用 ;（分号）来表示注释。 此变更适用于 php.ini 以及用 parse_ini_file() 和 parse_ini_string() 函数来处理的文件。
+ 第一，数值不能以点号（.）结束 （例如，数值 34. 必须写作 34.0 或 34）。 第二，如果使用科学计数法表示数值，e 前面必须不是点号（.） （例如，3.e3 必须写作 3.0e3 或 3e3）
+$str = "0xffff";
+$int = filter_var($str, FILTER_VALIDATE_INT, FILTER_FLAG_ALLOW_HEX); 检查一个 string 是否含有十六进制数字,并将其转换为integer:
+var_dump("0x123" == "291");
+var_dump(is_numeric("0x123")); 含十六进制字符串不再被认为是数字
+
+```
+[PHP内存溢出解决方案 数据量过大内存溢出解决方案](http://onwise.xyz/2017/02/08/php%e5%86%85%e5%ad%98%e6%ba%a2%e5%87%ba%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88/)
+```js
+ini_set(‘memory_limit’,’64M’);　//重置php可以使用的内存大小为64M，一般在远程主机上是不能修改php.ini文件的，只能通过程序设置。注：在safe_mode（安全模式）下，ini_set失效
+ 
+set_time_limit(600);//设置超时限制为６分钟
+ 
+$farr = $Uarr = $Marr = $IParr = $data = $_sub = array();
+ 
+$spt = ”$@#!$”;
+ 
+$root = ”/Data/webapps/VisitLog”;
+ 
+$path = $dpath = $fpath = NULL;
+ 
+$path = $root.”/”.date(“Y-m”,$timestamp);
+ 
+$dpath = $path.”/”.date(“m-d”,$timestamp);
+ 
+for($j=0;$j<24;$j++){
+ 
+$v = ($j < 10) ? ”0″.$j : $j;
+ 
+$gpath = $dpath.”/”.$v.”.php”;
+ 
+if(!file_exists($gpath)){
+ 
+continue;
+ 
+} else {
+ 
+$arr = file($gpath);////将文件读入数组中
+ 
+array_shift($arr);//移出第一个单元－》<?php exit;?>
+ 
+$farr = array_merge($farr,$arr);
+ 
+unset($arr);
+ 
+}
+ 
+}
+ 
+if(empty($this->farr)){
+ 
+echo ”<p><center>没有相关记录！</center></p>”;
+ 
+exit;
+ 
+}
+ 
+while(!empty($farr)){
+ 
+$_sub = array_splice($farr, 0, 10000); //每次取出$farr中1000个
+ 
+for($i=0,$scount=count($_sub);$i<$scount;$i++){
+ 
+$arr = explode($spt,$_sub[$i]);
+ 
+$Uarr[] = $arr[1]; //vurl
+ 
+$Marr[] = $arr[2]; //vmark
+ 
+$IParr[] = $arr[3].” |$nbsp;”.$arr[1]; //IP
+ 
+}
+ 
+unset($_sub);//用完及时销毁
+ 
+}
+ 
+unset($farr);
+
+只有当指向该变量的所有变量（如引用变量）都被销毁后，才会释放内存。 unset()函数只能在变量值占用内存空间超过256字节时才会释放内存空间。
+
+$farr=range(1,10);
+while(!empty($farr)){
+	print_r($farr);
+ 
+$_sub = array_splice($farr, 0, 2); //每次取出$farr中2个
+ 
+for($i=0,$scount=count($_sub);$i<$scount;$i++){
+ 
+ 
+$Uarr[] = $_sub[$i];
+ 
+ 
+}
+ 
+unset($_sub);//用完及时销毁
+ 
+}
+ 
+unset($farr);
+
+print_r($Uarr);
+
+```
+[二分法查找与顺序查找 查找算法](http://onwise.xyz/2015/08/15/%e4%ba%8c%e5%88%86%e6%b3%95%e6%9f%a5%e6%89%be%e4%b8%8e%e9%a1%ba%e5%ba%8f%e6%9f%a5%e6%89%be/)
+```js
+//如从一个数组中找到一个数：34  
+//$arr = array(23,45,67,34,9,34,6)如果查到则输出下标，否则输出查无此数  
+  
+$arr = array(23,45,67,34,9,34,6);  
+//设一个标志位  
+$flag = false;  
+foreach($arr as $x => $x_val)  
+{  
+      
+    if ($x_val == 34)  
+    {  
+        echo 'arr['.$x.']=34'."<br>";  
+        $flag = true;  
+    }  
+}  
+if ($flag==false)  
+{  
+    echo "查无此数！";  
+}     
+//如从一个数组中找到一个数：134   首先找到数组中间这个数，然后与要查找的数比较，如果要查找的数大于中间这个数，则说明应该向后找，否则向前找，如果想等，则说明找到。
+//$arr = array(23,45,67,89,90,134,236)如果查到则输出下标，否则输出查无此数  
+  
+function binarySearch(&$arr,$val,$leftindex,$rightindex)  
+{  
+    if($rightindex < $leftindex)  
+    {  
+        echo "查无此数！";  
+        return 0;  
+    }  
+    //四舍五入取整数值  
+    $middleindex = round(($leftindex + $rightindex)/2);  
+    if($val > $arr[$middleindex])  
+    {  
+        binarySearch($arr,$val,$middleindex + 1,$rightindex);  
+    }  
+    elseif($val < $arr[$middleindex])  
+    {  
+        binarySearch($arr,$val,$leftindex,$middleindex - 1);  
+    }  
+    else  
+    {  
+        echo 'arr['."$middleindex".']=134'."<br>";  
+    }  
+}  
+    $arr = array(23,45,67,89,90,134,236);  
+    sort（$arr）;//先排序
+//  $leftindex = 0;左下标  
+//  $rightindex = count($arr)-1;右下标  
+//      $val = 134;要找的值  
+    binarySearch($arr,134,0,count($arr) - 1)  
+```
+[PHP网站的自动化部署工具](https://segmentfault.com/q/1010000000659604)
+[这个javascript双色球代码](https://segmentfault.com/q/1010000008920706)
+```js
+function doubleChromosphere() {
+
+                var bools = [],
+                    i,
+                    ranNumber;
+
+                for(i = 0; i < 5;) {
+                    ranNumber = parseInt(Math.random() * 33 + 1);
+                    if(bools.indexOf(ranNumber) == -1) {
+                        bools.push(ranNumber);
+                        i++;
+                    }
+                }
+
+                
+                var str = "";
+                for(var j = 0; j < bools.length; j++){
+                    str += bools[j] + "&ensp;";
+                }
+                red.innerHTML = str.toString();
+                
+                blue.innerHTML = (parseInt(Math.random() * 16 + 1)).toString();
+            }
+```
+http://capistranorb.com/ http://deployer.org/  https://github.com/meolu/walle-web
+
+[数据结构之四种基本排序 数据排序算法](http://onwise.xyz/2016/01/15/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e4%b9%8b%e5%9b%9b%e7%a7%8d%e5%9f%ba%e6%9c%ac%e6%8e%92%e5%ba%8f/)
+[Web系统大规模并发——秒杀与抢购 秒杀系统优化与预防措施](http://onwise.xyz/2017/03/06/web%e7%b3%bb%e7%bb%9f%e5%a4%a7%e8%a7%84%e6%a8%a1%e5%b9%b6%e5%8f%91-%e7%a7%92%e6%9d%80%e4%b8%8e%e6%8a%a2%e8%b4%ad/)
+[cookie跨域session共享 结合实践谈谈cookie和session](http://onwise.xyz/2017/02/14/cookie%e8%b7%a8%e5%9f%9fsession%e5%85%b1%e4%ba%ab/)
+```js
+setcookie("sso", "e589hR6VnO8K1CNQZ4PSP/LWGBhRKE5VckawQwl1TdE8d4Q5E7tW", time() + 900);
+var_dump($_COOKIE["sso"]);
+要解决这个问题，要先了解一下setcookie后发生了什么？因为cookie是保存在客户端的，php是服务端语言，实际上setcookie之后只是在返回的http头增加一个cookie的头信息，告诉客户端需要设置一个酱紫的cookie
+而$_COOKIE这个数组里面保存客户端传递上来的cookie。自然第一次刷新的时候因为客户端没有相应的cookie值，所以$_COOKIE是没有sso的信息的。第一次请求过后，因为服务器设置了cookie sso，所以第一次请求过来客户端就有了cookie sso的信息，所以第二次请求的时候就会带上sso的信息，服务端就能通过$_COOKIE取到值了。
+
+ 
+session_start();
+echo session_id();//本例输出ipkl446enhae25uq92c28u4lo3
+$_SESSION['name'] = "tony”;
+$_SESSION['users'] = array("tony", "andy");
+通过session_id方法可以取到当前的session编号，通过这个编号可查看一下该session文件。
+$ sudo more /var/tmp/sess_ipkl446enhae25uq92c28u4lo3
+name|s:4:"tony";users|a:2:{i:0;s:4:"tony";i:1;s:4:"andy";}
+php在进行session操作的时候会生成一个session id，而后把这个值以cookie的形式保存在客户端，就是图示中的PHPSESSID了。客户端在下次请求的时候就会带上这个PHPSESSID，服务端就能知道当前客户端对应的session文件了。
+如果需要使用redis进行存储，需要session中的Registered save handlers支持redis
+```
+
+[PHP 命令行下的世界 PHP的shell](http://onwise.xyz/2016/12/27/php-%e5%91%bd%e4%bb%a4%e8%a1%8c%e4%b8%8b%e7%9a%84%e4%b8%96%e7%95%8c/)
+通过php_sapi_name()函数判断是否是在命令行下运行的 提供了两个全局变量$argc和$argv用于获取命令行输入。
+查看redis类的信息
+
+$ php --rc redis
+查看函数printf的信息
+
+$ php —rf printf
+查看扩展redis的配置信息
+
+$ php —ri redis
+php —info | grep redis
+
 [SegmentFault 年度内容盘点 - 2016](https://summary.segmentfault.com/2016/#/)
 [策略模式适用情况是你已经知道了某个算法。](http://www.cnblogs.com/yjf512/p/6546490.html)
 ```js
