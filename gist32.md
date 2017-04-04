@@ -1,3 +1,543 @@
+[MySQL 分页查询性能比较](https://www.v2ex.com/t/351908#reply20)
+
+SELECT * FROM API_LOG a JOIN (select ID from API_LOG LIMIT 0, 10) b ON a.ID = b.ID
+
+SELECT * FROM API_LOG WHERE ID IN ( SELECT * FROM (SELECT ID FROM API_LOG LIMIT 0, 10) t)
+WHERE IN 又子查询在 mysql 上的实现似乎是上一级的查询的每一条数据做一次子查询， mysql 文档上似乎有详细解释  加 SELECT * FROM 是 MySQL 不允许 Limit IN 在子查询里面  覆盖索引的意思就是指直接通过索引的查询就能获取到数据。例如： select id from table 这个 id 是主键，仅仅通过索引查询就能返回结果， select * from table 这里则需要先查到主键，再通过主键获取剩余字段的值，这也就是为什么前者比后者快。
+[用 select * from table where in 来查找， in 里面有 50 个学号，但是 select 出来只有 40 个，我改如何找出在数据库中不存在的学号](https://www.v2ex.com/t/351690#reply12)
+SELECT 
+* 
+FROM table1 t1 
+LEFT JOIN table2 t2 ON t1.id = t2.id 
+WHERE t2.id IS NULL
+先做一次初始化，然后把有的数据更新，最后查未更新过的。 
+
+解决方案非常不优化，但胜在快速简单...   NOT IN 是数据库中存在但不匹配 IN 列表的项。
+[服务端一般怎么处理 token？](https://www.v2ex.com/t/351950)
+很多都是不存，即用 JWT 
+[javascript 之隐藏你的代码](http://blog.mango16.cc/2017/02/20/hiderjs/)
+```js
+在 unicode 里有一种神奇的字符叫 零宽空白，它的特点是字型的显示宽度为 0，无论堆了多少个零宽字符，你都看不见它
+每个字符都有一个唯一的编码，将编码以 2 进制表示得到 01.. 的字串，把 1 替换成 U+200C，把 0 替换成 U+200D 就得到一个全零宽空白的字符串，每 8 位零宽字符可用于表示 1 个 ascii字符，所以例子当中，理论上是变长的，不算解码程序的 129 个字符，仅空白就占了原文 8 倍的体积，如果出现中文，那就更不止了，因为中文已经超过了 ascii 的范围，需要先转成纯 ascii （如以 \uxxxx 表示）后再处理。
+在 unicode 里，至少有 U+200B, U+200C, U+200D 和 U+FEFF 四个零宽字符，如果把这 4 个字符全用上，上面的例子又可以减少 1 半的体积
+
+function(window) {
+    var rep = { // 替换用的数据，使用了4个零宽字符，数据量减少了一半。
+        '00': '\u200b',
+        '01': '\u200c',
+        '10': '\u200d',
+        '11': '\uFEFF'
+    };
+    function hide(str) {
+        str = str.replace(/[^\x00-\xff]/g, function(a) { // 转码 Latin-1 编码以外的字符。
+            return escape(a).replace('%', '\\');
+        });
+        str = str.replace(/[\s\S]/g, function(a) { // 处理二进制数据并且进行数据替换
+            a = a.charCodeAt().toString(2);
+            a = a.length < 8 ? Array(9 - a.length).join('0') + a : a;
+            return a.replace(/../g, function(a) {
+                return rep[a];
+            });
+        });
+        return str;
+    }
+    var tpl = '("@code".replace(/.{4}/g,function(a){var rep={"\u200b":"00","\u200c":"01","\u200d":"10","\uFEFF":"11"};return String.fromCharCode(parseInt(a.replace(/./g, function(a) {return rep[a]}),2))}))';
+    window.hider = function(code, type) {
+        var str = hide(code); // 生成零宽字符串
+        str = tpl.replace('@code', str); // 生成模版
+        if (type === 'eval') {
+            str = 'eval' + str;
+        } else {
+            str = 'Function' + str + '()';
+        }
+        return str;
+    }
+})(window);
+```
+[全栈数据工程师养成攻略](https://zhuanlan.zhihu.com/fullstack-data-engineer)
+
+[ Mac 下文件名大小写不敏感](http://blog.mango16.cc/2017/03/10/everyday/)
+```js
+$ git mv --force myfile MyFile
+#修改git配置，不忽略大小写
+git config core.ignorecase false
+ git push --delete origin branch_name 删除git 远程的分支
+$ git push origin dev -f
+netstat -apn|grep 7782
+tcp        0      0 :::80                       :::*                        LISTEN      19408/java 
+#那么进程号就是`19408`
+再通过`ps -ef | grep 19408` 就知道这个进程是啥了。 Linux下查看一个端口被哪个占用进程
+php --ini
+显示当前加载的php.ini绝对路径
+php --re swoole
+显示某个扩展提供了哪些类和函数。
+php --ri swoole
+显示扩展的phpinfo信息。与phpinfo的作用相同，不同之处是这里仅显示指定扩展的phpinfo
+php --rf file_get_contents
+显示某个PHP函数的信息，一般用于检测函数是否存在
+set_error_handler PHP中用来捕获自定义的错误信息
+public function aaa()
+{
+    function customError($errno, $errstr, $errfile, $errline)
+    {
+        echo "<b>Custom error:</b> [$errno] $errstr<br />";
+        echo " Error on line $errline in $errfile<br />";
+        echo "Ending Script";
+        die();
+    }
+    //set error handler， 第二个参数是可以设置需要捕获的错误类型
+    set_error_handler("customError", E_ALL | E_WARNING);
+    //$a 没定义，应该会有一个错误：
+    var_dump($a);
+}
+redis MONITOR 监控redis的所有的被执行的命令
+//在程序之外用管道监控某一个命令。
+redis-cli -h 172.16.71.70 -p 6379 MONITOR|grep medal:rank:9
+1472647383.968024 [0 172.16.71.67:48460] "ZINCRBY" "medal:rank:9" "1.0000000000000000" "12436136
+
+```
+[猴子选大王算法](http://blog.mango16.cc/2016/06/05/monkeyKing/)
+有M个monkey ，转成一圈，第一个开始数数，数到第N个出圈，下一个再从1开始数，再数到第N个出圈，直到圈里只剩最后一个就是大王 【单项循环数据链表】
+```js
+class MonkeyKing
+{ 	
+	var $next;
+   	var $name;
+   public function __construct($name)
+   {
+       $this->name = $name;
+   }
+   public static function whoIsKing($count, $num)
+   {
+       /************* 构造单向循环链表 ******************/
+       // 构造单向循环链表
+       $current = $first = new MonkeyKing(1);
+       for($i=2; $i<=$count; $i++)
+       {
+           $current->next = new MonkeyKing($i);
+           $current = $current->next;
+       }
+       // 最后一个指向第一个
+       $current->next = $first;
+       // 指向第一个
+       $current = $first;
+       /*************** 开始数数 *********************/
+       // 定义一个数字
+       $cn = 1;
+       while($current !== $current->next)
+       {
+           $cn++;  // 数数
+           if($cn == $num)
+           {
+               $current->next = $current->next->next;
+               $cn = 1;
+           }
+           $current = $current->next;
+       }
+       // 返回猴子王的名字
+       return $current->name;
+   }
+}
+// 共10个猴子每3个出圈
+echo MonkeyKing::whoIsKing(10,3);
+```
+[因为这篇EXCEL教程，我卸载了王者荣耀。](https://zhuanlan.zhihu.com/p/26150579)
+[Edward 是一个用于概率建模、推理和评估的 Python 库。](https://edward-cn.readthedocs.io/zh/latest/)
+[关于 MySQL 你可能不知道的 SQL 使用技巧](https://zhuanlan.zhihu.com/p/25064592)
+```js
+select 'product' as type, count(*) as count from `products`
+union
+select 'comment' as type, count(*) as count from `comments`
+order by count;
+我们通过 UNION 语法同时查询了 products 表 和 comments 表的总记录数，并且按照 count 排序。
+
+ERROR 1093 (HY000): You can't specify target table 'xxx' for update in FROM clause
+这样的错误产生的原因是：MySQL 不支持同一个 SQL 语句尝试对同一个表进行查询和修改两个操作。
+
+删除没有评论的文章这条语句
+
+delete from articles 
+where id in (
+select a.id from articles as a left join comments as c on a.id=c.article_id 
+where c.is is NULL
+)
+articles 表既被查询，也被更新，将出现上面的错误。
+
+但是，如果 DELETE 结合 JOIN，则可以直接写出这样的 SQL 语句，简洁许多：
+
+delete s from articles as a 
+left join comments as c on a.id=c.article_id 
+where c.is is NULL
+当然，UPDATE 也是同理：
+
+update articles as a 
+left join comments as c on a.id=c.article_id 
+set a.deleted=1 
+where c.is is NULL
+
+
+
+```
+[python 抓取任何网站 HTTPError: HTTP 599: Resolving timed out](https://segmentfault.com/q/1010000007809233)
+我今天也遇到这个问题，经过千百次不同的尝试，终于发现了问题所在。只需禁用你当前所使用的网络的ipv6访问即可
+[【位运算经典应用】 寻找那个唯一的数](http://www.cnblogs.com/zichi/p/4795049.html)
+[PHPExcel 类库](https://mp.weixin.qq.com/s?__biz=MjM5OTgxMTIwMw==&mid=2447558518&idx=1&sn=b802b4a22bc211e7bf9e7113c1fd6547&chksm=b323a69a84542f8ceea83cd49dd3d111df96bd34a4afc0f996af679708c9acfbd094f99d6773#rd)
+\w 包括字母数字下划线，但不包括减号
+[如何用Jq 对数组重复对象去重？](https://segmentfault.com/q/1010000008935350)
+var arr=[{id:1,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:4,X: 3, Y: 4},{id:5,X: 3, Y: 4}];
+    var hash = {};
+    var result = [];
+    for(var i = 0, len = arr.length; i < len; i++){
+        if(!hash[arr[i].id+arr[i].X+arr[i].Y]){
+            result.push(arr[i]);
+            hash[arr[i].id+arr[i].X+arr[i].Y] = true;
+        }
+    }
+    console.log(result);
+[Python 代码应该如何修改才能正确运行？](https://segmentfault.com/q/1010000008930570)
+class Solution(object):
+    def test(self):
+        ans = 0
+        def fn():
+            nonlocal ans
+            ans = max(ans, 10)
+            return ans
+
+        print(fn())
+
+obj = Solution()
+obj.test()
+[js倒计时代码](https://segmentfault.com/q/1010000008928904)
+var c1t = setInterval("count1()",1000);
+function count1(){
+    if(num1>=1){
+        cerCount.innerHTML=num1;
+        num1--;
+    }else if(num1==0) {
+        divs[0].className=null;
+        divs[1].className="current";
+        clearInterval(c1t);
+        setInterval("count2()",1000);
+    }
+}
+
+window.document.body.innerHTML= printData.innerHTML;https://segmentfault.com/q/1010000008926575
+[python3读取chrome浏览器cookies](http://www.cnblogs.com/gayhub/p/pythongetcookiefromchrome.html)
+```js
+"""
+python3从chrome浏览器读取cookie
+get cookie from chrome
+2016年5月26日 19:50:38 codegay
+
+"""
+import os
+import sqlite3
+import requests
+from win32.win32crypt import CryptUnprotectData
+
+def getcookiefromchrome(host='.oschina.net'):
+    cookiepath=os.environ['LOCALAPPDATA']+r"\Google\Chrome\User Data\Default\Cookies"
+    sql="select host_key,name,encrypted_value from cookies where host_key='%s'" % host
+    with sqlite3.connect(cookiepath) as conn:
+        cu=conn.cursor()        
+        cookies={name:CryptUnprotectData(encrypted_value)[1].decode() for host_key,name,encrypted_value in cu.execute(sql).fetchall()}
+        print(cookies)
+        return cookies
+
+#运行环境windows 2012 server python3.4 x64 chrome 50
+#以下是测试代码
+#getcookiefromchrome()
+#getcookiefromchrome('.baidu.com')
+
+url='http://my.oschina.net/'
+
+httphead={'User-Agent':'Safari/537.36',}
+
+#设置allow_redirects为真，访问http://my.oschina.net/ 可以跟随跳转到个人空间
+r=requests.get(url,headers=httphead,cookies=getcookiefromchrome('.oschina.net'),allow_redirects=1)
+print(r.text)
+```
+[爬虫去爬取51job里的招聘信息](https://segmentfault.com/q/1010000008924427)
+```js
+import requests
+from lxml import etree
+import re
+
+headers = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+               "Accept-Encoding": "gzip, deflate",
+               "Accept-Language": "en-US,en;q=0.5",
+               "Connection": "keep-alive",
+               "Host": "jobs.51job.com",
+               "Upgrade-Insecure-Requests": "1",
+               "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0"}
+
+def generate_info(url):
+    html = requests.get(url, headers=headers)
+    html.encoding = 'GBK'
+    select = etree.HTML(html.text.encode('utf-8'))
+    job_id = re.sub('[^0-9]', '', url)
+    job_title=select.xpath('/html/body//h1/text()')
+    print(job_id,job_title)
+
+sum_page='http://search.51job.com/jobsearch/search_result.php?fromJs=1&jobarea=070200%2C00&district=000000&funtype=0000&industrytype=00&issuedate=9&providesalary=06%2C07%2C08%2C09%2C10&keywordtype=2&curr_page=1&lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=0&list_type=0&dibiaoid=0&confirmdate=9'
+sum_html=requests.get(sum_page)
+sum_select=etree.HTML(sum_html.text.encode('utf-8'))
+urls= sum_select.xpath('//*[@id="resultList"]/div/p/span/a/@href')
+
+for url in urls:
+    generate_info(url)
+
+```
+[python如何手动实现阻塞](https://segmentfault.com/q/1010000008924200)
+while True:
+    ＃ 等待一年
+    time.sleep(60*60*24*365)
+    
+# 直接等待一百年
+time.sleep(60*60*24*365*100)
+condition=threading.Condition()
+condition.acquire()
+condition.wait()
+[抓取一个代理ip网页，使用cookie但是报错](https://segmentfault.com/q/1010000008927935)
+他把重要的key隐藏到js中，并通过eval函数进行转换跳转，起到一个混搅代码的作用，使用selenium的话也许可以解决这个问题
+
+[python如何相加加法](https://segmentfault.com/q/1010000008938541)
+>>> def sum(*args):
+...     r = 0.0
+...     for n in args:
+...             r += float(n)
+...     return "%.2f" % r
+...
+>>> sum('1.1', '2.2')
+'3.30'
+>>> sum('1.1', '2.2', 3.3)
+'6.60'
+>>> num=['276.30','1,446.90','23,456.80']
+>>> "%.2f" % sum(map(lambda s:float(s.replace(',','')),num))
+'25180.00'
+[mysql索引与数据是怎样关联的](https://segmentfault.com/q/1010000008831966)
+1、主键存储数据行的物理地址，普通索引关联主键
+2、所有数据
+3、关联主键存储多行
+[Laravel在database.php加上强制mysql预处理后出现问题](https://segmentfault.com/q/1010000008849888)
+$item对象对应的is_display字段值为string类型的，导致$child为空
+[limit前面加上order by 索引查询性能会更好？](https://segmentfault.com/q/1010000008862044)
+如果不加索引，SELECT * FROM sys_client LIMIT 100000,10会将全表扫描，然后取第100001~100010这10条记录； 
+加了索引之后，就只检索100010条记录，而不是全表检索，所以执行效率会更好！
+[laravel5.1路由一个非常奇怪的问题](https://segmentfault.com/q/1010000008854296)
+Route::get('admin/login', 'Admin\AuthController@getLogin');
+Route::get('adminasds/login', 'Admin\AuthController@getLogin');
+在public目录下有admin文件夹
+[laravel 关闭指定控制器方法的CSRF后获取不到session吗](https://segmentfault.com/q/1010000008893817)
+既然要关闭CSRF，那么这个URL的来源可能是来自于 SWF、其他途径
+
+如果基于浏览器访问当前Domain的页面，这不可能会丢失Session的
+
+我猜测可能场景是 使用Flash上传文件，那么的确会出现丢失Cookie的情况(Cookie和Session有什么关系)
+
+一般情况下，我会把Session ID附加到这些场景的POST的字段、或上传的URL中：url?session_id=<?php echo session_id();?>
+
+然后在控制器里面重设SessionID：
+
+session_id($_GET['seesion_id']);
+Session::setId($_GET['seesion_id']);
+[laravel toArray()方法内存泄露,](https://segmentfault.com/q/1010000008903003)
+ $query->chunk(1000, function ($data) use (&$firstWrite, $fp) {
+    Log::info("开始:".memory_get_usage());
+    $data = $data->toArray();
+    Log::info("结束:".memory_get_usage());
+    unset($data);
+    Log::info("usnet 结束:".memory_get_usage());
+});
+
+DB::table("coupons")->orderBy("id")->chunk(1000, function ($data){
+   $data=json_decode(json_encode($data),true);
+});
+有哪些可视化大数据三方应用推荐呢https://segmentfault.com/q/1010000008873761
+https://www.qcloud.com/product/RayData  https://data.aliyun.com/visual/datav?spm=5176.8142029.388261.109.9ZNB5N https://github.com/airbnb/superset
+大文本数据合并问题思路https://segmentfault.com/q/1010000008909291  https://github.com/BurntSushi/xsv
+python编写爬虫，返回http error 521怎么解决https://segmentfault.com/q/1010000008880517
+import execjs
+import re
+import requests
+
+url = "http://www.kuaidaili.com/proxylist/1/"
+
+HERDERS = {
+    "Host": "www.kuaidaili.com",
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36',
+}
+
+
+def executejs(html):
+    # 提取其中的JS加密函数
+    js_string = ''.join(re.findall(r'(function .*?)</script>',html))
+
+    # 提取其中执行JS函数的参数
+    js_func_arg = re.findall(r'setTimeout\(\"\D+\((\d+)\)\"', html)[0]
+    js_func_name = re.findall(r'function (\w+)',js_string)[0]
+
+    # 修改JS函数，使其返回Cookie内容
+    js_string = js_string.replace('eval("qo=eval;qo(po);")', 'return po')
+
+    func = execjs.compile(js_string)
+    return func.call(js_func_name,js_func_arg)
+
+def parse_cookie(string):
+    string = string.replace("document.cookie='", "")
+    clearance = string.split(';')[0]
+    return {clearance.split('=')[0]: clearance.split('=')[1]}
+
+# 第一次访问获取动态加密的JS
+first_html = requests.get(url=url,headers=HERDERS).content.decode('utf-8')
+
+# 执行JS获取Cookie
+cookie_str = executejs(first_html)
+
+# 将Cookie转换为字典格式
+cookie = parse_cookie(cookie_str)
+print('cookies = ',cookie)
+
+# 带上cookies参数，再次请求
+response = requests.get(url=url,headers=HERDERS,cookies=cookie)
+print(response.status_code)
+Xpath 为什么爬取不到内容https://segmentfault.com/q/1010000008885973
+在写爬虫的时候，使用xpath一定要确认一下网页的源代码中是否有数据，如果没有，说明是异步加载的
+view-source:https://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=%E6%9A%B4%E8%B5%B0%E6%BC%AB%E7%94%BB&pn=0
+
+[laravel 的 Eloquent 设置排序的时候怎么以两个字段的差来排序？](https://segmentfault.com/q/1010000008829128)
+orderByRaw(string $sql, array $bindings = array())方法，直接把排序的sql写在第一个参数就可以了
+-- mysql原語句
+select (click-num) click_num from table order by click_num desc
+// laravel寫法，如果ORM，則自行調整
+DB::table('table)->selectRaw('(click-num) as click_num')->orderBy('click_num', 'desc')->get()
+[用JS读取出 arr 字符串中每个字母重复出现的次数](https://segmentfault.com/q/1010000008924203)
+var arr='asfacfagsahvahvxssaaxssxs';
+
+var info = arr
+     .split('')
+     .reduce( (p,k) => (p[k]++ || (p[k]=1) ,p ),{});
+
+console.log(info);
+
+var info = arr
+     .reduce( (p,k) => {
+         if (p[k]) {
+             p[k]++
+         } else {
+             p[k]=1
+         }
+         return (p);
+     }, {});
+     
+抓取天猫详情页里面的月销量，反爬非常厉害https://segmentfault.com/q/1010000008843066 
+https://segmentfault.com/q/1010000008867745
+Python2 BeautifulSoup 提取网页中的表格数据及连接https://segmentfault.com/q/1010000008859379
+# coding:utf-8
+
+import requests
+
+r = requests.get('http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx?type=CT&cmd=C._BKGN&sty=FPGBKI&st=c&sr=-1&p=1&ps=5000&token=7bc05d0d4c3c22ef9fca8c2a912d779c&v=0.12043042036331286')
+data = [_.decode('utf-8').split(',') for _ in eval(r.text)]
+
+url = 'http://quote.eastmoney.com/center/list.html#28003{}_0_2'
+lst = [(url.format(_[1].replace('BK0', '')), _[2]) for _ in data]
+print lst
+https://segmentfault.com/q/1010000008870050 
+Python读取文件每行记录并转存为字典格式的数据https://segmentfault.com/q/1010000008847767
+f = open('1', 'r')                  
+result = {}
+for line in f.readlines():
+    line = line.strip()
+    if not len(line):
+        continue
+    result[line.split(':')[0]] = line.split(':')[1]
+f.close()
+print result
+with open('test.txt', 'r') as f:
+    result = dict(line.strip().split(':') for line in f if line)
+print(result)
+
+
+[Cannot read property 'appendChild' of null](https://segmentfault.com/q/1010000008935520)
+执行js的时候body还没加载，把script放在body内部或者用window.onload把js包起来可以解决问题
+错误指向这一行 document.body.appendChild(table);
+[python-在微信上假装我是小冰](https://zhuanlan.zhihu.com/p/25912740)
+http://link.zhihu.com/?target=https%3A//github.com/BestJuly/just_for_fun 
+
+[初学Python--微信好友/群消息防撤回，查看相关附件](https://zhuanlan.zhihu.com/p/25744154?group_id=824799146052587520)
+http://link.zhihu.com/?target=https%3A//github.com/ZKeeer/WeChatForRevocation.git
+[初学python--小脚本解决大问题（实时推送闲鱼某关键词最新动态）](https://zhuanlan.zhihu.com/p/25843989)
+http://link.zhihu.com/?target=https%3A//github.com/ZKeeer/fSeach.git
+[一个简单的微信自动回复机器人的实现](https://github.com/pannzh/pyweixin)
+[深入理解PHP之：Nginx 与 FPM 的工作机制](https://zhuanlan.zhihu.com/p/20694204)
+fpm 是进程管理器，同时也实现了 fastcgi 协议，使用 master-worker 模型管理 php 进程，master 负责 php 进程的调度，worker 负责具体 php 代码的执行。
+
+然后就是你的「php-fpm是负责调度php-cgi的进程管理器」说法并不正确，fpm 管理的是 php，而非 php-cgi, php-cgi 是 cgi 协议的实现，使用 stdin 和 stdout 进行数据交换，每个请求都需要开启一个进程，性能是在太渣，现在应该没人用了~
+1.nginx是web服务器，提供http服务。2.php代码需要php解析器解析。所以这里要有个nginx和php解析器通信的问题。就出现了一个fastcgi的协议来解决通信问题。
+
+
+[能理解聊天记录的微信机器人 ](https://zhuanlan.zhihu.com/p/26010876)
+http://link.zhihu.com/?target=https%3A//github.com/grapeot/WechatForwardBot 
+
+和ElasticSearch和Kibana连了起来，现在有了实时监控和可视化了。能看到每小时平均有多少次自动回复，多少次看群里话唠，多少次看标签云。
+[如何将自己的程序发布到 PyPI](https://zhuanlan.zhihu.com/p/26159930)
+python setup.py register sdist upload
+[img2html 用于将图片转化为 HTML 页面](https://github.com/xlzd/img2html)
+```js
+python3的话 ，手动改一下xrange-> range，78行的 next()--> char=next(self.char)。就好了。谢谢作者，有点意思。 -o 参数指定输出到哪里，或者默认到控制台上。 ！曾经我也搞过
+https://github.com/hit9/img2txt
+另外还有这个动画的
+https://github.com/hit9/gif2txt  ./gif2txt.py test.gif -m 80 -o out.html http://hit9.github.io/gif2txt/out.html
+https://github.com/upfain/html-img
+ //参数1:图片url *
+ //参数2:效果比例 默认2 (整数)  http://mengdc.applinzi.com/caicai.html
+ //参数3:function
+ htmlImg('img.jpg',1,function (html,tag) {
+     //html 是一个生成的table标签的字符串
+     //tag  为table标签
+     document.body.appendChild(this)
+ })
+pip install img2html
+from img2html.converter import Img2HTMLConverter
+
+converter = Img2HTMLConverter(*some config here*)
+html = converter.convert(*image_path*)
+```
+[我的工具包](https://github.com/xlzd/xtls)
+https://github.com/xlzd/xPyToys 
+[生成ascii文字](https://github.com/xlzd/xart)
+
+xart test
+
+
+
+[好像只有面试的时候考算法，但是在实际工作中算法几乎用不到](https://segmentfault.com/q/1010000008606058)
+```js
+你在学算法？你都学什么算法了？插入排序？？你学插入排序当然会用不到了！你要是学快排的话，抱歉，库都实现好了。
+
+你学不实用，或者成熟的算法，当然很难用到了。前者根本用不到，后者已经被别人实现好了。
+
+对于常见算法，最重要的是理解：它的时间复杂度、空间复杂度、功能特点等。然后呢，你就可以学点实现不是那么多的算法（比如 skiplist 啊，hyperloglog 啊，bloom filter 啊之类的。有些语言糙，连最大堆和 btree map 都没有，你需要的时候也可以去实现一个。当然前提是你知道你需要什么。
+
+你自己的背景说得太少了，所以我不好举例。就说数据库查询吧，你知道 hash 索引和 btree 索引的差别吗？
+
+至于面试。那是刚毕业的人，没什么实战经验，所以才会考算法这种学校里学的东西吧。不然面试会针对你应聘的工作内容来问的。当然那些大公司都很需要懂算法的人，创业公司就不怎么需要了。
+
+再补充一点：会算法不等于会编程。很多人认为算法好就能写出好程序，are you kidding me？算法好的确能写出高效的程序，但是程序又不止高效这一方面。一个优秀的程序需要：
+
+效率足够好
+良好的可读性 / 可维护性
+可扩展性
+良好的用户界面（不管它是 GUI、TUI 还是命令行或者配置文件）
+足够的支持性文档
+良好的兼容性
+易与其它程序配合工作
+```
+
+
+
+
 [nodejs客服聊天系统](https://segmentfault.com/q/1010000008018196)
 https://gist.github.com/martinsik/2031681
 
