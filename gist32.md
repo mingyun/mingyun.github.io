@@ -1,3 +1,13 @@
+[WEB应用在今天越来越广泛，也是CTF夺旗竞赛中的主要题型，题目涉及到常见的Web漏洞，诸如注入、XSS、文件包含、代码执行、上传等漏洞。](http://www.shiyanbar.com/ctf/practice)
+http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ichunqiu.com/racing
+https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https://c.runoob.com/
+[针对CTF，大家都是怎么训练的](https://www.zhihu.com/question/30505597)
+[网络安全培训phppythonweb](http://www.moonsos.com/)
+《Web安全深度剖析》书籍出版 
+[ctf xss练习平台]( http://ctf.bugku.com/scoreboard)
+[md5查询](http://www.chamd5.org/login.html)
+http://www.cnblogs.com/wangleiblog/p/5936238.html  http://pmd5.com/#
+[Github 安全军火库](http://www.moonsos.com/post/52.html)
 [PHP实现长轮询](http://bayescafe.com/php/implementing-long-polling-with-php.html)
 ```js
 
@@ -176,7 +186,7 @@ c情况中，超过nginx.conf中的client_max_body_size，Nginx会返回413 Requ
 
 最后要说的是，尽管上面只讨论了上传单文件，但是这种错误更多见于一张表单上传多个文件，上传多个文件时，虽然每个文件的大小都小于upload_max_filesize，但是若多个文件加起来大于post_max_size，就会触发这个错误。debug时只看单个文件的大小，没有注意所有文件的总大小，bug就会时隐时现，非常让人头疼。不过话说回来，以现在公网的网速来讲，提交这么大的POST请求体验太差了，还是采取Ajax的方式逐个上传好一点。
 ```
-[]()
+
 
 [MySQL 分页查询性能比较](https://www.v2ex.com/t/351908#reply20)
 
@@ -364,6 +374,7 @@ where c.is is NULL
 [PHPExcel 类库](https://mp.weixin.qq.com/s?__biz=MjM5OTgxMTIwMw==&mid=2447558518&idx=1&sn=b802b4a22bc211e7bf9e7113c1fd6547&chksm=b323a69a84542f8ceea83cd49dd3d111df96bd34a4afc0f996af679708c9acfbd094f99d6773#rd)
 \w 包括字母数字下划线，但不包括减号
 [如何用Jq 对数组重复对象去重？](https://segmentfault.com/q/1010000008935350)
+```js
 var arr=[{id:1,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:4,X: 3, Y: 4},{id:5,X: 3, Y: 4}];
     var hash = {};
     var result = [];
@@ -374,6 +385,7 @@ var arr=[{id:1,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:2,X: 3, Y: 4},{id:4,X: 3, Y: 4}
         }
     }
     console.log(result);
+```
 [Python 代码应该如何修改才能正确运行？](https://segmentfault.com/q/1010000008930570)
 class Solution(object):
     def test(self):
