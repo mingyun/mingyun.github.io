@@ -1,3 +1,183 @@
+[PHP实现长轮询](http://bayescafe.com/php/implementing-long-polling-with-php.html)
+```js
+
+$result = $mysql->query($sql);
+
+//如果没有取到数据，且执行时间小于30秒，则暂停1秒后重新查询
+while($result->num_rows == 0 && (time()-$begintime<30))
+{
+    sleep(1);
+    $result = $mysql->query($sql);
+}
+
+//用JSON返回数据
+$ret = array();
+if ($result->num_rows > 0)
+{
+    while($row = $result->fetch_assoc())
+    {
+        $ret[]=array('id'=>$row["id"],'nick'=>$row["nick"],'content'=>$row["content"]);
+    }
+}
+
+echo json_encode($ret);
+
+$mysql->close();
+function chat_update() 
+{
+    $.ajax({
+        url: "chatview.php",
+        //取最后一条ID之后的数据
+        data: {begin: window.Lastid},
+        cache: false,
+        success: function (data) {
+            //将数据填入页面上
+            resolveMsg(data);
+            chat_update();
+        },
+        error: function(){
+            chat_update();
+        }
+    });
+} set_time_limit会导致死循环，你这个跑久了服务器会崩的。可以用RS服务实现实时推送，开发文档见http://doc.hostker.com/realtime-sock.html
+```
+[JavaScript条形码生成和扫码识别(Barcode scan)开源库](http://ourjs.com/detail/58bd0c8c4edfe07ccdb234e9)
+[QRCode:用纯JavaScript实现的微信二维码图片生成器](http://ourjs.com/detail/55e412ebe3312b046d27f51c)
+<div id="qrcode"></div>
+<script type="text/javascript">
+new QRCode(document.getElementById("qrcode"), "http://davidshimjs.github.io/qrcodejs/");
+</script>
+[安全宝「约宝妹」代码审计CTF题解](http://bayescafe.com/php/yuebaomei-ctf.html)
+![p](http://bayescafe.com/usr/uploads/2015/02/1008817134.png)
+```js
+var_dump("1" == "01"); // 1 == 1 -> true
+var_dump("10" == "1e1"); // 10 == 10 -> true
+var_dump(100 == "1e2"); // 100 == 100 -> true
+三个正则比较简单，就不细说了，分别是：
+
+可见字符超过12个
+字符串中，把连续的大写，小写，数字，符号作为一段，至少分六段，例如a12SD+io8可以分成a 12 SD + io 8六段
+大写，小写，数字，符号这四种类型至少要出现三种
+符合这三个要求的字符串很容易构建，关键是最后还要使$password=="42"。
+var_dump("42"=="0x2A");
+可以用4.2e1也可以用420e-1，不过第二种可以额外提供一个-符号，在第二个里加上小数点，420.0e-1，就满足正则2和正则3了。为了满足正则1，在里面再加几个零，就是我最后的答案：
+
+420.00000e-1
+var_dump("\x34\x32\x2E"=="42");//bool(true)
+在PHP中，如果在双引号里放转义字符，在赋值的时候就会转义。例如
+
+$a = "\x34\x32\x2E";
+echo $a;//42.
+echo strlen($a);//3
+var_dump($a=="42");//bool(true)
+而通过POST提交，浏览器会对转义字符做转换，服务器拿到的相当于在单引号里赋值的字符串（值为%5Cx34%5Cx32%5Cx2E）：
+
+$b = '\x34\x32\x2E';
+echo $b;//\x34\x32\x2E
+echo strlen($b);//12
+var_dump($b=="42")//bool(false);
+
+$flag = "THIS IS FLAG";
+
+if  ("POST" == $_SERVER['REQUEST_METHOD'])
+{
+    $password = $_POST['password'];
+    if (0 >= preg_match('/^[[:graph:]]{12,}$/', $password))
+    {
+        echo 'Wrong Format';
+        exit;
+    }
+
+    while (TRUE)
+    {
+        $reg = '/([[:punct:]]+|[[:digit:]]+|[[:upper:]]+|[[:lower:]]+)/';
+        if (6 > preg_match_all($reg, $password, $arr))
+        break;
+
+        $c = 0;
+        $ps = array('punct', 'digit', 'upper', 'lower');
+        foreach ($ps as $pt)
+        {
+            if (preg_match("/[[:$pt:]]+/", $password))
+            $c += 1;
+        }
+
+        if ($c < 3) break;
+        if ("42" == $password) echo $flag;
+        else echo 'Wrong password';
+        exit;
+    }
+}
+
+CTF训练营，IDF实验室做的CTF在线解题网站，喜欢CTF的同学可以多刷刷题，组个队去参加真正的CTF比赛。
+```
+[微信抢红包插件示例代码及其实现原理](http://ourjs.com/detail/58da6a724edfe07ccdb23535)
+[从一行JavaScript代码生成随机字符串说起](http://bayescafe.com/webfrontend/generate-random-string-in-javascript.html)
+```js
+function generateUIDNotMoreThan1million() {
+    return ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).slice(-4)
+}
+在这里要生成的是一个4位字母数字混合的字符串，他把这个字符串看作了一个4位的36进制数字（10个数字+26个字母）。这个数字的上限用十进制表示是36的4次方。因此通过Math.random()*Math.pow(36,4)可以获得一个从0到36^4范围内的随机数字（带小数）。
+
+然后使用<< 0截断这个数字的小数位。因为<<操作符会把操作数转换成整数，就像《从一行CSS》里的~~一样。
+
+接下来使用.toString(36)将这个十进制整数转换成36进制。Number.prototype.toString方法接受一个2-36的整数参数，可以用来作进制转换。
+
+然后"0000"+在左侧补全，再用slice(-4)截取右4位。这样可以在生成的字符串位数不够4位时在左侧补0。
+
+这样就可以获得一个由数字和小写字母组成的4位随机字符串了
+("0000000" + (Math.random()*Math.pow(36,7) << 0).toString(36)).slice(-7)
+超过2147483647的数字在按位左移之后会得到负数，而不仅仅是取整。那么，最多生成几位的随机字符串时，这种方法是安全的？答案是log36(2147483647)=5.996，5位。
+
+想要获得更长的字符串怎么办？也很简单啦，只要用Math.floor代替<<取整就可以了
+
+生成6位颜色码 Math.random().toString(16).substr(-7, 6);
+
+同样的道理 生成带数字和字母的随机数 Math.random().toString(36).substr(-7, 6); http://ourjs.com/detail/54be0a98232227083e000012
+```
+
+[强大的微信开发组件/服务](http://www.weixingate.com/)
+[PHP中三元运算符的结合性](http://bayescafe.com/php/the-associativity-of-ternary-operator-in-php.html)
+```js
+echo 1?'a':0?'b':'c';
+输出的结果为b。
+
+这是因为，在C语言中，表达式1?'a':0?'b':'c'被解释为
+
+1 ? 'a' : ( 0 ? 'b' : 'c' )
+而在PHP中，被解释为
+
+( 1 ? 'a' : 0 ) ? 'b' : 'c'
+也即，在PHP中，三元运算符是左结合的 https://eev.ee/blog/2012/04/09/php-a-fractal-of-bad-design/#operators
+```
+[PHP上传文件时$_FILES数组为空](http://bayescafe.com/php/php-upload-found-files-array-empty.html)
+```js
+有三个上传文件的大小限制：
+
+php.ini 里的 upload_max_filesize
+php.ini 里的 post_max_size
+nginx.conf 里的 client_max_body_size
+假设只上传一个文件，此时会出现三种不同的情况：
+
+a) 文件大于1，小于2
+b) 文件大于2，小于3
+c) 文件大于3
+a情况中。超过php.ini中upload_max_filesize的值，可以在PHP中得到$_FILES['file']['error']==1。
+
+c情况中，超过nginx.conf中的client_max_body_size，Nginx会返回413 Request Entity Too Large错误。
+
+在b情况中，你能看到的就是$_FILES数组为空（即isset($_FILES['file']==FALSE）。
+
+此时就出现了两种可能，一种是客户端的表单里没有file这个字段，另一种是有超限的附件使表单的大小超过了post_max_size。
+
+如果客户端是网页，那还比较好办，在HTML表单里，文件类型的input即使没有选择文件，$_FILES['file']也是在的，此时服务器端拿到的应该是$_FILES['file']['error']==4错误。因此当出现$_FILES为空时，就可以告诉用户上传文件过大了（前提是你确定表单没有问题，尤其是没有忘记加enctype="multipart/form-data"属性）。
+
+如果客户端是App的话，作为后端程序员难免有点拿不准客户端究竟传没传文件。这时还有一个办法，就是取Header中的Content-Length。也就PHP里的$_SERVER['CONTENT_LENGTH']，如果是没有传文件的话，纯文本的表单体积很小，通常在几十几百，而如果传了一个超过8M的文件，Content-Length会大于8388608。因此可以用ini_get('upload_max_filesize')取出upload_max_filesize的值，换算成字节数与Content-Length比较一下，来确定是哪种情况。
+
+最后要说的是，尽管上面只讨论了上传单文件，但是这种错误更多见于一张表单上传多个文件，上传多个文件时，虽然每个文件的大小都小于upload_max_filesize，但是若多个文件加起来大于post_max_size，就会触发这个错误。debug时只看单个文件的大小，没有注意所有文件的总大小，bug就会时隐时现，非常让人头疼。不过话说回来，以现在公网的网速来讲，提交这么大的POST请求体验太差了，还是采取Ajax的方式逐个上传好一点。
+```
+[]()
+
 [MySQL 分页查询性能比较](https://www.v2ex.com/t/351908#reply20)
 
 SELECT * FROM API_LOG a JOIN (select ID from API_LOG LIMIT 0, 10) b ON a.ID = b.ID
