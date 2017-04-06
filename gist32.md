@@ -1,13 +1,42 @@
 [WEB应用在今天越来越广泛，也是CTF夺旗竞赛中的主要题型，题目涉及到常见的Web漏洞，诸如注入、XSS、文件包含、代码执行、上传等漏洞。](http://www.shiyanbar.com/ctf/practice)
+
 http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ichunqiu.com/racing
 https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https://c.runoob.com/
+
 [针对CTF，大家都是怎么训练的](https://www.zhihu.com/question/30505597)
+
 [网络安全培训phppythonweb](http://www.moonsos.com/)
 《Web安全深度剖析》书籍出版 
+
+[HBCTF是专门为CTF小白打造的入门级训练平台](http://star.ctftools.com/)
+
 [ctf xss练习平台]( http://ctf.bugku.com/scoreboard)
+
 [md5查询](http://www.chamd5.org/login.html)
 http://www.cnblogs.com/wangleiblog/p/5936238.html  http://pmd5.com/#
+
 [Github 安全军火库](http://www.moonsos.com/post/52.html)
+[websocket服务](http://wiki.hostker.com/page/websocket/)
+
+[数据字典,data-dictionary,数据库字段文档,db-doc](https://github.com/CallMeNP/DBDict)
+[数据字典自动生成文档 https://blog.lerzen.com](https://github.com/jormin/laravel-ddoc)
+[开始使用PHPUnit](http://bayescafe.com/php/getting-started-with-phpunit.html)
+```js
+├── phpunit.xml
+├── src
+│   ├── autoload.php
+│   └── Money.php
+└── tests
+    └── MoneyTest.php
+    
+function __autoload($class){
+    include $class.'.php';
+}
+
+spl_autoload_register('__autoload');
+在项目根目录下执行：phpunit tests/MoneyTest
+```
+
 [PHP实现长轮询](http://bayescafe.com/php/implementing-long-polling-with-php.html)
 ```js
 
@@ -186,8 +215,113 @@ c情况中，超过nginx.conf中的client_max_body_size，Nginx会返回413 Requ
 
 最后要说的是，尽管上面只讨论了上传单文件，但是这种错误更多见于一张表单上传多个文件，上传多个文件时，虽然每个文件的大小都小于upload_max_filesize，但是若多个文件加起来大于post_max_size，就会触发这个错误。debug时只看单个文件的大小，没有注意所有文件的总大小，bug就会时隐时现，非常让人头疼。不过话说回来，以现在公网的网速来讲，提交这么大的POST请求体验太差了，还是采取Ajax的方式逐个上传好一点。
 ```
+[Laravel的核心概念](https://blog.lerzen.com/articles/34d733c0-1234-11e7-8029-9f45782468d5)
+[Laravel5导入全球国家信息](https://blog.lerzen.com/articles/d4849d70-0fca-11e7-8e7c-ed6df2003de5)
+composer require webpatser/laravel-countries  http://phplib.lerzen.com/country
+$ # 使用 Composer 创建项目
+  $ composer create-project --prefer-dist laravel/laravel [项目名称]
+  $ # 也可以指定创建的Laravel框架版本
+  $ composer create-project --prefer-dist laravel/laravel [项目名称] "5.3.*"
+  
+  
+    $ # 使用 Composer 下载 Laravel 安装包
+  $ composer global require "laravel/installer"
+  $ # 创建项目
+  $ laravel new [项目名称]
+[全新环境安装Homestead](https://blog.lerzen.com/articles/41bbec30-0fcb-11e7-9d5a-097d182109fa)
+[一步一步教你部署自己的Laravel应用程序到服务器](https://lufficc.com/blog/step-by-step-teach-you-to-deploy-your-laravel-application-to-server)
+
+https://www.laravist.com/series/deploy-laravel-app-on-vps 
+[Laravel邮件、事件、队列浅谈](https://blog.lerzen.com/articles/09440f70-1202-11e7-8330-9358a635e7ff)
+[Nginx 有一个主线程（ master process）和几个工作线程（worker process）。主线程的目的是加载和验证配置文件、维护工作线程。](https://lufficc.com/blog/nginx-for-beginners)
+```js
+events 和 http 放置在主配置文件中，server 放置在http块指令中，location放置在server块指令中。 
+如果 URI 匹配多个 location 块，Nginx 采用最长前缀匹配原则（类似计算机网络里面的IP匹配）
+server {
+    location / {
+        root /data/www;
+    }
+
+    location /images/ {
+        root /data;
+    }
+}用一个 Nginx 实例实现对图片文件的请求使用本地文件系统，而其他请求转发到代理服务器。
+server {
+    listen 8080;
+    root /data/up1;
+
+    location / {
+    }
+}
+server {
+    location / {
+           # proxy_pass指令的参数为：协议+主机名+端口号
+        proxy_pass http://localhost:8080;
+    }
+
+    location /images/ {
+        root /data;
+    }
+}
+使用fastcgi_pass指令替换proxy_pass指令，并将参数更改为 localhost:9000 。 在 PHP 中， SCRIPT_FILENAME 参数用于确定脚本名称，而 QUERY_STRING 参数用于传递请求参数。
+server {
+    location / {
+        fastcgi_pass  localhost:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param QUERY_STRING    $query_string;
+    }
+
+    location ~ \.(gif|jpg|png)$ {
+        root /data/images;
+    }
+}
+```
+[自己搭建 Shadowsocks 服务器科学上网 N 种姿势](https://lufficc.com/blog/vpn)
+[Laravel的核心概念](https://lufficc.com/blog/the-core-conception-of-laravel)
+每一次请求结束，Php的变量都会unset，Laravel的singleton只是在某一次请求过程中的singleton；你在Laravel 中的静态变量也不能在多个请求之间共享，因为每一次请求结束都会unset。
 
 
+
+
+[在PHP中生成守护进程(Daemon Process)](http://bayescafe.com/php/create-daemon-process-with-php.html)
+```js
+
+function run()
+{
+    //第一次fork，父进程与子进程在此分开
+    if(($pid1 = pcntl_fork()) === 0)
+    {
+        //子进程在此成为会话组leader
+        posix_setsid();
+
+        //第二次fork，子进程与孙子进程在此分开
+        if(($pid2 = pcntl_fork()) === 0)
+        {
+            //孙子进程成为守护进程，开始处理任务
+            handle_http_request('www.codinglabs.org', 9999);
+        }
+        else
+        {
+            //子进程退出，将孙子进程交由init托管
+            exit;
+        }
+    }
+    else
+    {
+        //父进程在此等待子进程的退出信号
+        pcntl_wait($status);
+    }
+}
+if(($pid1 = pcntl_fork()) === 0)
+{
+    //子进程执行此处的代码
+}
+else
+{
+    //父进程执行此处的代码
+}
+
+```
 [MySQL 分页查询性能比较](https://www.v2ex.com/t/351908#reply20)
 
 SELECT * FROM API_LOG a JOIN (select ID from API_LOG LIMIT 0, 10) b ON a.ID = b.ID
