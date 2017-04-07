@@ -4,7 +4,7 @@ http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ich
 https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https://c.runoob.com/
 
 [针对CTF，大家都是怎么训练的](https://www.zhihu.com/question/30505597)
-
+https://hbctf.ctftools.com/index.php?p=game   http://star.ctftools.com/
 [网络安全培训phppythonweb](http://www.moonsos.com/)
 《Web安全深度剖析》书籍出版 
 
@@ -14,9 +14,186 @@ https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https:
 
 [md5查询](http://www.chamd5.org/login.html)
 http://www.cnblogs.com/wangleiblog/p/5936238.html  http://pmd5.com/#
-
+[twig](http://pengbotao.cn/twig-template-language.html)
+http://www.twigcn.com/doc.php 
 [Github 安全军火库](http://www.moonsos.com/post/52.html)
 [websocket服务](http://wiki.hostker.com/page/websocket/)
+[laravel的php框架](https://www.zhihu.com/question/27453375?sort=created)
+```js
+public function findMostPopular($per_page = self::PAGE_SIZE)
+    {
+        return $this->model
+                    ->orderByRaw('(tricks.vote_cache * 5 + tricks.view_cache) DESC')->whereNull('deleted_at')
+                    ->paginate($per_page);
+    }
+  echo join('',array_reverse(preg_split('//u', 'redis数据库')));  
+//二维数组排序，   
+//$source_array是数据，  
+//$key_word是排序的健值，  
+//$order是排序规则:0是升序，1是降序  
+function array_sort($source_array, $key_word, $order=0)   
+{  
+    if (!is_array($source_array))   
+        return false;  
+      
+    $keysvalue = array();  
+    foreach($source_array as $key => $val)   
+    {  
+        $keysvalue[$key] = $val[$key_word];  
+    }  
+    if($order == 0)  
+    {  
+        asort($keysvalue);  
+    }  
+    else   
+    {  
+        arsort($keysvalue);  
+    }  
+    reset($keysvalue);  
+    foreach($keysvalue as $key => $vals)   
+    {  
+        $keysort[$key] = $key;  
+    }  
+      
+    $new_array = array();  
+    foreach($keysort as $key => $val)   
+    {  
+        $new_array[$key] = $source_array[$val];  
+    }  
+    return $new_array;  
+}  
+  
+$source_array = array(31=>array('id'=>10001, 'name'=>'allen'),  
+                      7=>array('id'=>10020, 'name'=>'bbb'),  
+                      13=>array('id'=>10013, 'name'=>'fff'),  
+                      45=>array('id'=>10024, 'name'=>'dddd'),  
+                      65=>array('id'=>10076, 'name'=>'gggg'),  
+                      12=>array('id'=>10047, 'name'=>'jjjj'),  
+                      23=>array('id'=>10058, 'name'=>'hhh'),  
+                      43=>array('id'=>10039, 'name'=>'kkkkk'),  
+                      56=>array('id'=>10011, 'name'=>'iiiiii'));  
+$result = array_sort($source_array, 'id', 0);  
+print_r($result);    
+获取    后缀名
+function get_ext1($file_name)
+{
+	return substr(strrchr($file_name, '.'), 1);
+}
+function get_ext2($file_name)
+{
+	return substr($file_name, strrpos($file_name, '.')+1);
+}
+function get_ext3($file_name)
+{
+	$path = pathinfo($file_name);
+	return $path['extension'];
+}
+function get_ext4($file_name)
+{
+	$file_name_array = explode('.', $file_name);
+	return array_pop($file_name_array);
+}
+function get_ext5($file_name)
+{
+	$str = strrev($file_name);
+	return strrev(substr($str, 0, strpos($str, '.')));
+}
+
+echo get_ext1('/a/b/c/d.class.php');
+echo '<br/>';
+echo get_ext2('/a/b/c/d.class.php');
+echo '<br/>';
+echo get_ext3('/a/b/c/d.class.php');
+echo '<br/>';
+echo get_ext4('/a/b/c/d.class.php');
+echo '<br/>';
+echo get_ext5('/a/b/c/d.class.php');
+/** 
+* 遍历目录，结果存入数组。支持php4及以上。php5以后可用scandir()函数代替while循环。 
+* @param string $dir 
+* @return array 
+*/  
+function my_scandir($dir)  
+{  
+    $files = array();  
+    if ( $handle = opendir($dir) ) {  
+        while ( ($file = readdir($handle)) !== false )   
+        {  
+            if ( $file != ".." && $file != "." )   
+            {  
+                if ( is_dir($dir . "/" . $file) )   
+                {  
+                    $files[$file] = my_scandir($dir . "/" . $file);  
+                }  
+                else   
+                {  
+                    $files[] = $file;  
+                }  
+            }  
+        }  
+        closedir($handle);  
+        return $files;  
+    }  
+}  
+  
+function my_scandir1($dir)  
+{  
+    $files = array();  
+    $dir_list = scandir($dir);  
+    foreach($dir_list as $file)  
+    {  
+        if ( $file != ".." && $file != "." )   
+        {  
+            if ( is_dir($dir . "/" . $file) )   
+            {  echo $file.'<br>';
+                $files[$file] = my_scandir1($dir . "/" . $file);  
+            }  
+            else   
+            {  
+                $files[] = $file;  
+            }  
+        }  
+    }  
+      
+    return $files;  
+}  
+function is_prime($n)
+{  
+	$m = ceil($n/2);	
+	for ($i = 2; $i <= $m; $i++) 
+	{
+		//如果有可以被整除数，说明此数n不是质数
+		if ($n % $i == 0) 
+			return 0;
+		
+	}
+	
+	return 1;
+}
+// （输入1到100间的所有素数）
+for($i=2;$i<=100;$i++)
+ {
+  $flag=1;
+  for($j=2;$j<=sqrt($i);$j++)
+   if(!($i%$j)) $flag=0; 
+  if($flag)
+   echo "$i<br/>";
+ }
+// 求100以内的质数和。
+$first=2;  
+$last=100;
+for($i=$first;$i<=$last;$i++){  
+	$arr[$i]=1;  
+	for($j=2;$j<=ceil($i/2);$j++){  
+		if(fmod($i,$j)==0){  
+		$arr[$i]=0;  
+		break;  
+		}  
+	}  
+}  
+```
+
+
 
 [数据字典,data-dictionary,数据库字段文档,db-doc](https://github.com/CallMeNP/DBDict)
 [数据字典自动生成文档 https://blog.lerzen.com](https://github.com/jormin/laravel-ddoc)
