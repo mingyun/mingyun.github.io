@@ -191,6 +191,58 @@ for($i=$first;$i<=$last;$i++){
 		}  
 	}  
 }  
+
+// 按照权重随机item的代码
+$w = array('a' =>1, 'b'=>10, 'c'=>14, 'e'=>20, 'f'=>30, 'h'=>6, 'g'=>70);
+function roll($weight)
+{
+    $sum = array_sum($weight);
+    $j = 0;
+    foreach($weight as $k=>$v)
+    {
+        $j = mt_rand(1,$sum);
+        if($j <= $v)
+        {
+            return $k;
+        }else{
+            $sum -= $v;
+        }
+    }
+}
+$ret = array();
+$n = 1000;
+for($i=0;$i<$n;$i++)
+{
+    $v = roll($w);
+    $ret[$v] = isset($ret[$v]) ? $ret[$v] + 1 :1;
+}
+print_r($ret);
+foreach($ret as $k=>$v)
+{
+     printf("real: %f\t", ($v / $n));
+     printf("set: %f\n",($w[$k] / array_sum($w)));
+}
+function GetIpLookup($ip = ''){  
+    if(empty($ip)){  
+        $ip = GetIp();  
+    }  
+    $res = @file_get_contents('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js&ip=' . $ip);  
+    if(empty($res)){ return false; }  
+    $jsonMatches = array();  
+    preg_match('#\{.+?\}#', $res, $jsonMatches);  
+    if(!isset($jsonMatches[0])){ return false; }  
+    $json = json_decode($jsonMatches[0], true);  
+    if(isset($json['ret']) && $json['ret'] == 1){  
+        $json['ip'] = $ip;  
+        unset($json['ret']);  
+    }else{  
+        return false;  
+    }  
+    return $json;  
+}  
+  
+  
+$ipInfos = GetIpLookup('106.2.187.202'); //baidu.com IP地址 
 ```
 
 
