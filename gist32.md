@@ -2,6 +2,82 @@
 
 http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ichunqiu.com/racing
 https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https://c.runoob.com/
+[python gzip 查找任意一串数字在圆周率小数点后两亿位中的具体位置](https://www.v2ex.com/t/349851#reply3)
+```js
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding:gzip,deflate
+Accept-Language:zh-CN
+Cache-Control:no-cache
+Connection:keep-alive
+Cookie:__cfduid=d7569585f59a67768e5ff2544a32641181491619438
+url = 'http://www.angio.net/newpi/piquery?q=666666666'
+#这里 headers 是完全复制了浏览器里的
+req = urllib.request.Request(url, None, headers)
+response = urllib.request.urlopen(req).read()
+
+b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\x03L\x8c1\x0e\xc20\x10\xc0\xfe\xe29C\x8e\r\xb9\xfb\x02\x03\x0f@\x0c\x85\xc2\x82\x04\x88\xb6S\xc5\xdfQ\x07$\xbcx\xb0\xe4\x95\xebL45)\x897q\\xb9\x13\xb4\x1f$\xa6\x99\xc8\x9b\x86y\x99\x08n\xcf\xe51\x92x\x11Z[\x17\xeb\x92\x18\xcf\x04\xbdY\x91\\xb3\xbaU\xa9\xd9<\xbb\x92\x18\x07\x02\x13+\xdak\xdb\xb9\xba\xb9\xf7\xa2\xba\xb5\x0b!\x9f\xd3\xdf\xfd\xb0\xe7\x0b\x00\x00\xff\xff\xaa\x05\x00\x00\x00\xff\xff\x03\x00B\xb8\x0e\x84\x95\x00\x00\x00'
+又加了一句解压缩之后就正常了 
+gzip.decompress(response).decode("utf-8")
+其实你没必要自己解压，可以先试试去掉 header 里 Accept-Encoding 的压缩选项，只保留 identity ，服务器应该就会回明文了。
+
+
+```
+[微信机器人itchatdemo](https://github.com/discountry/itchat-examples/blob/master/examples/auto-reply-greetings.py)（）
+[THULAC：一个高效的中文词法分析工具包](http://thulac.thunlp.org/)
+```js
+代码示例1
+import thulac   
+
+thu1 = thulac.thulac()  #默认模式
+text = thu1.cut("我爱北京天安门", text=True)  #进行一句话分词
+print(text)
+代码示例2
+thu1 = thulac.thulac(seg_only=True)  #只进行分词，不进行词性标注
+thu1.cut_f("input.txt", "output.txt")  #对input.txt文件内容进行分词，输出到output.txt
+```
+[1024之我可能注册了假的黄色网站上卷（渗透到社工）](https://zhuanlan.zhihu.com/p/26213061)
+大家可以关注一波我的公众号 微信搜索网络小捕快
+[Python练习第八题，阶乘计算](https://zhuanlan.zhihu.com/p/25635148)
+```js
+def FirstFactorial(num): 
+  factorial = 1
+  for i in range(1, num+1):
+    factorial = factorial * i
+  return factorial
+https://coderbyte.com/ 编程挑战
+
+def FirstFactorial(num):  
+    def factorial(n):
+        if n == 0:
+      return 1
+        else:
+      return factorial(n-1) * n
+  return factorial(num)
+  
+import operator
+swd=sorted(dic.items(),key=operator.itemgetter(1),reverse=True)#从大到小排序  
+  yield 实现Fibonacci数列（斐波那契数列）
+  def fab(max):  
+n, a, b = 0, 0, 1  
+while n < max:  
+        yield b  
+        # print b  
+        a, b = b, a + b  
+        n = n + 1
+```
+[史上最全Quant资源整理数据源](https://zhuanlan.zhihu.com/p/26179943)
+[微信公众号如何运营？](https://www.zhihu.com/question/22084460/answer/97431309)
+[相信我，这篇文章足以颠覆你对Office的三观](https://zhuanlan.zhihu.com/p/26213949)
+[图表秀网址 图表秀--免费在线图表制作工具,数据可视化工具](https://zhuanlan.zhihu.com/p/26249606)
+http://link.zhihu.com/?target=http%3A//www.tubiaoxiu.com 
+[工资报表计算、打印的小玩意，有什么好的库或者软件吗？](https://www.v2ex.com/t/346969#reply27)
+delphi 好工具啊  薪人薪事如果用 python 的话，就用 pandas ，可以做透视表
+Github 上有把 foxpro 数据文件转 csv 文件的东西。 
+https://www.zhihu.com/question/21588013
+方案一、继续用 foxpro 开发。 
+
+方案二、先数据迁移到 SQLite ， Qt 提供 GUI 界面，处理打印报表。 Tower 旗下的知人可以试试
+没人提 power bi?免费版够用了
 
 [针对CTF，大家都是怎么训练的](https://www.zhihu.com/question/30505597)
 https://hbctf.ctftools.com/index.php?p=game   http://star.ctftools.com/
