@@ -102,6 +102,7 @@ print(sorted(students, cmp=lambda x,y : cmp(x[0], y[0])) )
 >>>[('li', 'B', 12), ('wang', 'A', 15), ('zhang', 'B', 10)]
 [安利一个很火的 Github 滤镜项目](https://zhuanlan.zhihu.com/p/26066756?group_id=830439826254872576)
 http://link.zhihu.com/?target=https%3A//github.com/jcjohnson/neural-style
+https://zhuanlan.zhihu.com/p/25853745?group_id=830133798166478848
 [爬虫入门到精通-headers的详细讲解](https://zhuanlan.zhihu.com/p/26075735?group_id=830525132417159168)
 ```js
 当我第一次打开王者荣耀：在 App Store 上的内容网页的时候，再次刷新的时候，你会看到http状态码返回 304
@@ -124,6 +125,11 @@ print z1.status_code
 z2 = requests.head(url,headers=headers)
 if z1.headers['Last-Modified'] == last_modified:
     print u'网页没有更新'
+    
+ keys = ['Name', 'Sex', 'Age']
+values = ['Jack', 'Male', 23]
+dict(zip(keys,values))   
+    
 ```
  [算法和数据结构学习-八种必需掌握的排序](https://zhuanlan.zhihu.com/p/26065419?group_id=830424829554466816)   
     
