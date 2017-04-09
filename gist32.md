@@ -11,6 +11,162 @@ str 本质上其实是一串二进制数据，而 unicode 是字符（符号）�
 相当于：
 
 >>> u"Python之禅".encode("ascii")
+[p里面不能包含块级元素div](https://stackoverflow.com/questions/5441639)
+ https://segmentfault.com/q/1010000008981388
+[php处理阴历和阳历的](https://segmentfault.com/q/1010000008997316)
+$lunar = new Lunar();
+$month = $lunar->convertSolarToLunar(time());//将阳历转换为阴历 
+var_dump($month);
+[ubuntu开启3306端口失败](https://segmentfault.com/q/1010000008938349)
+竟然返回空的，3306端口没有开启
+
+netstat -an|grep 3306
+然后就使用以下命令
+
+iptables -I INPUT 4 -p tcp -m state --state NEW -m tcp --dport 3306 -j ACCEPT
+来开启3306，但是显示以下错误
+
+iptables: Index of insertion too big.
+表示在INPUT chain中第四行的位置插入这条rule
+
+iptables: Index of insertion too big.
+说明你的iptable里没有那么多行
+
+iptables -S 看一下你一共多少行
+[mysql连表统计查询问题](https://segmentfault.com/q/1010000008951274)
+select u2.username as borrower,u1.username as debtor,sum(b.amount) as debt from borrow_log b left join users u1 on b.debtor = u1.id left join users u2 on b.borrower = u2.id where u1.gender = 1 group by b.borrower,b.debtor;
+
+数据库连接要设置为utf8mb4，一般配置数据库的地方都有设置。
+
+如果没有的话php连接数据库后先执行一次查询
+
+set names utf8mb4  General error: 1366 Incorrect string value: '\xF0\x9F\x98\xAF' for column 'content' mysql无法保存emoji表情https://segmentfault.com/q/1010000008965110
+[一对多查询问题](https://segmentfault.com/q/1010000008950624)
+select a.id from a where not exists (select 1 from b where a.id=b.a_id); SELECT 
+  a.id 
+FROM
+  a 
+WHERE a.id NOT IN 
+  (SELECT 
+    a.id  
+  FROM
+    a
+    RIGHT JOIN b ON b.a_id = a.id) 
+    
+[php正则循环匹配](https://segmentfault.com/q/1010000008993966)
+    preg_match_all('/(\d{8}\$[^<]+)/', $subject, $result, PREG_PATTERN_ORDER);
+for ($i = 0; $i < count($result[0]); $i++) {
+    # Matched text = $result[0][$i];
+}
+php 跨域请求执行了两次接口https://segmentfault.com/q/1010000008992437
+if (strtolower($_SERVER['REQUEST_METHOD']) == 'options') {
+    exit;
+}
+php判断一个二进制数中，哪些位是0 而 哪些是1？https://segmentfault.com/q/1010000008984540
+
+$a= 100010010;
+需要通过php判断出（从右往左）的 第0 第2 第3 第5 第6 第7位是0
+从而得到
+$ar0=array(0,2,3,5,6,7);
+$ar1=array(1,4,8);
+$binary = ".....";
+$binary = str_split($binary);
+
+// 0
+$a0 = array_keys(array_filter($binary, function ($bit) {
+    return !$bit;
+}));
+
+// 1
+$a1 = array_keys(array_filter($binary));
+[ 单点登录SSO的实现原理](http://blog.csdn.net/cutesource/article/details/5838693)
+[curl 抓取某些页面的时候，提示 503 nginx](https://segmentfault.com/q/1010000008980562)
+```js
+function task() {
+        $url = "url";
+        $headers = randIp();
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url); 
+        curl_setopt($curl, CURLOPT_BINARYTRANSFER, true);  
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_USERAGENT,  "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0");      //模拟浏览器类型
+        curl_setopt($curl, CURLOPT_TIMEOUT, 300);                               // 设置超时限制防止死循环    
+        curl_setopt($curl, CURLOPT_HEADER, 0);                                  // 显示返回的Header区域内容    
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);                          // 获取的信息以文件流的形式返回
+        $tmpInfo = curl_exec($curl);
+        if (curl_errno($curl)) { 
+            print "Error: " . curl_error($curl); 
+        } else { 
+            curl_close($curl); 
+        } 
+    }
+//此函数提供了国内的IP地址
+function randIP(){
+       $ip_long = array(
+           array('607649792', '608174079'), //36.56.0.0-36.63.255.255
+           array('1038614528', '1039007743'), //61.232.0.0-61.237.255.255
+           array('1783627776', '1784676351'), //106.80.0.0-106.95.255.255
+           array('2035023872', '2035154943'), //121.76.0.0-121.77.255.255
+           array('2078801920', '2079064063'), //123.232.0.0-123.235.255.255
+           array('-1950089216', '-1948778497'), //139.196.0.0-139.215.255.255
+           array('-1425539072', '-1425014785'), //171.8.0.0-171.15.255.255
+           array('-1236271104', '-1235419137'), //182.80.0.0-182.92.255.255
+           array('-770113536', '-768606209'), //210.25.0.0-210.47.255.255
+           array('-569376768', '-564133889'), //222.16.0.0-222.95.255.255
+       );
+       $rand_key = mt_rand(0, 9);
+       $ip= long2ip(mt_rand($ip_long[$rand_key][0], $ip_long[$rand_key][1]));
+       $headers['CLIENT-IP'] = $ip; 
+       $headers['X-FORWARDED-FOR'] = $ip; 
+
+       $headerArr = array(); 
+       foreach( $headers as $n => $v ) { 
+           $headerArr[] = $n .':' . $v;  
+       }
+       return $headerArr;    
+   }
+```
+>>> import chardet
+>>> a=b'\xb5\xd8\xb1d\xb6\xea\xc5\xe9\xaf}\xad\xb5\xa4@'
+>>> chardet.detect(a)
+{'confidence': 0.99, 'encoding': 'Big5'}
+>>> a.detect('Big5')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'bytes' object has no attribute 'detect'
+>>> a.decode('Big5')
+'華康圓體破音一'
+linux ubuntu14.04找不到3306端口 my.cnf里面设置了skip-networking 导致mysql启动起来不监听端口netstat -an | grep 3306 https://segmentfault.com/q/1010000008952539 
+echo substr_replace ('13412343312','****',3,4) ; 把13412343312 替换成 134**3312
+[采用JWT做API的验证，如何设计token刷新的逻辑？](https://segmentfault.com/q/1010000008994073)
+[mysql需要笛卡尔积join，才能在两个3行的表取出3行以上的记录](https://segmentfault.com/q/1010000008968545)
+			
+```js
+CREATE TABLE `user` (
+  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(8) COLLATE utf8_unicode_ci DEFAULT '',
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `desk` (
+  `desk_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `left_id` int(10) unsigned DEFAULT NULL,
+  `right_id` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`desk_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO test.user (name) VALUES ('小明');
+INSERT INTO test.user (name) VALUES ('小红');
+INSERT INTO test.user (name) VALUES ('小丽');
+
+INSERT INTO test.desk (left_id, right_id) VALUES (3, null);
+INSERT INTO test.desk (left_id, right_id) VALUES (null, 2);
+INSERT INTO test.desk (left_id, right_id) VALUES (1, 2);
+```
+    
 [Python 爬虫之模拟知乎登录](https://github.com/lzjun567/crawler_html2pdf/blob/master/zhihu/auto_login.py)
 ```js
 import time
