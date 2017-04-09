@@ -1,7 +1,187 @@
 [WEB应用在今天越来越广泛，也是CTF夺旗竞赛中的主要题型，题目涉及到常见的Web漏洞，诸如注入、XSS、文件包含、代码执行、上传等漏洞。](http://www.shiyanbar.com/ctf/practice)
-
+[Apple ID钓鱼网站后台一览](https://zhuanlan.zhihu.com/p/26219701)
 http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ichunqiu.com/racing
 https://www.ctftools.com/down/ https://www.ctftools.com/down/down/passwd/ https://c.runoob.com/
+[Python 编码为什么那么蛋疼](https://zhuanlan.zhihu.com/p/25924333?group_id=832384651610980352)
+str 本质上其实是一串二进制数据，而 unicode 是字符（符号），编码（encode）就是把字符（符号）转换为 二进制数据的过程，因此 unicode 到 str 的转换要用 encode 方法，反过来就是用 decode 方法。
+为调用 write 方法时，Python 会先判断字符串是什么类型，如果是 str，就直接写入文件，不需要编码，因为 str 类型的字符串本身就是一串二进制的字节序列了。
+
+如果字符串是 unicode 类型，那么它会先调用 encode 方法把 unicode 字符串转换成二进制形式的 str 类型，才保存到文件，而 encode 方法会使用 python 默认的 ascii 码来编码
+
+相当于：
+
+>>> u"Python之禅".encode("ascii")
+[Python 爬虫之模拟知乎登录](https://github.com/lzjun567/crawler_html2pdf/blob/master/zhihu/auto_login.py)
+```js
+import time
+from http import cookiejar
+#https://zhuanlan.zhihu.com/p/26102000
+import requests
+from bs4 import BeautifulSoup
+
+headers = {
+    "Host": "www.zhihu.com",
+    "Referer": "https://www.zhihu.com/",
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87'
+}
+
+# 使用登录cookie信息
+session = requests.session()
+session.cookies = cookiejar.LWPCookieJar(filename='cookies.txt')
+try:
+    print(session.cookies)
+    session.cookies.load(ignore_discard=True)
+
+except:
+    print("还没有cookie信息")
+
+
+def get_xsrf():
+    response = session.get("https://www.zhihu.com", headers=headers)
+    soup = BeautifulSoup(response.content, "html.parser")
+    xsrf = soup.find('input', attrs={"name": "_xsrf"}).get("value")
+    return xsrf
+
+
+def get_captcha():
+    """
+    把验证码图片保存到当前目录，手动识别验证码
+    :return:
+    """
+    t = str(int(time.time() * 1000))
+    captcha_url = 'https://www.zhihu.com/captcha.gif?r=' + t + "&type=login"
+    r = session.get(captcha_url, headers=headers)
+    with open('captcha.jpg', 'wb') as f:
+        f.write(r.content)
+    captcha = input("验证码：")
+    return captcha
+
+
+def login(email, password):
+    login_url = 'https://www.zhihu.com/login/email'
+    data = {
+        'email': email,
+        'password': password,
+        '_xsrf': get_xsrf(),
+        "captcha": get_captcha(),
+        'remember_me': 'true'}
+    response = session.post(login_url, data=data, headers=headers)
+    login_code = response.json()
+    print(login_code['msg'])
+    for i in session.cookies:
+        print(i)
+    session.cookies.save()
+
+
+if __name__ == '__main__':
+    email = "xxxx"
+    password = "xxxxx"
+    login(email, password)
+```
+[手机电脑互传工具](https://zhuanlan.zhihu.com/p/26008219?group_id=829438715901390848)
+[史上最详细VUE2.0全套demo讲解 基础篇](https://zhuanlan.zhihu.com/p/26119383?group_id=831214352295137280)
+[Nodejs系列课程，从入门到进阶帮你打通全栈](https://zhuanlan.zhihu.com/p/26107559?group_id=831112083264393216)
+[下载资料，别只知道去百度文库啦！](https://zhuanlan.zhihu.com/p/26096144?group_id=830942891496067072)
+道客巴巴
+
+http://www.doc88.com/ 、 好东东网
+
+http://www.haodd.com.cn/ d.dxy.cn/
+
+丁香文档是丁香园旗下文档在线浏览与下载平
+[不会Python也可以用用她做的工具——全网网页视频下载工具You-Get](https://zhuanlan.zhihu.com/p/26098165?group_id=830864380286599168)
+http://link.zhihu.com/?target=https%3A//github.com/soimort/you-get/releases/tag/v0.4.652  下载好软件，解压，打开下图所示bat文件。
+[Python高手都知道的内置函数，你不知道就low了](https://zhuanlan.zhihu.com/p/26097557?group_id=830848161630285824)
+L = [{1:5,3:4},{1:3,6:3},{1:1,2:4,5:6},{1:9}]
+new_line=sorted(L,key=lambda x:len(x))
+students = [('wang', 'A', 15), ('li', 'B', 12), ('zhang', 'B', 10)]   
+print(sorted(students, key=lambda student : student[2]))  
+>>>[('zhang', 'B', 10), ('li', 'B', 12), ('wang', 'A', 15)]
+students = [('wang', 'A', 15), ('li', 'B', 12), ('zhang', 'B', 10)]   
+print(sorted(students, cmp=lambda x,y : cmp(x[0], y[0])) )
+>>>[('li', 'B', 12), ('wang', 'A', 15), ('zhang', 'B', 10)]
+[安利一个很火的 Github 滤镜项目](https://zhuanlan.zhihu.com/p/26066756?group_id=830439826254872576)
+http://link.zhihu.com/?target=https%3A//github.com/jcjohnson/neural-style
+[爬虫入门到精通-headers的详细讲解](https://zhuanlan.zhihu.com/p/26075735?group_id=830525132417159168)
+```js
+当我第一次打开王者荣耀：在 App Store 上的内容网页的时候，再次刷新的时候，你会看到http状态码返回 304
+import requests
+
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'}
+
+url = 'https://itunes.apple.com/cn/app/%E7%8E%8B%E8%80%85%E8%8D%A3%E8%80%80/id989673964'
+
+z = requests.get(url,headers=headers)
+# 获取上次修改时间
+last_modified = z.headers['Last-Modified']
+
+# 修改headers
+headers['If-Modified-Since'] = last_modified
+z1 = requests.get(url,headers=headers)
+print z1.status_code
+# 304
+# 可以看到已经返回状态码304，表示网页没有更新
+z2 = requests.head(url,headers=headers)
+if z1.headers['Last-Modified'] == last_modified:
+    print u'网页没有更新'
+```
+ [算法和数据结构学习-八种必需掌握的排序](https://zhuanlan.zhihu.com/p/26065419?group_id=830424829554466816)   
+    
+    
+[零基础入门之：JavaScript学习课程共26节](https://zhuanlan.zhihu.com/p/26088017?group_id=830775821064093696)
+[HR看不下去了：应聘时你真的好意思说自己精通Excel？](https://zhuanlan.zhihu.com/p/26100199?group_id=830900756126265344)
+求和是最常用的Excel函数之一，只需要连续按下快捷键“alt”和“=”就可以求出一列数字的和。
+[Phantomjs正确打开方式](https://zhuanlan.zhihu.com/p/26110017?group_id=831133453583024128)
+用phantomjs Webservice作为一种web服务的形式（api）,将其与其他语言分离开来（比如python）。
+[愚人节专刊—说说互联网厂商的愚人节产品](https://zhuanlan.zhihu.com/p/26120806?group_id=831479183145324544)
+百度种子搜索内测版 http://huodong.baidu.com/zhongzi/  种子搜索
+[教你分析知乎用户系列之陆](https://zhuanlan.zhihu.com/p/23422888?group_id=831609049371013120)
+百度豆瓣小 https://nosec.org/users/sign_in  lxghost site:http://tieba.baidu.com  http://www.weixinduihua.com/ 微信对话框
+[天眼查企查查，启信宝，工商总](http://www.tianyancha.com/search?key=%E5%8C%97%E4%BA%AC%E5%BE%AE%E5%90%BC%E6%97%B6%E4%BB%A3%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&checkFrom=searchBox)
+[批量取关：控制台脚本实现新浪微博批量取消关注](https://zhuanlan.zhihu.com/p/26143735?group_id=831814580383653888)
+```js
+function qxgz()
+{
+document.getElementsByClassName("btn_link S_txt1")[0].click();
+var arrs = document.getElementsByClassName("member_li S_bg1 ");
+for(var i = 0;i<arrs.length;i++){arrs[i].click();}
+document.getElementsByClassName("W_btn_a")[1].click();
+document.getElementsByClassName("W_btn_a btn_34px")[0].click();
+
+}
+self.setInterval("qxgz()",60000);
+var arrs = $('div.markup_choose');
+for(var i=0;i<arrs.length;i++){
+	arrs[i].click();
+
+}
+```
+
+[如何用爬虫获取网易云音乐歌单中的歌曲？](https://www.zhihu.com/question/41505181/answer/155095628?group_id=832628588288303104)
+```js
+import requests
+from bs4 import BeautifulSoup
+https://github.com/Chengyumeng/spider163
+headers = {
+    'Referer':'http://music.163.com/',
+    'Host':'music.163.com',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101 Firefox/38.0 Iceweasel/38.3.0',
+    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+                
+play_url = 'http://music.163.com/playlist?id=317113395'
+
+s = requests.session()
+s = BeautifulSoup(s.get(play_url,headers = headers).content)
+main = s.find('ul',{'class':'f-hide'})
+
+for music in main.find_all('a'):
+  print('{} : {}'.format(music.text,music['href']))
+```
+
+
+
+
 [python gzip 查找任意一串数字在圆周率小数点后两亿位中的具体位置](https://www.v2ex.com/t/349851#reply3)
 ```js
 Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
