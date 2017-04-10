@@ -11,6 +11,91 @@ str 本质上其实是一串二进制数据，而 unicode 是字符（符号）�
 相当于：
 
 >>> u"Python之禅".encode("ascii")
+[PHP的笛卡尔积算法实现](https://www.bytelang.com/article/content/zUEWXIbeyeU=)
+```js
+function Descartes()
+{
+    $t = func_get_args();
+
+    if (func_num_args() == 1) {
+        $t0 = $t[0];
+        return call_user_func_array(__FUNCTION__, $t0);
+    }
+
+    $a = array_shift($t);
+    if (!is_array($a)) $a = array($a);
+    $a = array_chunk($a, 1);
+    do {
+        $r = array();
+        $b = array_shift($t);
+        if (!is_array($b)) $b = array($b);
+        foreach ($a as $p)
+            foreach (array_chunk($b, 1) as $q)
+                $r[] = array_merge($p, $q);
+        $a = $r;
+    } while ($t);
+    return $r;
+}
+>>> Descartes([1,2],[3,4])
+=> [
+       [
+           1,
+           3
+       ],
+       [
+           1,
+           4
+       ],
+       [
+           2,
+           3
+       ],
+       [
+           2,
+           4
+       ]
+   ]
+```
+[laravel在controller中给created_at或者updated_time赋值为什么出错](https://segmentfault.com/q/1010000009000895)
+```js
+系统将created_at、updated_at、deleted_at字段格式化为了Carbon\Carbon类了。
+
+// 例子
+$posts->created_at->timestamp;  // 时间戳
+$posts->created_at->format('Y-m-d H:i:s');  // 返回指定格式
+// Carbon支持很多操作
+```
+[js根据数组中的值 排序对象](https://segmentfault.com/q/1010000009011452)
+```js
+var a = [100,200,300]
+var b = [{id:'100',name:'小红'},{id:'300',name:'小明'},{id:'200',name:'小蓝'}]
+
+function sortSome(a, b){
+    var arr = [];
+    a.forEach(function(tem, index){
+      b.forEach(function(val, num){
+        if(tem == val.id){
+          arr.push(val);
+      }
+    })
+  })
+  return arr;
+}
+console.log(sortSome(a,b))
+```
+
+[签到表格插件](http://www.gcpowertools.com.cn/products/spreadjs/demo.htm)
+[php如何确保服务端的接口调用安全](https://segmentfault.com/q/1010000008918918)
+1.对受限资源的登录授权
+2.对请求做身份认证
+3.对敏感数据进行加密
+[PHP简体中文离线手册17-04月更新](https://www.oschina.net/question/998019_2237185)
+http://www.os688.com/fenanr/112646.html
+[php 3028问题在于32位系统，64位系统上任意版本的php都不会有这个问题]()
+echo date('Y-m-d H:i:s', strtotime('+500 year', time()));//2517-04-10 02:55:47
+$d=new datetime()
+$d->modify('+500 year');
+$d->format('Y-m-d')
 [p里面不能包含块级元素div](https://stackoverflow.com/questions/5441639)
  https://segmentfault.com/q/1010000008981388
 [php处理阴历和阳历的](https://segmentfault.com/q/1010000008997316)
