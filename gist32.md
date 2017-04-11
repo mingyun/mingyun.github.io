@@ -11,6 +11,10 @@ str 本质上其实是一串二进制数据，而 unicode 是字符（符号）�
 相当于：
 
 >>> u"Python之禅".encode("ascii")
+[Python科学计算的瑞士军刀——Anaconda 安装与配置](http://blog.csdn.net/u012675539/article/details/46974217)
+conda config --add channels 'https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/'
+conda config --set show_channel_urls yes
+如果大家使用 whl 手动安装包安装wordcloud ，出现pip安装报错：is not a supported wheel on this platform。可以使用这种解决方法：将文件名wordcloud‑1.3‑cp27‑cp27m‑win_amd64.whl改为wordcloud-1.3-cp27-none-win_amd64    即：将cp27m改为none。 或者尝试装后缀为 win32.whl 的版本
 [PHP的笛卡尔积算法实现](https://www.bytelang.com/article/content/zUEWXIbeyeU=)
 ```js
 function Descartes()
