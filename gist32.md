@@ -1,3 +1,35 @@
+分批处理数据
+```js
+$count = 140000;
+        $take = 2000;
+        $s    = floor($count/$take);
+	    for ($i =0 ;$i <= $s; $i++ ){
+            $skip   = $take*$i;
+            echo 'start ---'.$skip.'---'.$take."---\n";
+            $ret = WebinarSwitch::groupBy('webinar_id')->skip($skip)->take($take)->get();
+            if(!empty($ret)){
+                $list = $ret->toArray();
+                foreach ($list as $row){
+                    $webinar = Webinars::withTrashed()->find($row['webinar_id']);
+                    if(!empty($webinar)){
+                        $sql = "update webinar_switch set user_id ='{$webinar['user_id']}' where webinar_id={$row['webinar_id']}; \n";
+                        file_put_contents($file,$sql,FILE_APPEND);
+                    }
+                }
+            }
+        }
+	
+30分钟支付
+$second = strtotime($order['created_at']) + 60*30 - time();
+        if ($second>0) {
+            $order['expire'] = date('i:s', $second);
+        } else {
+            $order['expire'] = '00:00';
+        }
+	
+```
+
+
 [WEB应用在今天越来越广泛，也是CTF夺旗竞赛中的主要题型，题目涉及到常见的Web漏洞，诸如注入、XSS、文件包含、代码执行、上传等漏洞。](http://www.shiyanbar.com/ctf/practice)
 [Apple ID钓鱼网站后台一览](https://zhuanlan.zhihu.com/p/26219701)
 http://www.cnblogs.com/zqh20145320/p/5710072.html  网站链接：http://www.ichunqiu.com/racing
