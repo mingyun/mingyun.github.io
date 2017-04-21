@@ -1,3 +1,59 @@
+[ mysql 优化整理](http://blog.csdn.net/gaoxuaiguoyi/article/details/47439331)
+```js
+count(column) 是表示结果集中有多少个column字段不为空的记录。
+
+　　count(*) 是表示整个结果集有多少条记录。
+
+拆分大的 DELETE 或 INSERT 语句
+while (1) { 
+    //每次只做1000条 
+    mysql_query("DELETE FROM logs WHERE log_date <= '2009-11-01' LIMIT 1000"); 
+    if (mysql_affected_rows() == 0) { 
+        // 没得可删了，退出！ 
+        break; 
+    } 
+    // 每次都要休息一会儿 
+    usleep(50000); 
+} 
+应尽量避免在where子句中对字段进行函数操作，这将导致mysql放弃使用索引
+
+          select uid from imid where datediff(create_time,'2011-11-22')=0
+            优化后
+           select uid from imid where create_time> ='2011-11-21‘ and create_time<‘2011-11-23’;
+$user = User::create($createArr);
+        $name = 'v'.$user->id;
+        $user->name = $name;
+        $user->save();
+```
+[PHP类延迟加载机制原理](http://blog.csdn.net/gaoxuaiguoyi/article/details/49622155)
+```js
+//1.不使用类延迟加载  
+      
+    require 'class/Class1.php';  
+    require 'class/Class2.php';  
+      
+    $c1 = new Class1;  
+    $c2 = new Class2;  
+    $c1->say();  
+    $c2->say();  
+      
+    //2.使用类延迟加载  
+      
+    function autoload($class){  
+          
+        require ('class/'.$class.'.php');  
+          
+    }  
+    spl_autoload_register("autoload");  
+      
+      
+    $c1 = new Class1;  
+    $c2 = new Class2;  
+    $c1->say();  
+    $c2->say(); 
+    实例化一个PHP类的时候，new class这个过程如果没有包含类文件活报出警告信息，没有包含该类文件，但是这个时候，会去执行spl_autoload_register这个函数，执行之后，会将我们new的类名传递过去，进行包含我们的类文件，这样就是我们在使用的时候才去加载需要的类，而不是无论是否使用都进行加载
+```
+
 [laravel的依赖注入http://blog.csdn.net/gaoxuaiguoyi/article/details/50042829]()
 ```js
 public function register()  
