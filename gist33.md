@@ -578,8 +578,8 @@ $a=new \Carbon\carbon()
        have_weekday_relative: 0,
        have_special_relative: 0
    }
-
-  function consoleLog($data, $log = false)
+//输出js数组
+  function consoleLog($data, $log = false)
     {
         // 数据预处理json
         if (is_string($data) && $preJsonMsg = json_decode($data, true)) {
