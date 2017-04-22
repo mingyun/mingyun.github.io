@@ -38,8 +38,182 @@ https://github.com/songtianyi/wechat-go
 [懒得找-程序员购衣导航网](https://www.v2ex.com/t/356359#reply12)
 目前网站雏形见： http://www.landezhao.com/ 
 [科学上网管理系统正式开源  PHP 技术栈 ](https://www.v2ex.com/t/355402#reply50)
+BiliBili 解析 下载 合并 一条龙服务 
+
+https://github.com/XhstormR/GetBilibili
+ 
+[微信指数多词对比查询工具](https://www.v2ex.com/t/352709#reply9)
+ http://wx.quafelabs.com/wxIndex 
 
 Github 地址： https://github.com/ZhuFaner/shadowsocks-manage-system
+[ 基于 yourls 搭建的短网址服务](https://www.v2ex.com/t/353705#reply84)
+https://u.nu/ 
+
+API 文档在这儿 
+
+https://u.nu/api/ 
+[给自己挖了一个 Python 爬虫系列的坑](https://www.v2ex.com/t/353080#reply19)
+[开源 PHP 图床程序](https://www.v2ex.com/t/353270#reply35)
+演示地址： https://famio.liew.io 
+Git ： https://git.oschina.net/famio/wocreat 
+[Mobi.css 2 发布 beta 版，一个轻量、可拓展、移动端优先的 css 框架](https://www.v2ex.com/t/352809#reply15)
+[ Tiicle 一个程序员分享编程知识和协作的平台](https://www.v2ex.com/t/352855#reply15)
+https://tiicle.com/
+[第二篇爬虫文章](https://www.v2ex.com/t/352150#reply20)
+[耀眼的 404 页面](https://www.v2ex.com/t/352105#reply78)
+[PHP 写了一个管理本地 Nginx 网站配置文件的命令行小工具](https://www.v2ex.com/t/352420#reply6)
+
+https://github.com/panlatent/site-cli 
+[视频专辑《如何提高生产效率目录》](https://www.v2ex.com/t/352396#reply14)
+http://www.findspace.name/easycoding/1890
+[Python 下发送邮件的库](https://www.v2ex.com/t/351693#reply8)
+```js
+from Smail import Smail
+a=Smail()
+#设置邮件服务期信息，包含 smtp 地址，端口，登录账号和密码，如果端口不是 25 就启用 SSL 。 
+a.set_server("smtp.exmail.qq.com",465,"admin@aliencn.net","password")
+#写一个主题  
+a.set_subject('hello')  
+#写邮件内容，默认情况下邮件是 plain 的格式，如果要切换成 html 的可以执行 a.set_mail_type('html')
+a.set_content('world') 
+#添加收件人，可以添加多个
+a.add_to_addr('admin@aliencn.net')  
+a.add_to_addr('admin2@aliencn.net')  
+#Optional
+#接下来就是可选项了，比如添加抄送、密送、附件什么的
+a.add_cc_addr('admin1@aliencn.net')  
+a.add_cc_addr('admin2@aliencn.net')  
+a.add_bcc_addr('admin3@aliencn.net')  
+a.add_bcc_addr('admin4@aliencn.net')  
+a.add_attachment(r'D:\Alien_System\Desktop\0.jpg')  
+a.add_attachment(r'D:\Alien_System\Desktop\1.exe')  
+ 
+#send mail now
+#最后一步，发送邮件
+a.send()
+```
+[ mysql 中文排序的问题，就是某一列是有“高”、“中”、“低”三种值，然后我怎么才能 orderby 出高中低的效果](https://www.v2ex.com/t/350941#reply16)
+ order by decode ，然后搜索到 MySQL 的， ORDER BY FIND_IN_SET(FieldName,"高,中,低")
+
+
+[阿里云代码](https://code.aliyun.com/)
+[pdf 文件转成 html 文件](https://github.com/coolwanglu/pdf2htmlEX)
+[GitHub 与 Python 有关的 repo 集合](https://www.v2ex.com/t/350802#reply7)
+[从事摄影后期的人要失业了](https://github.com/luanfujun/deep-photo-styletransfer)
+[开源项目——HelloGitHub](https://www.v2ex.com/t/351587#reply39)
+[简书上写 Python 爬虫系列文章](https://www.v2ex.com/t/351900#reply80)
+http://www.jianshu.com/p/11d7da95c3ca  https://blog.ansheng.me/article/python-full-stack-way/
+[开坑一个从零开始的 Python 爬虫教程](https://www.v2ex.com/t/351442#reply47)
+http://www.jianshu.com/p/e3444c52c043
+[CodePan: 能够离线使用的 JSBin/CodePen](https://www.v2ex.com/t/351601#reply4)
+网站: https://codepan.js.org
+ V2 签到脚本 
+
+https://github.com/bonfy/qiandao
+代码: https://github.com/egoist/codepan
+[MarkDown 文档帮助系统](https://www.v2ex.com/t/348636#reply6)
+https://elvisszhang.github.io/jr-docs/
+[基于命令行的网易云音乐下载器](https://www.v2ex.com/t/348005#reply3)
+https://github.com/ziwenxie/netease-dl
+
+[支付宝收款明细检查工具](https://www.v2ex.com/t/347913#reply20)
+[Composer 的源管理工具 slince/crm](https://www.v2ex.com/t/347603#reply5)
+http://0.30000000000000004.com/ composer global require slince/crm
+
+[支付宝 alipay-sdk- PHP](https://www.v2ex.com/t/348451#reply31)
+https://github.com/wxpay/WXPay-SDK-PHP   https://github.com/fishlab/alipay-sdk-php
+```js
+经实践，最终我的做法是： 
+1 、在 vendors 下新建 alipay 
+2 、把 SDK 里的 aop 目录拷到 alipay 下（抛弃原来 SDK 目录下的 lotusphp_runtime 和 AopSdk.php ） 
+3 、最终目录结构是 vendors/alipay/aop 
+4 、 composer.json 的 autoload 节点里加入： 
+
+"classmap": [ 
+"vendor/alipay/aop" 
+]
+5 、运行``composer dump-autoload`` 
+6 、这样在项目里可以不用 require ，直接： 
+
+// 仅测试能使用命名空间，忽略参数设置吧。。。 
+$a = new \AopClient(); 
+$b = new \AlipayAppTokenGetRequest(); 
+$c = $a->execute($b);
+```
+[拉勾的爬虫](https://www.v2ex.com/t/346862#reply13)
+https://github.com/whatsGhost/lagou_spider  
+[root 防撤回 微信 QQ](https://www.v2ex.com/t/347634#reply56)
+http://github.com/JasonQS/Anti-recall 
+[ PHP 循环获取用户关系树的性能问题](https://www.v2ex.com/t/347529#reply31)
+[循环超过 5000 条时，页面就不动了，内存都用完了](https://www.v2ex.com/t/346901#reply29)
+
+
+[PHP 写的验证码类](https://www.v2ex.com/t/347730#)
+传送门： https://github.com/sostuts/Vcode
+[创业公司安全基础](https://github.com/Hopsken/security-101-for-saas-startups-zh_CN)
+
+[Nginx+ PHP -fpm 运行原理详解](https://www.v2ex.com/t/351308#reply6)
+[Chrome 扩展一枚： ToolCat 开发者常用工具](https://www.v2ex.com/t/349791#reply10)
+http://tool.leavesongs.com/
+[Python企查查爬虫](http://pituber.com/t/python/42)
+[各语言常用工具库及资料【爬虫相关】](http://pituber.com/t/topic/131)
+[传送门这个网站采集了大量的微信公众号文章](https://www.v2ex.com/t/349562#reply24)
+http://www.tianfangyetan.org/ http://phptools.cn ，还集成了一个 google 镜像
+[创建联动选择器的 js 库](https://www.v2ex.com/t/349215#reply4)
+https://jsfiddle.net/lmk123/8d2x8dLy/
+[玩法收藏/云服务器/Python3 环境安装 PySpider 爬虫框架](https://www.v2ex.com/t/349209#reply4)
+pip install pyspider
+
+[Composer Packagist 镜像搭建工具](https://www.v2ex.com/t/345641#reply3)
+https://github.com/garveen/imagist
+[做了一个标题党制作器](https://www.v2ex.com/t/346036#reply29)
+[简单生成 Excel2007 xlsx 文档的 PHP 类，主要解决了内存占用问题](https://www.v2ex.com/t/345939#reply2)
+https://github.com/chopins/toknot/blob/master/vendor/toknot/Toknot/Share/SimpleXlsx.php
+
+图片小站，堪称宅男神奇。 http://www.chihepiao.com （吃喝嫖全拼）
+
+[在线 markdown 转 html 的小工具， http://md2html.net/ ](https://www.v2ex.com/t/345076#reply23)
+curl ifconfig.cat 
+wget -q ifconfig.cat 
+http -b ifconfig.cat ifconfig.io
+[面试问什么问题比较容易看出一个 PHPer 的水平](https://www.v2ex.com/t/344137#reply36)
+服务器抓包 HTTP 的工具https://www.v2ex.com/t/343223#reply25
+又一个图床 https://ooxx.ooo
+github 上比较火的一篇软件设计模式的介绍https://github.com/questionlin/design-patterns-for-humans  https://sourcemaking.com/design-patterns-and-tips 
+撸了一个导航网站 喜欢个人博客的进来啦https://www.v2ex.com/t/343011#reply108   传送门： http://blog.yiyeti.cc/ 
+[JSON 格式化工具](http://json.awesomes.cn/)
+Laravel+Vue 前后端分离 https://www.v2ex.com/t/342281#reply21
+web 移动端原生裁剪插件https://github.com/ffx0s/xcrop  Talk is cheap, show me the code -- 用 github 数据辅助你完善简历 https://www.v2ex.com/t/341669#reply38  php面试题 https://www.v2ex.com/t/341873#reply72  https://www.onlinevideoconverter.com/zh 
+https://www.youtubeto.com/zh/ 
+http://savevideo.me/
+翻译了开源书籍 《 Python 数据结构》一书 https://www.v2ex.com/t/340583#reply100 
+借助微信测试公众号撸了个 服务器信息推送https://www.v2ex.com/t/340512#reply26
+https://github.com/iakisey/ServerMsgPush  发企业号文本消息的 Shell 脚本, 十几行代码搞定. 需要自取. 
+https://github.com/x1596357/scripts/blob/master/alert-wechat/alert-wechat.sh  https://github.com/boywhp/fcn  内网穿透的软件
+网址收藏应用： http://mybookmark.cn/  开源图床上传工具 [File to URL]https://www.v2ex.com/t/338814#reply42
+[PHP 就碰到 PDO 扩展的一个大坑，详情](https://segmentfault.com/q/1010000008305175)
+[关于Python的面试题](https://github.com/taizilongxu/interview_python)
+PHPMailer 封装，让发邮件更简单https://www.v2ex.com/t/342029#reply6 
+[ awesome-backend 收集展示后端开发相关组件和解决方案](https://www.v2ex.com/t/351248#reply0)
+Github: https://github.com/sunchen009/awesome-backend
+[不错的在线简历模板，如果有需要可以直接拿去用](https://www.v2ex.com/t/351441#reply26)
+git clone --recursive https://github.com/onevcat/resume.git
+[python免费代理工具，目前来说有用不完的代理 ](https://github.com/awolfly9/IPProxyTool)
+[PHP 开源实战主题： PDF 处理类 pdfparser](https://www.v2ex.com/t/351278#reply0)
+PDF 处理类 http://www.pdfparser.org/demo
+[包学会之浅入浅出 Vue.js](https://www.v2ex.com/t/353120#reply55)
+https://www.qcloud.com/community/article/430630001490779316?fromSource=gwzcw.84430.84430.84430
+[应对“伸手党”的网站](https://www.v2ex.com/t/354605#reply65)
+帮你百度googlehttp://lmgtfy.com/   http://www.baidu-x.com/  http://lmbtfy.cn/ https://shansing.com/lmbtfy/  http://www.lmbtfy.cn/ 
+http://lmgtfy.com/
+[一个假的苹果网站，能肉眼看出来算我输](https://www.v2ex.com/t/355961#reply80 )
+https://www.xn--80ak6aa92e.com/  http://chuangzaoshi.com/friends
+[个人博客](https://www.v2ex.com/t/354131#reply47)
+[爬取查询百度指数的教程](http://blog.shenjianshou.cn/?p=170)
+[Laravel 写了一个图床网站](https://www.v2ex.com/t/353720#reply74)
+改成 https://sm.ms 的图床  体验地址： http://img.hanc.cc/ 项目地址： https://github.com/HanSon/img
+
+
 [Vue 第一次练手： github-issue 博客生成方案](https://www.v2ex.com/t/355274#reply13)
 [方正字库开放云平台](http://yun.foundertype.com/)
 [Python 分布式抓取京东商城评价并且使用 pandas](https://www.v2ex.com/t/356132#reply22)
