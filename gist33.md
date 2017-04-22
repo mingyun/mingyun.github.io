@@ -1,5 +1,90 @@
+[python38 行代码实现传输 Android 实时画面](https://www.v2ex.com/t/356275)
+[无广告，集百度，谷歌] (http://www.qi1y.cn/)
+Windows 绝赞应用 https://emlvirus.gitbooks.io/windows-apps-that-amaze-us/content/ 
+[值得购买/使用的、能够提升码农日常生活/工作的服务工具](https://www.v2ex.com/t/355892#reply97)
+[Python 字符串 '0x01' 转换成 数字](https://www.v2ex.com/t/356421#reply5)
+int('0xaa01', 16)int('0x01',0) int(eval('0x01'))
+[2017 谷歌可用hosts](http://www.51ask.org/article/256)
+修改hosts后如果不生效 ，需要刷新DNS ipconfig /flushdns  sudo rcnscd restart
+[PHP 在线项目挑战](https://www.v2ex.com/t/356459#reply0)
+挑战地址： https://www.shiyanlou.com/contests/lou5/challenges  可以找你擅长的题目试试身手： https://www.shiyanlou.com/contests/
+
+[php 敏感词过滤 php-ext-trie-filter](http://www.51ask.org/article/421)
+[将页面内容输出为 pdf 文档](https://www.v2ex.com/t/356363)
+TCPDF 分页 
+Mpdf 完美 html 排版 
+PHP 生成 PDF ： http://www.51ask.org/article/232
+http://pdftest.xieyi.im/ https://github.com/MrRio/jsPDF 
+phantomjs 挺好的啊。有现成的 example https://github.com/ariya/phantomjs/blob/master/examples/rasterize.js
+
+chrome 浏览器 选择内容 右键-打印 保存到 pdf 效果不错啊 可以分页啊 
+有其他需求就 acrobat 有浏览器插件
+ https://github.com/wkhtmltopdf/wkhtmltopdf
+ 
+ [猴子选大王](http://www.51ask.org/article/406)
+ ```js
+ /**
+* 猴子选大王
+*一群猴子排成一圈，按1，2，...，n依次编号。然后从第1只开始数，数到第m只,把它踢出圈，从它后面再开始数，再数到第m只，在把它踢出去...，如此不停的进行下去，直到最后只剩下一只猴子为止，那只猴子就叫做大王。要求编程模拟此过程，输入m、n, 输出最后那个大王的编号。
+* @param int $m 猴子数
+* @param int $n 出局数
+* @return array
+*
+*/
+function ws_king($m ,$n)
+{
+//构造数组
+for($i=1 ;$i<$m+1 ;$i++){
+   $arr[] = $i ;
+}
+$i = 0 ;    //设置数组指针
+
+while(count($arr)>1)
+{
+   //遍历数组，判断当前猴子是否为出局序号，如果是则出局，否则放到数组最后
+   if(($i+1)%$n ==0) {
+    unset($arr[$i]) ;
+   } else {
+    array_push($arr ,$arr[$i]) ; //本轮非出局猴子放数组尾部
+    unset($arr[$i]) ;   //删除
+   }
+   $i++ ;
+}
+return $arr ;
+}
+
+var_dump(ws_king(6,4));
+ ```
 [ mysql 优化整理](http://blog.csdn.net/gaoxuaiguoyi/article/details/47439331)
+
+
 ```js
+/**
+ *@功能：获取客户端的代理IP地址,很容易被程序篡改http://www.51ask.org/article/372
+ *@参数：null
+ *@返回：客户端的IP地址
+ */
+function get_proxy_ip()
+{
+    $arr_ip_header = array(
+        'HTTP_CDN_SRC_IP',
+        'HTTP_PROXY_CLIENT_IP',
+        'HTTP_WL_PROXY_CLIENT_IP',
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'REMOTE_ADDR',
+    );
+    $client_ip = 'unknown';
+    foreach ($arr_ip_header as $key)
+    {
+        if (!empty($_SERVER[$key]) && strtolower($_SERVER[$key]) != 'unknown')
+        {
+            $client_ip = $_SERVER[$key];
+            break;
+        }
+    }
+    return $client_ip;
+}
 count(column) 是表示结果集中有多少个column字段不为空的记录。
 
 　　count(*) 是表示整个结果集有多少条记录。
