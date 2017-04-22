@@ -8,7 +8,70 @@ int('0xaa01', 16)int('0x01',0) int(eval('0x01'))
 修改hosts后如果不生效 ，需要刷新DNS ipconfig /flushdns  sudo rcnscd restart
 [PHP 在线项目挑战](https://www.v2ex.com/t/356459#reply0)
 挑战地址： https://www.shiyanlou.com/contests/lou5/challenges  可以找你擅长的题目试试身手： https://www.shiyanlou.com/contests/
+[MySQL 获取随机数据方法](http://www.51ask.org/article/428)
+推荐使用PHP解决。尽量少用mysql去处理问题。
+交给php解决 不操作mysql 比如 一千w条数据 随机取十条 先用php生成一千万以内的随机数 20个 再用mysql的主键in(这20个随机数) 之所以取20条是因为有些id可能被删除了 然后再用php处理成10条。性能最高
+[农民房设计服务，「求设计」新站上线](https://www.v2ex.com/t/356294#reply46)
+ https://qiusheji.com
+[命令行传参的时候, 请问如何防止参数带有特殊符号，使得整行命令 broke](https://www.v2ex.com/t/349792#reply9)
+但是当密码带有$符号的时候，整行命令就 broken 
+防止 argumen 里面注入非法字符有 2 种， 
+1. 在每个非法字符前面用\转义。 
+2. 用单引号'' 来包裹 argument 。
+> echo $var 
 
+> export var=passwd 
+> echo $var 
+passwd 
+> echo \$var 
+$var 
+> echo "$var" 
+passwd 
+> echo '$var' 
+$var
+[css让页面动起来](https://www.v2ex.com/t/353955)
+https://daneden.github.io/animate.css/  http://www.coolshell.cn/ 可以把 high 一下 拖到书签位置，然后打开其他网站再点击书签，同样有效
+https://gist.github.com/devn/5007287 
+javascript:setInterval(() => {document.querySelectorAll('p,img,button,h1,h2,h3').forEach(x=>x.style=`transform:rotate(${Math.random()*777}deg) scale(${Math.random()*3}); transition:all 500ms`)}, 500);
+[wechat-go 微信机器人](https://www.v2ex.com/t/356399#reply31)
+https://github.com/songtianyi/wechat-go
+[懒得找-程序员购衣导航网](https://www.v2ex.com/t/356359#reply12)
+目前网站雏形见： http://www.landezhao.com/ 
+[科学上网管理系统正式开源  PHP 技术栈 ](https://www.v2ex.com/t/355402#reply50)
+
+Github 地址： https://github.com/ZhuFaner/shadowsocks-manage-system
+[Vue 第一次练手： github-issue 博客生成方案](https://www.v2ex.com/t/355274#reply13)
+[方正字库开放云平台](http://yun.foundertype.com/)
+[Python 分布式抓取京东商城评价并且使用 pandas](https://www.v2ex.com/t/356132#reply22)
+体验地址：http://awolfly9.com/jd/
+[解析 Excel 文件(xls,xlsx)的 javascript 方案](https://github.com/SheetJS/js-xlsx)
+[防不胜防的钓鱼网址](https://www.v2ex.com/t/355174#reply204)
+Chrome 插件来防止被钓鱼, 希望对 V 友有用. 
+
+下载地址: https://chrome.google.com/webstore/detail/real-domain-name/lhbkkikjboiebjeghokpefafaahnfoff 
+GitHub: https://github.com/liaa/real_domain_name 
+[Python 3 写了个基于 selenium 的知乎关键词爬虫，可以爬钓鱼贴图片]()
+[《收库 123·导航网》](https://www.v2ex.com/t/355344#reply19)
+官网网址： http://shouku123.com/  http://123.xcatliu.com/  chuangzaoshi.com  撸表情 http://www.lubiaoqing.com  http://www.alloyteam.com/nav/
+[下载微博、秒拍视频](http://v.atob.site/)
+[基于 laravel 的一个后台管理系统](https://www.v2ex.com/t/355936#reply28)
+https://github.com/AnyISalIn/zhihu_fun 
+
+
+[编解码小工具](https://www.v2ex.com/t/349150#reply1)
+http://tool.leavesongs.com/
+[一个解除网页“禁用复制”的小书签](https://www.v2ex.com/t/356477#reply7)
+https://github.com/yulanggong/celery 
+[Python 密码泄露查询模块 leakPasswd](https://www.v2ex.com/t/355641#reply19)
+[百度网盘爬虫](https://www.v2ex.com/t/348731)
+[blibili 直播换成 HTML5 播放器的油猴脚本](https://www.v2ex.com/t/339625)
+安装地址： https://greasyfork.org/zh-CN/scripts/27239  DPlayer ： https://github.com/DIYgod/DPlayer
+[PHP 写一个爬虫](https://www.v2ex.com/t/347589)
+gouchaoer 同学的爬虫经验分享： https://www.v2ex.com/t/324309 
+
+另外可以看下这个： https://github.com/owner888/phpspider https://github.com/slince/spider 分分钟教你做人。 https://querylist.cc/ 靠谱简单的 https://github.com/FriendsOfPHP/Goutte https://doc.phpspider.org/
+分分钟搞定一个爬虫程序 https://www.figotan.org/2016/08/10/pyspider-as-a-web-crawler-system/
+ 这种简单验证码识别率应该可以达到 100%  https://gist.github.com/liberize/79f9bfb5a7e767b4b756ff1c7dc04eaa
 [php 敏感词过滤 php-ext-trie-filter](http://www.51ask.org/article/421)
 [将页面内容输出为 pdf 文档](https://www.v2ex.com/t/356363)
 TCPDF 分页 
