@@ -1,4 +1,162 @@
+[值得回头看几遍](https://www.zhihu.com/collection/19561986)
+[知乎实时热门](https://www.zhihu.com/collection/118261499)
+[laravel用构造器写了一个查询,如何知道具体运行的sql语句](https://www.zhihu.com/question/58792455)
+```js
+MySQL开general_log就能看到应用程序执行了哪些SQL:my.cnf:
+[mysqld]
+general_log=ON
+general_log_file=/path/to/sql.log
+用 tail -f /path/to/sql.log 实时监听日志文件的改变.用ORM和Query Builder还不如用PDO+SQL来得简单直接:有参数的:
+$stmt = $db->prepare($sql);
+$stmt->execute($params);
+$rows = $stmt->fetchAll();
+$rowCount = $stmt->rowCount();
+没有参数的:
+$rows = $db->query($sql)->fetchAll();
+$rowCount = $db->query($sql)->rowCount();
+https://link.zhihu.com/?target=http%3A//overtrue.gitbooks.io/building-web-apps-with-laravel5/
+ PHP的几种SAPI(Server API):
+
+php(cli,cli-server)
+php-cgi(cgi-fcgi)
+php-fpm/hhvm(fpm-fcgi)
+libphp7.so/php7apache2_4.dll(apache2handler)
+cli跟其他SAPI最大的区别就是:像你熟悉的各种超全局变量$_SERVER,$_COOKIE,$_SESSION,$_GET,$_POST,$_FILES,你没法在cli下正常使用了,换言之,就是cli下默认没有这些东西.
+```
+文件包含漏洞(绕过姿势)https://zhuanlan.zhihu.com/p/26287501?group_id=835055887910588416
+4行Python代码获取所在城市天气预报https://zhuanlan.zhihu.com/p/26369491?group_id=836265482196754432
+ r = requests.get('http://www.weather.com.cn/data/sk/101020100.html')
+ r.encoding = 'utf-8'
+ 一行curl：
+curl "http://www.weather.com.cn/data/sk/101020100.html" | jq -c ". | .weatherinfo.city, .weatherinfo.WD, .weatherinfo.temp"
+一行 shell：curl
+http://wttr.in
+xlwings 让你的 Excel 飞起来https://zhuanlan.zhihu.com/p/25810634
+计算一个整数的阶乘https://zhuanlan.zhihu.com/p/26288051?group_id=835065900435636224
+傻子才去记Excel的函数，聪明人都用这招https://zhuanlan.zhihu.com/p/26324706?group_id=835549668145496064
+爬虫天坑系列-百度指数爬虫https://zhuanlan.zhihu.com/p/26295228?group_id=835159482865692672
+使用Python进行语音识别---将音频转为文字https://zhuanlan.zhihu.com/p/26121974?group_id=834701120264892416
+如何用Python做一个微信自动拉群机器人？https://zhuanlan.zhihu.com/p/26277794?group_id=835166911510765568
+25 个 questions, 教你向面试官提问!https://zhuanlan.zhihu.com/p/26287742?group_id=835062556828766208
+Python 基础梳理(思维导图与汇总)http://link.zhihu.com/?target=https%3A//github.com/Windrivder/Python-Book
+作为面试官，面试时我会问这三个问题https://zhuanlan.zhihu.com/p/26272337?group_id=834763880705167360 
+程序员职业发展该怎么做https://zhuanlan.zhihu.com/p/26334825?group_id=835796642362970112
+微博社交网络图：爬虫+可视化https://zhuanlan.zhihu.com/p/26316380?group_id=835463883828363264
+效率君先用Tineye（专业的以图搜图网站）
+https://zhuanlan.zhihu.com/p/26326810?group_id=835553821164986369  Python 网络爬虫入门
+[微信机器人进化指南](https://zhuanlan.zhihu.com/p/26319288?group_id=835502104545230848)
+笨办法学前端http://link.zhihu.com/?target=https%3A//frankfang.github.io/wheels/
+[我的职业是前端工程师](http://ued.party/)
+[我是如何使用Python来自动化我的婚礼的](https://zhuanlan.zhihu.com/p/26395384)
+[校长，我要上车——python模拟登录熊猫TV](https://zhuanlan.zhihu.com/p/26164778?group_id=837315473673707520)
+用chrome打开pandaTV，同时按F12打开chrome dev tool，选择Network栏，勾选Preserve log，如图所示。勾选Preserve log 是为了不让抓包被刷新掉，因为登录过程中有一次刷新，很容易就把关键的包刷掉了。
+[你一定能看懂的算法基础书《算法图解》](https://zhuanlan.zhihu.com/p/26332883?group_id=835775400192925696)
+[机器学习的数学之 python 矩阵运算](https://zhuanlan.zhihu.com/p/26343623?group_id=835872318491361280)
+
+[又在知乎上get√新技能](https://www.zhihu.com/collection/30569180)
+[从0开始学PHPExcel(1)之初探](https://zhuanlan.zhihu.com/p/26515492?group_id=839150577912025088)
+```js
+http://link.zhihu.com/?target=https%3A//github.com/PHPOffice/PHPExcel
+header('content_type:text/html;charset=utf-8');
+	$dir=dirname(__FILE__);//找到当前脚本所在的路径
+	include $dir."/PHPExcel.php";//引入文件
+	$objPHPExcel = new PHPExcel();//实例化PHPExcel类 (相当于创建了一个excel表格)
+	$objSheet=$objPHPExcel->getActiveSheet();//获取当前活动sheet的操作对象
+	$objSheet->setTitle("demo");//给当前活动的sheet这只名称为demo
+	$objSheet->setCellValue("A1","昵称")->setCellValue("B1","性别")->setCellValue("C1","年龄");//给当前活动的sheet填充数据
+	$objSheet->setCellValue("A2","羊大仙")->setCellValue("B2","男")->setCellValue("C2","21");
+	$objSheet->setCellValue("A3","张三")->setCellValue("B3","女")->setCellValue("C3","18");
+	$objWriter=PHPExcel_IOFactory::createWriter($objPHPExcel,"Excel2007");//按照指定的格式生成excel文件
+	$objWriter->save($dir."/demo.xlsx"); //命名保存的路径
+```
+[他看了几千份技术简历，愿意把技术简历的秘籍传授给你](https://zhuanlan.zhihu.com/p/26494021?group_id=838750245969092608)
+[【收藏】数据分析必备神器](https://zhuanlan.zhihu.com/p/26494069?group_id=838744356759408640)
+http://www.picdata.cn/#
+[Scrapy爬图片（二）](https://zhuanlan.zhihu.com/p/26419110?group_id=838166013559341056)
+[“你最大的缺点是什么？”，面试中你最好这样回答...](https://zhuanlan.zhihu.com/p/26445672?group_id=837979918125121536)
+有时候，我会过于关注一件事，尤其是截止日期很赶或成果很重要的时候，这时我对其他事的关注可能没那么够
+
+我有时会太注重细节，失去全局观
+[世界上最好语言，PHP技术百问](https://zhuanlan.zhihu.com/p/26484814)
+[ python Web 运维 爬虫.....一条龙学习视频教程](https://zhuanlan.zhihu.com/p/24518315)
+链接：http://pan.baidu.com/s/1boTrTmv 密码：w7ml解压密码: redis章节:www.helloworld.com 其他:www.zygx8.com
+[知乎牛人集中营](https://www.zhihu.com/collection/19682978)
+[mysql 证明为什么用limit时，offset很大会影响性能](https://github.com/zhangyachen/zhangyachen.github.io/issues/117)
+select * from test where val=4 limit 300000,5; select * from test a inner join (select id from test where val=4 limit 300000,5) b on a.id=b.id;
+[nginx 502 VS 504](https://github.com/zhangyachen/zhangyachen.github.io/issues/89)
+[mysql group max](https://github.com/zhangyachen/zhangyachen.github.io/issues/103)
+查找人数(userNum)最多的行对应的teamId，为什么会返回1呢？很显然人数最多的行对应的teamId不是1。
+select teamId,userNum from iknow_team_info order by userNum desc limit 1
+select teamId,max(userNum) maxNum from iknow_team_info group by teamId order by maxNum desc limit 1;
+[酷炫的matplotlib](https://zhuanlan.zhihu.com/p/26441649?group_id=837805836544929792)
+[《数据运营手册》| GrowingIO ](https://zhuanlan.zhihu.com/p/26486065)
 [python38 行代码实现传输 Android 实时画面](https://www.v2ex.com/t/356275)
+
+[一个自动上色的网站——Automatic Image Colorization](https://zhuanlan.zhihu.com/p/26438147?group_id=837740550802264064)
+[6个提高学习和工作效率的神器](https://zhuanlan.zhihu.com/p/25080445?group_id=837746344964784128)
+youtube高清视频在线下载 http://link.zhihu.com/?target=http%3A//www.clipconverter.cc/ http://link.zhihu.com/?target=http%3A//www.flvcd.com/
+[IP精确定位的一个网站](http://opengps.cn/Data/IP/LocHighAcc.aspx)
+[Python如何识别二维码](https://zhuanlan.zhihu.com/p/21292914?group_id=837314583822741505)
+import zbar
+from PIL import Image
+[sql连接查询中on筛选与where筛选的区别](https://zhuanlan.zhihu.com/p/26420938?group_id=837596545636536320)
+select * from main left JOIN exton main.id = ext.id and address <> '杭州'
+select * from main left JOIN ext on main.id = ext.id where address <> '杭州'
+1、先对两个表执行交叉连接(笛卡尔积)
+
+2、应用on筛选器
+
+3、添加外部行
+
+4、应用where筛选器
+
+[不那么反人性的爬虫，浏览器渲染](https://zhuanlan.zhihu.com/p/26385967?group_id=836718435974135808)
+http://link.zhihu.com/?target=http%3A//www.seleniumhq.org/download/  selenium (里面涉及到要用的webdriver, 比如我用的chrome
+http://link.zhihu.com/?target=https%3A//github.com/leven-ls/cq_lianjia 
+[从零开始的 Python 爬虫速成指南](https://zhuanlan.zhihu.com/p/26301354?group_id=836539571704569857)
+[为了找一份Python实习，我用爬虫收集数据](https://zhuanlan.zhihu.com/p/26409764?group_id=837352936089722880)
+[手把手教你搭建谷歌TensorFlow深度学习开发环境！](https://zhuanlan.zhihu.com/p/26389992?group_id=836913754196299776)
+[python奇技淫巧](https://zhuanlan.zhihu.com/p/26459091)
+```js
+os.system('pause') print a.prettify()
+获取python安装路径
+
+from distutils.sysconfig import get_python_lib
+print get_python_lib
+查看系统环境变量
+
+os.environ["PATH"]
+当前平台使用的行终止符
+
+os.linesep
+域名解析为ip
+isinstance("123",(int,long,float,complex)
+file_dict={"a":1,"b":2,"c":3}
+file_dict_new=sorted(file_dict.iteritems(), key=operator.itemgetter(1),reverse=True) ##字典排序,reverse=True由高到低，itemgetter(1)表示按值排序，为0表示按key排序
+ip= socket.getaddrinfo(domain,'http')[0][4][0]
+输出一个目录下所有文件名称
+列表去重
+
+ids = [1,4,3,3,4,2,3,4,5,6,1]
+ids = list(set(ids))
+将嵌套列表转换成单一列表
+
+a = [[1, 2], [3, 4], [5, 6]]
+>>> import itertools
+>>> list(itertools.chain.from_iterable(a))
+[1, 2, 3, 4, 5, 6]
+>>> ip= socket.getaddrinfo('zhuanlan.zhihu.com','http')[0][4][0]
+>>> ip
+'118.178.213.186'
+def search(paths):
+    if os.path.isdir(paths):  #如果是目录
+          files=os.listdir(paths)  #列出目录中所有的文件
+          for i in files:
+               i=os.path.join(paths,i)  #构造文件路径
+               search(i)           #递归
+          elif os.path.isfile(paths): #如果是文件
+               print paths   #输出文件名
+```
 [无广告，集百度，谷歌] (http://www.qi1y.cn/)
 Windows 绝赞应用 https://emlvirus.gitbooks.io/windows-apps-that-amaze-us/content/ 
 [值得购买/使用的、能够提升码农日常生活/工作的服务工具](https://www.v2ex.com/t/355892#reply97)
