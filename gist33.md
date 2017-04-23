@@ -1,3 +1,113 @@
+PHP中记录最后一次新增的ID https://segmentfault.com/q/1010000009114926
+如何比较高效的求出用户余额与流水的差异数据？https://segmentfault.com/q/1010000009115881
+MySQL的排序并取得对应序号https://segmentfault.com/q/1010000009124773
+统计出20170403到20170420期间点击量前十的广告每天的点击量https://segmentfault.com/q/1010000009139117
+SELECT s.date,s.advertise_id,s.count FROM advertise_stat s
+WHERE
+    EXISTS (
+        SELECT advertise_id FROM (SELECT advertise_id FROM advertise_stat GROUP BY advertise_id ORDER BY count DESC LIMIT 10) AS advertise_temp
+        WHERE advertise_id = s.advertise_id
+    )
+AND s.date BETWEEN 20170403 AND 20170420
+ORDER BY s.date ASC,s.count DESC
+group by后排序问题https://segmentfault.com/q/1010000009149903
+select a.cid,a.comment_content from old_chapter_check_list a join (select max(id) maxid from old_chapter_check_list group by cid order by maxid desc limit 10) b on a.id=b.maxid;
+select substring_index(group_concat(comment_content order by id desc separator '|||'),'|||',1) cmt,cid from old_chapter_check_list group by cid limit 10;
+mysql order by 子查询 后面的结果 如何 也显示在结果集https://segmentfault.com/q/1010000009160747
+sql 优化问题，between比in好？https://segmentfault.com/q/1010000009092938
+两句sql，一个是用or，一个是用union all，性能应该是后面的好吧？https://segmentfault.com/q/1010000009093526
+sql怎么优化下https://segmentfault.com/q/1010000009094213
+在一组wid中 每个（不重复的）wid 下对应的 前5个uid(order by id limit 5) https://segmentfault.com/q/1010000009109922
+SELECT
+    wid,
+    SUBSTRING_INDEX(GROUP_CONCAT(uid ORDER BY id),',',5) AS 'uids'
+FROM (
+  SELECT DISTINCT wid, uid
+  FROM demo_table
+  ORDER BY wid, uid
+)
+GROUP BY wid
+Mysql数据表行转列https://segmentfault.com/q/1010000009082729
+select team_name,sum(if(score='正',1,0)) as'正',sum(if(score='负',1,0)) as '负' 
+from teamscore 
+group by team_name;
+mysql 1kw数据 快速查询https://segmentfault.com/q/1010000008992061 
+mysql查询字符串形式保存的id怎么查https://segmentfault.com/q/1010000009077988
+select * from article_table where tags like '%,1,%' or tags like '1,%' or tags like '%,1' or tags='1'
+使用 redis 处理高并发原理？？https://segmentfault.com/q/1010000008835117
+为什么要用redis而不用map做缓存https://segmentfault.com/q/1010000009106416  使用redis或memcached之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致性。缺点是需要保持redis或memcached服务的高可用，整个程序架构上较为复杂。
+
+select jing_qu,group_concat(distinct gong_si separator ',') from A group by jing_qu
+自增值不会随你删除记录而减少.
+微服务架构下跨服务查询的聚合有什么好的方案？https://segmentfault.com/q/1010000009053767
+mysql的查询正则表达式https://segmentfault.com/q/1010000009084860
+SELECT code FROM xxxx WHERE code REGEXP '^(I|IC)[0-9]{4}0000[0-9]{3}$';
+SELECT code FROM xxxx WHERE code LIKE 'I____0000%' OR code LIKE 'IC____0000___';
+分库分表、分区、读写分离 这些都是用在什么场景下https://segmentfault.com/q/1010000009044121
+不用LEFT JOIN查询？https://segmentfault.com/q/1010000009030133
+sql查询结果合并的问题https://segmentfault.com/q/1010000009055596 
+SELECT
+  art.id,
+  meta1.meta_value AS meta_key10086,
+  meta2.meta_value AS meta_key12580
+FROM wp_posts AS art
+  LEFT JOIN wp_postmeta AS meta1
+    ON meta1.post_id = art.id AND meta1.meta_key = '10086'
+  LEFT JOIN wp_postmeta AS meta2
+    ON meta2.post_id = art.id AND meta2.meta_key = '12580'
+关于数据库查询，既要不影响查询速度，又能实现分页的办法？https://segmentfault.com/q/1010000009062581
+分库分表后关于查询的问题https://segmentfault.com/q/1010000009061988
+数据库存图片，是存图片名称？还是存图片路径？？https://segmentfault.com/q/1010000009061355
+mysql连表统计查询问题https://segmentfault.com/q/1010000008951274
+https://segmentfault.com/q/1010000008968545  https://segmentfault.com/q/1010000009013208
+Laravel 5.4 php artisan migrate 提示表已经存在https://segmentfault.com/q/1010000009119587
+socket发送的信息怎么在浏览器中显示出来https://segmentfault.com/q/1010000009159874
+https://segmentfault.com/q/1010000009159717
+通过正则提取出来的ip，怎么命名https://segmentfault.com/q/1010000009147022
+怎样在网页上运行Python脚本？https://segmentfault.com/q/1010000009044320
+python该种情形下应该使用pickle还是csvhttps://segmentfault.com/q/1010000009107764 
+requests.post(headers=headers,params=data, data=json.dumps(payload),url=qiuzhi_url)
+https://segmentfault.com/q/1010000009117002
+requests爬取[大街网]职位信息，尝试多次失败，帮忙看看我的代码有什么问题？应该怎么改呢？https://segmentfault.com/q/1010000009116197
+
+python mp3流如何转无损wavhttps://segmentfault.com/q/1010000009095487
+网易邮箱Web端模拟登录看信的加密参数_ntes_nnid、_ntes_nuidhttps://segmentfault.com/q/1010000009135799
+索引的长度超过了mysql的限制,在migrate之前,设置
+
+$table->string('email' , 32)->index();
+$table->string('token' , 128)->index();
+导入10万条数据，数据库里有100万条数据，如何判断重复https://segmentfault.com/q/1010000009121453
+```js
+假定目标表叫做 target（100万数据）， 需要导入的表叫做 source（10万数据）。
+本例很大的一部分时间消耗在于判断是否两张表中的记录一样，猜测楼主想要 所有字段都相同（除了id字段）才认定为是同一条记录。
+
+给每条记录计算一个类Hash值，可以存在target和source新建的字段中（hashValue), 计算量是 110万。然后使用以下语句导入数据
+
+IF EXISTS(
+    SELECT TOP 1 1
+      FROM source a
+      INNER JOIN target b
+    ON a.hashValue = b.hashValue
+) BEGIN
+
+  -- 返回重复记录
+    SELECT a.*
+      FROM source a
+      INNER JOIN target b
+    ON a.hashValue = b.hashValue
+
+END
+ELSE 
+BEGIN
+    INSERT INTO Target(filed1, field2, field3, field4 ... hashValue)
+    SELECT
+      t.filed1,
+      t.field2,
+      t.field3,
+      t.field4, ..., t.hashValue
+    FROM target t
+END
+```
 [值得回头看几遍](https://www.zhihu.com/collection/19561986)
 [知乎实时热门](https://www.zhihu.com/collection/118261499)
 [laravel用构造器写了一个查询,如何知道具体运行的sql语句](https://www.zhihu.com/question/58792455)
