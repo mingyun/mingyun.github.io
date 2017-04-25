@@ -1,3 +1,121 @@
+[python Pandas 使用](http://wiki.jikexueyuan.com/project/start-learning-python/311.html)
+```js
+import pandas as pd # This is the standard
+Series 就如同列表一样，一系列数据，每个数据对应一个索引值。比如这样一个列表：[9, 3, 8]
+DataFrame 是一种二维的数据结构，非常接近于电子表格或者类似 mysql 数据库的形式
+
+
+>>> s=pd.Series([100,'php','py','js'])
+>>> s.values
+array([100, 'php', 'py', 'js'], dtype=object)
+>>> s
+0    100
+1    php
+2     py
+3     js
+dtype: object
+>>> len(s)
+4
+>>> data = {"name":["yahoo","google","facebook"], "marks":[200,400,800], "price":[9, 3, 7]} 
+>>> f1 = DataFrame(data) 
+>>> f1 
+     marks  name      price 
+0    200    yahoo     9 
+1    400    google    3 
+2    800    facebook  7
+>>> f3 = DataFrame(data, columns=['name', 'price', 'marks', 'debt'], index=['a','b','c']) 
+>>> f3 
+       name      price  marks  debt 
+a     yahoo      9      200     NaN 
+b    google      3      400     NaN 
+c  facebook      7      800     NaN
+newdata = {"lang":{"firstline":"python","secondline":"java"}, "price":{"firstline":8000}}
+
+with open("./marks.csv") as f:
+...     for line in f:
+...         print line
+>>> csv_reader = csv.reader(open("./marks.csv"))
+>>> for row in csv_reader:
+...     print row
+>>> marks.sort(column="python")
+ 用pip 安装 openpyxl 模块：sudo pip install openpyxl。继续：
+
+>>> xls = pd.ExcelFile("./marks.xlsx")
+>>> xls.sheet_names
+['Sheet1', 'Sheet2', 'Sheet3']
+>>> sheet1 = xls.parse("Sheet1")
+# 查看表头5行
+df.head(5)
+
+# 查看表末5行
+df.tail(5)
+
+# 查看列的名字
+df.columns
+
+# 查看表格当前的值
+df.values
+
+# 查看所有列的统计描述，包括平均值，标准差，最大最小值，以及25%，50%，75%的 percentile 值
+df.describe()
+
+# 对表按照A列升序排序
+df.sort_values(by='A')
+在方括号中加入判断条件来过滤行，条件必需返回 True 或者 False
+
+df[(df.index >= '2013-01-01') & (df.index <= '2013-01-03')]
+df[df['A'] > 0]
+Pandas 中的基本数据结构有二，Series 和 Dataframe。 Series 用来创建行，也可以理解为一维数组。 Dataframe 用来创建块，或称为矩阵，表格。
+列的选取
+
+cols = df[['A', 'B', 'C']]http://www.chenhf.com/data/pandas-done-right
+df[df.rain_octsep < 1000]
+这条代码只返回十月-九月降雨量小于 1000 mm 的记录
+
+>>> df[0:3]
+   user_id         id  price
+0    28695  421750219   0.01
+1    28695  864476977   0.01
+2    28695  775958292   0.01
+>>> df['price'].mean()
+23.895552010210594
+>>> df['price'].count()
+1567
+>>> df['price'].describe()
+count    1567.000000
+mean       23.895552
+std       138.741234
+min         0.010000
+25%         1.000000
+50%         2.000000
+75%        10.000000
+max      5000.000000
+Name: price, dtype: float64
+>>> df.shape
+(1567, 3)
+>>>
+1.右连接。场景是根据几个主键把两个特征集拼起来。merge(data1,data2,how='left',on=['userID','date'])
+2.合并。场景是把两个特征都一样的数据集合并起来，比如把3月份的数据集合并到4月份来，这样样本就会比单用4月份的多了。concat((data1,data2))
+它是按列名合并的，所以列的顺序没关系
+
+作者：王杰
+链接：https://www.zhihu.com/question/37180159/answer/79671057
+来源：知乎https://ericfu.me/10-minutes-to-pandas/
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+修改符合条件行的某个值。比如，符合消费额度到1000的客户，打标签为优质客户。data['target'] = 0
+data.loc[data['consumption_sum']>1000,'target'] = 1
+8.某列转日期。data['date'] = pandas.to_datetime(data['date'])
+9.对某列进行比较特殊的处理。在个人工作中，用的比较多和时间相关的，所以推荐个时间加减的方法。#新建一列，为下个月
+from dateutil.relativedelta import relativedelta
+data['next_month'] = data['date'].map(lambda x:x+relativedelta(months=1))
+10.保持数据到csv#index=None不加，会将行号输出到文件中
+data.to_csv('data.csv',index=None)
+
+ 
+```
+
+
+
 [域名代码Punycode converter Unicode Domains](https://www.punycoder.com/)
 http://xn--domain.net/
 [ mysql处理高并发数据,防止数据超读](http://blog.csdn.net/gaoxuaiguoyi/article/details/47304615)
