@@ -110,11 +110,19 @@ from dateutil.relativedelta import relativedelta
 data['next_month'] = data['date'].map(lambda x:x+relativedelta(months=1))
 10.保持数据到csv#index=None不加，会将行号输出到文件中
 data.to_csv('data.csv',index=None)
+ 
+
+
 
  
 ```
+[十分钟的 pandas 入门教程](https://ericfu.me/10-minutes-to-pandas/)
+```js
 
 
+
+
+```
 
 [域名代码Punycode converter Unicode Domains](https://www.punycoder.com/)
 http://xn--domain.net/
