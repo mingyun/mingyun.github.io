@@ -1,3 +1,45 @@
+[域名代码Punycode converter Unicode Domains](https://www.punycoder.com/)
+http://xn--domain.net/
+[ mysql处理高并发数据,防止数据超读](http://blog.csdn.net/gaoxuaiguoyi/article/details/47304615)
+```js
+pandas-0.19.1-cp27-none-win32.whl
+beginTranse(开启事务)  
+try{  
+   //第一次进行查询，返回数量     
+    $result = $dbca->query('select amount from s_store where postID = 12345');  
+  // 3个请求进入,使用了之前的，查询结果，造成了数据脏读，都去更新了库存，造成库存超读  
+    if(result->amount > 0){  
+        //quantity为请求减掉的库存数量  
+        $dbca->query('update s_store set amount = amount - quantity where postID = 12345');  
+    }  
+}catch($e Exception){  
+    rollBack(回滚)  
+}  
+commit(提交事务);
+其实隐藏着巨大的漏洞。数据库的访问其实就是对磁盘文件的访问，数据库中的表其实就是保存在磁盘上的一个个文件，甚至一个文件包含了多张表。
+beginTranse(开启事务)  
+try{  
+    //quantity为请求减掉的库存数量  
+    $dbca->query('update s_store set amount = amount - quantity where postID = 12345');  
+    //更新之后再进行数量判断，如果为负就回滚，不会造成库存超读  
+    $result = $dbca->query('select amount from s_store where postID = 12345');  
+    if(result->amount < 0){  
+       throw new Exception('库存不足');  
+    }  
+}catch($e Exception){  
+    rollBack(回滚);  
+}  
+commit(提交事务);  
+beginTranse(开启事务)  
+try{  
+    //quantity为请求减掉的库存数量  
+    $dbca->query('update s_store set amount = amount - quantity where amount>=quantity and postID = 12345');  
+}catch($e Exception){  
+    rollBack(回滚)  
+}  
+commit(提交事务) 
+```
+
 PHP中记录最后一次新增的ID https://segmentfault.com/q/1010000009114926
 如何比较高效的求出用户余额与流水的差异数据？https://segmentfault.com/q/1010000009115881
 MySQL的排序并取得对应序号https://segmentfault.com/q/1010000009124773
