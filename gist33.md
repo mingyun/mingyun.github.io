@@ -1,4 +1,141 @@
+[Shadowsocks Windows 使用说明](https://github.com/shadowsocks/shadowsocks-windows/wiki/Shadowsocks-Windows-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
+[manage.py](https://github.com/Birdback/manage.py)
+[如何使用 Null Object 模式 laravel](http://oomusou.io/dp/dp-nullobject/)
 [python Pandas 使用](http://wiki.jikexueyuan.com/project/start-learning-python/311.html)
+[ app后端开发系列文章目录](http://blog.csdn.net/hel12he/article/details/47721209)
+```js
+t上环境增加 supervisord 任务
+[program:webianr_async_export]
+command=/usr/bin/php /application/www/e.vhall.com/artisan queue:listen --tries=3 --queue=webinar_user_reg_async_export --timeout=0
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/webianr_async_export_std.log
+stderr_logfile=/var/log/supervisor/webianr_async_export_err.log
+
+self的引用是在类被定义时就决定的，也就是说，继承了B的A，他的self引用仍然指向A 通过static关键字来访问静态的方法或者变量，与self不同，static的引用是由运行时决定。
+class C  
+{  
+    protected static $_instance = null;  
+    protected function __construct(){  
+    }  
+    protected function __clone(){  
+    }  
+    public function getInstance(){  
+        if (static::$_instance === null) {  
+            static::$_instance = new static;  
+        }  
+        return static::$_instance;  
+    }   
+}  
+class D extends C{  
+    protected static $_instance = null;  
+}  
+$c = C::getInstance();  
+$d = D::getInstance();  
+var_dump($c === $d);bool(false)
+
+var_dump(substr('f', 257, 1), substr('f', -257, 1));
+bool(false)
+string(1) "f"
+http://www.lolphp.com
+
+echo("I'm ok");
+var_dump(number_format('-0.123', 0)); string(2) "-0"
+```
+[支付宝、微信支付接入](http://blog.csdn.net/column/details/payment.html)
+[mysql数据库设计](http://blog.csdn.net/hel12he/article/details/44997209)
+[ Laravel5学习笔记：执行route:cache时报LogicException](http://blog.csdn.net/hel12he/article/details/46550645)
+php artisan route:cache  在闭包里边，是不能够进行路由缓存的
+// 之前，报错的路由
+Route::get('/', function()
+{
+    return veiw('welcome');
+});
+
+// 修改之后，能够路由缓存的方式
+Route::get('/', 'HomeController@index');
+[在packagist上发布自己的composer包](http://blog.csdn.net/hel12he/article/details/46659749)
+[Laravel5学习笔记：Facade的运行机制](http://blog.csdn.net/hel12he/article/details/46620519)
+$value = $app->make('cache')->get('key'); $value = $app['cache']->get('key');
+$value = app('cache')->get('key'); $value = Cache::get('key');
+use Illuminate\Support\Facades\Cache; use Cache;
+
+CacheServiceProvider实现cache单例
+$this->app->singleton('cache', function ($app) {
+            return new CacheManager($app);
+        });
+config/app.php 加载CacheServiceProvider
+[Composer.json配置文件说明](http://blog.csdn.net/hel12he/article/details/46503875)
+```js
+"autoload":{
+    "files":["lib/OrderManager.php"]
+}
+composer dump-autoload
+ 
+让composer重建自动加载的信息，完成之后，就可以在index.php里调用OrderManager类啦。
+"classmap":["lib"]
+PSR-0自动加载 
+PSR-1基本代码规范 
+PSR-2代码样式 
+PSR-3日志接口 
+PSR-4 自动加载
+PSR-4和PSR-0最大的区别是对下划线（underscore）的定义不同。PSR-4中，在类名中使用下划线没有任何特殊含义。而PSR-0则规定类名中的下划线_会被转化成目录分隔符。
+"autoload":{
+    "psr-0":{
+        "SilkLib":"lib/"
+    }
+}
+SlikLib是命名空间，lib是目录名，他们的组合告诉composer，文件搜索是在：lib/SilkLib/ 目录下，而不是在 SilkLib/lib 目录下
+应用根目录\lib\SilkLib\OrderManager.php
+namespace SilkLib;
+class OrderManager
+{
+    public function test()
+    {
+        echo "hello";
+    }
+ }
+ 应用根目录\lib\OrderManager.php
+"autoload":{
+    "psr-4":{
+        "Silk\\":"lib"
+    }
+}
+再次composer dump-autoload，运行测试，OK通过！
+```
+
+
+[ 8. Laravel5学习笔记：在laravel5中使用OAuth授权](http://blog.csdn.net/hel12he/article/details/46820711)
+composer lucadegasperi/oauth2-server-laravel
+
+
+[app后端开发四：GeoHash实现查找附近的X](http://blog.csdn.net/hel12he/article/details/48208927)
+https://github.com/helei112g/laravel_geohash 
+```js
+$lat = '30.555';
+$long = '104.07';
+$geohash = new GeoHash();
+
+$hash = $geohash->encode($lat, $long);
+// 决定查询范围，值越大，获取的范围越小
+// 当geohash base32编码长度为8时，精度在19米左右，而当编码长度为9时，精度在2米左右，编码长度需要根据数据情况进行选择。
+$pre_hash = substr($hash, 0, 5);
+
+//取出相邻八个区域
+$neighbors = $geohash->neighbors($pre_hash);
+array_push($neighbors, $pre_hash);
+
+$values = '';
+foreach ($neighbors as $key=>$val) {
+  $values .= '\'' . $val . '\'' .',';
+}
+$values = substr($values, 0, -1);
+SELECT * FROM `address` WHERE LEFT(`geohash`,5) IN ('wm6n0','wm6j8','wm6jc','wm3vz','wm3yp','wm6n1','wm6j9','wm3vx','wm6jb')
+```
+[app后端开发二：API接口文档自动生成工具 swagger-ui](http://blog.csdn.net/hel12he/article/details/46804915)
+https://github.com/helei112g/laravel-swagger/blob/master/README.md 
+https://github.com/helei112g/swagger-ui
+
 ```js
 import pandas as pd # This is the standard
 Series 就如同列表一样，一系列数据，每个数据对应一个索引值。比如这样一个列表：[9, 3, 8]
