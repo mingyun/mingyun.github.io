@@ -13,6 +13,231 @@ var GB2312UnicodeConverter={
 
       
 ```
+[php安全](http://stackoverflow.com/documentation/php/2781/security#t=201704280841101496392)
+```js
+$whitelist = [
+  'extensions' => [
+    'png', 'gif', 'jpg', 'jpeg'
+  ],
+  'mimes' => [
+    'image/png',
+    'image/gif',
+    'image/jpeg',
+  ]
+];
+
+if(in_array($extension, $whitelist['extensions'])){
+  if(in_array(mime_content_type($filename), $whitelist['mimes']){
+    // safe to store.
+  } else {
+    die('file extension does not match mime');
+  }
+} else {
+  die("Only '" . join(', ', $whitelist['extensions'])) . "' extensions are allowed");
+}
+$string = '<b>Hello,<> please remove the <br> tags.</b>';
+
+echo strip_tags($string, '<b>');
+$page = 'pages/'.$_GET['page'].'.php';
+$allowed = ['pages/home.php','pages/error.php'];
+if(in_array($page,$allowed)) {
+    include($page);
+} else {
+    include('index.php');
+}
+<?php system('ls ' . escapeshellarg($_GET['path'])); ?>
+echo '<div>' . htmlspecialchars($_GET['input']) . '</div>';
+$arr=[];
+echo $arr['a'];
+echo $arr['a']??'null';
+$data = [
+    [ "Fruit" => "Apple",  "Color" => "Red",    "Cost" => 1 ],
+    [ "Fruit" => "Banana", "Color" => "Yellow", "Cost" => 7 ],
+    [ "Fruit" => "Cherry", "Color" => "Red",    "Cost" => 2 ],
+    [ "Fruit" => "Grape",  "Color" => "Green",  "Cost" => 4 ]
+];
+
+foreach($data as $fruit) {
+    foreach($fruit as $key => $value) {
+        if ($key == "Cost" && $value >= 5) {
+            continue 2;
+        }
+        echo $key.$value.PHP_EOL;
+        /* make a pie */
+    }
+}
+// PHP <7.0
+if (isset($_COOKIE['user'])) {
+    // true, cookie is set
+    echo 'User is ' . $_COOKIE['user'];
+else {
+    // false, cookie is not set
+    echo 'User is not logged in';
+}
+unset($_COOKIE['user']);setcookie('user', '', time() - 3600, '/');
+// PHP 7.0+
+echo 'User is ' . $_COOKIE['user'] ?? 'User is not logged in';
+class StaticSquareHolder
+{
+    public static function square($number)
+    {
+        return $number * $number;
+    }
+}
+
+$initial_array = [1, 2, 3, 4, 5];
+$final_array = array_map(['StaticSquareHolder', 'square'], $initial_array);
+// or:
+$final_array = array_map('StaticSquareHolder::square', $initial_array); // for PHP >= 5.2.3
+$squaredHolder = new SquareHolder();
+var_dump($final_array); // prints the new array with 1, 4, 9, 16, 25
+$final_array = array_map([$squaredHolder, 'square'], $initial_array);
+
+echo '<?php echo "Hello world!";' | php
+$a = 1;
+$b = 1;
+$a = $b += 1;// 2 2
+$a = 3;
+$b = ($a = 5);//5 5
+print "Current cURL version: " . phpversion( 'curl' );
+模拟登陆
+# create a cURL handle
+$ch  = curl_init();
+
+# set the URL (this could also be passed to curl_init() if desired)
+curl_setopt($ch, CURLOPT_URL, "https://www.example.com/login.php");
+
+# set the HTTP method to POST
+curl_setopt($ch, CURLOPT_POST, true);
+
+# setting this option to an empty string enables cookie handling
+# but does not load cookies from a file
+curl_setopt($ch, CURLOPT_COOKIEFILE, "");
+
+# set the values to be sent
+curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+    "username"=>"joe_bloggs",
+    "password"=>"$up3r_$3cr3t",
+));
+
+# return the response body
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+# send the request
+$result = curl_exec($ch);别关闭 下面继续使用
+curl_setopt($ch, CURLOPT_URL, "https://www.example.com/show_me_the_foo.php");
+
+# change the method back to GET
+curl_setopt($ch, CURLOPT_HTTPGET, true);
+
+# send the request
+$result = curl_exec($ch);
+
+# finished with cURL
+curl_close($ch);
+
+同时上传文件和表单
+$files = array();
+
+foreach ($_FILES["upload"]["error"] as $key => $error) {
+    if ($error == UPLOAD_ERR_OK) {
+
+        $files["upload[$key]"] = curl_file_create(
+            $_FILES['upload']['tmp_name'][$key],
+            $_FILES['upload']['type'][$key],
+            $_FILES['upload']['name'][$key]
+        );
+    }
+}
+$data = $new_post_array + $files;
+$ch = curl_init();
+
+curl_setopt_array($ch, array(
+    CURLOPT_POST => 1,
+    CURLOPT_URL => "https://api.externalserver.com/upload.php",
+    CURLOPT_RETURNTRANSFER => 1,
+    CURLINFO_HEADER_OUT => 1,
+    CURLOPT_POSTFIELDS => $data
+));
+
+$result = curl_exec($ch);
+//Set the session name
+session_name('newname');
+//Start the session
+session_start();
+if(isset($_COOKIE[session_name()])) {
+    session_start();
+}
+>>> serialize(null)
+=> "N;"
+>>> serialize(true)
+=> "b:1;"
+>>> serialize(false)
+=> "b:0;"
+>>> serialize(3.445)
+=> "d:3.444999999999999840127884453977458178997039794921875;"
+$numbers = [16,3,5,8,1,4,6];
+
+$even_indexed_numbers = array_filter($numbers, function($index) {
+    return $index % 2 === 0;
+}, ARRAY_FILTER_USE_KEY);
+$parameters = ['foo' => 'bar', 'bar' => 'baz', 'boo' => 'bam'];
+$allowedKeys = ['foo', 'bar'];
+$filteredParameters = array_intersect_key($parameters, array_flip($allowedKeys));
+
+// $filteredParameters contains ['foo' => 'bar', 'bar' => 'baz]
+$parameters  = ['foo' => 1, 'hello' => 'world'];
+$allowedKeys = ['foo', 'bar'];
+$filteredParameters = array_filter(
+    $parameters,
+    function ($key) use ($allowedKeys) {
+        return in_array($key, $allowedKeys);
+    },
+    ARRAY_FILTER_USE_KEY
+);
+$array = ['Joel', 23, true, ['red', 'blue']];
+
+// Returns a JSON encoded array
+echo json_encode($array);
+#> ["Joel",23,true,["red","blue"]]
+
+// Returns a JSON encoded object
+echo json_encode($array, JSON_FORCE_OBJECT);
+#> {"0":"Joel","1":23,"2":true,"3":{"0":"red","1":"blue"}}
+
+// Combine bitmasks - force an object AND pretty print it
+echo json_encode($array, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT);
+{
+    "0": "Joel",
+    "1": 23,
+    "2": true,
+    "3": {
+        "0": "red",
+        "1": "blue"
+    }
+}
+$array = ['23452', 23452];
+
+echo json_encode($array);
+#> ["23452",23452]
+
+echo json_encode($array, JSON_NUMERIC_CHECK);
+#> [23452,23452]
+```
+
+[MySQL隐式转化整理](http://www.cnblogs.com/rollenholt/p/5442825.html)
+假如 password 类型为字符串，查询条件为 int 0 则会匹配上
+SELECT 1+'1'; SELECT CONCAT(2,' test');
+select * from test where name = 'test1' and password = 0;
+show warnings;
+SELECT * FROM users WHERE username = '$_POST["username"]' AND password = '$_POST["password"]'
+如果username输入的是a' OR 1='1，那么password随便输入，这样就生成了下面的查询：
+
+SELECT * FROM users WHERE username = 'a' OR 1='1' AND password = 'anyvalue'
+select * from test where name = 'a' + '55';
+select '55aaa' = 55;
+select 'a' + '55';select 'a' + 'b';
++为算术操作符arithmetic operator 这样就可以解释为什么a和b都转换为double了。因为转换之后其实就是：0+0=0了。 select 'a'+'b'='c';
 [laravel的启动过程](http://www.cnblogs.com/wish123/p/4756669.html)
 ```js
 PSR0加载方式—对应的文件就是autoload_namespaces.php
