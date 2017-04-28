@@ -1,10 +1,65 @@
+[php中max_input_vars默认值为1000导致多表单提交失败](http://www.cnblogs.com/wish123/p/6650361.html)
+，打印post请求后，也发现提交表单个数和正在表单个数对不上 再看了下php-fpm的日志，有点信息可以参考了。 max_input_vars = 2000
+[JS 汉字与Unicode码的相互转化](http://www.cnblogs.com/wish123/p/6481926.html)
+```js
+var GB2312UnicodeConverter={
+        ToUnicode:function(str){
+          return escape(str).toLocaleLowerCase().replace(/%u/gi,'\\u');
+        }
+        ,ToGB2312:function(str){
+          return unescape(str.replace(/\\u/gi,'%u'));
+        }
+      };
+
+      
+```
+[laravel的启动过程](http://www.cnblogs.com/wish123/p/4756669.html)
+```js
+PSR0加载方式—对应的文件就是autoload_namespaces.php
+PSR4加载方式—对应的文件就是autoload_psr4.php
+其他加载类的方式—对应的文件就是autoload_classmap.php
+加载公用方法—对应的文件就是autoload_files.php
+class Superman
+{
+    protected $power;
+
+    public function __construct(array $modules)
+    {
+        // 初始化工厂
+        $factory = new SuperModuleFactory;
+
+        // 通过工厂提供的方法制造需要的模块
+        foreach ($modules as $moduleName => $moduleOptions) {
+            $this->power[] = $factory->makeModule($moduleName, $moduleOptions);
+        }
+    }
+}
+
+// 创建超人
+$superman = new Superman([
+    'Fight' => [9, 100], 
+    'Shot' => [99, 50, 2]
+    ]);
+    
+    class Superman
+{
+    protected $module;
+
+    public function __construct(SuperModuleInterface $module)
+    {
+        $this->module = $module
+    }
+}
+```
+
 [Shadowsocks Windows 使用说明](https://github.com/shadowsocks/shadowsocks-windows/wiki/Shadowsocks-Windows-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
 [manage.py](https://github.com/Birdback/manage.py)
 [如何使用 Null Object 模式 laravel](http://oomusou.io/dp/dp-nullobject/)
 [python Pandas 使用](http://wiki.jikexueyuan.com/project/start-learning-python/311.html)
 [ app后端开发系列文章目录](http://blog.csdn.net/hel12he/article/details/47721209)
 ```js
-t上环境增加 supervisord 任务
+\Queue::push(new \App\Commands\WebinarUserRegExportDeal($id),null,'webinar_user_reg_async_export');
+t上环境增加 supervisord 任务  vi /etc/supervisord.d/webianr_async_export.conf
 [program:webianr_async_export]
 command=/usr/bin/php /application/www/e.vhall.com/artisan queue:listen --tries=3 --queue=webinar_user_reg_async_export --timeout=0
 autostart=true
