@@ -1,3 +1,48 @@
+[浅谈 CSRF 攻击](https://www.v2ex.com/t/357992#reply16)
+CSRF 就是利用了我们的登录状态或者授权状态（请注意“利用”，并没有窃取到），然后做一些损害我们自身利益的事情。 
+验证HTTP Referer 字段 服务端验证请求的token一致性
+session_start();
+$csrf_token = md5(openssl_random_pseudo_bytes(32));//生成随机token
+$_SESSION['token']= $csrf_token;
+[查询所有数据库占用磁盘空间大小的SQL语句](https://www.qcloud.com/community/article/538493001490275637)
+select TABLE_SCHEMA, concat(truncate(sum(data_length)/1024/1024,2),' MB') as data_size,
+concat(truncate(sum(index_length)/1024/1024,2),'MB') as index_size
+from information_schema.tables
+group by TABLE_SCHEMA
+order by data_length desc;
+[update 一条记录的值 WHERE 条件如何做到扩大限制到全表](https://www.v2ex.com/t/357665#reply12)
+```js
+UPDATE `user` SET `mobile`='13888888888' 
+where `id`=1 AND 全 user 表 mobile 字段所有记录没有等于 13888888888
+UPDATE `user` SET `mobile`='13888888888' 
+where 1 > (select count(*) from (select * from user) a where `mobile` = '13888888888') and `id` = 1; 
+UPDATE `zc_users` SET `mobile`='13888888888' 
+where 1 > (select count(*) from (select * from zc_users) a where `mobile` = '13888888888') and `user_id` = 1
+update zc_users set mobile='13888888888' where user_id=1 And not exists(select user_id from (select * from zc_users) a where mobile='13888888888'); 
+```
+[linux 下有办法将前一个命令的结果作为第二个命令的第一个参数](https://www.v2ex.com/t/357232)
+```js
+ls | xargs -i mv {} dst_dir/ (使用 xargs 的-i 参数)
+mv `ls` dst_dir/
+mv $(ls) dst_dir/
+e=`ls` => mv ${e} dst_dir/
+
+比如这个 cat hosts.txt 
+127.0.0.1 p.kjwx8.com 
+127.0.0.1 sta.jcjk0451.com 
+127.0.0.1 1.yhzm.cc 
+127.0.0.1 www.hao934.com 
+如何实现这个效果： 
+127.0.0.1 dp.559.cc 
+127.0.0.1 1.yhzm.cc 
+127.0.0.1 sta.jcjk0451.com 
+127.0.0.1 www.716703.com 
+cat hosts | rev | sort | rev
+```
+[两三年工作经验的 PHPer 需要了解什么知识点](https://www.v2ex.com/t/356904)
+https://freelancersinchina.github.io/diveintophp
+
+如何实现从最右边字符开始逐步往左字符排序
 [php中max_input_vars默认值为1000导致多表单提交失败](http://www.cnblogs.com/wish123/p/6650361.html)
 ，打印post请求后，也发现提交表单个数和正在表单个数对不上 再看了下php-fpm的日志，有点信息可以参考了。 max_input_vars = 2000
 [JS 汉字与Unicode码的相互转化](http://www.cnblogs.com/wish123/p/6481926.html)
