@@ -1,3 +1,14 @@
+[RESTful  PUT 一般用于更改已有数据， POST 一般用来创建新数据](https://www.v2ex.com/t/357228)
+幂等就是说，如果你提交的参数是相同的，不论提交几次，结果都是一样的，或者可以理解，最终结果都以最后一次提交为准 
+比如你修改 id=1 的 user 的 name 为 'zhu'，无论你请求多少次， name 都是 zhu 
+不幂等的情况，比如你创建一个 name 为 'zhu' 的用户，第一次请求，系统里有了一个 zhu ，返回 id 为 1 ，再请求一次，系统里又多了一个 zhu ，返回 id 为 2 ，系统状态以及返回结果与请求次数有关 POST 是非幂等，每次 POST 都会增加一个 record 
+PUT 是幂等 且完全替换，每次 PUT 都会对指定的 record 进行更新  CURD  ： 
+C(POST)， U(PUT)， R(GET)， D(DELETE) 
+[Python网络爬虫Scrapy框架研究](https://github.com/yidao620c/core-scrapy)
+[基于PDF.js的pdf文件在线阅读Demo](https://zhuanlan.zhihu.com/p/26606586)
+[独家|内部公开 灰产 网赚 创业项目20案例（不看后悔）](https://zhuanlan.zhihu.com/p/26549455)
+[暴力密码破解器 ocl-Hashcat-plus 支持每秒猜测最多 80 亿个密码，意味着什么？](https://www.zhihu.com/question/21558046/answer/160651946)
+[爬虫杂谈（二）使用Selenium抓取动态网站](https://zhuanlan.zhihu.com/p/26630390)
 [浅谈 CSRF 攻击](https://www.v2ex.com/t/357992#reply16)
 CSRF 就是利用了我们的登录状态或者授权状态（请注意“利用”，并没有窃取到），然后做一些损害我们自身利益的事情。 
 验证HTTP Referer 字段 服务端验证请求的token一致性
