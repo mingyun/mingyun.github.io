@@ -1,3 +1,14 @@
+[函数explode和split的区别](http://blog.csdn.net/diandianxiyu_geek/article/details/52177575)
+也就是说split函数并不支持PHP 7  split的第一个参数为正则表达式，也就是说，如果想要匹配特殊字符，需要转义一下。
+$arr='2016\8\11';
+$rearr = split ('[/\]', $arr);
+[PHP图像裁剪缩略裁切类源代码及使用方法](http://blog.csdn.net/diandianxiyu_geek/article/details/50477015重点在于使用图像处理函数 imagecopy 和 imagecopyresampled)
+[使用Laravel框架搭建的微博数据获取分析平台](https://github.com/daweilang/GetWB)
+
+
+[ubuntu 上给PHP安装扩展 Msgpack 和 Yar 可以高效的封装好供外部访问的接口](http://blog.csdn.net/diandianxiyu_geek/article/details/17119341)
+[PHP使用PHPExcel生成Excel表格文件附带随机生成英文名函数](http://blog.csdn.net/diandianxiyu_geek/article/details/51636990)
+[Redis在实际项目中的应用](http://blog.csdn.net/diandianxiyu_geek/article/details/52985648)
 [RESTful  PUT 一般用于更改已有数据， POST 一般用来创建新数据](https://www.v2ex.com/t/357228)
 幂等就是说，如果你提交的参数是相同的，不论提交几次，结果都是一样的，或者可以理解，最终结果都以最后一次提交为准 
 比如你修改 id=1 的 user 的 name 为 'zhu'，无论你请求多少次， name 都是 zhu 
