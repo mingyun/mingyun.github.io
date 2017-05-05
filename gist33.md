@@ -4,6 +4,58 @@ $arr='2016\8\11';
 $rearr = split ('[/\]', $arr);
 [PHP图像裁剪缩略裁切类源代码及使用方法](http://blog.csdn.net/diandianxiyu_geek/article/details/50477015重点在于使用图像处理函数 imagecopy 和 imagecopyresampled)
 [使用Laravel框架搭建的微博数据获取分析平台](https://github.com/daweilang/GetWB)
+php上传文件500错误,原来 是/tmp没有权限，你们说，谁能想到 php 上传500是因为没有权限啊，这不是看日志就能明白的事，所以自己的总结 还是有一定含金量的
+以前做会员过期是类似这样实现的，他买了一个月的会员，在买的时候设置expired_at字段为2017-6-4，然后Laravel中间件每次验证用户的时候顺便验证当前时间是否大于过期时间，后台也是一样，如果当前时间小于过期时间则有一个“会员”小标识，反过来就是没有
+table  中有一个字段  param   存储的是字符串列表  1,2,3 这样的
+
+现在要统计1,2,3分别的行数，我现在的想法是union 
+
+select param,count(*) as count from 
+(
+select * from table where find_in_set('param', 1)
+union 
+select * from table where find_in_set('param', 2)
+union
+select * from table where find_in_set('param', 3)
+) as tb
+group by param
+
+或者
+select param,count(*) as count from table where find_in_set('param', 1)
+union
+select param,count(*) as count from table where find_in_set('param', 2)
+select param,count(*) as count from table where find_in_set('param', 3)
+
+除了拆表     改字段类型，  有没有比较痛快的统计语句
+var a = [];
+a['abc'] = 1;
+console.log(a);
+
+你跑一下，是可以输出内容的，但json的化时候，就丢失了
+site:52pojie.cn beyondcompare4  绝大部分破解软件都能在52pojie上下到
+[酷Q聊天机器人的安装设置教程](http://jingyan.baidu.com/article/1612d500768ee0e20e1eeeb2.html)
+同一进程调用第一次false，第二次true
+```js
+function cacheUserIsThird($userData)
+    {
+        static $userIsThird;
+
+        if (isset($userIsThird)) {
+            return true;
+        }
+
+        $userIsThird = true;
+        return false;
+    }
+ cacheUserIsThird($user)   ;//false
+ 
+ $user=user::create([]);
+ if(cacheUserIsThird($user)){
+   return;
+ }
+    
+```
+[Redis持久化-RDB](https://wenchao.ren/archives/165)
 
 
 [ubuntu 上给PHP安装扩展 Msgpack 和 Yar 可以高效的封装好供外部访问的接口](http://blog.csdn.net/diandianxiyu_geek/article/details/17119341)
