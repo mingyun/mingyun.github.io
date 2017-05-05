@@ -4,6 +4,7 @@ $arr='2016\8\11';
 $rearr = split ('[/\]', $arr);
 [PHP图像裁剪缩略裁切类源代码及使用方法](http://blog.csdn.net/diandianxiyu_geek/article/details/50477015重点在于使用图像处理函数 imagecopy 和 imagecopyresampled)
 [使用Laravel框架搭建的微博数据获取分析平台](https://github.com/daweilang/GetWB)
+```js
 php上传文件500错误,原来 是/tmp没有权限，你们说，谁能想到 php 上传500是因为没有权限啊，这不是看日志就能明白的事，所以自己的总结 还是有一定含金量的
 以前做会员过期是类似这样实现的，他买了一个月的会员，在买的时候设置expired_at字段为2017-6-4，然后Laravel中间件每次验证用户的时候顺便验证当前时间是否大于过期时间，后台也是一样，如果当前时间小于过期时间则有一个“会员”小标识，反过来就是没有
 table  中有一个字段  param   存储的是字符串列表  1,2,3 这样的
@@ -33,6 +34,315 @@ console.log(a);
 
 你跑一下，是可以输出内容的，但json的化时候，就丢失了
 site:52pojie.cn beyondcompare4  绝大部分破解软件都能在52pojie上下到
+
+class A {private $x = 1;}
+
+// Pre PHP 7 code
+$getXCB = function() {return $this->x;};
+$getX = $getXCB->bindTo(new A, 'A'); // intermediate closure
+echo $getX();
+
+// PHP 7+ code
+$getX = function() {return $this->x;};
+echo $getX->call(new A);
+```
+[远程调用以及RPC框架](http://blog.csdn.net/diandianxiyu_geek/article/details/52294201)
+[PHP实现经典算法(下)](http://blog.csdn.net/diandianxiyu_geek/article/details/51141598)
+[PHP的CURL开发项目最佳实践](http://blog.csdn.net/diandianxiyu_geek/article/details/50414778)
+
+github开源地址 https://github.com/diandianxiyu/ApiTesting
+[ PHP计算时间差函数 可显示“消息来自XX分钟前”](http://blog.csdn.net/diandianxiyu_geek/article/details/17164179)
+```js
+function time2Units ($time)  
+{  
+        $year   = floor($time / 60 / 60 / 24 / 365);  
+        $time  -= $year * 60 * 60 * 24 * 365;  
+        $month  = floor($time / 60 / 60 / 24 / 30);  
+        $time  -= $month * 60 * 60 * 24 * 30;  
+        $week   = floor($time / 60 / 60 / 24 / 7);  
+        $time  -= $week * 60 * 60 * 24 * 7;  
+        $day    = floor($time / 60 / 60 / 24);  
+        $time  -= $day * 60 * 60 * 24;  
+        $hour   = floor($time / 60 / 60);  
+        $time  -= $hour * 60 * 60;  
+        $minute = floor($time / 60);  
+        $time  -= $minute * 60;  
+        $second = $time;  
+        $elapse = '';  
+          
+        $unitArr = array('年前'  =>'year', '个月前'=>'month',  '周前'=>'week', '天前'=>'day',  
+                '小时前'=>'hour', '分钟前'=>'minute', '秒前'=>'second'  
+        );  
+          
+        foreach ( $unitArr as $cn => $u )  
+        {  
+            if ( $year > 0 ) {//大于一年显示年月日  
+                $elapse = date('Y/m/d',time()-$time);  
+                break;  
+            }  
+            else if ( $$u > 0 )  
+            {  
+                $elapse = $$u . $cn;  
+                break;  
+            }  
+        }  
+          
+        return $elapse;  
+}  
+  
+$past = 2052345678; //已经过去的时间  
+$diff = time() - $past;  
+  
+echo '发表于' . time2Units($diff) . '前'; 
+```
+[PHP使用PHPExcel生成Excel表格文件](http://blog.csdn.net/diandianxiyu_geek/article/details/51636990)
+[极验验证官方SDK源码分析和实现思路](http://blog.csdn.net/diandianxiyu_geek/article/details/50455049)
+[Gif图片的处理 GIFDecoder的排错以及修改另附完整代码和demo](http://blog.csdn.net/diandianxiyu_geek/article/details/45889091)
+[模拟登录网站并获取用户信息](http://blog.csdn.net/diandianxiyu_geek/article/details/52074237)
+通过Chrome的调试模式寻找发送的http请求。
+
+注意勾选下图的Preserve log,避免页面跳转的请求记录丢失。
+[mysql分库分表的策略](http://type.so/sql/mysql-sharding-strategy.html)
+1. 插入数据，必须带有userId
+2. 根据userId计算出xId
+xId = userId % 10000;
+3. 根据xId定位数据所在表
+tNum = xId % 1024; // 最简单的取模hash(具体策略由中间件决定)
+4. 插入数据，返回realId
+realId = id + xId;
+1. 根据realId查询, 获取单张表中的Id值
+id = realId / 10000; // 整除
+2. 获取虚拟键xId
+xId = realId % 10000;
+3. 根据xId定位数据所在表
+tNum = xId % 1024; // 最简单的取模hash(具体策略由中间件决定)
+4. 根据表和Id获取单条数据
+[订单号的生成规则](http://type.so/default/order-id-generate-rule.html)
+[php max_input_vars限制](http://type.so/php/php-max-input-vars-limit.html)
+使用了大量的数组，造成了 php 端 $stock 变量无法完全解析。
+ 使用 post 的 body 将数据传过来；在 php 端使用 file_get_contents('php://input') 来获取之后在 json_decode；
+减少 post 的字段，先 js json_encode 一下，再用一个大字段传过来
+[slim框架接入pysh](http://type.so/php/slim-framework-and-pysh.html)
+
+[私信的设计](http://type.so/default/design-private-message.html)
+
+```js
+发件人和消息的关系 (一对多)
+
+消息和收件人的关系 (多对多)
+pre_messages
+
++------------+------------------+------+-----+---------+----------------+
+| Field      | Type             | Null | Key | Default | Extra          |
++------------+------------------+------+-----+---------+----------------+
+| id         | int(11) unsigned | NO   | PRI | NULL    | auto_increment |
+| sender_id  | int(11) unsigned | NO   |     | 0       |                |
+| message    | varchar(255)     | NO   |     |         |                |
+| type       | varchar(50)      | NO   |     |         |                |
+| expires_at | datetime         | YES  |     | NULL    |                |
+| created_at | datetime         | NO   |     | NULL    |                |
+| updated_at | datetime         | NO   |     | NULL    |                |
+| deleted_at | datetime         | YES  |     | NULL    |                |
++------------+------------------+------+-----+---------+----------------+
+
+pre_message_recipients
+
++--------------+---------------------+------+-----+---------+----------------+
+| Field        | Type                | Null | Key | Default | Extra          |
++--------------+---------------------+------+-----+---------+----------------+
+| id           | int(11) unsigned    | NO   | PRI | NULL    | auto_increment |
+| recipient_id | int(11) unsigned    | NO   |     | 0       |                |
+| message_id   | int(11) unsigned    | NO   |     | 0       |                |
+| status       | tinyint(1) unsigned | NO   |     | 0       |                |
+| created_at   | datetime            | NO   |     | NULL    |                |
+| updated_at   | datetime            | NO   |     | NULL    |                |
+| deleted_at   | datetime            | YES  |     | NULL    |                |
++--------------+---------------------+------+-----+---------+----------------+
+flush这个函数http://type.so/php/php-flush.html http://type.so/php/php-tips-1.html
+$my_string_var = 'test...';
+echo '';
+for($i = 1, $i <7, $i++) {
+	echo str_pad($my_string_var, 2048, ' ');
+	@ob_flush();
+	flush();
+	sleep(1);
+}
+
+// 获取所有php和txt文件，必须指定第二个参数为GLOB_BRACE才能使用{}
+$files = glob('*.{php,txt}', GLOB_BRACE);
+
+// 按照文件的修改时间排序
+usort($files, create_function('$a,$b', 'return filemtime($a) - filemtime($b);'));
+
+// 深度遍历文件夹
+$path = realpath('/etc');
+
+$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST);
+foreach($objects as $name => $object){
+    echo $name . PHP_EOL;
+}
+```
+[php大数（浮点数）取余](http://type.so/php/fmod.html)
+```js
+function Kmod($bn, $sn)
+{
+	return intval(fmod(floatval($bn), $sn));
+}
+//整数取余方法
+function mod($bn, $sn)
+{
+	return $bn%$sn;
+}
+
+//最大的int整数
+$bn = PHP_INT_MAX;
+$sn = 11;
+
+var_dump($bn);
+var_dump(Kmod($bn, $sn));
+var_dump(mod($bn, $sn));
+
+//给最大的int整数加1
+$bn = PHP_INT_MAX + 1;
+var_dump($bn);
+var_dump(Kmod($bn, $sn));
+var_dump(mod($bn, $sn));
+
+x = {'a':1, 'b': 2}
+y = {'b':10, 'c': 11}
+合并字典
+# python2.x
+z = dict(x.items() + y.items())
+# python3.x
+z = dict(list(x.items()) + list(y.items()))
+
+# another way
+z = dict(x, **y)
+
+直接用int会报错。
+
+str = "545.2222"
+print(int(float(str)))
+```
+[咔咔，网页截图服务 http://tool.lu/article/](https://github.com/xiaozi/kaka)
+[网易式评论箱的实现](http://type.so/php/netease-comment-box.html)
+[php对特定数组进行压缩](http://type.so/php/compress-array.html)
+```js
+$dataArr = array(
+'0'=>array('c'=>'A','f'=>55,'t'=>60),
+'1'=>array('c'=>'A','f'=>61,'t'=>70),
+'2'=>array('c'=>'A','f'=>71,'t'=>80),
+'3'=>array('c'=>'A','f'=>81,'t'=>90),
+'4'=>array('c'=>'B','f'=>91,'t'=>100),
+'5'=>array('c'=>'B','f'=>101,'t'=>110),
+'6'=>array('c'=>'A','f'=>111,'t'=>120),
+'7'=>array('c'=>'B','f'=>121,'t'=>130),
+'8'=>array('c'=>'B','f'=>131,'t'=>140),
+'9'=>array('c'=>'B','f'=>141,'t'=>150)
+);
+好多同城市的ip上一条结束和下一条开始其实是连续的，也就是说完全可以组成一条数据。
+function change($dataArr)
+{
+	$j=0;
+	for ($i=0;$i<=count($dataArr);$i++)
+	{
+		if($dataArr[$i]['t']+1 == $dataArr[$i+1]['f'] && $dataArr[$i]['c'] == $dataArr[$i+1]['c'] && $i!=count($dataArr)-1)
+		{
+			$dataArr[$i]['t'] = $dataArr[$i+1]['t'];
+			unset($dataArr[$i+1]);
+			$j++;
+		}
+	}
+	if($j != 0) $dataArr = change(array_values($dataArr));
+	return $dataArr;
+}
+array
+  0 => 
+    array
+      'c' => string 'A' (length=1)
+      'f' => int 55
+      't' => int 90
+  1 => 
+    array
+      'c' => string 'B' (length=1)
+      'f' => int 91
+      't' => int 110
+  2 => 
+    array
+      'c' => string 'A' (length=1)
+      'f' => int 111
+      't' => int 120
+  3 => 
+    array
+      'c' => string 'B' (length=1)
+      'f' => int 121
+      't' => int 150
+```
+[php中正确获取程序路径](http://type.so/php/php-application-root.html)
+if ( ! defined('DS')) {
+	define('DS', DIRECTORY_SEPARATOR);
+}
+
+$GLOBALS['laravel_paths']['base'] = __DIR__.DS;
+
+[位运算](http://type.so/python/bitwise.html)
+a, b = 3, 4
+a = a ^ b
+b = b ^ a
+a = a ^ b
+print(a, b) #4 3
+
+[Mysql ERROR 1690 (22003): BIGINT UNSIGNED value is out of range in..的解决方法](http://type.so/sql/mysql-bigint-unsigned-value-is-out-of-range-in-solution.html)
+当两个时间戳相减为负数时才会出现ERROR 1690 (22003): BIGINT UNSIGNED value is out of range in..这个错误，但在这个表中两个值中大小不是固定的，lastactivity有可能比lastvisit大，也有可能比lastvisit小。。所以这里可以用cast()来解决
+select abs(lastvisit-lastactivity) from pre_common_member_status limit 1;
+select lastactivity-lastvisit from pre_common_member_status limit 1;
+
+select cast(lastactivity as signed)-cast(lastvisit as signed) from pre_co
+mmon_member_status limit 1;
+select abs(cast(lastactivity as signed)-cast(lastvisit as signed)) from p
+re_common_member_status limit 1;
+[php中nbsp的trim](http://type.so/php/trim-nbsp.html)
+$str = "&nbsp;abc"; 
+$converted = strtr($str, array_flip(get_html_translation_table(HTML_ENTITIES, ENT_QUOTES)));
+var_dump($converted); // 这儿才是要处理的字符串，上面的都是准备工作
+var_dump(trim($converted, chr(0xc2) . chr(0xa0)));//abc
+[mysql load data infile一例](http://type.so/sql/load-data-infile.html)
+LOAD DATA INFILE 'D:\data.txt'
+INTO TABLE `domain`
+FIELDS TERMINATED BY ','
+(@domain,`status`)
+[php调用python服务](http://type.so/python/php-call-python.html)
+[使用casperjs截出优雅的图片](http://type.so/linux/casperjs-capture-nice.html)
+[为php程序增加调试REPL](http://type.so/php/add-repl-to-php-project.html)
+composer require d11wtq/boris dev-master
+require __DIR__ . '/vendor/autoload.php';
+
+$boris = new \Boris\Boris('> ');
+$boris->start();
+jQuery data函数的坑
+<div id="test" data-id="1e3"></div>
+<script>
+console.log($('#test').data('id'));
+// 1e3  jQuery 1.9.1
+// 1000  jQuery 1.7.2
+</script>
+[分析某手机号码归属地储存结构](http://type.so/other/phone-dat-struct.html)
+https://github.com/lovedboy/phone pip install phone p.find(1888888)
+[PHP unpack VS Python unpack](http://type.so/python/php-vs-python-unpack.html)
+unpack 对二进制数据解包。
+
+php unpack的结果 数组的索引是从 1 开始的
+python unpack的结果是 元祖，索引从 0 开始
+// php
+unpack('V6', $bin);
+
+# python
+import struct
+struct.unpack('<6L', bin[0:24])
+[MySQL server has gone away解决办法](http://type.so/sql/mysql-server-has-gone-away-solution.html)
+解决办法:将max_allowed_packet值调大。
+SHOW GLOBAL VARIABLES LIKE '%packet'; SET GLOBAL max_allowed_packet=10485760;
+
 [酷Q聊天机器人的安装设置教程](http://jingyan.baidu.com/article/1612d500768ee0e20e1eeeb2.html)
 同一进程调用第一次false，第二次true
 ```js
