@@ -2,7 +2,51 @@
 也就是说split函数并不支持PHP 7  split的第一个参数为正则表达式，也就是说，如果想要匹配特殊字符，需要转义一下。
 $arr='2016\8\11';
 $rearr = split ('[/\]', $arr);
+[  HTML转换为pdf](https://wkhtmltopdf.org/)
+[bug 管理平台](https://www.v2ex.com/t/359330)
+产品一：bugclose （ www.bugclose.cn ） 产品二：delbug （ www.delbug.cn ） 产品三：easybug （ easybug.org ） 产品四：bugfree （ www.bugfree.cn ）
+[当谈 SQL 优化时谈些什么？](https://www.qcloud.com/community/article/302356)
+where语句中列的表达式为=、>、>=、<、<=、BETWEEN、ISNULL或者LIKE ’pattern’（其中’pattern’不以通配符开始）
+每个AND组作为表达式匹配索引。
+如果表达式中存在类型转换或者列上有复杂函数则与该列不匹配索引中的列。
+索引的左前缀规则；索引中的列由左向右逐一匹配，如果中间某一列不能使用索引则后序列不在查询中不再被使用。
+索引的cost基本是由“估计需要扫描的行数”（rows）来确定。数据来源于information_schema，在Mysql启动的时候读入内存，运行时只使用内存值，存储引擎会动态更新这些值。
+type:索引的使用方式
+eq_ref      …  索引,关联匹配若干行
+   ref          …  索引(前缀)匹配   
+    range        …  索引范围扫(BETWEEN、IN、>=、LIKE)得到数据
+   index        …  索引全扫描
+    all           …  表全扫描
+    类型是否一致: int vs char（varchar）、varchar（32）vs varchar(64)
+字符集是否一致：涉及表关联时，两表字符集是否一致。 避免大offset，使用where语句过滤更多的行。
+    rows<1000，是在可接受的范围内的。
+rows在1000~1w之间，在密集访问时可能导致性能问题，但如果不是太频繁的访问(频率低于1分钟一次)，又难再优化的话，可以接受，但需要注意观察
+rows大于1万时，应慎重考虑SQL的设计，优化SQL
+当执行计划Extra 出现Using filesort 、Using temporary 时，可以考虑是否需要进行sql优化和调整索引，最后再调整my.cnf 中与排序或者临时表相关的参数，如sort_buffer_size或者tmp_table_size
+mysql查询只使用一个索引，如果where字句用了索引的话，那么order by 中的列是不会使用索引的。所以order by的条件也需要添加到索引里面组成联合索引
+索引有个最左前缀的原则：联合索引（a,b,c）可以匹配(a)、（a,b）、（a,b,c）但不可以匹配(b,c)
+发现数据库cpu或者io有异常现象时候，用show processlist看看数据库在忙什么
+[https明文代理](https://github.com/alibaba/anyproxy)
 [PHP图像裁剪缩略裁切类源代码及使用方法](http://blog.csdn.net/diandianxiyu_geek/article/details/50477015重点在于使用图像处理函数 imagecopy 和 imagecopyresampled)
+[如何免费地、完整地把 PDF 转换为 Word？](https://www.zhihu.com/question/20841069/answer/47857848)
+最好的PDF转换软件是 ABBYY FineReader  https://link.zhihu.com/?target=http%3A//www.abbyy.cn/
+[Python实现文字转语音功能](https://zhuanlan.zhihu.com/p/26726297)
+[介绍用Gephi进行数据可视化](https://zhuanlan.zhihu.com/p/26718634)
+[当Python遇上微信，可以这么玩](https://zhuanlan.zhihu.com/p/26514576)
+[搜索公众号文章批量采集抓取爬虫](https://zhuanlan.zhihu.com/p/24900456)
+[在后台运行和管理进程PM2](https://www.zhihu.com/question/59227720/answer/163372371)
+[有哪些命令行的软件堪称神器](https://www.zhihu.com/question/59227720)
+https://link.zhihu.com/?target=https%3A//github.com/aharris88/awesome-cli-apps
+[能理解聊天记录的微信机器人 (四)](http://link.zhihu.com/?target=https%3A//github.com/grapeot/WechatForwardBot)
+[使用codecs自定义编/解码方案](https://zhuanlan.zhihu.com/p/26720957)
+In : print u'\U0001F3F4'.encode('utf-8')
+🏴
+In : '哈哈'.decode('utf8')
+
+Out: u'\u54c8\u54c8'
+「utf-8」和「utf8」，这2个词长得很像。事实上都能正常使用是由于他们都是「utf\_8」的别名
+原生PHP一行代码就可以把远程图片保存到本地:
+file_put_contents('/tmp/logo.gif', file_get_contents('https://www.baidu.com/img/bdlogo.gif'));
 [使用Laravel框架搭建的微博数据获取分析平台](https://github.com/daweilang/GetWB)
 ```js
 php上传文件500错误,原来 是/tmp没有权限，你们说，谁能想到 php 上传500是因为没有权限啊，这不是看日志就能明白的事，所以自己的总结 还是有一定含金量的
@@ -12,7 +56,7 @@ table  中有一个字段  param   存储的是字符串列表  1,2,3 这样的
 现在要统计1,2,3分别的行数，我现在的想法是union 
 
 select param,count(*) as count from 
-(
+(https://www.qcloud.com/community/article/302356
 select * from table where find_in_set('param', 1)
 union 
 select * from table where find_in_set('param', 2)
