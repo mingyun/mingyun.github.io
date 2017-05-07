@@ -1,4 +1,221 @@
+[Laravel 后台管理扩展包 Voyager 汉化](https://laravel-china.org/topics/4581/laravel-background-management-expansion-pack-voyager)
+[Laravel 消费队列的正确使用姿势](https://laravel-china.org/articles/4605/laravel-use-of-the-correct-attitude-of-the-consumer-queue)
+queue:work - 这是一个新的后台进程（不再需要 daemon 标记）， 这种方式运行，框架只会启动一次，并保持循环去消费队列
+queue:listen - 这种方式运行，框架每次都会启动，运行job，然后关闭，然后再次启动框架，运行job
+luminate\Queue\Console\WorkCommand.php
+
+protected $signature = 'queue:work
+session_start()前面不能有任何代码 这个描述是不正确的。正确描述应该是 session_start 之前不能有输出语句，如果 echo var_dump 等，使用 ob_start 等缓冲处理情况除外。
+[Laravel 的命令版 Siri — 交互式生成命令](https://laravel-china.org/articles/4601/laravel-command-version-siri-interactive-generation-command)
+composer require laracademy/interactive-make 
+Laracademy\Commands\MakeServiceProvider::class,
+php artisan make
+[Laravel5.4+vue2 做的基本后台系统](https://laravel-china.org/topics/4063/laravel54vue2-basic-background-system)
+[有道翻译的插件](https://laravel-china.org/topics/4628/pure-nothing-idle-wrote-a-translation-of-the-plug-in)
+https://github.com/redrain-wang/laravel-youdao  php artisan vendor:publish
+[SESSION_DOMAIN 导致的 TokenMismatchException](https://laravel-china.org/topics/4635/laravel-53-session-domain-leads-to-tokenmismatchexception)
+在本地，只要把session_domain删掉，用默认的设置null，即可解决问题。
+[ThinkSNS+ 基于 Laravel master 分支](https://laravel-china.org/articles/4584/thinksns-based-on-laravel-master-branch-from-1-to-0-and-then-to-the-01)
+[基于 easywechat 的一个微信文字消息回复包](https://laravel-china.org/topics/4624/easywechat-based-on-a-wechat-text-message-reply-package)
+https://github.com/RunnerLee/wechat-answer 
+[基于 Laravel 的工作流](https://laravel-china.org/articles/4627/workflow-based-on-laravel)
+[又拍云的 Laravel Package](https://laravel-china.org/topics/4626/wrote-a-package-and-then-shoot-the-cloud-laravel)
+https://github.com/JellyBool/flysystem-upyun
+[Laravel 5.4+Bootstrap 写的商城小 demo](https://laravel-china.org/topics/4577/share-a-laravel-54bootstrap-to-write-a-small-mall-demo#reply5)
+支付使用包(omnipay-alipay/omnipay-wechatpay)来完成，目前只支持支付宝与微信，微信做了扫码支付功能；  https://github.com/freedomlizhigang/laravelDemo/tree/xyshop
+[Laravel5.4 版本的后台管理系统](https://laravel-china.org/topics/3768/laravel54-version-of-the-background-management-system-seek-advice)
+https://github.com/DukeAnn/Laradmin 
+[Laravel 之队列使用浅析](https://laravel-china.org/articles/4479/analysis-of-laravel-queue-usage)
+/home/niuyufu/php/bin/php /home/niuyufu/webroot/snail_api/artisan queue:work --queue=snail:SendMessage --tries=3 --memory=512 --daemon
+监控redis对应队列消息具体产生的消息操作如下
+
+tail -f | redis-cli -h 10.94.120.13 -p 6380 monitor | grep "queues:snail"
+[PHP Composer 简明教程](https://laravel-china.org/articles/4615/php-composer-concise-tutorial#reply1)
+"autoload": {
+"psr-4": {
+    "Foo\\": "src/"
+}
+}src/Bar/Hello.php”类文件中定义的Hello类，就可以通过命名空间“Foo\Bar\Hello”来使用了
+Collection 可以使用 isEmpty 来判断是否为空，或者 调用 count 方法来判断。 不用 toArray 和 empty 来判断是否为空。
+[LaraCSV--从 Eloquent 模型中生成 CSV 文件](https://laravel-china.org/articles/4533/laracsv-generates-csv-file-from-eloquent-model)
+ $users = User::get(); // All users
+   $csvExporter = new \Laracsv\Export();
+   $csvExporter->build($users, ['email', 'name'])->download();
+ https://github.com/usmanhalalit/laracsv   
+[laravel一个项目的初始及开发流程](https://laravel-china.org/articles/4597/the-initial-and-development-process-of-a-project) 
+[让简单工厂模式遵循开放封闭原则 (OCP)](https://laravel-china.org/articles/4330/let-the-simple-factory-model-follow-the-open-closed-principle-ocp)
+```js
+class Factory
+{
+    protected $items;
+
+    public function __construct(array $items = [])
+    {
+        $this->items = $items;
+    }
+
+    public function register($key, $value = null)
+    {
+        if (is_array($key)) {
+            foreach ($key as $alias => $class) {
+                $this->register($alias, $class);
+            }
+        } else {
+            $this->items[$key] = $value;
+        }
+
+    }
+
+    public function create($key)
+    {
+        if (array_key_exists($key, $this->items)) {
+            return new $this->items[$key];
+        }
+
+        throw new InvalidArgumentException("Key [{$key}] is not registered.");
+    }
+}
+
+// Test
+
+$factory = new Factory;
+
+$factory->register('std', StdClass::class);
+$factory->register('dom', DOMDocument::class);
+$factory->register('exception', Exception::class);
+
+$classes = [
+    'time' => DateTime::class,
+    'queue' => SplQueue::class,
+    'array' => ArrayObject::class,
+];
+
+$factory->register($classes);
+
+var_dump(
+    $factory->create('dom'),
+    $factory->create('queue'),
+    $factory->create('exception')
+);
+```
+[某个 Class 或某个 Trait 突然找不到](https://laravel-china.org/articles/3782/a-pit-reminder-a-class-or-a-trait-suddenly-can-not-find)
+删除旧文件，提交代码。
+添加新文件，提交代码。
+git config core.ignorecase false
+[PHP 依赖注入容器 Pimple 笔记](https://laravel-china.org/articles/4276/php-dependency-injection-container-pimple-notes)
+https://www.h57.pw/aritlce/42 
+[简化你的关注与点赞 - Laravel Follow & Vote](https://laravel-china.org/articles/4408/simplify-your-attention-with-the-point-of-praise-laravel-follow-vote)
+[Git submodule 的笔记](https://laravel-china.org/articles/4430/git-submodule-notes)
+[frp 内网穿透简单教程](https://laravel-china.org/articles/4200/frp-network-through-a-simple-tutorial)
+[如何构建一个自己的PHP框架](https://github.com/TIGERB/easy-php/blob/master/README-CN.md)
+[谁动了我的内存之 PHP 内存溢出](https://laravel-china.org/articles/4356/who-moved-my-memory-php-memory-overflow)
+ini_set('memory_limit','100M');循环,分段读取数据,读数据库的话可以用limit
+[Speedy - 简洁灵活的 Laravel 管理后台](https://laravel-china.org/articles/3829/speedy-simple-and-flexible-laravel-management-background)
+https://github.com/HanSon/speedy 
+[让程序飞起来之 Laravel OPcache Package](https://laravel-china.org/articles/4362/let-the-program-fly-laravel-opcache-package)
+composer require appstract/laravel-opcache  实现 OPcache 的一个缺点是每次更改任何 PHP 代码时你都不得不去清除缓存
+php artisan opcache:clear 
+[书童造轮子之自动生成数据字典](https://laravel-china.org/articles/4327/automatic-generation-of-data-dictionary-for-childrens-wheel)
+composer require jormin/laravel-ddoc  
+[laracasts.com 用的录屏软件](https://laravel-china.org/topics/4353/recording-software-for-laracastscom)
+https://www.telestream.net/screenflow/overview.htm
+[使用 anyproxy 二次开发的微信公众号抓取工具，可以抓阅读数，点赞数，赞赏数和回复数](https://laravel-china.org/articles/4352/wechat-spider)
+https://github.com/lijinma/wechat_spider 
+[微信小程序 for Laravel 5](https://laravel-china.org/topics/3824/wechat-applet-for-laravel-5)
+[Windows 7 上安装 Homestead 遇到的坑](https://laravel-china.org/articles/4358/windows-7-installed-on-homestead-encountered-pit)
+composer有好几个国内镜像，比如我的https://www.composer-proxy.org
+[在 Laravel 上撸了一个支持多语言的国家地区数据库](https://laravel-china.org/articles/4354/in-the-laravel-line-and-a-multi-language-country-database)
+https://github.com/khsing/laravel-world
+[基于 Windows 开启我的 Homestead 之旅 --PHPHub 安装](https://laravel-china.org/articles/4297/windows-based-on-my-homestead-tour-phphub-installation)
+[yaf-example](https://laravel-china.org/articles/4308/yaf-example)
+https://github.com/jsyzchen/chen-yaf
+[一个简单易用的 Vue 组件 V - Distpicker](https://laravel-china.org/articles/4161/a-simple-and-easy-to-use-vue-component-v-distpicker)
+[Laravel 5.1 加载流程 / 图形化](https://laravel-china.org/articles/4335/laravel-51-loading-process-graphical)
+[移动端后台开发 (加密验证--非通用接口篇）](https://laravel-china.org/articles/4294/mobile-backend-development-encryption-verification-non-generic-interface)
+[基于 Laravel 5 开发的轻量化手机短信服务包](https://laravel-china.org/articles/4302/lightweight-mobile-phone-short-message-service-package-based-on-laravel5)
+https://github.com/phper2013/laravel-sms
+[CentOS6 基于 Python 安装 Sentry](https://laravel-china.org/articles/4295/centos6-install-python-based-on-sentry)
+[简单轻松部署你的项目 - Deployer](https://laravel-china.org/articles/4389/simple-and-easy-to-deploy-your-project-deployer)
+[Laravel 缓存花样耍](https://laravel-china.org/articles/4371/laravel-cache-tricks)
+```js
+$fullUrl = request()->fullUrl();
+return Cache::remember($fullUrl, $minutes, function () use ($data) {
+    return $data;
+});
+$url = request()->url();
+$queryParams = request()->query();
+
+//对查询参数按照键名排序
+ksort($queryParams);
+
+//将查询数组转换为查询字符串
+$queryString = http_build_query($queryParams);
+
+$fullUrl = "{$url}?{$queryString}";
+
+```
+[省市区街道四级联动（2017年最新实时更新）](https://laravel-china.org/topics/4323/urban-street-four-linkage-2017-update)
+http://api.131.im/address/province.json  
+[写一个搜索：使用 Laravel Scout，Elasticsearch，ik 分词](https://laravel-china.org/articles/4027/tutorial-write-a-search-use-laravel-scout-elasticsearch-ik-word-segmentation)
+https://github.com/lijinma/laravel-scout-elastic-demo
+[说说 PHP 的魔术方法及其应用](https://laravel-china.org/articles/4404/talking-about-the-magic-method-of-php-and-its-application)
+[GitHub 多账号的 SSH 配置](https://laravel-china.org/articles/4411/github-multi-account-ssh-configuration)
+$ git clone git@user2.github:EvaEngine/Dockerfiles.git地址中的 host 替换为了 config 中配置的名称。
+git@github.com:EvaEngine/Dockerfiles.git
+[检测颜值包，基于微软小冰https://github.com/HanSon/face](https://laravel-china.org/articles/4401/detection-of-yan-value-package-based-on-microsoft-wheatgrass)
+https://github.com/HanSon/face  http://kan.msxiaobing.com/
+[镜像了一个 Linux 中文命令手册](http://linux-command.composer-proxy.org/)
+[結合 Laravel 與 Swoole，更簡易的開發與佈署！](https://laravel-china.org/articles/4390/swoole-the-combination-of-laravel-and-swoole-the-development-and-deployment-of-more-simple)
+[说说 API 的防重放机制](https://laravel-china.org/articles/4196/talk-about-the-anti-replay-mechanism-of-api)
+我们常用的防止重放的机制是使用timestamp和nonce来做的重放机制。 nonce是由客户端根据足够随机的情况生成的，比如 md5(timestamp+rand(0, 1000)); 它就有一个要求，正常情况下，在短时间内（比如60s）连续生成两个相同nonce的情况几乎为0。
+https://github.com/LingxiTeam/api-authentication  
+[app移动端后台开发 (加密验证--通用接口篇）](https://laravel-china.org/articles/4290/mobile-backend-development-encryption-verification-generic-interface)
+[灵析团队 package 陆续开源，向社区贡献力量](https://laravel-china.org/articles/4251/analysis-team-package-open-source-to-contribute-to-the-community)
+[Laravel+VueJs 知乎](https://laravel-china.org/articles/4466/laravelvuejs-know-almost)
+https://github.com/GeekGhc/zhihu-app 
+[Editor.md For Laravel 5](https://laravel-china.org/articles/4168/editormd-for-laravel5)
+https://github.com/LaravelChen/laravel-editormd 
+[Laravel 5.4 vue 实现收藏](https://laravel-china.org/articles/4271/laravel-54-vue-collection)
+https://github.com/ammezie/laravel-vue-favorite
+[Laragon 让你在 Windows 下愉快的编码](https://laravel-china.org/articles/3994/laragon-allows-you-to-happy-coding-under-windows)
+https://laragon.org/download.html
+[分享一个 Trait 来易用 Laravel 的缓存](https://laravel-china.org/articles/4421/share-a-trait-to-use-laravel-cache)
+https://github.com/deathkel/easy-cache
+[Laravel-Geetest For Laravel 5](https://laravel-china.org/articles/4441/laravel-geetest-for-laravel5)
+[Laravel 错误日志的插件 (Laravel-log-viewer)](https://laravel-china.org/articles/4419/laravel-error-log-plugin)
+https://github.com/rap2hpoutre  
+[搭建自己的 sentry 服务](https://laravel-china.org/articles/4285/build-your-own-sentry-service)
+[ 利用二级缓存提高缓存命中率和内存使用效率](https://laravel-china.org/articles/4545/outside-the-box-using-two-levels-of-buffer-cache-hit-rate-and-improve-the-efficiency-of-memory-usage)
+二级缓存可以看成业务逻辑的缓存，首页最新20条文章 就属于业务逻辑，只缓存这20条文章的id，极大地节省了内存占用。等需要用到具体的数据再去一级缓存取，一级缓存没有才去查询数据库
+[Laravel 5.3 搭建的简单博客](https://laravel-china.org/articles/4505/share-a-simple-blog-laravel-53)
+https://github.com/SadCreeper/myweb3.git
+[接口测试的解决方案](https://laravel-china.org/articles/4470/interface-test-solution)
+http://apidocjs.com/ 
+[PHP 系统架构师成长之路](https://laravel-china.org/articles/4496/the-growth-path-of-php-system-architect)
+[中文文案排版纠正器](https://laravel-china.org/articles/4532/chinese-copywriter)
+https://github.com/ricoa/copywriting-correct 
+[NGINX + SSH Tunnel 把本地开发环境公布到互联网上](https://laravel-china.org/articles/4522/nginx-ssh-tunnel-to-publish-the-local-development-environment-to-the-internet)
+[Docker 的安装与常用指令](https://laravel-china.org/articles/4541/docker-installation-and-commonly-used-instructions)
+[Nginx 新手配置引导](https://laravel-china.org/articles/4558/nginx-novice-configuration-guide)
+[手机号码绑定流程](https://laravel-china.org/articles/4515/phone-number-binding-process)
+[使用 ngrok 让外网也能访问本地](https://laravel-china.org/articles/4339/use-ngrok-to-allow-access-to-the-local-network)
+https://github.com/HanSon/ngrok-script 
+[Laravel 中文离线文档分享](https://laravel-china.org/topics/4026/laravel-chinese-offline-document-sharing)
+[Laravel 中间件使用及源码分析](https://laravel-china.org/articles/4544/laravel-middleware-use-and-source-analysis)
+[Laravel + Vue.js 的 SPA 项目中进行微信网页授权的一种姿势](https://laravel-china.org/articles/4539/laravel-vuejs-in-the-wechat-spa-project-in-a-position-authorized-by-the-page)
+[Sentry 自动化异常提醒](https://laravel-china.org/articles/4235/sentry-automation-exception-alert)
+[Nginx WebSocket 模块](https://laravel-china.org/topics/4595/nginx-websocket-module)
+https://github.com/lvht/nginx-websocket-module
+[发布一个为请求生成 id 的中间件](https://laravel-china.org/topics/4564/publishing-a-middleware-for-generating-id-requests)
+composer require cmzz/laravel-request-id
+ 依赖注入原理其实就是利用类方法反射，取得参数类型，然后利用容器构造好实例。然后再使用回调函数调起。
+[分享 Laravel 5.4 开发的博客系统](https://laravel-china.org/topics/4451/share-laravel-54-development-blog-system)
+laravel的错误信息可以统一在：app/Exceptions/Handler.php 里面的 report() 方法里面发送。
+[使用 Laravel Valet 做开发](https://laravel-china.org/articles/4546/development-using-laravel-valet)
 [函数explode和split的区别](http://blog.csdn.net/diandianxiyu_geek/article/details/52177575)
+[MDUI —— 基于 Material Design 的无依赖前端框架](https://laravel-china.org/topics/4570/mdui-an-independent-front-end-framework-based-on-material-design)
+https://github.com/zdhxiong/mdui 
+
 也就是说split函数并不支持PHP 7  split的第一个参数为正则表达式，也就是说，如果想要匹配特殊字符，需要转义一下。
 $arr='2016\8\11';
 $rearr = split ('[/\]', $arr);
