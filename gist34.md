@@ -1,5 +1,203 @@
+[php中GET/POST方法+号等特殊字符处理](https://iyaozhen.com/post-get-urlcode.html)
+```js
+$base64_image = str_replace(' ', '+', $base64);
+    //post的数据里面，加号会被替换为空格，需要重新替换回来，如果不是post的数据，则注释掉这一行
+    //PHP解析GET参数时，会经过过滤，即urldecode()处理，而urldecode会解码给出的已编码字符串中的任何 %##。 加号（'+'）被解码成一个空格字符。
+    //解决方法：传递参数时，对GET参数进行url编码，注意最好不使用urlencode()，否则会编码空格为+。应参考RFC 1738对url进行编码，使用rawurlencode()，将加号编码为 。这样上面例子中param=abc百分20百分2B，php接收到的param才会是abc +
+    //另外POST方式会 使用application/x-www-form-urlencoded此编码编码body中的数据，所以不会出现上述例子中的问题。
+    //字符串base64后传输之前可以先把“+”号替换掉，用“_”,“|”等等都可以，然后另一个页面接收的时候再替换过来即可（str_replace）。最后把替换之后的base64再解码。ok
+    //https://iyaozhen.com/post-get-urlcode.html
+    //重定向后的地址中加密后的name参数，其中包含“+”符号，而浏览器的地址栏中碰到“+”符号时会将加号转换为空格，于是要保证base64_decode进行正确的解码操作，我们可以先将参数中的空格替换成加号
+    参照GET方法中的解决方案，urlencode一下参数值就行了
+    $a = urlencode($a);	// url编码，处理特殊字符 服务端也不用urldecode
+	$post_data = "a=$a&b=123";	//POST值 
+get会忽略url的#后的字符	
+```
 
 [FRP内网穿透工具](https://www.diannaobos.com/frp/)
+
+概率分配
+```js
+$w = array('a' =>1, 'b'=>10, 'c'=>14, 'e'=>20, 'f'=>30, 'h'=>6, 'g'=>70);
+function roll($weight)
+{
+    $sum = array_sum($weight);
+    $j = 0;
+    foreach($weight as $k=>$v)
+    {
+        $j = mt_rand(1,$sum);
+        if($j <= $v)
+        {
+            return $k;
+        }else{
+            $sum -= $v;
+        }
+    }
+}
+$ret = array();
+$n = 1000;
+for($i=0;$i<$n;$i++)
+{
+    $v = roll($w);
+    $ret[$v] = isset($ret[$v]) ? $ret[$v] + 1 :1;
+}
+echo '<pre>';
+print_r($ret);
+echo array_sum($ret);
+foreach($ret as $k=>$v)
+{
+     printf("real: %f\t", ($v / $n));
+     printf("set: %f\n",($w[$k] / array_sum($w)));
+}
+Array
+(
+    [g] => 462
+    [c] => 80
+    [h] => 44
+    [e] => 148
+    [f] => 199
+    [b] => 61
+    [a] => 6
+)
+1000real: 0.462000	set: 0.463576
+real: 0.080000	set: 0.092715
+real: 0.044000	set: 0.039735
+real: 0.148000	set: 0.132450
+real: 0.199000	set: 0.198675
+real: 0.061000	set: 0.066225
+real: 0.006000	set: 0.006623
+
+function  shutdown ()
+{
+     // This is our shutdown function, in 
+    // here we can do any last operations
+    // before the script is complete.
+print_r(error_get_last());
+     echo  'Script executed with success' ,  PHP_EOL ;
+}
+
+ register_shutdown_function ( 'shutdown' );
+ setcookie ( "cookies[one]" ,  "cookieone" );
+ print_r($_COOKIE);
+ Array
+(
+    [Hm_lvt_8cc45d54c337ca616c34b1cf747da91c] => 1494467863
+    [Hm_lpvt_8cc45d54c337ca616c34b1cf747da91c] => 1494469325
+    [cookies] => Array
+        (
+            [one] => cookieone
+        )
+
+)
+
+$files=glob('./*.php');
+$files = array_map('realpath', $files);
+print_r($files);
+$a='11111111111111111111111111111111111111';
+$b='2222222222222222222222222222222222222';
+echo bcadd($a,$b);//13333333333333333333333333333333333333
+echo bccomp($a, $b); //1
+echo bccomp($b, $a); //-1
+echo bccomp($a, $a); //0
+preg_match_all('/./us', '分隔字符串', $matches);
+print_r($matches);
+Array
+(
+    [0] => Array
+        (
+            [0] => 分
+            [1] => 隔
+            [2] => 字
+            [3] => 符
+            [4] => 串
+        )
+
+)
+$id='1,5';
+$arr= array(1=>'php',3=>'js',5=>'python');
+$res =array_intersect_key($arr, array_flip(explode(',', $id)));
+print_r($res);
+Array
+(
+    [1] => php
+    [5] => python
+)
+print vsprintf("%04d-%02d-%02d", explode('-', '1988-8-1')); // 1988-08-01
+date_default_timezone_set('PRC');
+```
+重复的ID
+```js
+ String.prototype.strrev = function(){
+return this.split('').reverse().join('');
+}
+var tmpId = [];
+var result = [];
+$('*[id]').each(function() {
+    if ($.inArray($(this).attr('id'), tmpId) == -1) {
+        tmpId.push($(this).attr('id'));
+    } else {
+        result.push($(this).attr('id')); 
+    }
+}) 
+if (result.length > 0) {
+    console.log('重复的ID为:' + result.join(' || '));
+} else {
+    console.log('没有重复的ID');
+}
+```
+
+
+ 一个5位数字ABCDE*4=EDCBA,这5个数字不重复，请编程求出来这个数字是多少？
+```
+for($i=12345; $i<25000; $i++){
+if( $i*4==strrev($i) && count(array_unique(str_split($i)))==strlen($i) )
+echo $i;
+}
+
+
+for($i=10000;$i<25000;$i++){
+if(count(array_unique(str_split($i)))==count(str_split($i)) && $i*4==strrev($i)){
+echo $i;
+}
+}
+
+$num = range(12345,24999);
+foreach ($num as $val){
+
+$sum = strrev($val);
+if($val*4 == $sum){
+echo $val;
+break;
+}
+}
+
+$nums=ceil(98765/4);
+for($i = 12345;$i<$nums;$i++){
+    if($i*4 == strrev($i)){
+       echo $i.'<br />';
+     }
+}
+```
+时间相差月份
+```js
+getPeopleMonth('2017-12-12');//6
+function getPeopleMonth($time)
+    {
+        $validTime = date('Y-m-d', strtotime('+1 day'));
+        if ($validTime>$time) {
+            return 0;
+        }
+        $carbonDate = new Carbon($validTime);
+        $diffDate = $carbonDate->diff(new Carbon($time), true);
+        $month = $diffDate->y * 12 + $diffDate->m;
+        if ($month>0 && $diffDate->d == 0) {
+            $month = $month-1;
+        }
+        return $month;
+    }
+
+```
+
 [PHP百科全书](http://php.swoole.com/wiki/%E9%A6%96%E9%A1%B5)
 [投资意向生成书](http://wltermsheet.applinzi.com/)
 微信红包
