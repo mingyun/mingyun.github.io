@@ -12,7 +12,82 @@ $base64_image = str_replace(' ', '+', $base64);
     $a = urlencode($a);	// url编码，处理特殊字符 服务端也不用urldecode
 	$post_data = "a=$a&b=123";	//POST值 
 get会忽略url的#后的字符	
+
+
+laravel 框架这边的写法目前有2个地方需要注意一下：
+1、采用静态方法调用update和同时update多条数据时，触发不了模型里的钩子。users::where('id',123)->update([]);
+2、由于主从同步的原因，数据写入库立即查询的更新数据到缓存的话需要强制查询主库，否则查从库有概率缓存的数据是旧的。
+
+把异步的任务，可以变成同步的方式来执行。
+进程是关于程序与程序之间的内存隔离方式线程是并发处理 
+php-fpm 给每个网站分配一个水池子  一个水池子就是一个进程
+一个水池子是干掉还是洪水泛滥都不影响另一个 可是一个水池，只能一个人游泳... 这就是单线程
+ 
+进程在内存上是相互隔离的，大多数的时候进程进程之间互不影响的，所以开多进程就是为了进程之间的独立性
+线程基本都是运行在统一进程之下的， 多线程是为了并发处理的
+
+拿我以前做的一件事给你举例，  10年前视频转换很麻烦，我们方式都是在windows下处理的 用的一个叫conver vedio的团建
+
+我们的做法是写一个控制台程序  控制台程序从数据库中读取要转换的视频，然后开多线程 一个线程启动一个convert vedio软件进程，并守护这个进程
+多个convert vedio进程就是多进程   控制台程序本身也是个进程。 内存上都是相互隔离的，一个进程崩溃是不会影响另一进程的
+
+控制台中读取数据后 用多线程并发处理数据
+nodejs是操蛋的单进程（除了子进程外） 单线程的玩意
+
+要是你一台服务器上有多个nodejs网站， 而你又没使用pm2一类的东西， 那你完蛋了， 一个网站奔溃， 其它网站跟着全奔，因为运行在一个进程里哒，有PM2就不一样了 因为他可以隔离和守护nodejs进程
+
+nodejs虽然单线程  但是他的IO部分是拿多线程写的，所以才能实现异步
+跟PHP没关系   是php-fpm是多进程的而已 你还是没搞明白进程的概念
+一个软件的整体可以看做一个进程
+
+你可以开两个phpstorm 甚至多个    ，一个 phpstorm访问不了另一个phpstorm里的东西   一个phpstorm崩溃了不影响另一个
 ```
+[PHPer也来聊聊HTTP](http://martist.cn/a/74)
+
+[搭建博客必备：图片拖动文本框自动上传](http://www.tenyearsme.cn/blog/da-jian-bo-ke-bi-bei-wen-ben-kuang-tuo-dong-shang-chuan-tu-pian)
+https://github.com/Rovak/InlineAttachment
+[Laravel 实用的辅助函数小技巧--helper](https://www.blog8090.com/laravel-helper/)
+```js
+$array = array_collapse([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+
+// [1, 2, 3, 4, 5, 6, 7, 8, 9]
+$value = str_limit('The PHP framework for web artisans.', 7);
+
+// The PHP...
+collect($obj)->toArray();  
+$arr = collect([1,2,3,4])->filter(function ($str){
+                return $str > 2;
+        });
+        dd($arr);
+	$collection = collect(['Tom', 'Lark']);
+$zipped = $collection->zip(['170cm', '181cm']);
+$zipped->all();
+// [['Tom', '170cm'], ['Lark', '181cm']]
+```
+
+[Mysql 批量更新多行笔记](https://www.h57.pw/aritlce/25)
+```js
+update test set test.group = case name
+    when '小白' then 9
+    when '小红' then 10
+    end
+where name in ('小白')
+update test set test.group = case name
+    when '小白' then 9
+    when '小红' then 10
+    else 11
+    end
+where name in ('小白','大白')
+大白 没有被任何 when 所捕获到，所以，执行了 else 部分，把值更改为了11。
+update test set test.sex = case name
+    when '小白' then 2
+    when '小红' then 2
+    else 11
+    end
+where name in ('小白','小红') and test.group = 1
+```
+
+
 
 [FRP内网穿透工具](https://www.diannaobos.com/frp/)
 
