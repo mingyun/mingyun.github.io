@@ -1,3 +1,187 @@
+[简历黑客](http://jianliheike.com)
+
+[把嵌套的python list转成一个一维的python list](https://www.zhihu.com/question/27010691)
+```js
+>>> from compiler.ast import flatten
+>>> flatten(a)
+reduce(lambda x,y:x+y, a)
+import itertools
+a = [[1,2,3],[4,5,6], [7], [8,9]]
+out = list(itertools.chain.from_iterable(a))
+sum(a,[])
+def fun(li,em=[]):  #优雅滴写法，包治各种嵌套
+    for x in li:
+        if type(x)!=list:
+            em.append(x)
+        else:
+            fun(x)
+    return em
+
+最简单的方法，用 numpy.ravel()。
+
+a = [[1,2,3], [5, 2, 8], [7,8,9]]
+
+list(np.ravel(a))
+
+得到： 
+
+[1, 2, 3, 5, 2, 8, 7, 8, 9]
+a= eval('['+str(a).replace(' ','').replace('[','').replace(']','')+']')
+import operator
+from functools import reduce
+a = [[1,2,3], [4,5,6], [7,8,9]]
+print(reduce(operator.add, a))
+[item for sublist in list for item in sublist]
+a = eval('[%s]'%repr(l).replace('[', '').replace(']', ''))
+```
+[分享几个快乐有趣的网站](https://zhuanlan.zhihu.com/p/26871835?group_id=846461293912276992)
+在线制作GIF动态图片http://link.zhihu.com/?target=http%3A//gickr.com/
+[别被忽悠，你要逃离不肯给你涨薪的公司](https://zhuanlan.zhihu.com/p/26855046?group_id=846121250454634497)
+你应该去回答：「我看重的，绝不是薪水这么简单，是工作、岗位所能给我带来的价值有多少，以及我在这份工作能提供的价值是多少。薪水是象征了一个人的职业素养和职场价值，所以我们谈论的不仅仅是薪水这么简单，而是在谈论我的专业实力以及我的职业操守，因此，我认为我是有提供价值的，想提升相应薪水。所以，请问：公司能为我现在的岗位提供的薪水是多少？」
+[大数据系列 2 —看腾讯的大数据产品](https://zhuanlan.zhihu.com/p/25634208)
+腾讯位置大数据http://link.zhihu.com/?target=https%3A//heat.qq.com/index.php  http://link.zhihu.com/?target=https%3A//www.qcloud.com/act/event/ci_demo.html 微信指数 、万象优图
+[将文字隐藏到图片中](https://zhuanlan.zhihu.com/p/25285364?refer=wnsouba)
+http://link.zhihu.com/?target=http%3A//www.shuidi.im/
+飞搜人脸识别 http://link.zhihu.com/?target=http%3A//www.faceall.cn%3A82/
+阿里绿网http://link.zhihu.com/?target=https%3A//m.aliyun.com/markets/aliyun/act/lvwangdemo%3Fspm%3D5176.55804.359640.1.6xojDa%23testOnline
+网易易盾http://link.zhihu.com/?target=http%3A//dun.163.com/trial/image
+图普科技http://link.zhihu.com/?target=https%3A//www.tuputech.com/demo
+腾讯优图http://link.zhihu.com/?target=https%3A//open.youtu.qq.com/welcome/experience
+[是腾讯出的TIM，TIM是一款轻量级的QQ实时多人编辑文档国内的有一起写、石墨文档](https://zhuanlan.zhihu.com/p/26255850)
+[知乎TOP 500 赞的回答](https://zhuanlan.zhihu.com/p/26779637)
+[百度云盘搜索](http://www.biliworld.com/)
+[面试官问现在工资是多少？该怎么回答？](https://zhuanlan.zhihu.com/p/26830966?group_id=845718905661038592)
+[Python进阶](https://github.com/eastlakeside/interpy-zh)
+[php生成随机红包算法](http://www.jianshu.com/p/287a21a24e09#)
+[简单理解RESTful API接口风格](http://www.lcode.cc/2016/08/10/restful-v1.html)
+[CGI与fastcgi与php-fpm与php-cgi的关系](http://www.lcode.cc/2017/01/15/php-fpm.html)
+cgi是一个协议，它规定了服务器Nginx会将那些数据传送给php-cgi
+
+fastcgi也可以说是一个协议。fastcgi是对cgi的性能的一次提高。fastcgi会先启动一个master，解析配置文件（php.ini等），初始化执行环境，然后再启动多个worker，当请求过来时，master会传递给一个worker，然后等待下一个请求。
+
+php-fpm是实现了fastcgi这个协议的程序，用来管理php-cgi的（php-fpm是fastcgi进程管理器）
+
+php-cgi是解释php程序的
+
+[PHP文件锁机制](http://www.lcode.cc/2016/10/15/php-flock.html)
+```js
+//获取指针
+$file = 'lock/increase.txt';
+$fp = fopen($file, 'r');
+//加排他锁
+flock($fp, LOCK_EX);
+//数据操作
+$key = 'company_watch_num_' . $request['company_id'];
+Cache::increment($key);
+//解锁
+flock($fp, LOCK_UN);
+//关闭指针
+fclose($fp);
+```
+[PyPDF2 用 Python 操作 PDF](https://zhuanlan.zhihu.com/p/26647491?group_id=842900717793603584)
+```js
+from PyPDF2 import PdfFileReader, PdfFileWriter
+infn = 'infn.pdf'
+outfn = 'outfn.pdf'
+# 获取一个 PdfFileReader 对象
+pdf_input = PdfFileReader(open(infn, 'rb'))
+# 获取 PDF 的页数
+page_count = pdf_input.getNumPages()
+print(page_count)
+# 返回一个 PageObject
+page = pdf_input.getPage(i)
+
+# 获取一个 PdfFileWriter 对象
+pdf_output = PdfFileWriter()
+# 将一个 PageObject 加入到 PdfFileWriter 中
+pdf_output.addPage(page)
+# 输出到文件中
+pdf_output.write(open(outfn, 'wb'))
+```
+
+
+[命令行提示](https://github.com/chrisallenlane/cheat)
+cheat python 
+[Python编码之殇](https://zhuanlan.zhihu.com/p/26379043?group_id=843751406606364672)
+```js
+a="\\u8fdd\\u6cd5\\u8fdd\u89c4" #变量a的内容为unicode编码，变量a为string编码（""前不要加u）
+b=a.decode('unicode-escape')
+a="\\xe5\\x85\\xb3\\xe4\\xba\\x8e\\xe4" #变量a的内容为string编码，变量a为string编码（""前不要加u）
+b=a.decode('string-escape')
+a="\\xe5\\x85\\xb3\\xe4\\xba\\x8e\\xe4" #变量a的内容为string编码，变量a为string编码（""前不要加u）
+b=a.decode('string-escape')
+print b
+# 如果你的dict1现在是个字典，要用json库转成字符串再处理
+dict1 = {"data":["\u73bb\u7483", "\u5851\u6599", "\u91d1\u5c5e"]}
+import json
+j = json.dumps(dict1)
+dict2  = j.decode("unicode-escape").decode("unicode-escape")
+print dict2`
+[抓取单博主的所有微博及其评论](https://zhuanlan.zhihu.com/p/26793251?group_id=845221469830144000)
+http://m.weibo.cn/api/comments/show?id=4103033291539613&page=4
+[开启知乎收藏夹看图模式](https://zhuanlan.zhihu.com/p/26751624?group_id=844818990198030336)
+https://github.com/wzyonggege/Zhihu-Crawler 
+[！Github上的PHP资源汇总大全](https://zhuanlan.zhihu.com/p/26685858?group_id=844527860935983104)
+[【QQ/微信个人号变身机器人】炸群+远程监控个人PC的尝试在公众号（rose-fun）](https://zhuanlan.zhihu.com/p/26820394?group_id=845639113100107776)
+[根据用户id生成一个唯一邀请码](http://www.lcode.cc/2017/04/10/user-invite-code.html)
+[当Python遇上微信，可以这么玩](https://zhuanlan.zhihu.com/p/26514576?group_id=843751714145312768)
+http://link.zhihu.com/?target=https%3A//github.com/wzyonggege/python-wechat-itchat 
+
+
+```js
+function decode($code) {
+    static $source_string = 'E5FCDG3HQA4B1NOPIJ2RSTUV67MWX89KLYZ';
+    if (strrpos($code, '0') !== false)
+        $code = substr($code, strrpos($code, '0')+1);
+    $len = strlen($code);
+    $code = strrev($code);
+    $num = 0;
+    for ($i=0; $i < $len; $i++) {
+        $num += strpos($source_string, $code[$i]) * pow(35, $i);
+    }
+    return $num;
+}
+ function createCode($user_id) {
+    static $source_string = 'E5FCDG3HQA4B1NOPIJ2RSTUV67MWX89KLYZ';
+    $num = $user_id;
+    $code = '';
+    while ( $num > 0) {
+        $mod = $num % 35;
+        $num = ($num - $mod) / 35;
+        $code = $source_string[$mod].$code;
+    }
+    if(empty($code[3]))
+        $code = str_pad($code,4,'0',STR_PAD_LEFT);
+    return $code;
+}
+```
+```js
+#查找目录下的所有文件中是否含有某个字符串
+find .|xargs grep -ri "IBM" 
+
+#查找目录下的所有文件中是否含有某个字符串,并且只打印出文件名
+find .|xargs grep -ri "IBM" -l 
+
+#xargs配合grep查找
+find -type f -name '*.php'|xargs grep 'GroupRecord'
+
+#查看占用端口的程序或按进程号查询程序
+netstat -anp|grep 80
+
+#查看进程id
+ps -ef | grep Name
+REST ful 是面向资源的，而资源是通过 URI 进行暴露。
+GET /rest/api/getDogs | GET /rest/api/dogs 获取所有狗 
+POST /rest/api/addDogs | POST /rest/api/dogs 添加一个狗    
+PUT /rest/api/editDogs/:dog_id | PUT /rest/api/dogs/:dog_id 修改一只狗 
+DELETE /rest/api/deleteDogs/:dog_id | DELETE /rest/api/dogs/:dog_id 删除一只狗
+GET      获取一个资源 
+POST     添加一个资源 
+PUT      修改一个资源 
+DELETE   删除一个资源
+这四个动词实际上就对应着增删改查四个操作，这就利用了HTTP 动词来表示对资源的操作。
+
+```
 [php中GET/POST方法+号等特殊字符处理](https://iyaozhen.com/post-get-urlcode.html)
 ```js
 $base64_image = str_replace(' ', '+', $base64);
