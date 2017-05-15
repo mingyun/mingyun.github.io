@@ -1,3 +1,75 @@
+[window有内置属性name](https://segmentfault.com/q/1010000009425086)
+var name = [0, 1, 2]
+console.log(name) // 输出 "0,1,2"
+因为window有内置属性name，所以你在全局下声明name其实就是在给window.name赋值。关于window.name。类似的属性还有status等
+
+所以你用name1就没有问题。其实你在非全局下用name，或者在node环境的全局下用name也是没有逗号的。
+作用域是全局的 所以你定义的 name 变量相当于 window.name 
+它是一个特殊的全局变量 任何值赋值给它都会进行 toString 操作
+这里你将数组给 window.name 实际你可以输出看一下会发现它并不是数组而是字符串
+而恰好字符串是可以用循环遍历的 所以输出了逗号
+
+var name = [0, 1, 2]
+console.log(name) // 0,1,2
+console.log(typeof name === 'string') // true
+解决方法：不使用全局作用域 加一层自执行函数
+name是关键字，不要用这个命名变量,你可以typeof一下，会发现name是string，name1是object
+(function() {
+  var name = [0, 1, 2]
+  console.log(name) // [0, 1, 2]
+  console.log(Object.prototype.toString.call(name)) // [object Array]
+})()
+[PHP实现Unicode和Utf-8编码的互相转换](https://segmentfault.com/a/1190000003020776)
+[JavaScript 全局变量的一个困惑](https://segmentfault.com/q/1010000009418450)
+// ①
+console.log(b); // 代码执行到这行的时候，b未定义，在当前的作用域链上找不到b，所以 b is not defined
+b = 2; 
+
+// ②
+console.log(b);
+var b = 2;
+// 由于变量声明提升，相当于
+var b;
+console.log(b); // 代码执行到这行的时候，b已经声明了，只是没有赋值而已，所以 undefined
+b = 2; 
+代码执行总有个先后顺序吧。。。
+[设置cookie之后,刷新页面消失](https://segmentfault.com/q/1010000009395195)
+找到原因了,是因为跨域造成的,添加下头信息就行了
+[H5或者JS如何获得当前位置地理定位](https://segmentfault.com/q/1010000009120811)
+[cookie设置了生命周期30分钟](https://segmentfault.com/q/1010000009423958)
+cookie是单页面的，cookie 是每次都是重新生成的，如果设置了时间，是不是即便一直操作，时间到了也会失效的
+[php条件判断中同时有"与、或"，优先级](https://segmentfault.com/q/1010000009424520)
+优先级是与 > 或；
+$isAuthor = $article->user_id ==  Auth::id();
+$isValid = $article->status==0 || $article->expired_at < Carbon::now();
+
+if ($isAuthor && $isValid)
+{
+    $article->delete();
+    return back();
+}
+[laravel如何拼接多个模糊条件查询?](https://segmentfault.com/q/1010000009413913)
+[商品无限极分类Mysql表设计](https://segmentfault.com/q/1010000009419758)
+用like并不是一个好的选择，推荐一个Mysql函数find_in_set应该能解决楼主需求。
+
+[匿名函数 返回值的问题](https://segmentfault.com/q/1010000009415498)
+[fwrite和fread操作同一个文件](https://segmentfault.com/q/1010000009423315)
+fopen的第二个参数为模式, 有r, w, b, a等模式, 其中a表示append, 也就是附加的意思, 打开时不会清空文件(把EOF指向0), 而是把文件指针指向文件末尾
+[算法题：从数组中取出n个元素生成一个新的数组](https://segmentfault.com/q/1010000009427743)
+[JS的函数递归阶乘问题](https://segmentfault.com/q/1010000009422753)
+ function jiecheng(n){
+            if(n==1){
+                return 1
+            }else{
+                return n*jiecheng(n-1)    
+            }
+        }
+        var n=5;
+        alert(jiecheng(6))
+[Yandex Gixy - NGINX 配置文件分析器](https://www.v2ex.com/t/361498)
+pip install gixy
+[算法如何实现?](https://segmentfault.com/q/1010000009424232)
+[Fortran读取BMP图像](http://fcode.cn/code-list-1.html)
 [简历黑客](http://jianliheike.com)
 [Scrapy第五篇：断点续爬 | 存入MySQL](https://zhuanlan.zhihu.com/p/26810901?group_id=845755819374047232)
 CTF学习站点总结https://zhuanlan.zhihu.com/p/26876253?group_id=846472044680990720  【以图搜图】网站大全了https://zhuanlan.zhihu.com/p/25610099
