@@ -1,3 +1,251 @@
+QQ群记录16406911
+```js
+1，不打电话，用邮件或短信通知面试的，不去
+2，打电话，但不是女的公司，不去
+3，是女的，一问三不知的公司，不去
+自己的顶级域名个博客网站
+自己顶级域名的邮箱
+github仓库
+不要跟我说什么 性能，并发，加载量，给我一个laravel，拿起来就是干
+有这三项，人家至少知道你在这行混久了，好多人开发3 4年，连个网站都不会赔的
+mail@sniu.com
+mail@zhangxihai.cn 
+mail@is.cx
+买个域名  去腾讯申请个域名邮箱就是了 又不需要备案
+电话通知面试用女人，是专业的表现
+还有，老板自己通知面试的，肯定更不专业了
+域名这东西 随便注册
+申请域名邮箱又不要备案
+找工作最爽的就是，你说的东西框架什么面试官都没听过，然后各种羡慕的眼光的时候，然后面试官想让你上班，然后你说对该公司不感兴趣的时候，是最爽的
+laravel三大核心：
+1，mvc
+2，blade
+3，orm
+
+其他的不会也不影响工作
+不问设计模式  问的话也把单例模式给去掉   问问 工厂  观察者  代理三种
+公式化回答的话 就问问什么简单工厂的变种
+说再过2年 程序员不会docker  就会被淘汰了
+
+问设计模式有什么用啊   框架下面有个鸡毛的设计模式  又不招架构
+会那么多有鸡毛用啊，给你3天让你换个技术路线你换的了么
+orm用的贼熟，一用原生SQL就没辙，有鸡毛用
+前端不熟，难到你要换个技术路线，用rest架构再招个前端
+
+要就要基础牢  被虐经验多的
+但是就很多问设计模式的啊  还一堆题目 现场写SQL查询的  当时可真不好写那些SQL
+要学会分析SQL是否有性能问题
+
+设计模式，单例，工厂，观察者，够用了 观察者，核心是是事件驱动
+实际上你的类没继承  没实现接口 没人trait， 就去用静态得了
+有继承 有接口 有trait 就用单例
+可以把静态扔了，当然，单例，本身就是一个静态
+类型为 “人”，你传参数时传的是“女人”，但程序能跑通，这就是多态 因为女人也是人
+laravel + swoole = 天下无敌 
+yaf是世界上最简单的框架之一，一天之内学不会都难
+本身就特别简单，没有组件，没有m，没有v
+php-fpm php是解析式的，每次解析完，就会把内存释放掉。不同于其他语言。
+>>> print '\xe7\xa7\xbb\xe5\x8a\xa8'.decode('utf-8')
+移动
+我们公司的面试题里，有：redis请求量比较大的时候怎么办，
+开发者可以考虑用事务 而事务又分原子性与非原子性，这两个有什么区别，使用场景是什么
+其实问题都是很简单，对于 批量读数据，就可以用非原子性批处理（事务），对于写数据，如果考虑高安全，要使用原子性，但原子性的批处理要比非原子性的批处理慢10倍。。。。
+
+  function consoleLog($data, $log = false)
+    {
+        // 数据预处理json
+        if (is_string($data) && $preJsonMsg = json_decode($data, true)) {
+            if (count($preJsonMsg) > 1) {
+                $data = $preJsonMsg;
+            }
+        }
+
+        $logFunc = $log ? 'console.log' : 'console.dir';
+
+        if (is_array($data) || is_object($data)) {
+            echo("<script>".$logFunc."(".json_encode($data).");</script>");
+        } else {
+            echo("<script>".$logFunc."('".$data."');</script>");
+        }
+    }
+ laravel composer update
+ $ composer update
+Loading composer repositories with package information
+Updating dependencies (including require-dev)
+Package operations: 12 installs, 43 updates, 0 removals
+  - Removing rase/socket.io-emitter (0.7.0)
+  - Installing rase/socket.io-emitter (dev-master ce11711): Downloading (connect
+Downloading (100%)
+  - Installing paragonie/random_compat (v1.x-dev 965cdeb): Downloading (connecti
+Downloading (100%)
+  - Removing nesbot/carbon (1.21.0)
+  - Installing nesbot/carbon (dev-master 926aee5): Downloading (100%)
+  - Updating mtdowling/cron-expression (v1.0.4 => v1.2.0): Downloading (connecti
+Downloading (100%)
+  - Removing symfony/polyfill-util (dev-master 41250fb)
+  - Installing symfony/polyfill-util (dev-master 746bce0): Downloading (connecti
+Downloading (100%)
+  - Removing symfony/polyfill-php56 (dev-master b188ceb)
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (switch_host)nloading (connect
+$ wnloading (100%)
+  - Removing jeremeamia/superclosure (dev-master 29a88be)
+  - Installing jeremeamia/superclosure (dev-master af26c92): Downloading (connec
+Downloading (100%)
+  - Updating barryvdh/laravel-debugbar (v2.1.1 => v2.1.4): Downloading (connecti
+Downloading (100%)
+  - Removing guzzlehttp/psr7 (1.2.1)
+  - Installing guzzlehttp/psr7 (dev-master 8882b25): Downloading (connecting...)
+Downloading (100%)
+  - Removing guzzlehttp/promises (dev-master b1e1c0d)
+  - Installing guzzlehttp/promises (dev-master 73815f3): Downloading (connecting
+Downloading (100%)
+  - Removing guzzlehttp/guzzle (dev-master 74fc390)
+  - Installing guzzlehttp/guzzle (dev-master 1739e8b): Downloading (connecting..
+Downloading (100%)
+  - Updating league/oauth1-client (1.6.1 => 1.7.0): Downloading (100%)
+  - Removing sebastian/recursion-context (dev-master 913401d)
+  - Installing sebastian/recursion-context (1.0.x-dev b19cc32): Downloading (con
+Downloading (100%)
+  - Removing sebastian/exporter (dev-master f88f893)
+  - Installing sebastian/exporter (1.2.x-dev dcd43bc): Downloading (connecting..
+Downloading (100%)
+  - Removing sebastian/comparator (dev-master 937efb2)
+  - Installing sebastian/comparator (1.2.x-dev 18a5d97): Downloading (connecting
+Downloading (100%)
+  - Installing webmozart/assert (dev-master 4a8bf11): Downloading (connecting...
+Downloading (100%)
+  - Installing phpdocumentor/reflection-common (dev-master a046af6): Downloading
+Downloading (100%)
+  - Installing phpdocumentor/type-resolver (0.2.1): Downloading (100%)
+  - Updating phpdocumentor/reflection-docblock (2.0.4 => 3.1.1): Downloading (co
+Downloading (100%)
+  - Removing phpspec/prophecy (dev-master e55e3e3)
+  - Installing phpspec/prophecy (dev-master abe41cb): Downloading (connecting...
+Downloading (100%)
+  - Removing sebastian/environment (dev-master 6e71337)
+  - Installing sebastian/environment (1.3.x-dev 67f5569): Downloading (connectin
+Downloading (100%)
+  - Removing phpunit/php-code-coverage (dev-master 40103f9)
+  - Installing phpunit/php-code-coverage (2.2.x-dev eabf68b): Downloading (conne
+Downloading (100%)
+  - Removing phpunit/php-timer (1.0.7)
+  - Installing phpunit/php-timer (dev-master d107f34): Downloading (connecting..
+Downloading (100%)
+  - Removing phpunit/phpunit-mock-objects (dev-master a1304c5)
+  - Installing phpunit/phpunit-mock-objects (2.3.x-dev ac8e7a3): Downloading (co
+Downloading (100%)
+  - Removing phpspec/php-diff (v1.0.2)
+  - Installing phpspec/php-diff (dev-master 0464787): Downloading (connecting...
+Downloading (100%)
+  - Updating omnipay/common (2.4.0 => 2.5.x-dev b1440bd):  Checking out b1440bd7
+c0
+  - Updating symfony/css-selector (2.8.x-dev ac06d81 => dev-master 4d882dc):  Ch
+ecking out 4d882dced7
+  - Removing sebastian/global-state (1.1.1)
+  - Installing sebastian/global-state (1.1.x-dev cea85a8): Downloading (connecti
+Downloading (100%)
+  - Installing vhall/ip_location (dev-master 62b4d3e): Downloading (connecting..
+Downloading (100%)
+  - Installing vhall/check_picture (dev-master 6dd5373): Downloading (connecting
+Downloading (100%)
+  - Installing flamecore/user-agent (dev-master 3e8517d): Downloading (connectin
+Downloading (100%)
+  - Installing composer/ca-bundle (dev-master b17e615): Downloading (connecting.
+Downloading (100%)
+  - Installing maxmind/web-service-common (v0.3.1): Downloading (100%)
+  - Installing maxmind-db/reader (v1.1.3): Downloading (100%)
+  - Installing geoip2/geoip2 (v2.5.0): Downloading (100%)
+  - Installing aliyuncs/oss-sdk-php (v2.2.4): Downloading (100%)
+  - Removing doctrine/instantiator (dev-master 8e884e7)
+  - Installing doctrine/instantiator (dev-master 5acd2bd): Downloading (connecti
+Downloading (100%)
+  - Removing league/flysystem (dev-master 3130ff9)
+  - Installing league/flysystem (dev-master 64ff28b): Downloading (connecting...
+Downloading (100%)
+  - Removing psr/log (dev-master d8e60a5)
+  - Installing psr/log (dev-master 4ebe3a8): Downloading (100%)
+  - Removing phpunit/php-file-iterator (dev-master 6150bf2)
+  - Installing phpunit/php-file-iterator (dev-master 3cc8f69): Downloading (conn
+Downloading (100%)
+  - Removing phpunit/php-token-stream (dev-master cab6c6f)
+  - Installing phpunit/php-token-stream (dev-master 9ddb181): Downloading (conne
+Downloading (100%)
+  - Removing guzzle/guzzle (dev-master b3f5050)
+  - Installing guzzle/guzzle (dev-master f7778ed): Downloading (100%)
+  - Removing psr/http-message (dev-master 85d6369)
+  - Installing psr/http-message (dev-master f6561bf): Downloading (connecting...
+Downloading (100%)
+  - Removing symfony/security-core (2.6.x-dev 05f58bb)
+  - Installing symfony/security-core (2.6.x-dev 813cf2a): Downloading (connectin
+Downloading (100%)
+  - Removing doctrine/inflector (dev-master 90b2128)
+  - Installing doctrine/inflector (dev-master 803a2ed): Downloading (connecting.
+Downloading (100%)
+  - Removing monolog/monolog (1.x-dev 592af02)
+  - Installing monolog/monolog (1.x-dev 35c07a8): Downloading (100%)
+  - Removing sebastian/diff (dev-master 13edfd8)
+  - Installing sebastian/diff (dev-master 86ba64b): Downloading (100%)
+  - Removing maximebf/debugbar (dev-master 173f334)
+  - Installing maximebf/debugbar (dev-master b0dbb58): Downloading (connecting..
+Downloading (100%)
+  - Removing laravel/framework (5.0.x-dev b47cbe5)
+  - Installing laravel/framework (5.0.x-dev 262b813): Downloading (connecting...
+Downloading (100%)
+  - Updating phpoffice/phpexcel 1.8.x-dev (f29b05b => 185bf41):  Checking out 18
+5bf41233
+  - Removing swiftmailer/swiftmailer (5.x-dev fffbc0e)
+  - Installing swiftmailer/swiftmailer (5.x-dev cd4ffa8): Downloading (connectin
+Downloading (100%)
+  - Removing symfony/http-kernel (2.6.x-dev 498866a)
+  - Installing symfony/http-kernel (2.6.x-dev cdd991d): Downloading (connecting.
+Downloading (100%)
+  - Removing symfony/event-dispatcher (2.8.x-dev 475b620)
+  - Installing symfony/event-dispatcher (2.8.x-dev 7fc8e2b): Downloading (connec
+Downloading (100%)
+  - Removing nikic/php-parser (1.x-dev f78af2c)
+  - Installing nikic/php-parser (1.x-dev c4bbc8e): Downloading (100%)
+  - Removing symfony/yaml (2.8.x-dev 085a1eb)
+  - Installing symfony/yaml (2.8.x-dev 93ccdde): Downloading (100%)
+paragonie/random_compat suggests installing ext-libsodium (Provides a modern cry
+pto API that can be used to generate random bytes.)
+maxmind-db/reader suggests installing ext-gmp (bcmath or gmp is requred for deco
+ding larger integers with the pure PHP decoder)
+maxmind-db/reader suggests installing ext-maxminddb (A C-based database decoder
+that provides significantly faster lookups)
+Package guzzle/guzzle is abandoned, you should avoid using it. Use guzzlehttp/gu
+zzle instead.
+Writing lock file
+Generating autoload files
+> php artisan clear-compiled
+> php artisan optimize
+    
+```
+[关于laravel5 消息订阅/发布的理解初](http://www.cnblogs.com/phpper/p/6867786.html)
+php artisan make:command RedisSubscribe
+\Redis::publish('user-channel', json_encode(['username' => 'fantasy','message'=>'i miss you']));
+$exitCode = \Artisan::call('redis:subscribe');//这里应该是代码启动进程监听的命令了 网页调用 同php artisan redis:subscribe
+[基于Token的身份验证——JWT ](http://www.cnblogs.com/zjutzz/p/5790180.html)
+JWT就是一个字符串，经过加密处理与校验处理的字符串，一个JWT实际上就是一个字符串，它由三部分组成，头部、载荷与签名。形式为： 
+A.B.C
+http://www.cnblogs.com/xiekeli/p/5607107.html  http://laravelacademy.org/post/3640.html
+A由JWT头部信息header加密得到
+B由JWT用到的身份验证信息json数据加密得到
+C由A和B加密得到，是校验部分
+$token = array(
+    "iss" => "http://example.org",
+    "aud" => "http://example.com",
+    "iat" => 1356999524,
+    "exp" => 1357000000
+);$jwt = JWT::encode($token, $key);
+mac 系统由于空格引发的 storage/framework/views/wfdfdfdfdf 语法错误 unexceped end of file
+@if(empty($webinar->is_demand))回放@endif观看详情 模板引擎别这样写了... mac 用户访问页面之间崩溃了
+
+汉字别挨着 if关键字..就行 
+@if(empty($webinar->is_demand)) 回放 @endif 观看详情
+$x('//a').filter(function($i){return $i.href && $i.href!='javascript:;';}).map(function($a){return $a.href;}).join(',')
+[面向未来的团队工作方式机器人](https://bearychat.com/)
+https://github.com/ElfSundae/BearyChat
+
 [微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6](http://2014.54chen.com/blog/2016/06/18/wexin-resolve-slowly/)
 wget api.mch.weixin.qq.com
 wget -4 api.mch.weixin.qq.com
