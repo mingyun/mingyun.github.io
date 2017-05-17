@@ -1,3 +1,27 @@
+[微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6](http://2014.54chen.com/blog/2016/06/18/wexin-resolve-slowly/)
+wget api.mch.weixin.qq.com
+wget -4 api.mch.weixin.qq.com
+
+如果是curl，c可以强制指定ipv4，使用curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+[Md5在线破解 MD5 Crack](http://2014.54chen.com/blog/2008/11/25/md5%E5%9C%A8%E7%BA%BF%E7%A0%B4%E8%A7%A3-md5-crack/)
+[MySQL的性能调优工具：比mysqlreport更方便的tuning-primer.sh](http://2014.54chen.com/blog/2008/12/22/mysql%E7%9A%84%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%B7%A5%E5%85%B7%EF%BC%9A%E6%AF%94mysqlreport%E6%9B%B4%E6%96%B9%E4%BE%BF%E7%9A%84tuning-primersh/)
+wget http://www.day32.com/MySQL/tuning-primer.sh chmod +x tuning-primer.sh
+./tuning-primer.sh
+
+[Web压力测试工具介绍](http://2014.54chen.com/blog/2008/11/26/web%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/)
+ab -n 1000 -c 50 http://www.domain.com/test.php
+[PHP代码的优与劣](http://2014.54chen.com/blog/2008/11/27/php%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%98%E4%B8%8E%E5%8A%A3/)
+[MySQL时间字段究竟使用INT还是DateTime？](http://2014.54chen.com/blog/2009/04/27/%E5%8E%9F%E5%88%9B%E5%AE%9E%E6%B5%8Bmysql%E6%97%B6%E9%97%B4%E5%AD%97%E6%AE%B5%E7%A9%B6%E7%AB%9F%E4%BD%BF%E7%94%A8int%E8%BF%98%E6%98%AFdatetime%EF%BC%9F/)
+大数据量下，如果存在大量的select * from table where 时间>XX这样的查询，在MySQL5.1时使用int换datetime是有意义的。
+```js
+优良的PHP代码应该是结构化的。大段的代码应该被分割整理成一个个函数或方法，而那些不气眼的小段代码则应该加上注释，以便日后清楚它们的用途。而且应该尽可能地把前台代码如HTML、CSS、Javascript等从程序中分离出来。PHP的面向对象编程特性可以很好地帮助程序员将代码整理有序。
+　　优良的PHP代码应该是规范化的。无论是为变量名和函数名设定命名规则，还是对一些会重复使用的过程如数据库操作和错误处理进行标准化，抑或是简单到规定好代码是怎样缩进的，这些规范化都可以让代码的可读性大大提高。
+　　优良的PHP代码应该是自适应的。PHP有许多特性如magic quotes和short tags，这些特性的打开和关闭会影响到程序的运行。所以，一个好的程序员应该在他的代码中加如适当的语句来使程序能够根据环境进行调整。
+　　优良的PHP代码应该是安全的。虽然PHP是一种高效、灵活的语言，没有固定的框架，但却把安全问题留给了程序员们。对潜在安全漏洞的深刻理解，如跨站脚本攻击（XSS）、跨站请求伪造（CSRF）、代码注入漏洞、字符编码循环漏洞等，对于今天的专业程序员来说是至关重要的。
+  htmlspecialchars($_GET['query'], ENT_QUOTES)
+  
+```
+
 [window有内置属性name](https://segmentfault.com/q/1010000009425086)
 var name = [0, 1, 2]
 console.log(name) // 输出 "0,1,2"
