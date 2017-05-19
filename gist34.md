@@ -1,5 +1,17 @@
+[ RBAC用户权限管理数据库设计](http://blog.csdn.net/qiaqia609/article/details/38102091)
+![img](http://img.blog.csdn.net/20140725020830656?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcWlhcWlhNjA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+
 QQ群记录16406911
 ```js
+
+所有的功能模块全部存入数据库　然后把模块分配给用户 当用户访问模块的时候　判断是否是已经分配了
+如果没有分配　就是没有权限　　　如果有分配就可以正常访问 这就是rbac的整体逻辑
+有几种方式　　１.直接为用户分配权限　　２.为用户组分配权限（有人也叫角色权限）　　
+权限一般有三种　　１.查看　　２.编辑　　３.删除
+rbac比较绕　弄不懂思路　看代码也没用 拿tp 做为示例说一下　例：　/index.php?m=会员管理?a=查看会员
+这样的一个ＵＲＬ　　分别有模块名，操作名 你把模块与操作名记录到数据库里
+然后指定某个用户　能不能访问这个模块
+
 1，不打电话，用邮件或短信通知面试的，不去
 2，打电话，但不是女的公司，不去
 3，是女的，一问三不知的公司，不去
