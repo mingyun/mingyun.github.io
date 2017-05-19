@@ -1,6 +1,10 @@
 [ RBAC用户权限管理数据库设计](http://blog.csdn.net/qiaqia609/article/details/38102091)
 ![img](http://img.blog.csdn.net/20140725020830656?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcWlhcWlhNjA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+http://www.php.cn/course/497.html rbac视频教程已发
+https://github.com/chjj/marked
+ http://d.laravel-china.org/ 这个 网站 怎么由 md 格式转换为 html 网站的嘛？能帮解决的发红包感谢 https://github.com/evilstreak/markdown-js
 
+[javascript代码测试](https://scriptoj.com/topic/27/23-%E8%82%A5%E7%8C%AB%E5%88%97%E8%A1%A8)
 QQ群记录16406911
 ```js
 
