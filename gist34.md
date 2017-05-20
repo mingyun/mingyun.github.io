@@ -3,8 +3,54 @@
 http://www.php.cn/course/497.html rbac视频教程已发
 https://github.com/chjj/marked
  http://d.laravel-china.org/ 这个 网站 怎么由 md 格式转换为 html 网站的嘛？能帮解决的发红包感谢 https://github.com/evilstreak/markdown-js
-
+[知乎上妹子都爱取啥名？](https://zhuanlan.zhihu.com/p/27016289)
+[只有内心强大的人，才敢看这11部让人绝望的国产电影](https://zhuanlan.zhihu.com/p/26973597)
+[Markdown中插入图片有什么技巧？](https://www.zhihu.com/question/21065229/answer/171989853)
+使用搜狗输入法的截图工具加上极简图传  https://jiantuku.com/#/ 点击markdown 就可以复制了
+[知乎上的好身材女神](https://www.zhihu.com/collection/62024183)
+[揭秘勒索软件！用Python实现RSA加密，模拟文件劫持](https://zhuanlan.zhihu.com/p/26917148)
+http://link.zhihu.com/?target=https%3A//github.com/QuantumLiu/pyRSA_demo 
+[一个福利 · 520小程序爱の水晶球配置教程](https://zhuanlan.zhihu.com/p/26127760)
+https://www.zhihu.com/question/57172252  
+[结婚需要什么基本的安排和注意事项？](https://www.zhihu.com/question/22658147/answer/171062024)
+[PHP黑系列之一：PHP 为什么大小写规则是如此不规则？](https://zhuanlan.zhihu.com/p/26965548)
+[我在B站学数学](https://zhuanlan.zhihu.com/p/26899736)
+http://link.zhihu.com/?target=http%3A//space.bilibili.com/88461692/%23%21/ 
+有个网站叫kanbilibili哈哈哈哈专门提供b站下载。只要在b站找到你想下载的视频，再在网址栏里的bilibili前面加上kan然后猛敲回车就好啦
+[论如何找到男朋友、女朋友？](https://www.zhihu.com/question/59089074/answer/170373589)
 [javascript代码测试](https://scriptoj.com/topic/27/23-%E8%82%A5%E7%8C%AB%E5%88%97%E8%A1%A8)
+[使用 PDO 的 prepare 预处理，能 100%防止 SQL 注入吗](https://www.v2ex.com/t/362646#reply30)
+[PHP算法](http://www.leapcode.cn/question/two-sum)
+
+[删除了MySQL数据库中的文件](https://zhuanlan.zhihu.com/p/26941061)
+rm -rf /var/lib/mysql/test/t.ibd表空间删除以后，依然可以查询和修改这张表
+虽然在文件系统中已经找不到该文件，但是，该文件还没有真正被删除。在Linux下，如果我们删除了较大的文件，但是，使用df命令查看磁盘的空间，磁盘可用空间并没有增大。那么，很有可能是因为，你删除的这个文件正在被某一个进程使用。如果一个文件正在被一个进程使用，那么，删除文件时，文件并不会被立即删除，占用的磁盘空间也不会释放。
+由于有进程（MySQL进程）打开了该文件，因此，当我们从外部删除文件时，文件并没有被真正的删除。只有当进程关闭该文件的文件句柄时，文件才会被真正删除。此时，我们依然可以使用lsof命令查看已经被删除的文件，如下所示：
+lsof | grep t.ibd 在/proc[pid]/fd目录下，保存了所有进程打开的文件 ll /proc/11401/fd/25 
+直接对文件句柄进行拷贝即可。将数据文件拷贝到MySQL的数据库目录下，并修改文件的权限 
+cp /proc/11401/fd/25 /var/lib/mysql/test/t.ibd
+chown mysql:mysql /var/lib/mysql/test/t.ibd  https://zhuanlan.zhihu.com/p/26923061
+[只需两行，在微信中监控你的 Python 程序](https://zhuanlan.zhihu.com/p/25768417)
+[Python爬虫和 Flask 实现小说网站](https://zhuanlan.zhihu.com/p/26937917)
+github http://link.zhihu.com/?target=https%3A//github.com/Blackyukun/dingdian/tree/last 
+[爆款游戏《贪吃蛇大作战》的 Python 实现](https://zhuanlan.zhihu.com/p/22339492)
+[为什么有些程序员看不起 PHP 这门语言？](https://www.zhihu.com/question/59820507/answer/169623084)
+[一张图让你彻底明白八字的关系](https://zhuanlan.zhihu.com/p/26892621)
+[Python学习路径及练手项目合集](https://zhuanlan.zhihu.com/p/23561159)
+[GitHub Pages + Hexo搭建博客](https://link.zhihu.com/?target=http%3A//crazymilk.github.io/2015/12/28/GitHub-Pages-Hexo%25E6%2590%25AD%25E5%25BB%25BA%25E5%258D%259A%25E5%25AE%25A2/%23more)
+[爬虫杂谈（四）抓取微信公众号文章的轮子](https://zhuanlan.zhihu.com/p/26675148)
+pip install wechatsogou
+引用
+from wechatsogou import *
+wechats = WechatSogouApi() http://link.zhihu.com/?target=https%3A//github.com/Chyroc/WechatSogou
+
+
+[又有实用效率小工具推荐啦](https://zhuanlan.zhihu.com/p/26941722)
+Zybuluo 是在线Markdown 写作工具。  http://link.zhihu.com/?target=https%3A//cloudconvert.com/ CloudConvert 又是一个强大的在线多媒体转换工具。
+视频下载王是一款视频下载工具。http://link.zhihu.com/?target=https%3A//www.apowersoft.cn/video-download-capture
+Copyfish 是一款Chrome OCR（扫描识别成文字） 插件。http://link.zhihu.com/?target=https%3A//ocr.space/
+
+
 QQ群记录16406911
 ```js
 
