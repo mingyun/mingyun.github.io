@@ -1,3 +1,103 @@
+[python中有没有直接对多维数组排序](https://segmentfault.com/q/1010000009302207)
+```js
+sorted(dl1, key=lambda x: x[0])
+>>> a=np.array([[ 0.02598003,1.],
+               [ 0.00730082,2.],
+               [ 0.05471569,3.],
+               [ 0.02599167,4.],
+               [ 0.0544947 ,5.],
+               [ 0.00753346,6.]])
+>>> a.sort(0)
+>>> a
+array([[ 0.00730082,  1.        ],
+       [ 0.00753346,  2.        ],
+       [ 0.02598003,  3.        ],
+       [ 0.02599167,  4.        ],
+       [ 0.0544947 ,  5.        ],
+       [ 0.05471569,  6.        ]])
+>>> a=np.array([[ 0.02598003,1.],
+               [ 0.00730082,2.],
+               [ 0.05471569,3.],
+               [ 0.02599167,4.],
+               [ 0.0544947 ,5.],
+               [ 0.00753346,6.]])
+
+>>> a[a.argsort(0)[:,0]]
+array([[ 0.00730082,  2.        ],
+       [ 0.00753346,  6.        ],
+       [ 0.02598003,  1.        ],
+       [ 0.02599167,  4.        ],
+       [ 0.0544947 ,  5.        ],
+       [ 0.05471569,  3.        ]])
+```
+[php fsockopen win10本地调用接口正常](https://segmentfault.com/q/1010000009423264)
+```js
+ $params = json_encode($template,JSON_UNESCAPED_UNICODE);
+    $fp = fsockopen('api.weixin.qq.com', 80, $error, $errstr, 1);
+    $http = "POST /cgi-bin/message/template/send?access_token={$access_token} HTTP/1.1 ".PHP_EOL."Host: api.weixin.qq.com".PHP_EOL."Content-type: application/x-www-form-urlencoded".PHP_EOL."Content-Length: " . strlen($params) .PHP_EOL. "Connection:close".PHP_EOL.PHP_EOL.$params.PHP_EOL.PHP_EOL;
+    fwrite($fp, $http);
+    fclose($fp);
+```
+https://github.com/Anahkiasen/underscore-php 
+Laravel 中两类 Collection 的区别https://segmentfault.com/q/1010000009409607
+MySQL数据库误操作后快速回滚的方法http://www.jb51.net/article/99553.htm
+SUM(IF(type = 1, score, -score)) SUM(CASE WHEN type = 1 THEN score ELSE -score END)
+http://www.php.cn/php.html
+用一条sql实现该查询https://segmentfault.com/q/1010000009480365
+SELECT user_id, COUNT(IF(status=0,true, null)) AS 'right_count', COUNT(IF(status=1,true, null)) AS 'error_count', COUNT(IF(status=2,true, null)) AS 'absenteeism_count' FROM online_exam_user_detail WHERE exam_publish_id in (1, 2, 3) GROUP BY user_id;
+深入理解SELECT ... LOCK IN SHARE MODE和SELECT ... FOR UPDATEhttp://m.blog.csdn.net/article/details?id=50544728
+mysql有没有语句可以直接更新排序后的数据的前十条https://segmentfault.com/q/1010000009471209
+不支持使用 LIMIT 子句的 IN/ALL/ANY/SOME 子查询，只要你再来一层就行 如：
+
+UPDATE table SET name='zhangsan' WHERE id IN
+(SELECT t.id FROM (SELECT id FROM table LIMIT 10) AS t) 
+composer 的SSL错误https://segmentfault.com/q/1010000009417320
+failed to open stream: HTTP request failed!
+SSH连接到服务器，一段时间不操作后会卡住https://segmentfault.com/q/1010000009421113
+ linux 的安全问题,如果 60s 内没用任何数据,将会自动断开.
+nosql 数据实时同步方案 案例https://github.com/liukelin/canal_mysql_nosql_sync
+[阿里云 ecs 怎么安装mysql](https://segmentfault.com/q/1010000009366246)
+启动报错，看mysql的error日志
+登录权限报错，skip-grant-tables 跳过以后，修改mysql用户密码
+skip grunt tables 放错位置了 我放在[mysqld_safe]的块下面了 放在[mysqld]即可
+接下来重启失败，看错误日志，3306被占用了，kill -9 [pid] 发现杀掉后立刻重启，我用kill [pid]直接杀掉，发现3306端口不被占用了
+接下来进行连接mysql，报错没有mysql.sock文件，可能是我之前误删了，重启服务器，然后service mysqld restart 重启，找到了mysql.sock ，之后发现my.cnf 文件下的socket位置与它找的不一样，用ln -s 软连接了一下
+
+df包括已经删除但没释放的空间通过命令lsof|grep delete查看有哪些文件被删除但仍被程序占用。
+需要将这些程序重启才能将所占用的空间释放掉。https://segmentfault.com/q/1010000009263138
+[lnmp环境下有几种安装php扩展方式](https://segmentfault.com/q/1010000009341934)
+make clean 清理一下
+然后./configure$ phpize
+$ ./configure
+$ make && make install
+[linux 的crond服务 最少是1分钟 php](https://segmentfault.com/q/1010000009329754)
+系统使用systemd的话可以利用systemd.timer设置秒甚至毫秒级定时任务。https://segmentfault.com/a/1190000007916299#articleHeader2 
+* * * * * sleep 10; php /home/test.php
+* * * * * sleep 20; php /home/test.php
+* * * * * sleep 30; php /home/test.php
+
+[service ssh restart报错](https://segmentfault.com/q/1010000009316761)
+nginx 代理location /api/ {
+    proxy_pass http://ip:port
+}https://segmentfault.com/a/1190000009082326 
+service ssh restart是centos 6的命令。你这是centos 7。应该是systemctl restart sshd
+[数字保留小数点后几位](https://segmentfault.com/q/1010000009314050)
+from decimal import Decimal
+a = Decimal('1.0231212121')
+a = round(a,3) # Decimal('1.023')
+'{:.2f}'.format(1.0231212121) # '1.02'
+[git 上传项目至远程仓库](https://segmentfault.com/q/1010000009365671)
+关于pull的错误：refusing to merge...
+因为他们是两个不同的项目，要把两个不同的项目合并，git需要添加一句代码，在git pull,所以 
+git pull origin master --allow-unrelated-histories
+然后再push就ok了
+git push origin master 
+git remote add origin git@github.com:youngxhui/Test.git http://youngxhui.github.io/2016/08/13/Git%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/
+[mysql新说·记录数据轨迹的binlog](https://segmentfault.com/a/1190000008290848)
+binlog是mysql的日志工具，binlog日志可以记录insert、update、delete的sql和操作时间。
+mysqlbinlog /var/log/mysql/mysql-bin.000002
+mysqlbinlog --start-datetime="2017-01-10 10:31:12" /var/log/mysql/mysql-bin.000002 > sql.txt
+
 [ RBAC用户权限管理数据库设计](http://blog.csdn.net/qiaqia609/article/details/38102091)
 ![img](http://img.blog.csdn.net/20140725020830656?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcWlhcWlhNjA5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
 http://www.php.cn/course/497.html rbac视频教程已发
