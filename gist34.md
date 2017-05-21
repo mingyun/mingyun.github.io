@@ -21,7 +21,32 @@ http://link.zhihu.com/?target=http%3A//space.bilibili.com/88461692/%23%21/
 [javascript代码测试](https://scriptoj.com/topic/27/23-%E8%82%A5%E7%8C%AB%E5%88%97%E8%A1%A8)
 [使用 PDO 的 prepare 预处理，能 100%防止 SQL 注入吗](https://www.v2ex.com/t/362646#reply30)
 [PHP算法](http://www.leapcode.cn/question/two-sum)
-
+[为什么有些程序员看不起 PHP 这门语言](https://www.zhihu.com/question/59820507)
+http://www.albee.me/ http://blog.csdn.net/wuxia2001/article/details/45743641  
+https://github.com/wuxia2001/loveyue https://link.zhihu.com/?target=http%3A//www.albee.me/index2.html
+https://www.zhihu.com/topic/19577540/top-answers  http://love.nodoccat.cn/#/step-4 http://app.ikow.cn/love/
+520送钱包，里面带钱
+[有哪些程序员的告白方式？](https://www.zhihu.com/question/57172252)（）
+[HTML5 进阶系列：拖放 API 实现拖放排序](https://zhuanlan.zhihu.com/p/26666141?group_id=848937782297628672)
+[几个有趣又实用的网站](https://zhuanlan.zhihu.com/p/26993122?group_id=848916862652776448)
+http://link.zhihu.com/?target=https%3A//itunes.apple.com/cn/app/id548861535%3Fmt%3D8
+PHP 5.3的匿名函数中会丢失$this, self, parent作用域，所以你既不能use($this)，也不能直接在匿名函数里使用$this。怎么办呢，对于$this，你可以$that = $this然后use($that)，对于self和parent，可以改写__call方法，然后仍然用$that调用。准确说这个也不是use的bug，而是匿名函数的bug。当然这些bug在5.4及以后的版本都被修复了。
+最好是PHP老手都会踩的语法坑。比如PHP的函数编码问题 echo trim("邯郸市","市"); 比如官方函数传参是传引用还是传值的问题
+[无聊的马](http://endless.horse/)
+[基于搜狗微信搜索的微信公众号爬虫接口](https://zhuanlan.zhihu.com/p/26675148?group_id=847065916146585600)
+http://link.zhihu.com/?target=https%3A//github.com/Chyroc/WechatSogou
+数据可视化的工具BDP个人版http://link.zhihu.com/?target=https%3A//me.bdp.cn/home.html
+[又有实用效率小工具推荐](https://zhuanlan.zhihu.com/p/26941722?group_id=847920103541583872)
+://cloudconvert.com/ 一个打造漂亮可视化数据图表的网站——文图http://link.zhihu.com/?target=https%3A//www.wentu.io/
+[面试的时候，如何自我介绍](https://www.zhihu.com/question/19603341/answer/170829220?group_id=848269894255538176)
+[如何让你的Python 代码一直运行着](https://zhuanlan.zhihu.com/p/26891627?group_id=847031341399830528)
+[公众号文章配图去哪找](https://www.zhihu.com/question/37493361/answer/170634089?group_id=848519848135901184)
+百度图片 FindIcons 免费图标搜索引擎    http://findicons.com/ 小猪动图 http://www.piggif.com/ 美图秀秀 创客贴
+词云图悦 http://www.picdata.cn/ Wordart   https://wordart.com/    秀米 图表秀
+现免费提供ps教程，想要的朋友可以关注公众号：0的开始，回复“教程”两个字即可获得下载地址。
+[）如何编辑修改PDF文件里的文字？](https://zhuanlan.zhihu.com/p/26961504?group_id=848247152189788160)
+迅捷PDF编辑器 搜索工具网站：smallpdf
+[有哪些有意思的礼物可以送给女朋友](https://www.zhihu.com/question/28551841)
 [删除了MySQL数据库中的文件](https://zhuanlan.zhihu.com/p/26941061)
 rm -rf /var/lib/mysql/test/t.ibd表空间删除以后，依然可以查询和修改这张表
 虽然在文件系统中已经找不到该文件，但是，该文件还没有真正被删除。在Linux下，如果我们删除了较大的文件，但是，使用df命令查看磁盘的空间，磁盘可用空间并没有增大。那么，很有可能是因为，你删除的这个文件正在被某一个进程使用。如果一个文件正在被一个进程使用，那么，删除文件时，文件并不会被立即删除，占用的磁盘空间也不会释放。
