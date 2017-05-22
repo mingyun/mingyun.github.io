@@ -124,7 +124,86 @@ function reverse($str){
 }
 reverse("abcdefg");//gfedcbc
 
+function test ($n){
+    echo $n."  ";
+    if($n>0){
+        test($n-1);
+    }else{
+        echo "";
+    }
+    echo $n."  "
+}
+test(2)
+结果是2 1 0<–>0 1 2
+
+ 
+
+第一步，履行test(2)，echo 2，然后由于2>0，履行test(1)， 后边还有没来得及履行的echo 2 
+第二步，履行test（1），echo 1，然后由于1>0，履行test（0），相同后边还有没来得及履行的 echo 1 
+第三步，履行test（0），echo 0，履行test（0），echo 0， 此刻0>0的条件不满意，不在履行test（）函数，而是echo “”，并且履行后边的 echo 0
+
+function fab($n){  
+    echo “-- n = $n ----------------------------”.PHP_EOL;  
+    debug_print_backtrace();  
+    if($n == 1 || $n == 0){  
+        return $n;  
+    }               
+    return fab($n - 1) + fab($n - 2);  
+}                       
+fab(4)；
+内置的与递归行为有关的函数（如array_merge_recursive,array_walk_recursive,array_replace_recursive等，考虑它们的实现）http://blog.csdn.net/ohmygirl/article/details/19679643
+
 ```
+[ foreach循环中变量引用的一道面试题](http://blog.csdn.net/ohmygirl/article/details/8726865)
+```js
+unset只会删除变量。并不会清空变量值对应的内存空间
+$a = "str";  
+$b = &$a;  
+unset($b);  
+echo $a; 
+[PHP内核探索之变量（5）- session的基本原理](http://blog.csdn.net/ohmygirl/article/details/43152683)
+Session需要使用Cookie做载体，来存放session_id Cookie过期和删除只能保证客户端的连接的失效，并不会清除服务器端的Session
+session_save_path('/root/xiaoq/phpCode/session');  
+session_start();  
+   
+$_SESSION['index'] = "this is desc";  
+$_SESSION['int']   = 123;  
+print_r( session_id());//5rdhbe4k8k73h5g1fsii01iau5 服务器端是以sess_{session_id}的命名方式来储存Session数据文件的：
+session_id("5rdhbe4k8k73h5g1fsii01iau5");  通过传递session_id的方法来获取Session数据，从而避开Cookie的限制
+session数据是在当前会话结束时（一般就是指脚本执行完毕时）才会写入文件的
+在session数据使用完毕之后，调用session_commit或者session_write_close函数通知服务器写入session数据并关闭文件
+unset($_SESSION)只是重置$_SESSION这个全局变量，并不会将session数据从服务器端删除。较为稳妥的做法是，在需要清除当前会话数据的时候调用session_destroy删除服务器端Session数据
+unset($_SESSION);  
+session_destroy();  
+使用Cookie为载体的情况下，session.name指定存储session_id的Cookie的key( cookie中也是基于key=>value)。默认的情况下，session.name= PHPSESSID
+session_name("NEW_SESSION");  
+session_start();  
+调用session_commit或者脚本执行完毕时，session数据写入文件，关闭打开的session文件句柄。如果session_id是以Cookie存储的，那么在服务器端的响应中，还应该发送Set-Cookie的HTTP头，通知客户端存储session_id，之后的每次请求都应该携带这个session_id.
+“strlen函数返回给定字符串的长度”，但是，并没有对长度单位做任何说明，长度究竟是指”字符的个数“还是说”字符的字节数“。 说明strlen函数返回的是字符串的字节数
+$s = file_get_contents("./word");
+$a = array_count_values(str_word_count($s, 1)) ;
+
+配合array_flip，可以计算某个单词最后一次出现的位置：
+
+$t = array_flip(str_word_count($s, 2));
+配合了array_unique之后再array_flip，则可以计算某个单词第一次出现的位置：
+
+$t = array_flip( array_unique(str_word_count($s, 2)) );
+一个二进制安全的函数，本质上是指它将输入看做是原始的数据流（raw）而不包含任何特殊的格式。 C字符串只合适保存简单的文本，而不能用于保存图片、视频、其他文件等二进制数据。而在PHP中，我们可以使用$str = file_get_contents(“filename”);保存图片、视频等二进制数据。
+echo str_word_count(file_get_contents(“word”)); //112文本中的单词的个数
+
+```
+[nginx下file_get_contents导致cpu 100%的问题](http://blog.csdn.net/ohmygirl/article/details/18844987)
+对搜索接口的调用，是直接通过file_get_contents(API)的方式获取的。由于file_get_contents是阻塞的I/O方式，且默认没有设置超时，因而如果搜索接口在长时间没有返回数据的情况下，会一直占用系统的资源，从而导致了nginx的502 bad gateway错误。张宴的博客中，对这一现象做了详细的解释和描述（地址：http://blog.s135.com/file_get_contents/）。在文中，作者给的解决方案是使用stream的timeout参数，使file_get_contents的socket连接强制超时，具体方案是：
+
+$ctx = stream_context_create(array(  
+		'http' => array(  
+			'timeout' => 5 //设置一个超时时间，单位为s 
+		)  
+	)  
+);  
+使用更加强大的curl来完成相应的功能，并通过CURLOPT_TIMEOUT和CURLOPT_CONNECT_TIMEOUT限制搜索接口的连接时间和请求时间。且为了保证搜索的结果，会尝试3次连接，如果失败，则使用default的数据来填充。这样设置之后，基本上很少出现502 bad gateway的错误了。 进程异常时（如cpu占用较高），不要急于kill掉这个“现场”，不妨strace–p pid 追踪一下进程的系统调用
+[PHP内核探索之变量（7）- 不平凡的字符串](http://blog.csdn.net/ohmygirl/article/details/44753655)
 [ PHP不使用递归的无限级分类](http://blog.csdn.net/zhouzme/article/details/50097669)
 ```js
 $list = array(
