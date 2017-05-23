@@ -1,3 +1,14 @@
+[纯手工自制的内网穿透瑞士军刀 Socket Pipe](https://joyqi.com/javascript/socket-pipe.html)
+https://github.com/joyqi/socket-pipe 
+[让MySQL支持emoji图标存储](https://github.com/jaywcjlove/mysql-tutorial/blob/master/chapter17/17.1.md)
+SHOW VARIABLES WHERE Variable_name LIKE 'character\_set\_%' OR Variable_name LIKE 'collation%';
+SHOW FULL COLUMNS  FROM  users_profile;
+
+[八幅漫画理解使用JSON Web Token设计单点登录系统](http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/)
+要实现在login.taobao.com登录后，在其他的子域名下依然可以取到Session，这要求我们在多台服务器上同步Session。
+
+使用JWT的方式则没有这个问题的存在，因为用户的状态已经被传送到了客户端。因此，我们只需要将含有JWT的Cookie的domain设置为顶级域名即可
+Set-Cookie: jwt=lll.zzz.xxx; HttpOnly; max-age=980000; domain=.taobao.com
 [php 递归函数的三种实现方式 ](http://www.cnblogs.com/DeanChopper/p/4707757.html)
 ```js
 function test($a=0,&$result=array()){
@@ -154,6 +165,34 @@ fab(4)；
 内置的与递归行为有关的函数（如array_merge_recursive,array_walk_recursive,array_replace_recursive等，考虑它们的实现）http://blog.csdn.net/ohmygirl/article/details/19679643
 
 ```
+laravel 队列
+```js
+\Queue::push(new \App\Commands\Cut($id), null, 'cut_record');
+redis 队列的key 为queues:cut_record  默认的队列为queues:default
+vi /etc/supervisord.d/
+[program:cut_record]
+command=/usr/bin/php /usr/share/nginx/html/artisan queue:listen --tries=3 --queue=cut_record
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/artisan_cut_record_std.log
+stderr_logfile=/var/log/supervisor/artisan_cut_record_err.log
+
+#supervisorctl
+>update 
+>status 
+supervisor> status
+add_question                     RUNNING    pid 4954, uptime 13 days, 19:42:40
+artisan                          RUNNING    pid 4924, uptime 13 days, 19:42:41
+artisan_band-to-chat             RUNNING    pid 4923, uptime 13 days, 19:42:41
+artisan_flow                     RUNNING    pid 4926, uptime 13 days, 19:42:41
+
+之前做一个增量加载的功能  采用maxid和minid比对
+上拉比对minid    然后更新minid
+下拉比对maxid   然后更新maxid
+反复做了三遍才算真正作对了
+```
+
+
 [ foreach循环中变量引用的一道面试题](http://blog.csdn.net/ohmygirl/article/details/8726865)
 ```js
 unset只会删除变量。并不会清空变量值对应的内存空间
