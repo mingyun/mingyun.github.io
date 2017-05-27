@@ -3,7 +3,27 @@ https://github.com/joyqi/socket-pipe
 [让MySQL支持emoji图标存储](https://github.com/jaywcjlove/mysql-tutorial/blob/master/chapter17/17.1.md)
 SHOW VARIABLES WHERE Variable_name LIKE 'character\_set\_%' OR Variable_name LIKE 'collation%';
 SHOW FULL COLUMNS  FROM  users_profile;
-
+[PHP uniqid() 生成不重复唯一标识方法三](http://www.51-n.com/t-4264-1-1.html)
+```js
+$units = array();
+        for($i=0;$i<1000000;$i++){
+                $units[]=md5(uniqid(md5(microtime(true)),true));
+        }
+        $values  = array_count_values($units);
+        $duplicates = [];
+        foreach($values as $k=>$v){
+                if($v>1){
+                        $duplicates[$k]=$v;
+                }
+        }
+        echo '<pre>';
+        print_r($duplicates);
+        echo '</pre>';
+```
+[码云平台帮助文档](http://git.mydoc.io/?t=154707)
+[PHP设计模式简介](http://larabase.com/collection/5/post/143)
+[北京地区PHP程序员专业能力评测报告](https://v.sijiaomao.com/ability?3njfchm5)
+[酷Q聊天机器人的安装设置教程_百度经验](http://jingyan.baidu.com/article/1612d500768ee0e20e1eeeb2.html)
 [八幅漫画理解使用JSON Web Token设计单点登录系统](http://blog.leapoahead.com/2015/09/07/user-authentication-with-jwt/)
 要实现在login.taobao.com登录后，在其他的子域名下依然可以取到Session，这要求我们在多台服务器上同步Session。
 
