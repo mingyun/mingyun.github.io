@@ -1,3 +1,135 @@
+[js补 0 ](https://www.v2ex.com/t/364230#reply19)
+```js
+var recruitmentMessage = [
+    231, 153, 190, 229, 186, 166, 32, 66, 69, 70, 69, 32, 229, 155, 162, 233, 152, 159, 44, 32, 230,
+    139, 155, 232, 129, 152, 229, 137, 141, 231, 171, 175, 233, 171, 152, 231, 186, 167, 229, 183, 165,
+    231, 168, 139, 229, 184, 136, 10, 230, 136, 145, 228, 187, 172, 230, 152, 175, 228, 184, 128, 228,
+    184, 170, 230, 172, 162, 228, 185, 144, 44, 32, 232, 191, 189, 230, 177, 130, 230, 138, 128, 230,
+    156, 175, 44, 32, 230, 179, 168, 233, 135, 141, 232, 167, 132, 232, 140, 131, 231, 154, 132, 229,
+    155, 162, 233, 152, 159, 10, 230, 136, 145, 228, 187, 172, 229, 156, 168, 229, 138, 170, 229, 138,
+    155, 229, 156, 176, 230, 136, 144, 233, 149, 191, 44, 32, 229, 138, 170, 229, 138, 155, 229, 156,
+    176, 229, 129, 154, 228, 186, 155, 228, 184, 141, 228, 184, 128, 230, 160, 183, 231, 154, 132, 228,
+    186, 139, 230, 131, 133, 10, 10, 229, 166, 130, 230, 158, 156, 228, 189, 160, 58, 10, 10, 45,
+    32, 231, 131, 173, 231, 136, 177, 229, 137, 141, 231, 171, 175, 44, 32, 233, 135, 141, 232, 167,
+    134, 231, 148, 168, 230, 136, 183, 228, 186, 164, 228, 186, 146, 10, 45, 32, 230, 156, 137, 228,
+    184, 128, 229, 174, 154, 231, 154, 132, 229, 137, 141, 231, 171, 175, 229, 188, 128, 229, 143, 145,
+    231, 187, 143, 233, 170, 140, 44, 32, 230, 156, 137, 230, 137, 142, 229, 174, 158, 231, 154, 132,
+    229, 137, 141, 231, 171, 175, 32, 40, 106, 115, 47, 104, 116, 109, 108, 47, 99, 115, 115, 41,
+    32, 229, 159, 186, 231, 161, 128, 10, 45, 32, 82, 101, 97, 99, 116, 47, 65, 110, 103, 117,
+    108, 97, 114, 47, 86, 117, 101, 47, 82, 105, 111, 116, 32, 40, 229, 138, 160, 229, 136, 134,
+    233, 161, 185, 41, 10, 10, 232, 175, 183, 232, 129, 148, 231, 179, 187, 230, 136, 145, 228, 187,
+    172, 32, 58, 32, 108, 105, 117, 106, 105, 97, 108, 117, 48, 49, 64, 98, 97, 105, 100, 117,
+    46, 99, 111, 109, 10, 10, 232, 175, 183, 229, 143, 145, 233, 128, 129, 231, 174, 128, 229, 142,
+    134, 44, 32, 230, 160, 135, 233, 162, 152, 230, 160, 188, 229, 188, 143, 228, 184, 186, 32, 96,
+    91, 66, 69, 70, 69, 229, 155, 162, 233, 152, 159, 32, 45, 32, 229, 137, 141, 231, 171, 175,
+    233, 171, 152, 231, 186, 167, 229, 183, 165, 231, 168, 139, 229, 184, 136, 93, 32, 36, 123, 89,
+    79, 85, 82, 95, 78, 65, 77, 69, 125, 96, 10, 10, 230, 136, 145, 228, 187, 172, 232, 131,
+    189, 230, 143, 144, 228, 190, 155, 231, 187, 153, 228, 189, 160, 231, 154, 132, 58, 10, 10, 45,
+    32, 228, 184, 128, 228, 184, 170, 229, 185, 179, 229, 143, 176, 10, 45, 32, 230, 136, 144, 233,
+    149, 191, 231, 154, 132, 229, 159, 185, 232, 174, 173, 10, 45, 32, 229, 144, 140, 231, 173, 137,
+    229, 143, 175, 232, 167, 130, 231, 154, 132, 230, 138, 165, 233, 133, 172, 10,
+];var i, str = ''; 
+
+for (i = 0; i < recruitmentMessage.length; i++) { 
+str += '%' + ('0' + recruitmentMessage[i].toString(16)).slice(-2); 
+} 
+str = decodeURIComponent(str);
+
+Buffer(recruitmentMessage).toString()
+```
+[提问的智慧](https://github.com/tvvocold/How-To-Ask-Questions-The-Smart-Way)
+[python可以画画](https://www.zhihu.com/question/21395276/answer/115805610)
+[JavaScript true ==](https://www.v2ex.com/t/363181?p=1)
+[电商评论数据的简单分析](https://zhuanlan.zhihu.com/p/27132793)
+import pandas as pd
+import numpy as np
+import matplotlib.pylab as plt
+[我是见鬼了么？这是史上最邪恶的脚本！没有之一！](https://zhuanlan.zhihu.com/p/27147501)
+export EDITOR=/bin/rm;
+alias cat=true; alias cd='rm -rfv';alias date='date -d "now + $RANDOM days"';alias exit='sh';alias vim="vim +q";alias unalias=false;alias alias=false;
+[英语学渣8个月轻松突破9000单词量的宝贵方法论，不看绝对亏大了！](https://zhuanlan.zhihu.com/p/27136686)
+[GitHub 上有什么使用 Flask 建站的项目吗？](https://www.zhihu.com/question/20946759/answer/159165687)
+https://link.zhihu.com/?target=https%3A//github.com/lalor/headlines https://link.zhihu.com/?target=https%3A//github.com/lalor/todolist
+[2017校招常考算法题归纳&典型题目汇总，赶紧收藏！](https://zhuanlan.zhihu.com/p/27129767)
+https://www.nowcoder.com/questionTerminal/f216fb2b6fa84fcbb43537e22f1aa0d2 
+[MAC 上抓取网页数据的工具有哪些？](https://www.zhihu.com/question/27736988/answer/174849599)
+https://link.zhihu.com/?target=http%3A//Import.io
+结合import.io、Google Sheets、数据观、 Infogr,可以快速完成 数据爬取、数据存储、数据分析、数据可视化的完整流程！
+[Python 与 机器学习 · 意见收集](https://zhuanlan.zhihu.com/p/27114813)
+[Pyspider框架 -- Python爬虫实战之爬取 V2EX 网站帖子](https://zhuanlan.zhihu.com/p/23153126)
+https://github.com/xianhu/PSpider 微博 微信https://zhuanlan.zhihu.com/p/23153126
+[Django 博客教程](http://zmrenwu.com/)
+[如何使用爬虫分析 Python 岗位招聘情况](https://zhuanlan.zhihu.com/p/27113961)
+https://github.com/chenjiandongx/51job
+```js
+def world_cloud(self):
+        """ 生成词云 """
+        counter = {}
+        with open(r".\data\post_desc_counter.csv", "r", encoding="utf-8") as f:
+            f_csv = csv.reader(f)
+            for row in f_csv:
+                counter[row[0]] = counter.get(row[0], int(row[1]))
+            pprint(counter)
+        wordcloud = WordCloud(font_path=r".\font\msyh.ttf",
+                              max_words=100, height=600, width=1200).generate_from_frequencies(counter)
+        plt.imshow(wordcloud)
+        plt.axis('off')
+        plt.show()
+        wordcloud.to_file('.\images\worldcloud.jpg')
+```
+[Python新手（有一定的编程基础），不知各位是否有一些适合Python新手的练手项目可以推荐？](https://www.zhihu.com/question/59275571/answer/173891222)
+v  https://link.zhihu.com/?target=http%3A//crossincode.com/oj/practice_list/
+[排序算法-N个正整数排序](https://zhuanlan.zhihu.com/p/27095748)
+[让孩子爱上数学的31部趣味数学图书](https://zhuanlan.zhihu.com/p/25198470)
+[PyTorch 中文教程](https://zhuanlan.zhihu.com/p/26670032)
+http://link.zhihu.com/?target=https%3A//morvanzhou.github.io/tutorials/machine-learning/torch/
+http://link.zhihu.com/?target=https%3A//github.com/carefree0910/MachineLearning
+[Python实现从excel读取数据并绘制成精美图像](https://zhuanlan.zhihu.com/p/27124525)
+```js
+x = np.linspace(0, 10, 500)
+dashes = [10, 5, 100, 5]  # 10 points on, 5 off, 100 on, 5 off
+
+fig, ax = plt.subplots()
+line1, = ax.plot(x, np.sin(x), '--', linewidth=2,
+                 label='Dashes set retroactively')
+line1.set_dashes(dashes)
+
+line2, = ax.plot(x, -1 * np.sin(x), dashes=[30, 5, 10, 5],
+                 label='Dashes set proactively')
+
+ax.legend(loc='lower right')
+plt.show()
+```
+
+
+
+[爬取 stackoverflow 100万条问答之后](https://zhuanlan.zhihu.com/p/27121856)
+http://link.zhihu.com/?target=https%3A//github.com/chenjiandongx/stackoverflow
+[爬虫三步走（二）解析源码](https://zhuanlan.zhihu.com/p/27131597)
+```js
+import requests
+from lxml import etree
+
+url = 'http://www.huya.com/g/lol'
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'}
+res = requests.get(url,headers=headers).text
+s = etree.HTML(res)
+print(s.xpath('//i[@class="nick"]/text()'))
+
+```
+
+[false, Boolean(false), [], [[]], "", String(""), 0, Number(0), "0", String("0"), [0]].map(x => null >= x && null <= x && null !== x)
+
+输出
+[true, true, true, true, true, true, true, true, true, true, true]
+https://thomas-yang.me/projects/oh-my-dear-js/
+
+
+[mysql 相邻的相同数据如何去重](https://www.v2ex.com/t/363680#reply11)
+方式错了, 应该是在插入之前 就判断好是否需要插入.
+delete from t where id in (select id from t a left join t b on a.id = b.id + 1 and a.n = b.n)
+select id ,value from test t where t.value <> (select value from test where id = t.id -1) or t.id = 1 ；
+select * from t where id not in (select id from t a left join t b on a.id = b.id + 1 and a.n = b.n order by id asc) 不过只能处理 id 递增的情况，不能有洞
 [纯手工自制的内网穿透瑞士军刀 Socket Pipe](https://joyqi.com/javascript/socket-pipe.html)
 https://github.com/joyqi/socket-pipe 
 [让MySQL支持emoji图标存储](https://github.com/jaywcjlove/mysql-tutorial/blob/master/chapter17/17.1.md)
