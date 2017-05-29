@@ -4,6 +4,39 @@ http://link.zhihu.com/?target=http%3A//school.dingdone.com/
 
 load average: 120.05, 32.82, 11.42load average 表示系统负载,分别是1分钟,5分钟,15分钟前到现在的负载平均值(任务队列中进程或线程数量的平均数).load average指的是处于task_running或task_uninterruptible状态的进程(或线程)数的平均值.处于task_running状态的进程(或线程),可能正在使用CPU或排队等待使用CPU.处于task_uninterruptible状态的进程(或线程),可能正在等待I/O,比如等待磁盘I/O
 [这些问题答不出，是否代表不能成为能独当一面的PHP工程师](https://www.zhihu.com/question/60055316)
+[JavaScript深入系列15篇正式完结！](https://segmentfault.com/a/1190000009562674)
+[别人家的表情包是这样的](https://mp.weixin.qq.com/s/7IgckpEv9cn4RMqqYdqiHg)
+[无版权的高清图片搜索引擎 FreePhotos.cc，全部可以下载，支持中文搜索。](https://freephotos.cc/zh/%E5%A4%8F%E5%A4%A9)
+[热门模块](http://npmtrend.com/)
+[SQL删除重复记录](http://blog.githuber.cn/posts/684)
+查找表中多余的重复记录（多个字段）
+
+select * from vitae a
+where (a.peopleId,a.seq) in  (select peopleId,seq from vitae group by peopleId,seq  having count(*) > 1)
+查找表中多余的重复记录（多个字段），不包含rowid最小的记录
+
+select * from vitae a
+where (a.peopleId,a.seq) in  (select peopleId,seq from vitae group by peopleId,seq having count(*) > 1) and rowid not in (select min(rowid) from vitae group by peopleId,seq having count(*)>1)
+删除表中多余的重复记录（多个字段），只留有rowid最小的记录
+
+delete from vitae a
+where (a.peopleId,a.seq) in  (select peopleId,seq from vitae group by peopleId,seq having count(*) > 1) and rowid not in (select min(rowid) from vitae group by peopleId,seq having count(*)>1)
+播放器用「Potplayer」，好用到没朋友；截图用「Snipaste」，强大到无可想象；手机P图用「VSCO」「黄油相机」，功能强大有逼格；压缩软件用「Bandzip」，简洁干净解压快；看论文用「SumatraPDF」，功能较全还小巧；​​OCR文字识别用「扫描王」，识别效率高；搜书用「鸠摩搜书」，方便快捷；录屏用「EV录屏」，简洁易用，功能强大；下载视频用「硕鼠」「视频下载王」，功能齐全，支持多个视频网站
+[实现各种经典算法顺序查找](https://segmentfault.com/p/1210000009523704/read)
+[webcode  ： 一个在线的 web 代码生成小工具](https://webcode.tools/)
+[RBAC用户角色权限控制](https://segmentfault.com/p/1210000009472992/read)
+，需要用户表(user)，角色表(role)，权限表(permission)，还需要两张中间表,用户-角色表(user_role)，角色-权限表(role_permission),
+[用Ping++做支付](https://i6448038.github.io/2017/05/04/%E7%94%A8Ping-%E5%81%9A%E6%94%AF%E4%BB%98/)
+[使用 Medis 管理 Redis](https://github.com/luin/medis)
+[给PHP做的分布式跟踪系统，可以方便的查看线上调用关系，性能](https://github.com/weiboad/fiery)
+>>> x = ['abc','a','bc','abcd']
+>>> x.sort(key=len)
+>>> x
+['a', 'bc', 'abc', 'abcd’]
+>>> L = [1,4,3,2]
+>>> L.sort.__doc__
+'L.sort(key=None, reverse=False) -> None -- stable sort *IN PLACE*'
+[我想要搭建git仓库](https://segmentfault.com/p/1210000009571646/read#top)
 [Python有哪些黑魔法](https://www.zhihu.com/question/29995881)
 ```js
 a, b, c = (2 * i + 1 for i in range(3))
