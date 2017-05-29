@@ -1,5 +1,205 @@
+[如何免费自己制作一个APP](https://zhuanlan.zhihu.com/p/26976378?group_id=848854937373929472)
+http://link.zhihu.com/?target=http%3A//school.dingdone.com/
+[大意是非IO阻塞下不要开太多PHP-FPM进程,1.5倍是个不多不少的数 进程数保持为CPU核心数的1.5倍](https://www.zhihu.com/question/39955800)
+
+load average: 120.05, 32.82, 11.42load average 表示系统负载,分别是1分钟,5分钟,15分钟前到现在的负载平均值(任务队列中进程或线程数量的平均数).load average指的是处于task_running或task_uninterruptible状态的进程(或线程)数的平均值.处于task_running状态的进程(或线程),可能正在使用CPU或排队等待使用CPU.处于task_uninterruptible状态的进程(或线程),可能正在等待I/O,比如等待磁盘I/O
+[这些问题答不出，是否代表不能成为能独当一面的PHP工程师](https://www.zhihu.com/question/60055316)
+[Python有哪些黑魔法](https://www.zhihu.com/question/29995881)
+```js
+a, b, c = (2 * i + 1 for i in range(3))
+a, *b, c = [1, 2, 3, 4, 5]
+>>> a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+>>> a[::-1]
+[10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+>>> a[::-2]
+[10, 8, 6, 4, 2, 0]
+>>> a[::3]
+[0, 3, 6, 9]
+>>> a = [1, 2, 3]
+>>> b = ['a', 'b', 'c']
+>>> z = zip(a, b)
+>>> z
+[(1, 'a'), (2, 'b'), (3, 'c')]
+>>> zip(*z)
+[(1, 2, 3), ('a', 'b', 'c')]
+
+作者：地球的外星人君
+链接：https://www.zhihu.com/question/29995881/answer/172961766
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+列表相邻元素压缩器>>> a = [1, 2, 3, 4, 5, 6]
+>>> zip(*([iter(a)] * 2))
+[(1, 2), (3, 4), (5, 6)]
+
+>>> group_adjacent = lambda a, k: zip(*([iter(a)] * k))
+>>> group_adjacent(a, 3)
+[(1, 2, 3), (4, 5, 6)]
+>>> group_adjacent(a, 2)
+[(1, 2), (3, 4), (5, 6)]
+>>> group_adjacent(a, 1)
+[(1,), (2,), (3,), (4,), (5,), (6,)]
+
+>>> zip(a[::2], a[1::2])
+[(1, 2), (3, 4), (5, 6)]
+
+>>> zip(a[::3], a[1::3], a[2::3])
+[(1, 2, 3), (4, 5, 6)]
+
+>>> group_adjacent = lambda a, k: zip(*(a[i::k] for i in range(k)))
+>>> group_adjacent(a, 3)
+[(1, 2, 3), (4, 5, 6)]
+>>> group_adjacent(a, 2)
+[(1, 2), (3, 4), (5, 6)]
+>>> group_adjacent(a, 1)
+[(1,), (2,), (3,), (4,), (5,), (6,)]
+>>> m = {'a': 1, 'b': 2, 'c': 3, 'd': 4}
+>>> m.items()
+[('a', 1), ('c', 3), ('b', 2), ('d', 4)]
+>>> zip(m.values(), m.keys())
+[(1, 'a'), (3, 'c'), (2, 'b'), (4, 'd')]
+>>> mi = dict(zip(m.values(), m.keys()))
+>>> mi
+{1: 'a', 2: 'b', 3: 'c', 4: 'd'}
+>>> a = [[1, 2], [3, 4], [5, 6]]
+>>> list(itertools.chain.from_iterable(a))
+[1, 2, 3, 4, 5, 6]
+
+>>> sum(a, [])
+[1, 2, 3, 4, 5, 6]
+
+>>> [x for l in a for x in l]
+[1, 2, 3, 4, 5, 6]
+
+>>> a = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
+>>> [x for l1 in a for l2 in l1 for x in l2]
+[1, 2, 3, 4, 5, 6, 7, 8]
+
+>>> a = [1, 2, [3, 4], [[5, 6], [7, 8]]]
+>>> flatten = lambda x: [y for l in x for y in flatten(l)] if type(x) is list else [x]
+>>> flatten(a)
+[1, 2, 3, 4, 5, 6, 7, 8]
+>>> sum(x ** 3 for x in xrange(10))
+2025
+>>> sum(x ** 3 for x in xrange(10) if x % 3 == 1)
+408
+condition ? value1 : value2 (value2, value1)[condition]
+```
+[模拟登录一些常见的网站](https://github.com/xchaoinfo/fuck-login)
+[初探用Pandas|做基金分析](https://zhuanlan.zhihu.com/p/27054036)
+```js
+>>> import numpy as np
+>>> import pandas as pd
+>>> n1=np.array([100,90,89])
+>>> s=pd.Series(n1,index=['leo','jack','james'])
+>>> s
+leo      100
+jack      90
+james     89
+dtype: int32
+>>> s.index
+Index(['leo', 'jack', 'james'], dtype='object')
+>>> s.values
+array([100,  90,  89])
+>>> pd.Series({'leo':100,'jack':90,'james':89})
+jack      90
+james     89
+leo      100
+dtype: int64
+>>> s.describe()
+count      3.000000
+mean      93.000000
+std        6.082763
+min       89.000000
+25%       89.500000
+50%       90.000000
+75%       95.000000
+max      100.000000
+dtype: float64
+#最高价是哪一天
+
+print fund1.argmax(),fund1.max()
+#有多少天是高于均价的
+
+print fund1[fund1>fund1.mean()]
+print s1+s2
+把相同的index的数据相加,没有重叠的index数据变成NaN
+s1=pd.Series(np.arange(4),index=['d','a','b','c'])
+
+print s1.sort_index()
+print fruit.loc['Apple']
+print fruit.iloc[0]
+students={'names':['Leo','Jack','James'],'scores':[100,90,80]}
+fp = pd.read_excel('D:\Backup\桌面\lunzige.xlsx')
+df=pd.DataFrame(students)
+print students['Name']#也可以students.Name
+print students[students.Scores>=90]
+https://zhuanlan.zhihu.com/p/27139527?group_id=851773790600970240
+>>> df.names.tolist()
+['Leo', 'Jack', 'James']
+>>> df.names
+0      Leo
+1     Jack
+2    James
+Name: names, dtype: object
+```
+[python 知乎妹子词云](https://zhuanlan.zhihu.com/p/27016289)
+```js
+import pandas as pd
+fp = pd.read_excel('D:\Backup\桌面\lunzige.xlsx')
+name = fp['name'].tolist()
+li1 = list(set(name))
+li2 = ''.join(li1)
+import jieba
+seg_list = jieba.cut(li2)
+word = "/".join(seg_list)
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud,STOPWORDS,ImageColorGenerator
+backgroud_Image = plt.imread('girl.jpg')
+wc = WordCloud( background_color = 'white',    # 设置背景颜色
+                mask = backgroud_Image,        # 设置背景图片
+                max_words = 2000,            # 设置最大现实的字数
+                stopwords = STOPWORDS,        # 设置停用词
+                font_path = 'C:/Users/Windows/fonts/msyh.ttf',# 设置字体格式，如不设置显示不了中文
+                max_font_size = 300,            # 设置字体最大值
+                random_state = 50,            # 设置有多少种随机生成状态，即有多少种配色方案
+                )
+wc.generate(text)
+image_colors = ImageColorGenerator(backgroud_Image)
+#wc.recolor(color_func = image_colors)
+plt.imshow(wc)
+plt.axis('off')
+plt.show()
+wc.to_file('word.jpg')
+```
+[手把手教你做个撩妹网站--速成篇](https://zhuanlan.zhihu.com/p/21614137)
+http://shijieshangzuimeidenvrne.github.io/
+[安卓很强工具箱——一个木函](https://zhuanlan.zhihu.com/p/27101159?group_id=851052536457728000)
+http://link.zhihu.com/?target=http%3A//www.coolapk.com/apk/com.One.WoodenLetter
+[给好友群发有诚意的微信消息喔](https://github.com/vonnyfly/wechat-sendall)
 [js补 0 ](https://www.v2ex.com/t/364230#reply19)
 ```js
+function sum($n) {
+    if ($n == 1) {
+        return 1;
+    } else {
+        return $n + sum($n - 1);
+    }
+
+}
+function gen_one_to_n($n) {
+    $total = 0;
+    for ($i = 1; $i <= $n; $i++) {
+        $total += $i;
+       
+    }
+    yield $total;
+}
+$number = 100;
+$generator = gen_one_to_n($number);
+foreach ($generator as $value) {
+    echo "$value\n";
+}
 var recruitmentMessage = [
     231, 153, 190, 229, 186, 166, 32, 66, 69, 70, 69, 32, 229, 155, 162, 233, 152, 159, 44, 32, 230,
     139, 155, 232, 129, 152, 229, 137, 141, 231, 171, 175, 233, 171, 152, 231, 186, 167, 229, 183, 165,
