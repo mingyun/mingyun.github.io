@@ -1,3 +1,188 @@
+[怎么样mysql 大量数据导出导入](https://segmentfault.com/q/1010000009489134)
+使用开源 ETL 工具， kettle
+[有关sql语句反向LIKE的处理](https://segmentfault.com/q/1010000009509962)
+SELECT *
+  FROM 表
+ WHERE '字符串' LIKE CONCAT('%',字段,'%')
+[mysql innodb表锁问题](https://segmentfault.com/q/1010000009512243) 
+ select 可指定加各级锁如共享锁、排他锁等，比如select ... FOR UPDATE。
+至于为什么需要锁，举个简单例子，比如你有个单据继承自上个单据，这时候你可以select加读锁，锁定上个单据，来防止其他人在你提交前对上个单据进行修改，造成数据不一致。 只要条件不包含主键，或者包含主键但不是等号或IN，都会锁全表
+ [sql语句里写两个不同条件的SUM 并求出二者的差](https://segmentfault.com/q/1010000009493886)
+ SUM(IF(type = 1, score, -score))  SUM(CASE WHEN type = 1 THEN score ELSE -score END)
+ [mysql有没有语句可以直接更新排序后的数据的前十条](https://segmentfault.com/q/1010000009471209)
+ UPDATE table SET name='zhangsan' WHERE id IN
+(SELECT t.id FROM (SELECT id FROM table LIMIT 10) AS t) 
+[MySQL的SELECT...FOR UPDATE究竟起什么作用](https://segmentfault.com/q/1010000009472974)
+不要用like
+如果数据库中某字段存储为1,2,3，或者2,1,3或者3,1,2等值时，你要查找为2的就需要用到find_in_set了
+select * from table where FIND_IN_SET('4',字段名)
+[php对mysql提取数据那种速度更快](https://segmentfault.com/q/1010000009450727)
+[mysql order by为什么没有走索引排序？](https://segmentfault.com/q/1010000009440247)
+SELECT * FROM city FORCE INDEX(idx_fk_country_id) ORDER BY country_id;
+是这样的，你在SELECT中查询了索引建以外的列，那么ORDER BY就不会使用索引了。你可以用FORCE INDEX来强制使用索引。
+
+还有一点，就是所谓的覆盖索引。覆盖索引的定义是：MySQL可以根据索引返回select字段而不用根据索引再次查询文件而得出结果。
+
+当你使用select *时，你没有强制指定索引，那么mysql为了得到你的查询的字段而查询文件，然后再进行排序操作，这就没有用到覆盖索引。而你使用了force index就会强制使用覆盖索引，这样就不会出现filesort的情况了
+[三级分类显示输出](https://segmentfault.com/q/1010000009436782)
+```js
+$arr = [
+    0=>['id'=>1,'pid'=>0,'title'=>'标题名称一'],
+    1=>['id'=>2,'pid'=>0,'title'=>'标题名称一'],
+    2=>['id'=>3,'pid'=>1,'title'=>'标题名称一'],
+     3=>['id'=>4,'pid'=>1,'title'=>'标题名称一'],
+    4=>['id'=>5,'pid'=>2,'title'=>'标题名称一'],
+    5=>['id'=>6,'pid'=>2,'title'=>'标题名称一'],
+    6=>['id'=>7,'pid'=>3,'title'=>'标题名称一'],
+    7=>['id'=>8,'pid'=>3,'title'=>'标题名称一'],
+    8=>['id'=>9,'pid'=>6,'title'=>'标题名称一'],
+    9=>['id'=>10,'pid'=>6,'title'=>'标题名称一'],
+    10=>['id'=>11,'pid'=>2,'title'=>'标题名称一'],
+];
+$result = foreachd($arr,0);var_dump($result);
+function foreachd($arr,$pid,$showpage = '') {
+    $setpage = 1;
+    $result = array();
+    foreach($arr as $key=>$val) {
+        if($val['pid'] == $pid) {
+            $setshowpage = $showpage == '' ? $setpage : $showpage.'.'.$setpage;
+            $arr[$key]['page'] = $setshowpage;
+            $setpage++;
+            $setarray = ['page'=>$setshowpage,'title'=>$val['title']];
+            $result[] = $setarray;
+            $result = array_merge($result,foreachd($arr,$val['id'],$setshowpage));
+            
+        }
+    }
+    return $result;
+}
+/*function foreachd($arr,$pid) {
+    $return = array();
+    foreach($arr as $val) {
+        if($val['pid'] == $pid) {
+            $return[$val['id']]['title'] = $val['title'];
+            $childrendata = foreachd($arr,$val['id']);
+            if($childrendata) {
+                $return[$val['id']]['children'] = $childrendata;
+            }
+            
+        }
+    }
+    return $return;
+}*/
+```
+[MySQL关于判断后拼接条件进行查询的sql语句](https://segmentfault.com/q/1010000009447714)
+SELECT * FROM data a,race b WHERE a.race_id=b.race_id AND ((b.phase>2 AND UNIX_TIMESTAMP()>second_end_time) OR (b.phase<=2 AND UNIX_TIMESTAMP()>thirdly_end_time));
+[请教一个mysql去重取最新记录](https://segmentfault.com/q/1010000009446271)
+```js
+delete from test
+where (id,domain, port, email, type, name, value,route, def, remark) not in (
+select * from (
+select max(id) id,domain, port, email, type, name, value,route, def, remark
+from test group by domain, port, email, type, name, value,route, def, remark) tmp)
+
+mysqlnot in或者!=会导致索引失效并不是绝对的 对于数据较为均匀的场景是会失效的 但是如果业务数据严重不均的字段加了索引的话是不一定失效的 mysql自己会做判断 并不是绝对判定不使用索引 比如表A性别列有男10000条女20条，当sex!=’男‘是可以使用索引的 同样的如果你sex='男'反而不会使用索引 mysql自己会选择最优的检索方式
+```
+https://segmentfault.com/q/1010000009362947
+select t1.id, t1.name, t1.time, sum(t2.every)
+from t1
+inner join t2 on t1.id=t2.pid
+group by t1.id, t1.name, t1.time
+php 如何根据奖品的中奖概率值https://segmentfault.com/q/1010000009380848
+从0到100随即生成一个整数
+2.设置中奖范围 比如10%的中奖率 那么1到10是中奖数字
+3.然后根据抽中后的数字判断是几等奖
+关于php开发app接口的问题，求有经验的大神解答https://segmentfault.com/q/1010000009313454  jwt
+MySQL如何实现表中再嵌套一个表？https://segmentfault.com/q/1010000009306999
+不建议使用外键。外键会造成表与表之间的耦合，并且有可能造成死锁。而且这些错误在编程过程中都是不容易发现的。
+
+架设你现在要A表和B表联合。那么你在A表中新增一栏是保存B表中的id值。
+
+保存过程：先保存好B表，而后返回id值再保存进A表。
+取出过程：先取出A表，而后根据A表的id取出相应的B表数据。
+面试题：PHP三级分类怎样打印成表格展https://segmentfault.com/q/1010000009315213
+select c1.name "一级分类", c2.name "二级分类", c3.name "三级分类"
+from category c1
+inner join category c2 on c1.id=c2.parent_id
+inner join category c3 on c2.id=c3.parent_id
+where c1.parent_id=0 #最高级;
+查询mysql数据库中指定表指定日期的数据https://segmentfault.com/q/1010000009342646
+information_schema还有一个columns表，联查就有了
+
+select a.table_name,a.table_rows from tables a join columns b on a.table_name=b.table_name and a.table_schema=b.table_schema
+where a.TABLE_SCHEMA = 'test' and b.DATA_TYPE='mediumtext' and COLUMN_NAME='指定日期字段'
+order by table_rows desc;
+UPDATE A INNER JOIN B ON A.id = B.id SET A.a = B.b;
+mysql count(id)查询速度如何优化https://segmentfault.com/q/1010000009267682
+mysql 里边,自增长idhttps://segmentfault.com/q/1010000009286117 
+INSERT INTO sta_log_fun(`FCNAME`,`STATUS`) VALUES('WOQU',(SELECT auto_increment FROM information_schema.`TABLES` WHERE TABLE_SCHEMA='test2' AND TABLE_NAME='sta_log_fun'));
+MySQL 浮点型的精度范围与四舍五入https://segmentfault.com/q/1010000009279780 
+创建表的时候，指定的 f3 是 float(6,2) ，那这个 6 和 2 是什么意思？6 是数字总位数。2是小数点后只保留2位。所以会显示成 9999.99 即总共 6 个9，小数后是 2 位 建议使用decimal，尤其是涉及到钱的问题的时候，在mysql中float、double（或real）是浮点数，decimal（或numberic）是定点数。
+
+php 如何做自动退款功能https://segmentfault.com/q/1010000009221395
+第一种：crontab定时任务，执行一个php脚本去扫表，过期时间减去下单时间超过三天的都变更成退款状态。
+
+第二种：使用mysql的定时计划任务，下面是个demo，具体逻辑根据你自己的去写。
+
+create event myevent
+on schedule at current_timestamp + interval 1 hour (周期或者时间点)
+do
+update myschema.mytable set mycol = mycol + 1;     (执行的sql)
+第三种：使用Redis保存，保存的时候expire过期时间3天即可
+Mysql中group by的问题https://segmentfault.com/q/1010000009257348
+select * from user group by user_name; 
+mysql线程什么意思https://segmentfault.com/q/1010000009254712 
+innodb和myisam 哪个查询数据更快https://segmentfault.com/q/1010000009213110
+亲测（MySQL 版本 5.7.18），分别对 60W、1W 条记录进行测试
+有索引情况 MyISAM 比 Innodb 查询快，相差微小
+无索引情况 MyISAM 比 Innodb 查询快，查询速度相差在 1 倍左右
+如何将mysql数据表中数据定时导入到同库中的另一张表https://segmentfault.com/q/1010000009264156
+```js
+用mysql事件可以解决
+
+//开启事件调度器
+
+set global event_scheduler = on
+// 创建事件
+
+delimiter $$
+create event if not exists yesterday_sign_log
+on schedule every 1 day
+starts timestamp '2017-05-03 23:50'
+on completion preserve enable
+do begin
+drop table if exists yesterdaySignInfo;
+create table yesterdaySignInfo like signInfo;
+insert into yesterdaySignInfo select * from signInfo;
+end $$
+delimiter;
+```
+mysql，同一个表根据其中的两个字段修改这两个中的一个字段https://segmentfault.com/q/1010000009294529
+
+select * 
+  from student 
+  where id not in(select min(id) from student group by parent_id,name)t
+这就是把存在重复的学员找出来
+
+
+几百万数据的群聊要怎样分表？https://segmentfault.com/q/1010000008735729 
+update table set isbn = substr(isbn,0,13)
+
+[一个MySql查询问题](https://segmentfault.com/q/1010000009421868)
+select * from tablename where find_in_set('a', col)>0 and find_in_set('b', col)>0;
+[mysql如何把多行数据合并到一行的多列中](https://segmentfault.com/q/1010000009510957)
+```js
+最简单就是group_concat了，楼主不用那就只好case when了
+select time,
+max(case when wish_num=1 then num else 0) '1',
+max(case when wish_num=2 then num else 0) '2',
+max(case when wish_num=5 then num else 0) '5',
+max(case when wish_num=10 then num else 0) '10',
+max(case when wish_num=20 then num else 0) '20'
+from wish_num where time >= '15296000' and time <= '1495382399' group by time;
+```
+
+
 [Laravel前后端分离 客户端发来sessionid以后如何进行操作](https://segmentfault.com/q/1010000009449811)
 自己实现一个http的中间件，在中间件里面获取客户端传来的sessionid然后调用session_id()函数设置当前会话的sessionid 
 [发送验证码和短信来做一些验证, 请问如何进行校验](https://segmentfault.com/q/1010000009406497)
