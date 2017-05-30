@@ -1,3 +1,56 @@
+[请问下面代码中的...是扩展运算符还是操作运算符](https://segmentfault.com/q/1010000009596470)
+```js
+const state = {
+    a: 1,
+    b: 2,
+    c: 3
+};
+const now = {
+    ...state,
+    d: 4,
+    e: 5
+};
+Object {
+  "a": 1,
+  "b": 2,
+  "c": 3,
+  "d": 4,
+  "e": 5
+}
+http://babeljs.io/repl/#?babili=false&evaluate=true&lineWrap=false&presets=es2015,react,stage-2&targets=&browsers=&builtIns=false&debug=false&code=%20%20%20%20const%20state%20=%20%7B%0D%0A%20%20%20%20%20%20%20%20a:%201,%0D%0A%20%20%20%20%20%20%20%20b:%202,%0D%0A%20%20%20%20%20%20%20%20c:%203%0D%0A%20%20%20%20%7D;%0D%0A%20%20%20%20const%20now%20=%20%7B%0D%0A%20%20%20%20%20%20%20%20...state,%0D%0A%20%20%20%20%20%20%20%20d:%204,%0D%0A%20%20%20%20%20%20%20%20e:%205%0D%0A%20%20%20%20%7D;%0D%0A%20%20%20%20%0D%0A%20%20%20%20console.log%28now%29;
+```
+
+
+[Python3中BeautifulSoup的使用方法](https://mp.weixin.qq.com/s?__biz=MzI5NDY1MjQzNA==&mid=2247483924&idx=1&sn=a257b3debd706d308e5b45e45f397a3c&chksm=ec5edd69db29547f571cdfcd6f6b124961ed7dce5ae298d58bf92b060e0fb45741d5b22d6d8e&mpshare=1&scene=1&srcid=0529XiS9xl7CozvflbhHHzXE&pass_ticket=QAd1BSrfUjPPKszAxVA0F6chTYrGNzbUkTUlLIzy0n4PuLUYm4FVjxIrseaaimFL#rd)
+```js
+print(soup.title.name)
+print(soup.p.attrs)
+print(soup.p.attrs['name'])print(soup.p['name'])print(type(soup.a.parents))
+for i, child in enumerate(soup.p.children):
+    print(i, child)
+    print(list(enumerate(soup.a.parents)))
+    print(list(soup.a.parents)[0])
+print(list(soup.a.parents)[0].attrs['class'])
+print(soup.find_all(name='ul'))
+for ul in soup.find_all(name='ul'):
+    print(ul.find_all(name='li'))
+print(soup.find_all(attrs={'id': 'list-1'}))    
+print(soup.find_all(id='list-1'))
+print(soup.find_all(class_='element'))    
+ print(soup.find_all(text=re.compile('link')))
+ print(soup.select('ul li'))
+print(soup.select('#list-2 .element'))
+print('Get Text:', li.get_text())
+```
+[nginx是如何处理请求的](https://futu.im/posts/2017-05-05-how-nginx-processes-a-request/)
+如果请求没有带Host头，将与server_name为空字符串的server匹配，返回非标准的私有状态码444时，Nginx会关闭连接。
+所有类型的location都只匹配请求的URI部分，不包括任何参数
+[Python爬虫，看看我最近博客都写了啥，带你制作高逼格的数据聚合云图](http://blog.csdn.net/forezp/article/details/70198541)
+用 artword在线工具，地址：https://wordart.com https://github.com/forezp/ZhihuSpiderMan/tree/master/blogspider
+[Python代码执行可视化  Python程序员](https://python.freelycode.com/accounts/login/?next=/microcode/list/1)
+[微信群机器人](https://github.com/grapeot/WechatForwardBot)
+[用Python看知乎](https://github.com/l-passer/Passer-zhihu)
+用python爬虫搜电影pip install fmovice  从零开始学自动化测试
 [如何免费自己制作一个APP](https://zhuanlan.zhihu.com/p/26976378?group_id=848854937373929472)
 http://link.zhihu.com/?target=http%3A//school.dingdone.com/
 [大意是非IO阻塞下不要开太多PHP-FPM进程,1.5倍是个不多不少的数 进程数保持为CPU核心数的1.5倍](https://www.zhihu.com/question/39955800)
