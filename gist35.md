@@ -1,4 +1,80 @@
-[请问下面代码中的...是扩展运算符还是操作运算符](https://segmentfault.com/q/1010000009596470)
+[php拼接路径时"\"与"\\"的区别](https://segmentfault.com/q/1010000009596064)
+使用\\更为严谨，避免单独使用\时可能出现的问题。归于实际生产里，只要不存在转义问题，具体写哪个都是一样的，但前提是你对你的代码很有把握。如果没有把握，写\\不失为一种更可靠的方案 $class  =   'Think\\Storage\\Driver\\'.ucwords($type);
+[setTimeout的延迟时间，是从什么时间段开始算起的](https://segmentfault.com/q/1010000009595073)
+Javascript是单线程，单线程就意味着所有任务需要排队。然后会将所有任务分成两类：同步任务和异步任务！同步任务：在主线程上执行的任务，只有前一个任务执行完成，才会执行后一个！异步任务：不进入主线程、而进入“任务队列”的任务，当主线程上的任务执行完，主线程才会去执行“任务队列”。
+redis有知道所有数据库个数的命令config get databases
+[redis AOF的方式的主要缺点是追加log文件可能导致体积过大](https://segmentfault.com/q/1010000009498909)
+aof文件其中的命令可能有相当部分是重复的，可以执行bgrewriteaof，重写aof文件
+[php如何设计或实现数据统计](https://segmentfault.com/q/1010000009385922)
+```js
+用Redis保存这些热数据，这里使用redis是作为缓存，做个主从同步，就不怕宕机数据丢失了
+然后crontab定时任务跑个脚本，每天落地数据到Mysql保存
+再用个Redis做持久化操作，跑定时任务把要统计的数据无论是评论还是积分，按天，按周，按月分别存储好。格式为都按照Json格式存储。
+需要调用的时候，就从做了持久化的redis中读取数据，做数据分析或报表啥的，速度很快，基本不存在卡顿问题，或者搜索个东西等很久的现象，Json格式的数据，做一些操作后传给前端，用js遍历数据，随便分发到哪里的cdn服务器，完全动静分离不耦合。
+```
+[PHP定时通知、按时发布](https://segmentfault.com/q/1010000009508176)
+https://github.com/ouqiang/gocron  楼主要的应该是DelayQueue，即延迟消息队列服务
+```js
+WordPress定时发布文章这个功能是通过用户访问来触发的.
+也就是如果没有用户访问,那WordPress是不会发布文章的.
+一旦用户访问,WordPress就会查询是否有需要发布的文章,有则发布.
+
+如果你要追求准时发布,那还是用Linux crontab定时任务吧:
+
+sudo nano /etc/crontab 添加一条任务:
+格式: m h dom mon dow command
+即: 分(0~59) 时(0~23) 日(1~31) 月(1~12) 周(0~6,0为周日) 命令
+例如: 0 */1 * * * /usr/bin/php /path/to/task.php
+表示每隔1小时自动执行脚本task.php.
+
+重载服务使配置生效:
+sudo service cron reload
+php artisan queue:work监听默认的 default 队列。如果指定队列，php artisan queue:work --queue=a 就只会监听 a 队列
+```
+[PHP如何防止多个进程同时操作同一资源](https://segmentfault.com/q/1010000009335854)
+redis乐观锁 传统的方案就是乐观锁，悲观锁貌似性能太差，不建议使用。现在的话，大多使用redis了。如果要求不是特别高的话 使用乐观锁还是可以很好解决的。并发量大的话还是建议使用redis
+[如何用Redis解决并发导致数据重复插入MySQL的问题？](https://segmentfault.com/q/1010000009306401)
+```js
+加锁机制。代码进入操作前检查操作是否上锁，如果锁上，中断操作。否则进行下一操作，第一步将操作上锁，然后执行代码，最后执行完代码别忘将操作锁打开。不然你下去执行就没有办法进行了。
+
+上锁代码非常多，楼上给出的就是其中一种。redismemcachecache文件都可以，如果操作并发比较高的话，建议用楼上这种用redis。（其实就是使用string数据类型，给锁key赋个值{加锁}，开锁就将这个key的值清空或者或赋0值 ）
+
+$lock_status = $redis->get('lock_state');
+if ($lock_status == 0 || empty($lock_status)) {
+    $redis->set('lock_state', 3600, 1); #操作上锁
+    #操作代码
+    $redis->set('lock_state', 3600, 0); #操作解锁
+} else {
+    #上锁后的操作
+}
+
+//定义锁的时间秒数
+$lockSecond = 5;
+
+//获取锁定状态
+$lockKey="xxx";
+$lockStatus = $redis->get($lockKey);
+
+if ($lockStatus == 0 || empty($lockStatus)) {//无锁
+    //1.上锁
+    $redis->set($lockKey, 1, ['nx', 'ex' => $lockSecond]); 
+    //2.业务操作
+    
+    //3.解锁
+    $redis->del($lockKey);
+} else {
+    sleep($lockSecond)；
+     //恢复业务操作
+   
+}
+```
+[Redis中incr与incrBy的区别](https://segmentfault.com/q/1010000009160163)
+发现incr也可以像incrby那样指定增加量,这样感觉这就没区别了啊
+在调用 incr 时，可选的带一个long类型的数字，如果数字不为1，调用 incrby。
+
+顺便说一句，incrBy 的时候，如果后面参数是 1，会调用 incr。
+运行时间都一样，不存在incr执行多次。23000000000000000000000000000这个数字 要是执行多次，肯定要一定时间，但是和IncrBys所花时间是一样的
+[js请问下面代码中的...是扩展运算符还是操作运算符](https://segmentfault.com/q/1010000009596470)
 ```js
 const state = {
     a: 1,
@@ -19,8 +95,52 @@ Object {
 }
 http://babeljs.io/repl/#?babili=false&evaluate=true&lineWrap=false&presets=es2015,react,stage-2&targets=&browsers=&builtIns=false&debug=false&code=%20%20%20%20const%20state%20=%20%7B%0D%0A%20%20%20%20%20%20%20%20a:%201,%0D%0A%20%20%20%20%20%20%20%20b:%202,%0D%0A%20%20%20%20%20%20%20%20c:%203%0D%0A%20%20%20%20%7D;%0D%0A%20%20%20%20const%20now%20=%20%7B%0D%0A%20%20%20%20%20%20%20%20...state,%0D%0A%20%20%20%20%20%20%20%20d:%204,%0D%0A%20%20%20%20%20%20%20%20e:%205%0D%0A%20%20%20%20%7D;%0D%0A%20%20%20%20%0D%0A%20%20%20%20console.log%28now%29;
 ```
+[php中redis操作，使用lua](https://segmentfault.com/q/1010000009249945)
+官方推荐使用这个形式来实现锁机制 一些复杂的操作必须通过lua脚本才能保证原子性，例如把一个list的数据复制到另一个list
+eval($script, $a, 1)第一个参数是lua脚本，第二个参数是一个数组，第三个参数是键值对个数
+ [使用 redis 处理高并发原理](https://segmentfault.com/q/1010000008835117)
+[为什么要用redis而不用map做缓存](https://segmentfault.com/q/1010000009106416)
+使用redis或memcached之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致性。缺点是需要保持redis或memcached服务的高可用，整个程序架构上较为复杂。
+Redis 可以用几十 G 内存来做缓存，Map 不行，一般 JVM 也就分几个 G 数据就够大了
+Redis 的缓存可以持久化，Map 是内存对象，程序一重启数据就没了
+Redis 可以实现分布式的缓存，Map 只能存在创建它的程序里
+Redis 可以处理每秒百万级的并发，是专业的缓存服务，Map 只是一个普通的对象
+Redis 缓存有过期机制，Map 本身无此功能
+Redis 有丰富的 API，Map 就简单太多了
+[api 使用session替代token 的利弊在哪？](https://segmentfault.com/q/1010000008903882)
+session与token没有本质的区别，二者不都是一串被加密过的字符串，拿他来做校验都一样。 OAuth Token提供认证和授权这类机制的话，那么就可以把session甩开N条街了，甚至是已经完全是两种不同的概念。
+[PHP队列执行任务的时候,如何防止进程之间抢夺资源?](https://segmentfault.com/q/1010000008732536)
+```js
+实际上有一个非常简单的办法，你可以利用数据库操作的原子性来实现，不需要那么复杂的锁机制，甚至队列。就按你的方法来，假设任务数据表 task 里有两个字段 id, status，我们定义status三个状态
 
+0: 待处理
+1: 正在处理
+2: 处理完成
+假设你有一堆 PHP 进程都用如下 SQL 语句去取出数据库里的待处理任务
 
+SELECT * FROM task WHERE status = 0
+取出来以后，我们为了防止其他用户不再重复取出要把它的状态标记为 1
+
+UPDATE task SET status = 1 WHERE id = xxx
+但是等等，这样就会产生如你所说的资源抢夺，但如果加上一个简单的技巧就可以避免，你把语句变成这样
+
+UPDATE task SET status = 1 WHERE id = xxx AND status = 0
+```
+[predis包和phpredis扩展的区别是什么](https://segmentfault.com/q/1010000008848852)
+predis，是PHP版本写的redis client，采用socket连接php extension redis是PHP原生扩展，C写的
+
+由于没有进行过大数据压测，不能准确告诉你性能差异。但基本上扩展redis肯定比predis更好。Laravel推荐用predis，主要是当心一些主机没有支持redis吧。尽量少依赖C扩展，这样才能发挥PHP普及众生的思想
+[PHP抽奖活动加内存锁,](https://segmentfault.com/q/1010000009176379)
+抽奖用不到内存锁吧。用个Redis队列或者事务加Mysql的锁应该可以了吧。。
+
+你要的内存锁不知道是不是这个：
+$lock = new CacheLock('key_name'); 
+$lock->lock(); 
+//logic here 
+$lock->unlock(); 
+
+[php redis 连接问题](https://segmentfault.com/q/1010000009147294)
+打印phpinfo()函数时，显示是有redis扩展的 相当于安装了redis的客户端,还得在服务器端安装redis服务端才行 不能使用new Redis()连接redis。 但是我是可以使用Predis连接redis的 phpredis 是用C写的php扩展，需要编译安装。predis 是用php写的php扩展，直接使用，laravel 默认的就是predis
 [Python3中BeautifulSoup的使用方法](https://mp.weixin.qq.com/s?__biz=MzI5NDY1MjQzNA==&mid=2247483924&idx=1&sn=a257b3debd706d308e5b45e45f397a3c&chksm=ec5edd69db29547f571cdfcd6f6b124961ed7dce5ae298d58bf92b060e0fb45741d5b22d6d8e&mpshare=1&scene=1&srcid=0529XiS9xl7CozvflbhHHzXE&pass_ticket=QAd1BSrfUjPPKszAxVA0F6chTYrGNzbUkTUlLIzy0n4PuLUYm4FVjxIrseaaimFL#rd)
 ```js
 print(soup.title.name)
