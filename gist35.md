@@ -1,3 +1,112 @@
+[Laravel前后端分离 客户端发来sessionid以后如何进行操作](https://segmentfault.com/q/1010000009449811)
+自己实现一个http的中间件，在中间件里面获取客户端传来的sessionid然后调用session_id()函数设置当前会话的sessionid 
+[发送验证码和短信来做一些验证, 请问如何进行校验](https://segmentfault.com/q/1010000009406497)
+[定时任务来对数据库中的数据进行操作？](https://segmentfault.com/q/1010000009544541)
+[Laravel 中两类 Collection 的区别？](https://segmentfault.com/q/1010000009409607)
+[laravel中集合和数组的区别](https://segmentfault.com/q/1010000009364550)
+Laravel中的数组，源代码位置Illuminate\Support\Arr.php;
+laravel的权限包laravel-permission
+Laravel中的集合，源代码位置Illuminate\Support\Collection.php;
+
+集合是对数组的再次封装，以对象的形式呈现；提供了很多方法功能（这些方法内部大多采用了回调函数），比数组形式的操作要灵活多了；
+
+本质上就是用面向对象的形式操作元素和以数组形式操作元素的区别；如果以对象操作，如vika_倾慕说的，可以链式操作；如果按照数组操作，会产生很多中间临时变量或者语句，代码显得冗长；
+[要用orm以及orm的本质](https://segmentfault.com/q/1010000009330624)
+[Laravel我用artisan建立的model和migrate的数据表是如何绑定在一起](https://segmentfault.com/q/1010000009347511)
+如果没有显式地定义protected $table='xxxx';则会把当前Model的类名称来作为表名称 
+[php 如何自己在vendor目录下创建一个类，实现自动加载](https://segmentfault.com/q/1010000009248864)
+在Cart.php的头部声明namespace Mypack;
+然后在composer.json文件的autoload/psr-4节点里面加上:
+
+"Mypack\\":"vendor/mypack"
+[Guzzle, PHP HTTP client 发送https请求报错](https://segmentfault.com/q/1010000009180502)
+$client->setDefaultOption('verify', false);
+或者
+
+# 证书 https://github.com/guzzle/guzzle/blob/4.2.3/src/cacert.pem
+$client = new \GuzzleHttp\Client(['verify' => '/full/path/to/cert.pem']);
+用 @ 符号标记之后 blade 不会解析
+<h1>Laravel</h1>
+
+Hello, @{{ name }}.
+[laravel在controller中给created_at或者updated_time赋值为什么出错](https://segmentfault.com/q/1010000009000895)
+```js
+系统将created_at、updated_at、deleted_at字段格式化为了Carbon\Carbon类了。
+
+// 例子
+$posts->created_at->timestamp;  // 时间戳
+$posts->created_at->format('Y-m-d H:i:s');  // 返回指定格式
+// Carbon支持很多操作'
+$post->updated_time = Carbon::parse('2017-01-01');
+$post->updated_time = Carbon::createFromTimestamp(1491747387);
+```
+[mysql查询方式疑问](https://segmentfault.com/q/1010000009585499)
+[mysql多表查询](https://segmentfault.com/q/1010000009543121)
+[mysql 获取时间函数unix_timestamp 问题？](https://segmentfault.com/q/1010000009565920)
+SELECT unix_timestamp('2037-08-26 14:07:57')SELECT unix_timestamp('2067-05-26 14:07:57')
+[mysql innodb 表锁](https://segmentfault.com/q/1010000009551099)
+一个sql就是一个事务，并不是说操作了1W条记录就是1W个事务，sql1锁住所有>1的记录，sql2会等待sql1释放锁
+[MySQL定义触发器返回自增ID](https://segmentfault.com/q/1010000009558336)
+触发器中执行查询语句你也看不到结果,推荐将创建一张日志表插入.
+
+create trigger getAutoNewId after insert on city
+for each row 
+insert into log_table(newId, time) value(new.Id, now());
+[UPDATE不太适合用WHERE去关联两表](https://segmentfault.com/q/1010000009557941)
+UPDATE a,b SET a.v_publishyear = b.v_publishyear WHERE a.v_id = b.v_e
+UPDATE a LEFT JOIN b ON a.v_id = b.v_e SET a.v_publishyear = b.v_publishyear
+[mysql按时间分段统计的sql语句](https://segmentfault.com/q/1010000009539927)
+```js
+SELECT count(id)
+from dealdata
+where timestampdiff(minute,'2014-02-27 9:15:00',`TIME1`)<0 and timestampdiff(minute,'2014-02-27 8:00:00',`TIME1`)>=0
+group by floor(timestampdiff(minute,'2014-02-27 8:00:00',`TIME1`)/15)
+```
+[第三方支付平台在很短时间内多次异步通知](https://segmentfault.com/q/1010000009534995)
+请求来了时候 先把db中的记录状态由初始更新为一个中间状态
+然后在处理请求，把中间状态更新为处理完成状态
+然后给第三方异步请求返回报文
+
+
+
+
+[为什么数据库读写分离能提高数据库的性能？](https://segmentfault.com/q/1010000009522912)
+[数据库多表联合查询插入其他库](https://segmentfault.com/q/1010000009526979)
+`insert into B.list (id, areaname, catname, title, content, linkman) select content.id, area.areaname, category.catname, content.title, content.content, content.linkman from A.content content join A.area area on content.areaid = area.areaid join A.category category on category.catid = content.catid`
+[怎么生成这个sql表？](https://segmentfault.com/q/1010000009566838)
+```js
+$start = strtotime('20140227050000');
+$end = strtotime('20140227230000');
+$step = strtotime('1970-01-01 08:30:00');
+$data = array();
+while (($start+=$step) <= $end) {
+    $data[] = array(
+        's'=>date('Y-m-d H:i:s',($start-strtotime('1970-01-01 08:15:00'))),
+        'e'=>date('Y-m-d H:i:s',$start)
+    );
+}
+```
+
+[PHP定时任务,在某个操作执行后,计时两个小时然后给用户发短信](https://segmentfault.com/q/1010000009201204)
+[php条件判断中同时有"与、或"，优先级](https://segmentfault.com/q/1010000009424520)
+```js
+$isAuthor = $article->user_id ==  Auth::id();
+$isValid = $article->status==0 || $article->expired_at < Carbon::now();
+
+if ($isAuthor && $isValid)
+{
+    $article->delete();
+    return back();
+}
+laravel 如何获取post提交的formdata数据 laravel request->all获取的是get，post用这个方法获取不到，要用getcount才行
+```
+[laravel File::delete 删除文件失效](https://segmentfault.com/q/1010000009511736)
+
+文件处理完后需先关闭才能删除成功！所以要在删除前设置$file=null \File::delete(storage_path(self::SAVE_FILE_NAME));
+[php中用redis存储session](https://segmentfault.com/q/1010000008721376)
+php的session确实是会在一次完整的http请求结束后，才会设置session，下面是我根据redis自带的monitor监控了一下redis的状态
+在http请求完成以后redis中有一个setex命令，其实这个就是php内核告诉redis写入session，这是一个自动的过程，session之所以第一次没有打印出来，也是因为第一次http请求结果后，php才会把session写入redis中，第二次请求的时候session已经成功写入，所以打印的结果能够显示。
+redis用 echo $redis->get('PHPREDIS_SESSION'.session_id());
 [php拼接路径时"\"与"\\"的区别](https://segmentfault.com/q/1010000009596064)
 使用\\更为严谨，避免单独使用\时可能出现的问题。归于实际生产里，只要不存在转义问题，具体写哪个都是一样的，但前提是你对你的代码很有把握。如果没有把握，写\\不失为一种更可靠的方案 $class  =   'Think\\Storage\\Driver\\'.ucwords($type);
 [setTimeout的延迟时间，是从什么时间段开始算起的](https://segmentfault.com/q/1010000009595073)
