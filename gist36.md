@@ -1,5 +1,98 @@
+
+
+git分支冲突
+```js
+$ git checkout test
+error: unable to create file app/Commands/Search.php (Permission denied)
+error: unable to create file app/Console/Kernel.php (Permission denied)
+D       app/Commands/Search.php
+D       app/Console/Kernel.php
+Switched to branch 'test'
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (test)
+$ git checkout -b d
+D       app/Commands/Search.php
+D       app/Console/Kernel.php
+Switched to a new branch 'd'
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (d)
+$ git commit -am 'u'
+[d d13de58] u
+ 2 files changed, 135 deletions(-)
+ delete mode 100644 app/Commands/Search.php
+ delete mode 100644 app/Console/Kernel.php
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (d)
+$ git checkout test
+Switched to branch 'test'
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (test)
+$ git branch -D d
+Deleted branch d (was d13de58).
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www/laravel_web (test)
+$ git merge saas3.3.0
+Auto-merging app/Http/Controllers/Api/Internal/WebinarController.php
+Merge made by the 'recursive' strategy.
+ app/Http/Controllers/Api/Internal/WebinarController.php | 9 +++++++--
+ 对于preg_match
+/[^a-zA-Z0-9_^\x{4e00}-\x{9fa5}]+/u
+
+
+是正常的能达到目的的
+/[^a-zA-Z0-9_\x{4e00}-\x{9fa5}]+/u
+和
+/^[a-zA-Z0-9_\x{4e00}-\x{9fa5}]+/u
+就是不正常的
+
+/^[a-zA-Z0-9_|\x{4e00}-\x{9fa5}]+/u
+
+就又正常了
+
+
+证明\x{4e00}-\x{9fa5}  在php正则中需要单独划出来
+字节转换
+function HumanSize($Bytes)
+{
+  $Type=array("", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta");
+  $Index=0;
+  while($Bytes>=1024)
+  {
+    $Bytes/=1024;
+    $Index++;
+  }
+  return("".$Bytes." ".$Type[$Index]."bytes");
+}
+```
+[500 桶酒找毒酒的最快编程方法](https://www.zhihu.com/question/56545610)
+```js
+500桶酒，其中1桶是毒酒；48小时后要举行酒会；毒酒喝下去会在之后的第23-24小时内毒死人；国王决定用囚犯来试酒，不介意囚犯死多少，只要求用最少的囚犯来测试出哪一桶是毒酒，问最少需要多少囚犯才能保证找出毒酒？
+
+2个。一个人有25个时间段。25的平方大于500
+500桶酒的“总不确定性”是log2(500)
+
+一个囚犯的“表达能力”是log2(25)
+https://www.nowcoder.com/questionTerminal/5bd27ea2bb9b4773b9e3ae0408c73aa1?source=relative 2的9次方=512>500
+至少需要⌈log2(500)/log2(25)⌉ = 2 个囚犯测试出毒酒
+
+总不确定性和表达能力分别与酒的桶数和时间间隔相关，看起来可以普适地解决这类问题
+
+假设我们要计算1055×8712。 查表得lg1055≈3.023，lg8712≈3.940。 将两数相加，得6.963。 计算1055×8712≈10^6.963 = 9183330。 验算：直接计算1055×8712=9191160，可见有一定误差。在对数位数取值更多时，数值将更为精确。
+>>> 10**(log(1055,10)+log(8712,10))
+=> 9191160.0
+>>> log(200,10)
+=> 2.301029995664
+>>> log(100,10)+log(2,10)
+=> 2.301029995664
+```
+[1000杯酒,有一个是毒酒,用奴隶试酒,毒发10到20小时,问最少需要多少奴隶才能找出毒酒](https://www.zybang.com/question/20b505045e3423541cfcfbe4ddf8474c.html)
+最少1个尝一杯就死.最多10个,把酒分500+500,两个奴隶分别全部尝500杯,挂掉一个,就知道毒酒在哪一半,添一个奴隶不断半分,2的十次方=1024,十次方意思就是每次死一个,最后两杯活下来的那个一个人试试就出来了,1000瓶倒在一起就是一瓶了,一大瓶!https://www.33iq.com/question/19870.html
 [php解决中文截取乱码问题](http://www.cnblogs.com/loveyoume/p/6081930.html)
 ```js
+call_user_func传递的参数必须符合系统函数的传参顺序
+$return = call_user_func('rtrim','sso;osoo;',';');
+$return2 = call_user_func('explode',';','sso;osoo;');
+
 header('content-type:text/html;charset=utf-8;');
 $str = '利要a-符e:r ttnx节小-子s区。vh;peh。例t来个oe体字n代gb节看t通c eu是的soS至什tna过码 t;Ie看C实e/,字le A来具8y么a)n=于ndg是r于 0tmt现码 e0ssf8单下s(uo别e的以ieh过aatx和t接要u几这看 nsw Ihrr用字 mgtts上就eg cAei的nwo码e跳h，t编';
 /*
