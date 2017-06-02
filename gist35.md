@@ -1,3 +1,207 @@
+
+
+
+
+[斐波那契数列](http://www.jb51.net/article/102812.htm)
+
+```js
+ function fib($n){  
+    $array = array();  
+    $array[0] = 1;  
+    $array[1] = 1;  
+    for($i=2;$i<$n;$i++){  
+        $array[$i] = $array[$i-1]+$array[$i-2];  
+    }  
+    print_r($array);  
+}  
+fib(10);  
+echo "\n------------------\n";  
+function fib_recursive($n){  
+    if($n==1||$n==2){return 1;}  
+    else{  
+        return fib_recursive($n-1)+fib_recursive($n-2);  
+    }  
+}  
+echo fib_recursive(10);
+function fib2($n)
+{
+    $cur = 1;
+    $prev = 0;
+    for ($i = 0; $i < $n; $i++) 
+    {
+        yield $cur;
+ 
+        $temp = $cur;
+        $cur = $prev + $cur;
+        $prev = $temp;
+    }
+}
+ 
+$fibs = fib2(19);
+foreach ($fibs as $fib) {
+    echo " " . $fib;
+}
+
+i, j = 0, 1
+while i < 10000:
+ print i,
+ i, j = j, i+j
+ 
+ $i= 0;$j=1;$a=[];
+while($i < 10){ 
+     $a[]=$i;
+  
+        $temp = $j;
+        $j = $i + $j;
+        $i = $temp;
+
+}
+```
+[php实现斐波那契数列以及由此引起的联想](http://www.cnblogs.com/loveyoume/p/5914438.html)
+```js
+/*
+    *函数功能求出斐波那数列的最后一项的值
+    *@param1 数列的第一个值 $one
+    *@param2 数列的第二个值 $two
+    *@parma3 数列的第n项，也是数列的元素个数，$n
+    *返回值，斐波那数列的最后一项的值
+    */
+    function Fobb($one,$two,$n){
+        //不是整数则返回false，这里只考虑整数的情况
+        if(!is_int($one) || !is_int($two)) return false;
+        if(!is_int($n) || $n < 2) return false;//判断$n是否为正整数
+        //初始化斐波那契数列
+        $arr = array($one,$two);
+        //初始化最后一项的值
+        $j = $two;
+        //循环添加斐波那契数列的元素
+        for($i=0;$i<$n-2;$i++){
+            $j= $arr[$i] + $j;
+            //把最后一项添加数列的尾部
+            array_push($arr,$j);
+        }
+        return $j;
+    }
+    var_dump(Fobb(0,1,60));//32位系统的超过2147483647就转为float类型
+    //求一个整数的阶乘
+function factorial($n){
+    if(!is_int($n) || $n<0) return false;
+    //初始化阶乘数组
+    $arr = array($n);
+    //初始化阶乘的值
+    $j = 1;
+    for($i=0;$i<$n;$i++){
+        //利用阶乘公式求阶乘的值，保存在中间中间变量$j中
+        $j = $j*($n-$i);
+        array_push($arr,$j);
+    }
+    return $j;
+}
+var_dump(factorial(1));
+```
+[php的spl_autoload_register函数的一点个人见解](http://www.cnblogs.com/loveyoume/p/6024801.html)
+```js
+//定义一个函数，功能自动加载类文件
+    function autoload($class){
+        //参数$class，不用管它，它自己会以``类的名称``作为参数
+        //类文件的地址，类文件的格式是$class.class.php
+        $classPath = str_replace('\\','/',__DIR__).'/'.$class.'.class.php';
+        //var_dump($classPath);
+        if(file_exists($classPath)){
+            include_once $classPath;
+        }
+    }
+    //注册自动加载函数，此时autoload这个函数就相当于php的自动寻找类函数__autoload()
+    spl_autoload_register('autoload');
+    //spl_autoload_register();这个参数确实无须传递，它自己会以你调用的类名传递过去，你实例化什么类，他就传递什么类名
+    $obj = new auto;//这个类已经存在同级目录中,我的情况
+    $obj->autoloader();
+
+
+    /*spl_autoload_register假如用在类中，则传递的参数必须包含类名和方法名
+    *如下面的例子：
+    */
+    class loadClass{
+        public function loadFunction($class){
+            $classPath = str_replace('\\','/',__DIR__).'/'.$class.'.class.php';
+            if(file_exists($classPath)){
+                include_once $classPath;
+            }
+        }
+        public function _register(){
+        //注册自动加载方法loadFunction
+        spl_autoload_register('self::loadFunction');
+        //或者参数为数组，数组的第一个元素为类名，第二个为要注册的方法名
+        spl_autoload_register(array('loadClass','loadFunction'));
+        }
+    }
+```
+[获取windows磁盘的可用空间函数](http://www.cnblogs.com/loveyoume/p/6056045.html
+```js
+  /*
+    *获取某个磁盘的剩余空间
+    *$param 关联数组，下标是哪个盘，单位，可以是B，KB，MB，GB
+    *可以设置获取多个磁盘，例如：array('C'=>'KB','D'=>'MB','E'=>'GB','F'=>'B')
+    *假如出错，返回false
+    */
+    function Space($arr){
+        //检查参数
+        if(is_array($arr)){
+            //初始化存储值
+            $memory = array();
+            foreach($arr as $disk=>$size){
+                $D = strtoupper($disk).':';//转化为大写的键盘路径
+                $S = strtoupper($size);//转变为大写的单位
+                if(in_array($D,array('C:','D:','E:','F:')) && in_array($S,array('B','KB','MB','GB','TB'))){
+                    switch($S){
+                        case 'B':
+                            $memory[$disk]= disk_free_space($D).'B';
+                        break;
+                        case 'KB':
+                            $d = round(disk_free_space($D) / 1024);
+                            $memory[$disk] = $d .'KB';
+                        break;
+                        case 'MB':
+                            $d = round(disk_free_space($D) / pow(1024,2));
+                            $memory[$disk]= $d.'MB';
+                        break;
+                        case 'GB':
+                            $d = round(disk_free_space($D) / pow(1024,3));
+                            $memory[$disk]= $d.'GB';
+                        break;
+                        case 'TB':
+                            $d =  sprintf("%.4f", disk_free_space($D) / pow(1024,4));
+                            $memory[$disk] = $d .'TB';
+                        break;
+                        default:
+                            return 0;
+                        break;
+                    }
+                }else{
+                    return null;
+                }
+            }
+            return $memory;
+        }else{
+            return null;
+        }
+    }
+    $arr = array('c'=>'kb','d'=>'Mb','e'=>'Gb','f'=>'Tb');
+    var_dump(Space($arr));
+    //要报警的磁盘和设置的单位
+    $di = array('c'=>'gb','d'=>'gb','e'=>'gb','f'=>'gb');
+    $_space = Space($di);
+    //应急配置
+    $alarm = '50GB';
+    $data = array();
+    //报警处理
+    foreach ($_space as $k=>$v){
+        //当磁盘空间小于50GB的情况
+        if(intval(substr($v,0,-2)) <= intval(substr($alarm,0,-2))){
+            $data[] = array('data'=>$k.'磁盘空间不足'.$v.'，请尽快处理');
+        }
+    }
+```
 [怎么样mysql 大量数据导出导入](https://segmentfault.com/q/1010000009489134)
 使用开源 ETL 工具， kettle
 [有关sql语句反向LIKE的处理](https://segmentfault.com/q/1010000009509962)
