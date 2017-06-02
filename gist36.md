@@ -1,4 +1,34 @@
+[FSCapture是一款抓屏工具](http://jingyan.baidu.com/article/d5c4b52be9a966da560dc5af.html)
+[PDO和消息队列的一点个人理解](http://www.cnblogs.com/loveyoume/p/6107239.html)
+[用 Redis 实现分布式锁与实现任务队列](http://blog.jobbole.com/95156/)
 
+为了应对高并发，处理数据量超级大的一种数据容器，也可以说是利用各种方式，先把数据存储在一个···容器···中，然后，再慢慢从这个容器中获取数据，实现·····异步操作数据库·····的方式，以便降低数据库的压力
+[简单理解桶排序](http://www.cnblogs.com/loveyoume/p/6286929.html)
+```js
+外层的for循环，我们就是用来控制比较········轮数········的,
+
+　　内层的for循环，我们用来控制···················每一轮的比较次数··················的
+ 
+//外层控制轮数
+        for(var i=0;i<len;i++){
+            //标记是否有排序的元素
+            var mark = true;
+            //内层对数组元素进行冒泡选择
+            for(var j=0;j<len-1-i;j++){
+                //交互元素
+                if(arr[j] > arr[j+1]){
+                    mark = false;
+                    var temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp;    
+                }
+            }
+            if(mark){
+            //当没有进行冒泡选择时，证明已经排序好了
+                return arr;    
+            }
+        }
+```
 
 git分支冲突
 ```js
