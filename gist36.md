@@ -1,3 +1,277 @@
+[对 Python 闭包的理解](https://www.v2ex.com/t/361368)
+```js
+作用域是程序运行时变量可被访问的范围，定义在函数内的变量是局部变量，局部变量的作用范围只能是函数内部范围内，它不能在函数外引用。
+def print_msg():
+	# print_msg 是外围函数
+	msg = "zen of python"
+    def printer():
+    	# printer 是嵌套函数
+        print(msg)
+    return printer
+
+another = print_msg()
+# 输出 zen of python
+another()
+函数中的局部变量仅在函数的执行期间可用，一旦 print_msg() 执行过后，我们会认为 msg变量将不再可用。然而，在这里我们发现 print_msg 执行完之后，在调用 another 的时候 msg 变量的值正常输出了，这就是闭包的作用，闭包使得局部变量在函数外被访问成为可能。
+def adder(x):
+    def wrapper(y):
+        return x + y
+    return wrapper
+
+adder5 = adder(5)
+# 输出 15
+adder5(10)
+# 输出 11
+adder5(6)
+所有函数都有一个 __closure__属性，如果这个函数是一个闭包的话，那么它返回的是一个由 cell 对象 组成的元组对象。cell 对象的 cell_contents 属性就是闭包中的自由变量。
+
+>>> adder.__closure__
+>>> adder5.__closure__
+(<cell at 0x103075910: int object at 0x7fd251604518>,)
+>>> adder5.__closure__[0].cell_contents
+5
+```
+[mysql查询时，offset过大影响性能的原因与优化方法](http://blog.csdn.net/fdipzone/article/details/72793837)
+mysql> select id from member where gender=1 limit 300000,1;因此我们先查出偏移后的主键，再根据主键索引查询数据块的所有内容即可优化。
+select a.* from member as a inner join (select id from member where gender=1 limit 300000,1) as b on a.id=b.id;
+[ mysql group by 组内排序方法](http://blog.csdn.net/fdipzone/article/details/72453553)
+```js
+/**
+ * 获取指定日期段内每一天的日期
+ * @param  Date  $startdate 开始日期
+ * @param  Date  $enddate   结束日期
+ * @return Array
+ */
+function getDateFromRange($startdate, $enddate){
+
+    $stimestamp = strtotime($startdate);
+    $etimestamp = strtotime($enddate);
+
+    // 计算日期段内有多少天
+    $days = ($etimestamp-$stimestamp)/86400+1;
+
+    // 保存每天日期
+    $date = array();
+
+    for($i=0; $i<$days; $i++){
+        $date[] = date('Y-m-d', $stimestamp+(86400*$i));
+    }
+
+    return $date;
+}
+一个评论表有多个用户评论，需要获取每个用户最后评论的内容
+mysql> select a.*from comment a,(select user_id,max(addtime) addtime from commen
+t group by user_id) b where a.user_id=b.user_id and a.addtime=b.addtime;
+select * from comment where id in(select max(id) from comment group by user_id) order by userid
+select a.* from comment as a right join 
+(select user_id, max(addtime) as maxtime from comment where user_id is not null group by user_id) as b 
+on a.user_id=b.user_id and a.addtime=b.maxtime order by a.user_id asc;
+[mysql explain中key_len的计算方法](http://blog.csdn.net/fdipzone/article/details/55804684)
+使用变长字段需要额外增加2个字节，使用NULL需要额外增加1个字节，因此对于是索引的字段，最好使用定长和NOT NULL定义，提高性能
+select a.id,a.name,IFNULL(b.lastlogintime,0) as lastlogintime from user as a left join user_lastlogin as b on a.id=b.uid;
+```
+[ php 判断页面或图片是否经过gzip压缩](http://blog.csdn.net/fdipzone/article/details/53191442)
+ob_start('ob_gzhandler'); // 开启gzip，屏蔽则关闭
+function check_gzip($url){
+    $header = get_headers($url, 1);
+    if(isset($header['Vary']) && $header['Vary']=='Accept-Encoding'){
+        return true;
+    }
+    return false;
+}
+[php 从指定数字中获取随机组合的方法](http://blog.csdn.net/fdipzone/article/details/51794055)
+```js
+function getNumGroups($var, $num){
+
+    // 数量不正确
+    if($var<$num){
+        return array();
+    }
+
+    $total = 0;
+    $result = array();
+
+    for($i=1; $i<$num; $i++){
+        $tmp = mt_rand(1, $var-($num-$i)-$total);
+        $total += $tmp;
+        $result[] = $tmp;
+    }
+
+    $result[] = $var-$total;
+
+    return $result;
+
+}
+$a = 0.1;
+$b = 0.9;
+$c = 1;
+
+printf("%.20f", $a+$b); // 1.00000000000000000000
+printf("%.20f", $c-$b); // 0.09999999999999997780
+var_dump(($c-$b)==$a);                   // false
+var_dump(round(($c-$b),1)==round($a,1)); // true
+var_dump(bcsub($c, $b, 1)==$a); // true
+使用glob方法遍历指定文件夹（包括子文件夹）下所有php文件
+$path = dirname(__FILE__);
+$result = array();
+traversing($path, $result);
+print_r($result);
+
+function traversing($path, &$result){
+    $curr = glob($path.'/*');
+    if($curr){
+        foreach($curr as $f){
+            if(is_dir($f)){
+                array_push($result, $f);
+                traversing($f, $result);
+            }elseif(strtolower(substr($f, -4))=='.php'){
+                array_push($result, $f);
+            }
+        }
+    }
+}
+PDO 查询mysql返回字段整型变为String型解决方法 如id在数据库中是Int的，查询后返回是String型
+$pdo = new PDO($dsn, $user, $pass, $param);
+
+// 在创建连接后，加入
+$pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+PDO::ATTR_STRINGIFY_FETCHES 提取的时候将数值转换为字符串。 
+PDO::ATTR_EMULATE_PREPARES 启用或禁用预处理语句的模拟。
+$str = '1,2,3,4,5,6,7,8,9';
+$arr = explode(',', $str,0);  ids=null，使用explode分割，得出的数组是Array ( [0] => )而不是Array()。
+输出时用%u来格式化为无符号整型
+$ip = '192.168.101.100';
+$ip_long = sprintf('%u',ip2long($ip));
+echo $ip_long.PHP_EOL;  // 3232261476 
+echo long2ip($ip_long); // 192.168.101.100
+Strict Mode功能说明
+
+不支持对not null字段插入null值
+不支持对自增长字段插入”值
+不支持text字段有默认值
+ 使用array_flip与isset方法会比in_array效率高很多。 array_flip方法去重比使用array_unique方法运行时间减少98%，内存占用减少4/5;
+ 查看表当前auto_increment alter table tablename auto_increment=NUMBER;
+ select auto_increment from information_schema.tables where table_schema='db name' and table_name='table name';
+$str = "中国,广东省,广州市,天河区,'113.329884,23.154799',1,'2016-01-01 12:00:00','1,2,3,4,5,6'";
+$arr = str_getcsv($str, ',', "'");$arr = explode(',', $str);
+mysql互换表中两列数据方法update product set original_price=price,price=original_price;
+这样执行的结果只会使original_price与price的值都是price的值，因为update有顺序的， 
+先执行original_price=price , original_price的值已经更新为price， 
+然后执行price=original_price，这里相当于没有更新。
+update product as a, product as b set a.original_price=b.price, a.price=b.original_price where a.id=b.id;
+show global variables like '%group_concat_max_len%';
+function randFloat($min=0, $max=1){
+    return $min + mt_rand()/mt_getrandmax() * ($max-$min);
+}
+public function version_to_integer($version){
+        if($this->check($version)){
+            list($major, $minor, $sub) = explode('.', $version);
+            $integer_version = $major*10000 + $minor*100 + $sub;
+            return intval($integer_version);
+        }else{
+            throw new ErrorException('version Validate Error');
+        }
+    }
+/**
+     * 将数字转为版本
+     * @param  Int     $version_code 版本的数字表示
+     * @return String
+     */
+    public function integer_to_version($version_code){
+        if(is_numeric($version_code) && $version_code>=10000){
+            $version = array();
+            $version[0] = (int)($version_code/10000);
+            $version[1] = (int)($version_code%10000/100);
+            $version[2] = $version_code%100;
+            return implode('.', $version);
+        }else{
+            throw new ErrorException('version code Validate Error');
+        }
+    }
+    使用curl POST数据时，如果POST的数据大于1024字节，curl并不会直接就发起POST请求。而是会分两步。
+1.发送一个请求，header中包含一个Expect:100-continue，询问Server是否愿意接受数据。
+2.接受到Server返回的100-continue回应后，才把数据POST到Server。
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Expect:")); 
+
+if (($_SERVER['PHP_AUTH_USER']!= "fdipzone" || $_SERVER['PHP_AUTH_PW']!="654321")) {  
+        header('WWW-Authenticate: Basic realm="localhost"');  
+        header("HTTP/1.0 401 Unauthorized");  
+        exit;  
+    }  
+curl_setopt($ch, CURLOPT_USERPWD, 'fdipzone:654321'); // 加入这句 
+```
+[ 使用FormData对象提交表单及上传图片](http://blog.csdn.net/fdipzone/article/details/38910553)
+```js
+var data = new FormData($('#form1')[0]);  
+        $.ajax({  
+            url: 'server.php',  
+            type: 'POST',  
+            data: data,  
+            dataType: 'JSON',  
+            cache: false,  
+            processData: false,  
+            contentType: false  
+        }).done(function(ret){ 
+        
+        $name = isset($_POST['name'])? $_POST['name'] : '';  
+$gender = isset($_POST['gender'])? $_POST['gender'] : '';  
+  
+$filename = time().substr($_FILES['photo']['name'], strrpos($_FILES['photo']['name'],'.'));  
+  
+$response = array();  
+  
+if(move_uploaded_file($_FILES['photo']['tmp_name'], $filename)){  
+    $response['isSuccess'] = true;  
+    $response['name'] = $name;  
+    $response['gender'] = $gender;  
+    $response['photo'] = $filename;  
+}else{  
+    $response['isSuccess'] = false;  
+}  
+  
+echo json_encode($response);  
+
+function ext_json_decode($str, $mode=false){  
+    if(preg_match('/\w:/', $str)){  
+        $str = preg_replace('/(\w+):/is', '"$1":', $str);  
+    }  
+    return json_decode($str, $mode);  
+}  
+  
+$str = '{"name":"fdipzone"}';  
+var_dump(ext_json_decode($str, true)); // array(1) { ["name"]=> string(8) "fdipzone" }  
+  
+$str1 = '{name:"fdipzone"}';  
+var_dump(ext_json_decode($str1, true)); // array(1) { ["name"]=> string(8) "fdipzone" }  
+
+php5.4 以后，json_encode增加了JSON_UNESCAPED_UNICODE , JSON_PRETTY_PRINT 等几个常量参数。使显示中文与格式化更方便
+当执行session_start()后，session会被锁住。直到页面执行完成。
+因此在页面执行其间，对sesssion进行写操作，只会保存在内存中，并不会写入session文件。
+而对session进行读取，则需要等待，直到session锁解开才能读取到。
+
+我们可以使用session_write_close()把数据写入session文件并结束session进程。这样就不需要等待页面执行完成，也能获取到执行到哪一步http://blog.csdn.net/fdipzone/article/details/30846529
+PHP int 的范围是 -2147483648 ~ 2147483647，可用常量 PHP_INT_MAX 查看。
+当求余的数超过这个范围，就会出现溢出。从而出现负数。
+echo 3701256461%62; // -13   $res = floatval(3701256461);  
+echo fmod($res,62); // 53  
+```
+[你只有 10 只小白鼠和一星期的时间，如何检验出哪个瓶子里有毒药](https://www.zhihu.com/question/19676641)
+[开始Python的数据结构](https://zhuanlan.zhihu.com/p/27233450)
+[大型目标渗透－01入侵信息搜集](https://zhuanlan.zhihu.com/p/27233785)
+[php 如何设置一个严格控制过期时间的session](http://blog.csdn.net/fdipzone/article/details/48816891)
+使用memcache/Redis来保存session，设置过期时间，因为memcache/redis的回收机制不是按机率的，可以确保session过期后失效。
+[ 客户端调用服务端接口减少请求数据容量的优化例子](http://blog.csdn.net/fdipzone/article/details/51540891)
+[使用redis锁限制并发访问类](http://blog.csdn.net/fdipzone/article/details/51793837)
+[ php flock 使用实例](http://blog.csdn.net/fdipzone/article/details/43839851)
+[mysql left join 右表数据不唯一的情况解决方法](http://blog.csdn.net/fdipzone/article/details/45119551)
+[php str_replace 替换指定次数方法](http://blog.csdn.net/fdipzone/article/details/45854413)
+[ crontab 精确到执行分钟内某一秒执行的方法](http://blog.csdn.net/fdipzone/article/details/52079533)
+* * * * * php /Users/fdipzone/test.php >> /Users/fdipzone/test.log crontab总是在执行分钟的0~1秒开始执行指定命令。 
+如果想在执行分钟的第30秒执行，只使用crontab命令不能做到，但我们可以加一个sleep命令去延迟执行，使延迟指定秒数后再执行指定命令。* * * * * sleep 30; php /Users/fdipzone/test.php >> /Users/fdipzone/test.log
+[ mysql导入大批量数据出现MySQL server has gone away的解决方法](http://blog.csdn.net/fdipzone/article/details/51974165)
+增大 max_allowed_packet 参数可以使client端到server端传递大数据时，系统能够分配更多的扩展内存来处理
+set global max_allowed_packet=268435456;show global variables like 'max_allowed_packet';
 [FSCapture是一款抓屏工具](http://jingyan.baidu.com/article/d5c4b52be9a966da560dc5af.html)
 [PDO和消息队列的一点个人理解](http://www.cnblogs.com/loveyoume/p/6107239.html)
 [支付宝 alipay-sdk- PHP](https://www.v2ex.com/t/348451)
