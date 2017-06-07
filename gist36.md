@@ -4,8 +4,25 @@
 mb_strimwidth() 即不是按字节，也不是按字符截取，而是按照宽度。在 php.net 的说明中指出，多字节字符通常是单字节字符的两倍宽度，也就是说，英文字符占一个宽度，中文占两个，宽度不足以截取一个字符时则不取。
 mb_substr() 截取的是字符个数，而 mb_strimwidth() 截取的是字符宽度
 echo mb_strimwidth('辅导费对方的辅导费对方的辅导费对方的辅导费对方的辅导费对方的', 0, 23, '...','utf-8');//截取10个汉字
+from collections import Counter
+counts = Counter('列表名')
+counts. most_common(10)#前10位的计数
+
+对于DataFrame对象中的一列所返回的对象Series，例如frame['属性名']，有一个value_counts方法，
+
+counts = frame['属性名'].value_counts()
+
 异步导出数据
 ```js
+foreach ($arr as &$v)
+$arr=[1,2,3];
+&$v=$arr[0];//$v成为$arr[0]的引用
+&$v=$arr[1];//$v成为$arr[1]的引用
+&$v=$arr[2];//$v成为$arr[2]的引用
+//此处结束$arr=[1,2,3];
+$v=$arr[0];//因为作用域被改变的原因,此处$v实际上是$arr[2]的引用,相当于$arr[2]=$arr[0];$arr=[1,2,1];
+$v=$arr[1];//相当于$arr[2]=$arr[1];$arr=[1,2,2];
+$v=$arr[2];//相当于$arr[2]=$arr[2];$arr=[1,2,2];
 /**
      * 设置活动 附属属性到hash表
      * @param $id
