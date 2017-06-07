@@ -1,3 +1,81 @@
+[xiaoshuwu.net 分享有价值的书籍资料python](https://pan.baidu.com/share/home?uk=3339153721#category/type=0)
+[ PHP之 mb_strimwidth字符串截取函数使用 & UTF8编码认识](http://blog.csdn.net/sosospicy/article/details/9111191)
+此函数按等宽字体计算字符串占用宽度。汉字占两个宽度，其余占一个宽度。
+mb_strimwidth() 即不是按字节，也不是按字符截取，而是按照宽度。在 php.net 的说明中指出，多字节字符通常是单字节字符的两倍宽度，也就是说，英文字符占一个宽度，中文占两个，宽度不足以截取一个字符时则不取。
+mb_substr() 截取的是字符个数，而 mb_strimwidth() 截取的是字符宽度
+echo mb_strimwidth('辅导费对方的辅导费对方的辅导费对方的辅导费对方的辅导费对方的', 0, 23, '...','utf-8');//截取10个汉字
+异步导出数据
+```js
+/**
+     * 设置活动 附属属性到hash表
+     * @param $id
+     * @param array $data
+     */
+    public static function setWebinarsAttachedInfo($id,$data =[]){
+        $key = self::WEBINARS_ATTACHED_INFO.$id;
+        RedisFacade::hmset($key,$data);
+    }
+
+    /**
+     * 设置活动列表
+     * @param $webinar_id
+     */
+    public static function setWebinarList($webinar_id){
+        $key = self::WEBINARS_EXPORT_LIST;
+        RedisFacade::sadd($key,$webinar_id);
+    }
+
+
+    /**
+     * 异步导出处理逻辑
+     * @param $id
+     * @param $startDate
+     * @param $endDate
+     * @return array
+     */
+    public static function asyncExport($id,$startDate,$endDate,$isMerge = false){
+        $rsData = ['code'=>'200','msg'=>'生成中'];
+        $status =RedisFacade::hget(self::WEBINARS_ATTACHED_INFO.$id,'async_export_status');
+        if(1 == $status){
+            $rsData = ['code'=>400,'msg'=>'已有一个导出任务正在生成中，请稍后'];
+        }else{
+            $exportAttributes = [
+                'is_async_export'=>1,       //活动是否有异步导出
+                'async_export_time'=>time(),//导出时间
+                'async_export_status'=>1    //当前异步导出进度状态 1开始，2完成
+            ];
+            self::setWebinarsAttachedInfo($id,$exportAttributes);
+            \Queue::push(new \App\Commands\VodTableExportDeal($id,$startDate,$endDate,$isMerge),null,'vodtable_async_export');
+        }
+        return $rsData;
+    }
+    /**
+     * 结束导出处理
+     * @param $webinar_id
+     */
+    private function endExportDeal($webinar_id){
+        $data = ['async_export_status'=>2];
+        \App\Services\VodTableService::setWebinarsAttachedInfo($webinar_id,$data);
+        //活动id 计入集合
+        \App\Services\VodTableService::setWebinarList($webinar_id);
+    }
+ 数据库中有一百张表， 我想知道哪些表格里面含有student字段   
+    select * from information_schema.columns where TABLE_SCHEMA = 'db_sms' and COLUMN_NAME = 'student'
+ 获取数据表字段 show full columns from table
+   Db::query( "SELECT COLUMN_NAME FROM information_schema. COLUMNS WHERE table_name = '$table'" );
+   http://101.201.236.181:8081/ip?ip=1.119.129.2
+   {
+	"ret":	"ok",
+	"data":	["中国", "中国", "", "", "wishisp.com", "36.894402", "104.166000", "Asia/Chongqing", "UTC+8", "100000", "86", "CN", "AP"]
+}
+```
+[【QQ/微信个人号变身机器人】炸群+远程监控个人PC的尝试](https://zhuanlan.zhihu.com/p/26820394?refer=666666)
+
+[利用wordcloud包制做中文标签云](https://github.com/lpty/wordcloud)
+https://github.com/amueller/word_cloud 
+wordcloud_cli.py --text mytext.txt --imagefile wordcloud.png
+[github短连接](https://git.io/)
+http://www.cnblogs.com/shanwater/p/5636553.html http://www.kuqin.com/shuoit/20141118/343265.html 
 [对 Python 闭包的理解](https://www.v2ex.com/t/361368)
 ```js
 作用域是程序运行时变量可被访问的范围，定义在函数内的变量是局部变量，局部变量的作用范围只能是函数内部范围内，它不能在函数外引用。
