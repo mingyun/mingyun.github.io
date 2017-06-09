@@ -11,9 +11,15 @@ counts. most_common(10)#前10位的计数
 对于DataFrame对象中的一列所返回的对象Series，例如frame['属性名']，有一个value_counts方法，
 
 counts = frame['属性名'].value_counts()
-
+[WebSocket 教程](http://www.ruanyifeng.com/blog/2017/05/websocket.html)
+视频地址： http://pan.baidu.com/s/1kUCGcJ1
+[通过 itchat 实现微信远程开启内网机器](https://github.com/monkey-wenjun/wchatwakeonlan)
+[如何记忆VIM快捷键 cheatsheet](https://blog.haitun.me/remember-vim/)
 异步导出数据
 ```js
+<img class="advs-image" src="//dev-vhall-static.oss-cn-beijing.aliyuncs.com/upload/webinars\promote\3b\f0\3bf0dcd1ce9d2cb7862560753055cad8.png?" onerror="this.src='//dev-vhall-static.oss-cn-beijing.aliyuncs.com/static/img/ad.jpg'" alt=""/>
+图片加载不了会替换src 控制台看到的和源码不同
+
 foreach ($arr as &$v)
 $arr=[1,2,3];
 &$v=$arr[0];//$v成为$arr[0]的引用
