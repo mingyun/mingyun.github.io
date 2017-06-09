@@ -11,6 +11,8 @@ counts. most_common(10)#前10位的计数
 对于DataFrame对象中的一列所返回的对象Series，例如frame['属性名']，有一个value_counts方法，
 
 counts = frame['属性名'].value_counts()
+[多账户微信登录/收发消息/管理群聊 API](https://github.com/leohowell/barbossa)
+[Python入门之生成海贼王云图](http://101python.cn/wordcloud)
 [WebSocket 教程](http://www.ruanyifeng.com/blog/2017/05/websocket.html)
 视频地址： http://pan.baidu.com/s/1kUCGcJ1
 [通过 itchat 实现微信远程开启内网机器](https://github.com/monkey-wenjun/wchatwakeonlan)
