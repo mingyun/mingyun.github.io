@@ -1,3 +1,109 @@
+[git 有什么办法可以比对任意两次提交中一个作者修改了哪些文件吗？](https://www.v2ex.com/t/367266#reply16)
+git show commit1..commit2 --author=你 --pretty= --name-only | sort -u
+[PHP 实现给中文之间加空格问题](https://www.v2ex.com/t/366551#reply15)
+https://github.com/Rakume/pangu.php 支持各个语言版本 英文空格分割
+
+
+```js 
+php pangu-cli.php "Jackie的鼻子有幾個？123個！" //// Jackie 的鼻子有幾個？123 個！
+原来：这个是 ui 一 些 999 什 A 么汉子。
+转后：这 个 是 ui 一 些 999 什 A 么 汉 子 。
+我提供个思路, 将字符串转为数组, 然后对数组的元素判断是否为 [数字 /字母 /符号]: 
+function ch2arr($str) 
+{ 
+$length = mb_strlen($str, 'utf-8'); 
+$array = []; 
+for ($i=0; $i<$length; $i++) 
+$array[] = mb_substr($str, $i, 1, 'utf-8'); 
+return $array; 
+} 
+
+$str = '这个是 ui 一些什 b 么汉子。'; 
+
+$arr= ch2arr($str); 
+var_dump($arr); print_r(preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY));
+
+$pattern = '/^[\s\w+]$/'; 
+foreach ($arr as $key => $value) { 
+echo !preg_match($pattern, $value) && !preg_match($pattern, $arr[$key+1]) ? $value.' ' : $value; 
+} 
+$str = '这个是 ui 一 些 999 什 A 么汉子。'; 
+
+$str = preg_replace("/([\x{4e00}-\x{9fa5}])/u", "\\1 ", $str); 
+$res = preg_replace ( "/\s(?=\s)/","\\1", $str); //这 个 是 ui 一 些 999 什 A 么 汉 子 。
+https://www.v2ex.com/t/365989#reply23
+status1 = ( A && B && C ) ? a : b; 
+status2 = (A || B || C) ? b : a; 
+
+当 A、B、C 都为假时，status1 = b, status2 = a 
+当 A、B、C 都为真时，status1 = a, status2 = b 
+A && B == !(!A || !B)
+status 
+
+= ( A && B && C ) ? a : b; 
+
+= !( A && B && C )? b : a; 
+
+= ( !A || !B || !C ) ? b : a;
+```
+[光棍节闯关游戏第9关](http://kodango.com/segmentfault-double-11-game)
+```js
+fp = open('code.txt')
+# 将那串二进制代码分隔成列表
+code = fp.readline().split()
+fp.close()
+
+# 将二进制字符串转换成十进制
+code = [ int(s, 2) for s in code ]
+# 将十进制数字转换成ASCII码对应的字符
+code = [ '%c' % i for i in code ]
+# 拼接成字符串，可以看到现在是一长串，有点像base64编码
+code = ''.join(code)
+# 解码base64
+import base64
+e = base64.b64decode(code)
+开头的标记为'\x1f\x8b\x08\x00"，谷歌了一下发现是gzip的压缩格式。
+fp = open('code.gz', 'w')
+fp.write(e)
+fp.close()
+```
+[PHP黑系列之二：PHP 为什么函数命名是如此不一致？](https://zhuanlan.zhihu.com/p/27288770)
+[Eric，基于多搜索引擎的自动问答机器人](https://zhuanlan.zhihu.com/p/27285330)
+http://link.zhihu.com/?target=https%3A//github.com/SnakeHacker/QA-Snake
+[当Python遇上微信，可以这么玩](https://zhuanlan.zhihu.com/p/26514576)
+http://link.zhihu.com/?target=https%3A//github.com/wzyonggege/python-wechat-itchat
+[图片鉴黄](https://zhuanlan.zhihu.com/p/27338572)
+```js
+pip install qcloud_image
+```
+[终端下肉眼看不见的东西](http://kodango.com/hidden-text-in-terminal)
+```js
+# ls -1 *.log
+a.log
+b.log
+c.log
+# for i in `ls -1 *.log | sed '$d'`; do
+> grep 'err' $i
+> done
+# for i in `\ls -1 *.log`; do
+> grep 'err' $i
+> done
+注意到了吗，用\ls就可以去掉alias的效果
+
+for i in *.log; do grep 'err' $i; done
+```
+[flask 应该怎么保护后端 api 接口，为接口增加权限机制](https://www.v2ex.com/t/366237#reply20)
+```js
+jwt 只是身份验证的标志，通过 flask-login 登录后，生成一个 token 返回给前端，以后就可以通过这个 token 找到对应的用户，用户有没有权限访问 api 就可以通过后端来验证了。 
+
+其实关键的地方不在于 jwt 或者别的什么 token，而在于两点： 
+1.用户要有权限等级的分配，你需要在用户系统里加入权限的概念，不同的用户访问不同等级的 API 接口，这一步其实不需要 jwt，flask-login 也是能实现的 
+2.对每一次用户的请求，要识别出是哪个用户发起的，基本实现的方式就是写 cookie。 
+
+建议使用 jwt 只是因为它很方便，不需要在后端数据库里维护一个 token-user 的表，把权限直接写进 token 里，每次解析出来校验一下就行了。
+apigateway 啊，保护 api，从我做起，写一个网关系统，有认证机制 一个通用的 RBAC 系统 post 的数据里面加个 token 字段，用 token 来分辨登陆的人
+```
+
 [xiaoshuwu.net 分享有价值的书籍资料python](https://pan.baidu.com/share/home?uk=3339153721#category/type=0)
 [ PHP之 mb_strimwidth字符串截取函数使用 & UTF8编码认识](http://blog.csdn.net/sosospicy/article/details/9111191)
 此函数按等宽字体计算字符串占用宽度。汉字占两个宽度，其余占一个宽度。
