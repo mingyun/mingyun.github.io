@@ -1,5 +1,139 @@
 [git 有什么办法可以比对任意两次提交中一个作者修改了哪些文件吗？](https://www.v2ex.com/t/367266#reply16)
 git show commit1..commit2 --author=你 --pretty= --name-only | sort -u
+[微信自动拉入群聊的机器人](https://zhuanlan.zhihu.com/p/27234860?group_id=854503289126023168)
+```js
+http://link.zhihu.com/?target=https%3A//github.com/wzyonggege/wechat-wxpy/tree/master
+```
+[如何理解memcache的原子性操作？](https://segmentfault.com/q/1010000009588486)
+[用Python调用api之后，没有输出该如何解决](https://segmentfault.com/q/1010000009737997)
+pprint(page.json()) print(eval(page.text))
+毫秒级的时间戳，怎么转换成标准的日期显示echo date('Y-m-d H:i:s', 1497154554827.0 / 1000);
+[js正则：只能输入数字和英文句号，不能连续两个点，不能以“.”开头以及结尾](https://segmentfault.com/q/1010000009672695)
+/^(((\d+[.])+\d+)|\d)$/
+thinkphp5中如何用redis做一个订单15分钟取消?https://segmentfault.com/q/1010000009663568
+可以将这个功能做成用户行为触发，比如用户查看订单时才判断未支付且超过15分钟就更改订单状态为超时取消。未查看的、状态未更新的订单可能写计划任务凌晨更新。在订单量大的情况下，不推荐全部订单都实时同步状态，也没意义
+MYSQL里类似20-35这种格式的年龄段字段，如何进行范围查找https://segmentfault.com/q/1010000009705902
+select * from tbl where left(age,2)<=34 and right(age,2)>=25;
+多表联查的SQL怎么写?https://segmentfault.com/q/1010000009204311
+
+```js
+SELECT
+    a.id,a.num,b.aid,b.sid,b.content,c.id,substring_index(group_concat(c.time order by c.time desc),',',1) ctime,substring_index(group_concat(c.libs order by c.time desc),',',1) clibs
+FROM a
+JOIN b ON b.aid = a.id
+JOIN c ON c.id = b.sid
+WHERE a.id = 3
+GROUP BY c.id ;
+```
+MySQL的联合查询[union]有什么实际的用处https://segmentfault.com/q/1010000009711530
+```js
+每个模块表都有一个title,id,picture字段。为减少多次的查询SQL，使用union将这些表的数据合为一个结果集返回。
+
+SELECT id,title,picture, 'A' AS module FROM A LIMIT 5
+UNION 
+SELECT id,title,picture, 'B' AS module FROM B LIMIT 5
+UNION
+SELECT id,title,picture, 'C' AS module FROM C LIMIT 5
+select goods "商品", case goods when 1 then price then price*1.2 when 2 then price*1.5 else 0 end
+from talbe
+缺点:代码可读性差
+
+select goods, price*1.2
+from table where goods=1
+union
+select goods, price*1.5
+from table where goods=2
+union
+select goods, 0
+from table where goods not in (1, 2)
+length()返回存储占用字节数，char_length()返回字符数。
+例如，length('你好')在utf8字符集下应该返回6，char_length('你好')应该返回2。
+```
+[INSERT ... ON DUPLICATE KEY UPDATE和REPLACE是有区别的](https://segmentfault.com/q/1010000009670558)
+```js
+前者INSERT失败后执行UPDATE，后者相当于DELETE再INSERT，原来整行都消失哦！
+
+具体而言，如果你的表有3列的话：
+
+id name alias
+1  王五 王二麻子
+这两句的效果是不一样的：
+
+INSERT INTO pri (id, name) VALUES (1, '李四') ON DUPLICATE KEY UPDATE name = '李四'
+
+REPLACE INTO pri (id, name) VALUES (1, '李四')
+```
+[php中try catch 和 mysql中的事务的关系](https://segmentfault.com/q/1010000009672106)
+```js
+事务和 try catch是两个东西,之所以在启动事务的时候使用try catch是因为如果在使用pdo mysqli这类的扩展的时候,数据库报错会给 php 返回一个错误,让 php 执行的程序终止,从而不能执行到 rollback这一步的函数命令(在执行录入的时候程序就中断了),而使用try catch 再执行事务操作的时候就安全许多
+
+要分清楚try catch是属于php java 这类的逻辑操作的东西,而transation是属于数据库的东西,两者可以配合但是不能替代
+<?php
+$dbms='mysql';     //数据库类型
+$host='127.0.0.1:33060'; //数据库主机名
+$dbName='Walle';    //使用的数据库
+$user='root';      //数据库连接用户名
+$pass='123123';          //对应的密码
+$dsn="$dbms:host=$host;dbname=$dbName";
+
+try {
+    $dbh = new PDO($dsn, $user, $pass,[PDO::ATTR_PERSISTENT => true]); //初始化一个PDO对象
+    echo "连接成功".PHP_EOL;
+} catch (PDOException $e) {
+    die ("Error!: " . $e->getMessage() . "<br/>");
+}
+
+try{
+  $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  $dbh->beginTransaction();
+  $res = $dbh->exec("INSERT INTO test (name) values ('ddd')");
+  $res = $dbh->exec("INSERT INTO test (name) values ('ddd')");
+  if($res){
+    echo 111 . PHP_EOL;
+  }else{
+    echo 222 . PHP_EOL;
+  }
+  var_dump($res);
+
+  $dbh->commit();
+}catch(Exception $e){
+  $dbh->rollBack();
+  echo "error:" . $e->getMessage() . PHP_EOL;
+}
+
+
+$dbh = null;
+?>
+
+
+```
+[视频下载完整源码](https://zhuanlan.zhihu.com/p/27234910?group_id=854507338323861504)
+```js
+import requests
+import re
+
+main_url = 'http://video.eastday.com/a/170602114054589846059.html?indexlbt'
+resp = requests.get(main_url)
+#没有这行，打印的结果中文是乱码
+
+resp.encoding = 'utf-8'
+html = resp.text
+link = re.findall(r'var mp4 = "(.*?)";', html)[0]
+link = 'http:'+link
+
+dest_resp = requests.get(link)
+#视频是二进制数据流，content就是为了获取二进制数据的方法
+data = dest_resp.content
+#保存数据的路径及文件名
+path = '/Users/suosuo/Desktop/头条视频/刘涛.mp4'
+f = open(path, 'wb')
+f.write(data)
+f.close()
+print('下载完成')
+```
+
+
 [PHP 实现给中文之间加空格问题](https://www.v2ex.com/t/366551#reply15)
 https://github.com/Rakume/pangu.php 支持各个语言版本 英文空格分割
 
