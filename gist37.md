@@ -1,3 +1,365 @@
+prepare与sql的开销https://segmentfault.com/q/1010000009649587
+PHP 的 PDO里面有个选项，叫 ATTR_EMULATE_PREPARES
+
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+正式的prepare需要把这个设置成false。
+数组重组https://segmentfault.com/q/1010000009659423
+```js
+     $arr = array(
+                array(
+                        'gid' => 1,
+                        'num' => 4,
+                    ),
+                array(
+                        'gid' => 1,
+                        'num' => 4,
+                    ),
+                array(
+                        'gid' => 3,
+                        'num' => 3,
+                    ),
+                array(
+                        'gid' => 4,
+                        'num' => 4,
+                    ),
+         );
+    
+    $result = array();
+    foreach($arr as $val) {
+        if(!isset($result[$val['gid']])) {
+            $result[$val['gid']] = $val;
+            continue;
+        }
+        
+        $result[$val['gid']]['num'] += $val['num'];
+    }
+    
+    var_dump("<pre>", $result);die;
+```
+php 计算数组最大最小值https://segmentfault.com/q/1010000009456364
+```js
+function getMaxAndMin($items){
+    $newItems=[];
+    $cutStr=',';//要分割的字符
+    foreach($items as $item)
+    {
+    //保证是String并且包含','
+      if(is_string($item) && strpos($item,$cutStr)!==false)
+      {
+        list($t1,$t2)=explode(',',$item)
+        $newItems[]=$t1;
+        $newItems[]=$t2;
+       }else{
+           $newItems[]=$item;
+       }
+    }
+    return [min($newItems),max($newItems)];
+}
+$exampleArr=[
+'0,129',
+'130,249',
+'250,459'
+];
+list($min,$max)=getMaxAndMin($exampleArr);
+function getMaxAndMin($items,$operator=',')
+{
+    $data = explode($operator, join($operator,$data));
+    return [min($data),max($data)];
+}
+Accept 可以通过请求的Accept 头部信息来判断,浏览器请求会带上text/html | application/xhtml+xml | application/xml 类似的信息,其中text/html必定会有的,而通过img标签的src是不会有text/html 请求类型的 参考session_decode和session_encode这两个函数，session的序列化与serialize序列化有些区别。
+```
+php 数组 如何将 1,2,4,5,6,7,9,11 优雅的转换为 '1,2,4-7,9,11' 这样的字符串呢?https://segmentfault.com/q/1010000009641437
+```js
+function array_hyphens($arr){
+    return implode(',',array_reduce($arr,function($a,$num){
+        if(!($len=count($a))) return array($num);
+        @list($s,$e) =explode('-',$a[--$len]);
+        if($s==$num-1 || (isset($e) && $e==$num-1)) $a[$len]=implode('-',array($s,$num));
+        else array_push($a,$num);
+        return $a;
+    },array()));
+}
+echo array_hyphens([7,11,16,17,18,33,102,103,555]);
+// 7,11,16-18,33,102-103,555
+```
+在PHP中，如何实现将生成验证码图片 编码为base64https://segmentfault.com/q/1010000009568647
+```js
+function base64EncodeImage ($image_file) {
+    $base64_image = '';
+    $image_info = getimagesize($image_file);
+    $image_data = fread(fopen($image_file, 'r'), filesize($image_file));
+    $base64_image = 'data:' . $image_info['mime'] . ';base64,' . chunk_split(base64_encode($image_data));
+    return $base64_image;
+}
+```
+求从第一列走到第n列的最短路径https://segmentfault.com/q/1010000008885217
+固定时间内不能提交多次？https://segmentfault.com/q/1010000009558772
+```js
+这个使用redis实现很方便，使用一个key来存储提交次数，假如key为count。每次提交时从redis取出count
+
+如果count为空，将count值设为1，超时时间设为一分钟，正常提交；
+如果count值不为空且大于等于5则报错提示“操作频繁，请输入验证码”；
+如果count值不为空且小于5，则正常提交,count值加一。
+try {
+  $redis = new Redis(); // 创建实例
+  $redis->connect(REDIS_HOST, REDIS_PORT, REDIS_TIMEOUT); // 连接
+  $redis->ping(); // 确认连接已经成功
+} catch (Exception $e) {
+  die('Can not connect Redis.');
+}
+
+$incrkey = 'TEST:用户:分钟'; // 每分钟缓存key
+$incrValue = $redis->incr($incrkey);
+if ($incrValue == 1) {
+  // 设定缓存时间（键名，缓存时间[单位：秒]）
+  $redis->expire($incrkey, 60);
+} else if ($incrValue >= 5) {
+  die('操作频繁，请输入验证码');
+}
+```
+PHP 判断二维数组是否再存相同的值https://segmentfault.com/q/1010000009557601
+```js
+    <?php
+
+    $test = [
+        [
+            'name'   => 'a',
+            'age'    => 12,
+            'number' => 11,
+            'score'  => 50,
+        ],
+        [
+            'name'   => 'a',
+            'age'    => 12,
+            'number' => 11,
+            'score'  => 30,
+        ],
+        [
+            'name'   => 'b',
+            'age'    => 12,
+            'number' => 12,
+            'score'  => 50,
+        ]
+    ];
+    根据 name number age 确认是否重复,如果重复则把score相加
+    $arr = array();
+    foreach($test as $val) {
+        $key = $val['name'] . '-' . $val['age'] . '-' . $val['number'];
+        $arr[$key]['name']    = $val['name'];
+        $arr[$key]['age']     = $val['age'];
+        $arr[$key]['number']  = $val['number'];
+        $arr[$key]['score']  += $val['score'];
+    }
+    
+    var_dump("<pre>", array_values($arr));die;
+    
+    $file = 'path/to/file';
+$mode = 0755;
+if(@chmod($file,$mode) === false)
+    throw new \RuntimeException("$file can not change mode to $mode");
+```
+sf 用的socket.io
+你打开网页的时候用dev-tools就可以看到网络中有类似这样的请求
+wss://segmentfault.com:7001/socket.io/?EIO=3&transport=websocket&sid=8r6PgQTb-KLvxevHDkEp
+PHP中的setlocale()函数对中文无效吗？https://segmentfault.com/q/1010000009514161
+setlocale 
+strftime - 根据区域设置格式化本地时间／日期
+
+这两个函数要配合使用，你才能看到效果。
+从函数的实现功能方面考虑,而不考虑回调过程来理解递归.https://segmentfault.com/q/1010000009521619
+```js
+对于一些常用的递归函数功能很好描述,如递归求解阶乘:
+
+<?php
+
+function factorial($n) {
+    if ($n != 1)
+        $res = $n * factorial($n-1);
+    else
+        $res = 1;
+    return $res;
+}
+
+?>
+函数功能就是: 计算 n 的阶乘, 函数功能实现就是: n 的阶乘 = n * (n-1)的阶乘.这样理解就不用考虑递归过程中的函数调用问题.
+```
+
+php如何区分简体中文，繁体中文，日文，韩文https://segmentfault.com/q/1010000009508282
+```js
+        $s = <<<'EOF'
+"memolov 爱书 愛書 あいしょ 사랑 때문에 책이 되다",
+EOF;
+        echo $s.PHP_EOL;
+        if(preg_match_all('/([\x{4e00}-\x{9fa5}]+)/u',$s,$m)){  //中文简体繁体
+            echo "<pre>";
+            print_r($m[1]);
+            echo "</pre>";
+        }
+
+        if(preg_match_all('/([\x{0800}-\x{4e00}]+)/u',$s,$m)){ //日文
+            echo "<pre>";
+            print_r($m[1]);
+            echo "</pre>";
+        }
+        if(preg_match_all('/([\x{AC00}-\x{D7A3}]+)/u',$s,$m)){  //韩文
+            echo "<pre>";
+            print_r($m[1]);
+            echo "</pre>";
+        }
+        
+        http://pv.sohu.com/cityjson  var returnCitySN = {"cip": "223.20.179.161", "cid": "110000", "cname": "北京市"};
+```
+PHP秒杀系统的流程是怎样？https://segmentfault.com/q/1010000009462806
+不是直接生成订单，所谓队列，就是放入场券在里面，凭券购买！可以都是数字1，也可以其他的来代替！redis是单线程，出队也是按先后的，队列空时返回false。只要用户拿到入场券，立即将该商品放入该用户的购物车，直接走普通的购物流程即可！
+php如何设计或实现数据统计https://segmentfault.com/q/1010000009385922
+mysql不使用索引如何做到不插入重复的数据？https://segmentfault.com/q/1010000009405966
+移动端app后端接口是怎么设计的https://segmentfault.com/q/1010000009355135
+如果检索到以小数点打头的，则在小数点前面加0 $number = '.5';
+$number = preg_replace('/^(\.\d+)/', '0$1', $number);
+关于过滤用户输入的代码<script>alert(0)</script>https://segmentfault.com/q/1010000009305852
+```js
+php 的 htmlspecialchars()
+前端
+`function htmlspecialchars(str) 
+{
+
+str = str.replace(/&/g, '&amp;');  
+str = str.replace(/</g, '&lt;');  
+str = str.replace(/>/g, '&gt;');  
+str = str.replace(/"/g, '&quot;');  
+str = str.replace(/'/g, '&#039;');  
+return str;  
+} `
+
+```
+session进一步的理解问题，session原理和回收机制。https://segmentfault.com/q/1010000009321211
+Redis解决并发导致数据重复插入MySQL的问题？https://segmentfault.com/q/1010000009306401
+```js
+$lock_status = $redis->get('lock_state');
+if ($lock_status == 0 || empty($lock_status)) {
+    $redis->set('lock_state', 3600, 1); #操作上锁
+    #操作代码
+    $redis->set('lock_state', 3600, 0); #操作解锁
+} else {
+    #上锁后的操作
+}
+php数组排序的笔试题https://segmentfault.com/q/1010000009351470
+asort($array, SORT_FLAG_CASE | SORT_NATURAL);
+
+$array  = [
+            0=>"z01",
+            1=>"Z32",
+            2=>"z17",
+            3=>"Z16",
+        ];
+
+function cmp($a,$b){
+  $a = intval(substr($a, 1));
+  $b = intval(substr($b, 1));
+  if ($a == $b) {
+    return 0;
+  }
+  return ($a < $b ) ? -1 : 1;
+}
+
+usort($array, "cmp");
+print_r($array);
+
+/*
+
+Array
+(
+    [0] => z01
+    [1] => Z16
+    [2] => z17
+    [3] => Z32
+)
+
+ */
+
+```
+python输出我想要的格式？https://segmentfault.com/q/1010000009722468
+```js
+data_input = [('2016-09', 20874.73, '李四'), ('2016-10', 64296.45, '李四'), ('2016-11', 58657.1, '李四'), ('2016-12', 51253.14, '李四'), ('2017-01', 57791.88, '李四'), ('2017-01', 46007.0, '张三'), ('2017-02', 67193.55, '李四'), ('2017-02', 38352.0, '张三'), ('2017-03', 83359.53, '李四'), ('2017-03', 49661.0, '张三'), ('2017-04', 39907.0, '张三')]
+
+import pandas as pd
+df = pd.DataFrame(data_input)
+df.columns = ['month','value','name']
+d = df.set_index(['name'])
+print ( set(d.index) )                           # {'张三', '李四'}
+print ( list(d.loc['张三'].values.tolist()) )  # data變成list
+print ( [{'data':list(d.loc[x].values.tolist()) , 'name': x} for x in set(d.index) ] )   
+```
+4个一维数组的元素能组成多少个一维数组https://segmentfault.com/q/1010000009265535
+#这就是求笛卡尔积
+
+from itertools import product
+print list(product([1,2,3,4], [5, 6], [7,8], [9]))
+php 在使用is_int函数时，当需要判定的数字超过了9位则返回了falsehttps://segmentfault.com/q/1010000009274936
+Integer 整型是有个范围的，而这个范围是跟平台版本有关的32位（最大值为：2^31 - 1）与64位（最大值为：2^63 - 1）的范围不一致。这时候超出范围的数字会被解释为float类型，所以is_int（）函数判断会是false,下面是64位的整数溢出：
+$large_number = 9223372036854775807;
+var_dump(is_int($large_number));                     // true
+
+$large_number = 9223372036854775808;
+var_dump(is_int($large_number));                    // false
+
+如果库存中有10件商品 却有100人购买https://segmentfault.com/q/1010000009303701
+以通过数据库的锁来实现
+
+开启事务
+select * for update
+update库存
+提交事务
+怎么处理 linux 的crond服务 最少是1分钟 phphttps://segmentfault.com/q/1010000009329754
+使用systemd的话可以利用systemd.timer设置秒甚至毫秒级定时任务
+高并发下悲观锁与乐观锁的选择问题https://segmentfault.com/q/1010000009251675
+php怎样进行SHA512withRSA算法签名https://segmentfault.com/q/1010000009257928
+```js
+function sign($data) {
+    $certs = array();
+    openssl_pkcs12_read(file_get_contents("你的.pfx文件路径"), $certs, "password"); //其中password为你的证书密码
+    if(!$certs) return ;
+    $signature = '';  
+    openssl_sign($data, $signature, $certs['pkey'],OPENSSL_ALGO_SHA512);
+    return base64_encode($signature); 
+}
+```
+php出现 3.5527136788005e-15 等形式数据如何优雅地处理https://segmentfault.com/q/1010000009511841
+$num = $num < 1 ? 0 : number_format($num, 2);
+var_dump($num);
+phpexcel导入用科学计数法表示的数据https://segmentfault.com/q/1010000009511712
+最前面加一个单引号。
+$num = 1.00E+36;
+var_dump($num);
+var_dump(number_format($num));    //返回的是string类型 
+echo print_r($arr,true);
+PHP中microtime()函数的两种返回方式精度不同https://segmentfault.com/q/1010000009513580
+```js
+ini_get('precision') 控制精度为 14 的意思是 ：
+
+float(1495449772.2334) 全部有 14 个数字，小数点前 10位，小数点后 4 位，并不是小数点后面 14 位的意思啊。
+
+看看小面代码的结果吧。
+
+ini_set('precision', 18);
+var_dump(microtime());
+var_dump(microtime(true));
+```
+
+
+PHP处理超长数据内存限制问题https://segmentfault.com/q/1010000009566903
+```js
+如果是php7的话不能使用preg_replace，需要换成preg_replace_callback来处理
+
+$str=$_POST['str'];//点的4个属性组成的字符串
+$json_str = '['.substr(preg_replace('/([^,]+),([^,]+),([^,]+),([^,]+),/iU','{"x":"$1","y":"$2","a":"$3","p":"$4"},',$str.','),0,-1).']';
+//将json字符串保存在```.txt```文件中
+$handle=fopen("./1.txt","w");
+fwrite($handle, $json_str);
+fclose($handle);
+```
+
+
 [关于不同的商品总价计算的问题](https://segmentfault.com/q/1010000009685623)
 ```js
  $math = '%s*%s';
