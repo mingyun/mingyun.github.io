@@ -1,3 +1,168 @@
+[转换字节数](http://www.cnblogs.com/picaso/archive/2012/09/06/2673635.html)
+```js
+function getFileSize($size, $format = 'kb') {
+        $p = 0;
+        if ($format == 'kb') {
+            $p = 1;
+        } elseif ($format == 'mb') {
+            $p = 2;
+        } elseif ($format == 'gb') {
+            $p = 3;
+        }
+        $size /= pow(1024, $p);
+        return number_format($size, 3);
+    }
+    function format_bytes($size) { 
+$units = array(' B', ' KB', ' MB', ' GB', ' TB'); 
+for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024; 
+return round($size, 2).$units[$i]; 
+} 
+if(!empty($webinarIds)){ //srem/sadd 第二个参数如果是空数组会报错
+                \RedisFacade::srem(Webinar::MASTER_USER_ID_PREFIX.$masterUserId,$webinarIds);
+            }
+            if(!empty($wids)){
+                \RedisFacade::sadd(Webinar::MASTER_USER_ID_PREFIX.$masterUserId,$wids);
+            }
+            function calculateFileSize($size)
+{
+   $sizes = ['B', 'KB', 'MB', 'GB'];
+   $count=0;
+   if ($size < 1024) {
+    return $size . " " . $sizes[$count];
+    } else{
+     while ($size>1024){
+        $size=round($size/1024,2);
+        $count++;
+    }
+     return $size . " " . $sizes[$count];
+   }
+}
+function calcSize($size,$accuracy=2) {
+    $units = array('b','Kb','Mb','Gb');
+    foreach($units as $n=>$u) {
+        $div = pow(1024,$n);
+        if($size > $div) $output = number_format($size/$div,$accuracy).$u;
+    }
+    return $output;
+}
+function size2Byte($size) {
+    $units = array('KB', 'MB', 'GB', 'TB');
+    $currUnit = '';
+    while (count($units) > 0  &&  $size > 1024) {
+        $currUnit = array_shift($units);
+        $size /= 1024;
+    }
+    return ($size | 0) . $currUnit;
+}
+function filesize_formatted($path)
+{
+    $size = filesize($path);
+    $units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+    $power = $size > 0 ? floor(log($size, 1024)) : 0;
+    return number_format($size / pow(1024, $power), 2, '.', ',') . ' ' . $units[$power];
+}
+function sortSize($a,$b){
+         $a = getByteSize($a);
+         $b = getByteSize($b);
+         if($a == $b){
+             return 0;
+         }
+         return ($a>$b)? 1 : -1;
+         
+     }
+     function getByteSize($size){
+         $base = array(array('KB','K'),array('MB','M'),array('GB','G'),array('TB','T'));
+         $sum = 1;
+         for($i=0; $i<4; $i++){
+             if(stripos($size,$base[$i][0]) || stripos($size,$base[$i][1])){
+                 $size = $sum*str_ireplace($base[$i],'',$size)*1024;
+                 break;
+             }
+             $sum*=1024;
+         }
+         return $size;
+     }
+     $arr = array('23M','1.02G','987MB','45MB','0.98G');
+     usort($arr,'sortSize');
+     print_r($arr);
+     CURL也可以伪造IP，别干坏事哦～～
+
+　　curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-FORWARDED-FOR:8.8.8.8', 'CLIENT-IP:8.8.8.8'));
+    ini_set('memory_limit','-1');
+    $data = file('1000w.txt');
+    echo $data['1245666']; 
+     $array = array(1,2,4,6,8);
+    $k = array_slice($array,-1,1);
+    print_r($k);　　//结果是一维数组
+    
+  $a = 10;
+    while($a--) {
+        echo $a;//9876543210
+    }
+      $a = 10;
+    while(--$a) {
+        echo $a;//987654321
+    }
+    正则匹配多行
+   $str='<table>
+<tr><td>aaaa</td></tr>
+<tr><td>bbbb</td></tr>
+<tr><td>cccc</td></tr>
+<tr><td>dddd</td></tr>
+</table>';
+//<tr>.*?<\/tr>/is /<tr>[.\n]*?<\/tr>”　　（这个是错误的）
+preg_match_all('#<tr>(.|\n)*?<\/tr>#',$str,$m);
+print_r($m);
+```
+[PHP笔试——指定概率随机数](http://www.cnblogs.com/picaso/archive/2012/05/02/2478982.html)
+```js
+$a=$b=$c=0;
+    for($i=1;$i<6001;$i++){
+        $temp = rand(0,60);
+        if($temp<20){
+            $a++;
+        }elseif(20<=$temp&&$temp<30){
+            $b++;
+        }else{
+            $c++;
+        }
+    }
+    echo $a;
+    echo "\n";
+    echo $b;
+    echo "\n";
+    echo $c;
+    echo "\n";
+```
+
+[PHP大整数加法](http://www.cnblogs.com/picaso/archive/2013/06/11/3132286.html)
+```js
+ $a = '234567890';
+    $b = '111111111111101';
+    $m = strlen($a);
+    $n = strlen($b);
+    $num = $m>$n?$m:$n;
+    $result = '';
+    $flag = 0;
+    while($num--){
+        $t1 = 0;
+        $t2 = 0;
+        if($m>0){
+            $t1 = $a[--$m];
+        }
+        if($n>0){
+            $t2 = $b[--$n];
+        }
+        $t = $t1+$t2+$flag;
+        $flag = $t/10;
+        $result = ($t%10).$result;
+    }
+    echo $result;
+    echo "\r\n";
+    echo $a+$b;
+```
+
+
 prepare与sql的开销https://segmentfault.com/q/1010000009649587
 PHP 的 PDO里面有个选项，叫 ATTR_EMULATE_PREPARES
 
