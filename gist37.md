@@ -1,4 +1,174 @@
+[Mysql获取每组前N条记录](http://blog.csdn.net/wzy_1988/article/details/52871636)
+select * from student group by ClassId order by Score;
+group by 先于order by执行,order by是针对group by之后的结果进行的排序,而我们想要的group by结果其实应该是在order by之后.
+select * from (select * from student order by Score) group by ClassId;
+select * from Employee as e
+    where (select count(distinct(e1.salary)) from Employee as e1 where  e1.DepartmentId = e.DepartmentId and e1.salary > e.salary) < 3;
 [基于swoole的异步轻量级web框架](https://github.com/keaixiaou/zhttp)
+[php引用方法形成树](http://www.cnblogs.com/siqi/archive/2012/10/11/2719245.html)
+```js
+/**
+ * 创建父节点树形数组
+ * 参数
+ * $ar 数组，邻接列表方式组织的数据
+ * $id 数组中作为主键的下标或关联键名
+ * $pid 数组中作为父键的下标或关联键名
+ * 返回 多维数组
+ * 
+ * 分析：
+ * 由于传递是引用，故当赋值给他后，当这个值在变时，上面的值也会跟着一块变
+ * 后面的循环不断的给他添加值 第一个元素也会不断的添加值
+ * 最终所有的树行结构都会放到数组的第一个元素中
+ * 而下面的元素依次保存当次级别以下的孩子
+ * 
+ **/
+function find_parent($ar, $id='id', $pid='pid') {
+  foreach($ar as $v) $t[$v[$id]] = $v;
+  foreach ($t as $k => $item){
+    if( $item[$pid] ){
+      if( ! isset($t[$item[$pid]]['parent'][$item[$pid]]) )
+         $t[$item[$id]]['parent'][$item[$pid]] =& $t[$item[$pid]];
+    }
+  }
+  return $t;
+}
+
+
+/**
+ * 创建子节点树形数组
+ * 参数
+ * $ar 数组，邻接列表方式组织的数据
+ * $id 数组中作为主键的下标或关联键名
+ * $pid 数组中作为父键的下标或关联键名
+ * 返回 多维数组
+ **/
+function find_child($ar, $id='id', $pid='pid') {
+  foreach($ar as $v) $t[$v[$id]] = $v;
+  foreach ($t as $k => $item){
+    if( $item[$pid]) {
+      $t[$item[$pid]]['child'][$item[$id]] = & $t[$k];
+    }
+  }
+  return $t;
+}
+
+    $data = array(
+      array('ID'=>1, 'PARENT'=>0, 'NAME'=>'祖父'),
+      array('ID'=>2, 'PARENT'=>1, 'NAME'=>'父亲'),
+      array('ID'=>3, 'PARENT'=>1, 'NAME'=>'叔伯'),
+      array('ID'=>4, 'PARENT'=>2, 'NAME'=>'自己'),
+      array('ID'=>5, 'PARENT'=>4, 'NAME'=>'儿子'),
+    );
+
+   $p = find_parent($data, 'ID', 'PARENT');
+   $c = find_child($data, 'ID', 'PARENT');
+```
+[浮点数一般是不能用来比较大小的](http://www.cnblogs.com/siqi/archive/2012/12/02/2798058.html)
+```js
+$a = 13.2;
+$b = 24;
+$c = $a/$b;
+
+//实际值是这个d:0.54999999999999993338661852249060757458209991455078125;
+echo serialize($c).'<br/>';//
+
+echo  $c.'<br/>';//输出时会显示成0.55 实际的值是比他小的
+
+//所以直接和0.55比较大小是不成立的
+if($c == 0.55){
+    echo 'nothing';
+}
+
+$c = round($c,2);
+
+//用round处理
+if($c == 0.55){
+    echo 'ok';
+}
+
+//强制转为字符串
+// $c = (string)$c;
+// $c = strval($c);
+
+if("$c" == 0.55){
+    echo 'ok';
+}
+```
+[php 二维数组排序](http://www.cnblogs.com/siqi/p/3651719.html)
+```js
+function multi_compare($a, $b)
+{
+    $val_arr = array(
+            'gold'=>'asc',
+            'silver'=>'desc'//还可以增加额外的排序条件
+    );
+    foreach($val_arr as $key => $val){
+        if($a[$key] == $b[$key]){
+            continue;
+        }
+        return (($val == 'desc')?-1:1) * (($a[$key] < $b[$key]) ? -1 : 1);
+    }
+    return 0;
+}
+
+$arr = array(
+    array('gold'=>1, 'silver'=>2),
+    array('gold'=>8, 'silver'=>10),
+    array('gold'=>8, 'silver'=>8),
+    array('gold'=>2, 'silver'=>1),
+);
+
+uasort($arr, 'multi_compare');
+
+
+```
+[时间戳实现增量数据同步](http://www.cnblogs.com/siqi/p/4316992.html)
+where id>x order by id asc limit xx
+where insert_time>lastmax_timestamp and insert_time<=current_timestamp  order by timestamp  asc limit xx 
+不断调整 lastmax_timestamp ，可以每次运行完就把 lastmax_timestamp  存储redis
+[php易错总结](http://www.cnblogs.com/siqi/archive/2012/10/31/2748900.html)
+```js
+$a = 3;
+$b = 5;
+
+var_dump(5 || $b = 7);//boolean(true)
+
+if($a = 5 || $b = 7) { //|| 的优先级比赋值预算的要高    
+    var_dump($a); //boolean(true)
+    $a++;
+    $b++;
+}
+echo $a . " " . $b;//1 6
+
+ function timesTwo(&$int) {
+        $int = $int * 2;
+    }
+    $int = 2;
+    $result = timesTwo($int);
+    echo $int;//4
+    $int  = 2;
+    $bool = true;
+
+    // 算术运算符和字符串运算符
+    $a= 1 + 'test'. ($int + $bool);
+    $b= 'test' . ($int + $bool) + 1;
+    var_dump($a, $b);//string(2) "13" int(1)
+    echo -10%3; //-1
+    
+    //如果 var 不是数组类型或者实现了 Countable 接口的对象，将返回 1，有一个例外，如果 var 是 NULL 则结果是 0。 
+echo  count ("567");//1
+echo count(null);    //0
+echo count(false);  //1
+//注意这种操作引起的错误
+$a = null;
+var_dump($a['abc']);//null 
+explode(',',null)//['']
+    if($a = 100 && $b = 200) {
+    var_dump($a,$b);//bool(true) int(200)
+}
+```
+
+
 [全球首个微信小程序（应用号）开发教程！通宵吐血赶稿，每日更新](https://my.oschina.net/wwnick/blog/750055)
 [pygments生成图片中的中文](http://type.so/python/pygments-image-chinese.html)
 ```js
