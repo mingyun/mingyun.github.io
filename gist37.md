@@ -1,3 +1,103 @@
+[基于swoole的异步轻量级web框架](https://github.com/keaixiaou/zhttp)
+[全球首个微信小程序（应用号）开发教程！通宵吐血赶稿，每日更新](https://my.oschina.net/wwnick/blog/750055)
+[pygments生成图片中的中文](http://type.so/python/pygments-image-chinese.html)
+```js
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import ImageFormatter
+# 可以有中文么a可以的
+code = ""
+content = highlight(code, PythonLexer(), ImageFormatter(font_name = 'WenQuanYi Zen Hei'))
+with open('a.png', 'wb') as handle:
+	handle.write(content)
+	handle.close()
+'''.decode('utf-8')
+# content = highlight(code, PythonLexer(), ImageFormatter(font_name = 'Consolas', line_numbers = False, font_size = 20))
+content = highlight(code, PythonLexer(), ImageFormatter(font_name = 'Consolas', cfont_name = 'Microsoft Yahei', line_numbers = False, font_size = 20, cfont_size = 13))
+with open('a.png', 'wb') as handle:
+	handle.write(content)
+	handle.close()
+```
+[多为数组转换成一维-递归]()
+```js
+//静态变量是只存在于函数作用域中的变量，注释：执行后这种变量不会丢失（下次调用这个函数时，变量仍会记着原来的值）
+function array_multi2single($array){
+    static $result_array=array();
+    foreach($array as $value){
+        if(is_array($value)){
+            array_multi2single($value);
+        }
+        else
+        $result_array[]=$value;
+    }
+    return $result_array;
+}
+//采用数组引用来实现，这样比上一种要好哦
+function array_multi2single($array,&$rs = array()){
+    foreach($array as $value){
+        if(is_array($value)){
+            array_multi2single($value, $rs);
+        }
+        else
+        $rs[]=$value;
+    }
+}
+$array=array("1"=>array("A","B","C",array("D","E")),"2"=>array("F","G","H","I"));
+$array=array_multi2single($array);
+foreach($array as $value){
+    echo "<h5>$value</h5>";
+    echo "<br>";
+}
+
+```
+
+[php调用python服务](http://type.so/python/php-call-python.html)
+php通过socket调用python 在线测试SQL：http://sqlfiddle.com
+[linux命令帮助](http://linuxtools-rst.readthedocs.io/zh_CN/latest/base/01_use_man.html)
+[php curl 异步请求](https://github.com/pengzhile/purl)
+[mysql处理高并发数据,防止数据超读 - 咖啡如同生活的专栏 - 博客频道 - CSDN.NET](http://blog.csdn.net/gaoxuaiguoyi/article/details/47304615)
+[php中如何设置mysql查询读取数据的超时时间](http://www.bo56.com/php%e4%b8%ad%e5%a6%82%e4%bd%95%e8%ae%be%e7%bd%aemysql%e6%9f%a5%e8%af%a2%e8%af%bb%e5%8f%96%e6%95%b0%e6%8d%ae%e7%9a%84%e8%b6%85%e6%97%b6%e6%97%b6%e9%97%b4/)
+[python抓取taobao ip数据库](http://type.so/python/python-crawl-taobao-ip.html)
+```js
+import time, unirest
+#pip install unirest
+def pp(extra):
+    # 其实这种做法和js很像，用一个闭包限制变量的作用域
+    def p(resp):
+        print(extra)
+        # 在这里做数据的处理和储存
+    return p
+
+def main():
+    r = ['192.9.201.0', '192.9.201.255'];
+    unirest.get('http://ip.taobao.com/service/getIpInfo.php', headers = {}, params = {'ip': r[0]}, auth = (), callback = pp(r))
+    # taobao访问限制：为了保障服务正常运行，每个用户的访问频率需小于10qps。
+    time.sleep(.5)
+```
+
+[自动化测试 -- 通过Cookie跳过登录验证码](http://www.cnblogs.com/fnng/p/6431484.html)
+```js
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+driver.get("https://www.baidu.com")
+
+# 添加Cookie
+driver.add_cookie({'name':'BAIDUID','value':'AAAAAAAAAAAAAA:FG=1'})
+driver.add_cookie({'name':'BDUSS','value':'AAAAAAAAAAAAAAAAAAAAAAAAAA'})
+
+# 刷新页面
+driver.refresh()
+
+# 获取登录用户名并打印
+username = driver.find_element_by_class_name("user-name").text
+print(username)
+
+#关闭浏览器
+driver.quit()
+```
+
+
 [转换字节数](http://www.cnblogs.com/picaso/archive/2012/09/06/2673635.html)
 ```js
 function getFileSize($size, $format = 'kb') {
