@@ -1,9 +1,62 @@
 [Mysql获取每组前N条记录](http://blog.csdn.net/wzy_1988/article/details/52871636)
+```js
 select * from student group by ClassId order by Score;
 group by 先于order by执行,order by是针对group by之后的结果进行的排序,而我们想要的group by结果其实应该是在order by之后.
 select * from (select * from student order by Score) group by ClassId;
 select * from Employee as e
     where (select count(distinct(e1.salary)) from Employee as e1 where  e1.DepartmentId = e.DepartmentId and e1.salary > e.salary) < 3;
+取GID每组 COL2最大的3条记录
+SELECT a.id,a.gid,a.col1,a.col2 FROM t2 a
+WHERE 3>=(
+SELECT COUNT(*) FROM t2 b
+WHERE a.gid=b.gid AND a.col2<=b.col2)
+ORDER BY a.gid,a.col2 desc
+
+我们先来获取每个组中的前3名工资最高的员工
+select * from Employee as e
+    where (select count(distinct(e1.salary)) from Employee as e1 where  e1.DepartmentId = e.DepartmentId and e1.salary > e.salary) < 3;
+ 
+where中的select是保证：遍历所有记录，取每条记录与当前记录做比较，只有当Employee表中同一部门不超过3个人工资比当前员工高时，这个员工才算是工资排行的前三名。
+http://www.jb51.net/article/31590.htm
+按name分组取val最大的值所在行的数据
+--方法1：select a.* from tb a where val = (select max(val) from tb where name = a.name) order by a.name 
+--方法2： 
+select a.* from tb a where not exists(select 1 from tb where name = a.name and val > a.val) 
+--方法3： 
+select a.* from tb a,(select name,max(val) val from tb group by name) b where a.name = b.name and a.val = b.val order by a.name 
+--方法4： 
+select a.* from tb a inner join (select name , max(val) val from tb group by name) b on a.name = b.name and a.val = b.val order by a.name 
+按name分组取最大的两个(N个)val 
+select a.* from tb a where 2 > (select count(*) from tb where name = a.name and val > a.val ) order by a.name,a.val 
+select a.* from tb a where val in (select top 2 val from tb where name=a.name order by val desc) order by a.name,a.val 
+select a.* from tb a where exists (select count(*) from tb where name = a.name and val > a.val having Count(*) < 2) order by a.name 
+写的顺序：select ... from... where.... group by... having... order by..
+执行顺序：from... where...group by... having.... select ... order by...
+select * from test group by category_id order by `date` desc
+
+子查询解决方案
+
+select * from (select * from `test` order by `date` desc) `temp`  group by category_id order by `date` desc
+
+mysql 中order by 与group by的顺序是：
+select
+from
+where
+group by
+order by
+注意：group by 比order by先执行，order by不会对group by 内部进行排序，如果group by后只有一条记录，那么order by 将无效。要查出group by中最大的或最小的某一字段使用 max或min函数。
+例：
+select sum(click_num) as totalnum,max(update_time) as update_time,count(*) as totalarticle from article_detail where userid =1 group by userid order by update_time desc 
+```
+[laravel 基础教程 —— 集合](http://www.jianshu.com/p/a6ec97b727c0#)
+[JavaScript: 详解Base64编码和解码](https://my.oschina.net/goal/blog/201032?p=2&temp=1472117779104#blog-comments-list)
+[Web 开发调试工具 Livepool ](http://www.oschina.net/p/livepool?fromerr=nRS72CJV)
+[ Appium python 框架](https://testerhome.com/topics/3460)
+[Swagger UI教程 API 文档神器 搭配Node使用](http://www.jianshu.com/p/d6626e6bd72c)
+https://zhuanlan.zhihu.com/p/21353795
+[JavaScript sdk(jssdk)设计指南](http://js8.in/archives/)
+[Python爬虫开发（二）：整站爬虫与Web挖掘](http://www.freebuf.com/news/topnews/96821.html)
+[vuejs学习网站推荐](http://www.cnblogs.com/wancy86/tag/vuejs/)
 [基于swoole的异步轻量级web框架](https://github.com/keaixiaou/zhttp)
 [php引用方法形成树](http://www.cnblogs.com/siqi/archive/2012/10/11/2719245.html)
 ```js
