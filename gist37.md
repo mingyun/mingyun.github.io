@@ -1,3 +1,238 @@
+[php随笔小技巧](http://www.cnblogs.com/siqi/archive/2012/12/02/2798178.html)
+```js
+/**
+ * 
+ *下面只是设置了保存sessionid的那个时间，这样的结果是关闭浏览器后session仍可以用
+ *实际并没有改变session的生存时间
+ *
+ */
+
+//只会在用户第一次访问的时候设置保存sessionid的那个cookie的过期时间
+$lifetime=600;
+session_set_cookie_params($lifetime);#注意到放到start的前面
+session_start();
+
+//每次都设置保存sessionid的那个cookie的过期时间
+$lifetime=600;
+session_start();
+setcookie(session_name(),session_id(),time()+$lifetime);
+//同上，每次都会设置
+$lifetime=86400;
+session_set_cookie_params($lifetime);
+session_start();
+session_regenerate_id(true);
+
+/**
+ * 获取最后一次出错信息，无论如何也能获取到
+ * 
+ * error_get_last set_error_handler 都不会受环境配置的影响
+ * 
+ */
+error_reporting(0);
+ini_set("display_errors", "off");
+
+
+set_error_handler(function(){
+
+    print_r(func_get_args());
+
+});
+
+echo $a ;
+print_r(error_get_last());
+#正则中对\的理解
+
+$str = '<a href=\"db.house.qq\"></a>';
+
+#双引号中可以转义的符合会被执行，输出后不在显示转义符
+echo "/\\\\\"db.house.qq\\\\\"/" . "\n"; // /\\"db.house.qq\\"/ 总结：在双引号的正则中一个\需要写成 \\
+
+#正则本身的转义符号也需要转义
+var_dump(preg_match("/\\\\\"db.house.qq\\\\\"/", $str, $m));
+
+#单引号写法，单引号中的内容不会执行
+var_dump(preg_match('/\\\"db.house.qq\\\"/', $str, $m));
+
+print_r($m);
+// ?: 匹配但不捕获 加在前面
+//? 去贪婪 加在后面
+// \1 反向引用
+// $1 捕获
+$str = 'a a';
+preg_match("/(a)(?:\s+)\\1/", $str, $m); #1
+echo preg_replace("/(a)(\s+)\\1/", "$1", $str); #a
+print_r($m);
+
+#php通过mysql取出的数据库的数据都是字符串类型
+file_get_contents() 读取文件要比 fopen/fread 快30倍，但请求外部地址很慢，请用curl替代
+
+null ++ 为1， -- 仍为null  字符串只可以++，相当于最后一个字节加1， --则没效果
+//php 1~100 单个输出 记得php.ini中设置 output_buffering = Off
+echo str_repeat(' ',1024);
+for($i=1;$i<100;$i++)
+{
+    echo $i;
+    sleep(1);
+//     ob_flush();
+    flush();
+    
+}
+curl 当post超过1024byte时的问题
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+设置头信息（Post请求）
+1、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:text/plain') );
+file_get_contents('php://input', 'r') 获取到
+$_POST                                获取不到
+
+2、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:application/x-www-form-urlencoded') );#默认
+file_get_contents('php://input', 'r') 获取到
+$_POST                                获取到
+
+3、curl_setopt ( $ch, CURLOPT_HTTPHEADER, array('Content-type:multipart/form-data; boundary=----WebKitFormBoundarygAvW9MJkUNVmzDjY') );
+file_get_contents('php://input', 'r') 获取不到
+$_POST                                获取到
+
+/**
+ * 
+ * 传递一个数组到CURLOPT_POSTFIELDS，cURL会把数据编码成 multipart/form-data，
+ * 而然传递一个URL-encoded字符串时，数据会被编码成 application/x-www-form-urlencoded。
+ * 
+ */
+$ch = curl_init();
+
+$data = array('name' => 'Foo', 'file' => '@/home/user/test.png;type=xx;filename=xx');
+/**
+ * 用以取代file_get_contents函数，可以设置主机名以及超时时间等设置
+ * @param $url 主机名
+ * @param $path 路径
+ * @param $port=80 端口
+ * @param $timeout=10 超时设置，单位秒
+ * @return integer/string -1:连接不上主机 -2:发送请求串失败
+ */
+function get_file_contents($url,$path,$port=80,$timeout=10)
+{
+    $errno=null;
+    $errstr=null;
+    $fp=fsockopen($url,$port);
+    if(!$fp)
+    {
+        return -1;
+    }
+    $command='GET '.$path.' HTTP/1.1'."\r\n";
+    $command.='Accept: */*'."\r\n";
+    $command.='Accept-Language: zh-cn'."\r\n";
+    $command.='Host: '.$url."\r\n";
+    $command.='Connection: Close'."\r\n";
+    $command.="\r\n";
+    $flag=fwrite($fp,$command);
+    if(!$flag)
+    {
+        fclose($fp);
+        return -2;
+    }
+    stream_set_timeout($fp,$timeout);
+    $tmp_ret_str="";
+    $flag=false;
+    while(!feof($fp))
+    {
+        $tmp_cur_line=fgets($fp,2048);
+        if($flag)
+        {
+            $tmp_ret_str.=$tmp_cur_line;
+        }
+        if($tmp_cur_line=="\r\n")
+        {
+            $flag=true;
+        }
+    }
+    fclose($fp);
+
+    return $tmp_ret_str;
+}
+/**
+ * 获取ip地址，注意服务器是双网卡的情况
+ * @param unknown_type $dest
+ * @param unknown_type $port
+ * @return unknown
+ */
+function my_ip($dest='64.0.0.0', $port=80)
+{
+    $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+    socket_connect($socket, $dest, $port);
+    socket_getsockname($socket, $addr, $port);
+    socket_close($socket);
+    return $addr;
+}
+/**
+ * 判断是否是合法整形 加强版
+ * @param unknown_type $a
+ * @return boolean
+ */
+function is_intval($a) {
+    return ((string)$a === (string)(int)$a);
+}
+// true for ("123", "0", "-1", 0, 11, 9011, 00, 0x12, true)
+// false for (" ", "", 1.1, "123.1", "00", "0x123", "123a", "ada", "--1", "999999999999999999999999999999999", false, null, '1 ')
+/**
+ * 多进程同时写入一个文件 不支持NFS文件系统
+ * @param string $filename
+ * @param string $str
+ */
+function write($filename, $str) {
+    $f = fopen ( $filename, "a" );
+    if (flock ( $f, LOCK_EX )) {
+        fwrite ( $f, $str );
+        //sleep(5);
+        flock ( $f, LOCK_UN );
+    }
+    fclose ( $f );
+}
+write("/home/v_jksong/lock.data", "sjk");
+http://www.cnblogs.com/siqi/p/3623630.html
+/**
+ * 获取当前内存情况
+* @return string
+*/
+function memory_usage($isEcho = 0)
+{
+    $memUsage = memory_get_usage();
+    $unitArr = array("B", "K", "M", "G");
+
+    $used =  @round($memUsage/pow(1024, ($i=floor(log($memUsage, 1024)))), 2)."".($unitArr[$i]);
+    if($isEcho)
+    {
+    ee($used);
+    }
+    return $used;
+}
+/**
+ * 一种常用的hash算法
+ * @param string $str
+ * @return number
+ */
+function hash33($str)
+{
+    if(empty($str)) return 0;
+
+    $hash = 0;
+    $seed = 5;
+    $len  = strlen($str);
+    for ($i = 0; $i < $len; $i=$i+1)
+    {
+        $hash = ($hash << $seed) + $hash + ord($str{$i});
+        $hash =  $hash & 0x7FFFFFFF;
+    }
+
+    return $hash;
+}
+```
+[秒拍、微录客解析](http://www.72blog.com/miaopai-adpi.html)
+[PHP使用PDO库查询数据库除了NULL所有字段都返回的是字符串](https://segmentfault.com/q/1010000003698420/a-1020000003699079)
+
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+http://www.cnblogs.com/tinywan/p/6143889.html
+[超600本（优质）教程等你来下载！](http://www.w3cschool.cn/welcome?tnid=1002)
+[程序员专属搜索引擎](http://bird.so/search?q=php%20pdo%20string)
 [Mysql获取每组前N条记录](http://blog.csdn.net/wzy_1988/article/details/52871636)
 ```js
 select * from student group by ClassId order by Score;
