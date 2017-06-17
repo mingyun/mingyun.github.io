@@ -1,5 +1,9 @@
+[]()
+
+
 [php随笔小技巧](http://www.cnblogs.com/siqi/archive/2012/12/02/2798178.html)
 ```js
+Redis 数据备份与恢复 redis 127.0.0.1:6379> SAVE  将在 redis 安装目录中创建dump.rdb文件 将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可 redis 127.0.0.1:6379> CONFIG GET dir 输出 redis 安装目录http://biezhi.me/nosql/2016-03/redis-data-backup-and-recovery.html
 /**
  * 
  *下面只是设置了保存sessionid的那个时间，这样的结果是关闭浏览器后session仍可以用
