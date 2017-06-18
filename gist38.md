@@ -1,3 +1,72 @@
+[larave session问题，为什么每次session_id都要变](https://segmentfault.com/q/1010000009694886)
+[github怎么提交回退旧版本代码并更改后的文件到主分支上](https://segmentfault.com/q/1010000009800764)
+[让git命令行保存github的登录状态](https://segmentfault.com/q/1010000009785643)
+echo命令本身默认会在输出字符串后面追加一个换行符，可以通过增加一个选项-n来阻止此默认行为echo -ne "\n"
+ 删除当前目录下 10天前的子目录 find . -maxdepth 1 -type d -mtime +10|xargs rm -rf
+[将100之内的数字中文转换..](https://segmentfault.com/q/1010000009760061)
+[正则表达式问题](https://segmentfault.com/q/1010000009745638)
+# coding: utf8
+filename = '2.txt'
+with open(filename) as f:
+    for i in f:
+        result = i.split()
+        print result[1], result[-1]
+        
+[php 如何解析既有值又有属性的 xml 标签？](https://segmentfault.com/q/1010000009762137)        
+$xml = simplexml_load_string($content);
+foreach($xml->attributes() AS $a => $b) {
+
+echo "$a = $b <br />";
+}
+[数字变为文字](https://segmentfault.com/q/1010000009747721)   
+[python中eval的问题](https://segmentfault.com/q/1010000009808234)
+```js
+python有 decimal 和 fraction 2个模块用来进行高精度浮点计算
+>>> from fractions import Fraction
+>>> Fraction('0.3')-Fraction('0.1') == Fraction('0.2')
+True
+>>> from decimal import Decimal
+>>> Decimal('0.3')-Decimal('0.1') == Decimal('0.2')
+True
+>>> 
+eval('0.3-0.1==0.2')  # 输出为False, 是因为0.3-0.1=0.19999999999999998
+eval('%d - %d == %d'%(0.3, 0.1, 0.2))  # 输出为True, 是因为你%d传入是整数，相当于0-0=0
+eval('%s - %s == %s'%(0.3, 0.1, 0.2))  # 输出为False, 参考1
+eval('%s - %s == %s'%('0.3', '0.1', '0.2'))  # 输出为False, 参考1
+```
+[python如何转换时间戳到"2017年6月12日 18点24分"这样的格式](https://segmentfault.com/q/1010000009748841)
+```js
+import time
+print('%s年%s月%s日 %s时%s分' % time.localtime(1497254119.69407)[:5])
+timestamp = time.time() - 3600   # 时间戳
+print(time.strftime('%Y{y}%m{m}%d{d} %H{H}%M{M}', time.localtime(timestamp)).format(y='年', m='月', d='日', H='时', M='分'))
+#统计出现次数
+lst = [1,1,2,2,3,3,4,4,5,6]
+print len(set(lst))
+
+#统计每种各出现几次
+from collections import Counter
+print dict(Counter(lst))
+```
+[php字符串比较](https://segmentfault.com/q/1010000009794813)
+[Python 爬虫中完成 JavaScript 函数翻页?](https://segmentfault.com/q/1010000009753395)
+[一段不减的整数，如11111223333，怎么快速计算重复次数最多的那个数](https://segmentfault.com/q/1010000009695220)
+```js
+其实这种标准字典格式的，eval是最简单的。https://segmentfault.com/q/1010000009813506
+t='''{"status": "0", "msg": "ok", "result": {"name": "露水", "content": 
+"<p>释名在秋露重的时候，早晨去花草间收取。</p><p>气味甘、平、无毒。</p><p>主治用以煎煮润肺杀虫的药剂，或把治疗疥癣、虫癞的散剂调成外敷药，可以增强疗效。白花露：止消渴。百花露：能令皮肤健好。柏叶露、菖蒲露：每天早晨洗眼睛，能增强视力。韭叶露：治白癜风。每天早晨涂患处。</p>", "commentary": "", "translation": "", "appreciation": "", "interpretation": ""}}'''
+
+a=eval(t)
+```
+[请教linux的find命令如何按正则表达式过滤](https://segmentfault.com/q/1010000009776190)
+find . -regex '\./[0-9]+_[0-9]+\.zip'
+如果需要将找到的文件删除则利用xargs(注意确定之后再删除)：
+
+find . -regex '\./[0-9]+_[0-9]+\.zip'|xargs rm -f
+如果不仅要删除还要得到删除的数量，可以这样：
+
+find . -regex '\./[0-9]+_[0-9]+\.zip'|tee >(wc -l 1>&2)|xargs rm -f
+
 [PHP二维数组根据某字段排序](https://tiicle.com/items/288/php-two-dimensional-array-ordered-according-to-a-certain-field)
 ```js
 $array=[
