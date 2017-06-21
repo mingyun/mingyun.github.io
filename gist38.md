@@ -1,3 +1,5 @@
+[喜马拉雅在线json](http://www.ximalaya.com/tracks/1099713.json)
+[php在线库](http://www.ctolib.com/article/wiki/11055)
 [larave session问题，为什么每次session_id都要变](https://segmentfault.com/q/1010000009694886)
 [github怎么提交回退旧版本代码并更改后的文件到主分支上](https://segmentfault.com/q/1010000009800764)
 [让git命令行保存github的登录状态](https://segmentfault.com/q/1010000009785643)
