@@ -1,5 +1,85 @@
 [喜马拉雅在线json](http://www.ximalaya.com/tracks/1099713.json)
+[解决Redis之MISCONF Redis is configured to save RDB snapshots](http://www.jianshu.com/p/3aaf21dd34d6)
+强制关闭Redis快照导致不能持久化。
+127.0.0.1:6379> config set stop-writes-on-bgsave-error no
+set stop-writes-on-bgsave-error yes
 [php在线库](http://www.ctolib.com/article/wiki/11055)
+
+[微信自动加群](pan.baidu.com/s/1nuU3dl3)
+密码79yd http://mp.weixin.qq.com/s/Q5IfQvxD7sTueGjtRfq9Kg
+```js
+
+import itchat
+from itchat.content import *
+#自动同意好友申请
+@itchat.msg_register(FRIENDS)
+def add_friend(msg):
+    itchat.add_friend(**msg['Text']) # 该操作会自动将新好友的消息录入，不需要重载通讯录
+    itchat.send_msg('你好，回复[我要加群]获取群信息哦', msg['RecommendInfo']['UserName'])
+
+
+# 回复群消息
+@itchat.msg_register('Text')
+def text_reply(msg):
+    #查看msg中都有啥
+    # print( msg['FromUserName'])  #发信息的人的UserName
+    #创建一个字典用来保存群名称
+    qun_name = []
+    #存储群的username
+    qun_username = {}
+    #保存群名称和对应的MemberList
+    qun_member_list = {}
+    #群名称和对应群成员的数量
+    qun_name_count = {}
+    #应该在用户问之前获取所有群聊获取所有群聊
+    grouplist = itchat.get_chatrooms(update=True)[1:]
+
+
+    for group in grouplist:
+        # print( group['MemberCount'])
+        # print( group['MemberList'] )
+        qun_name.append(group['NickName'])
+        #根据群名称存入username
+        qun_username[ group['NickName'] ] = group['UserName']
+        qun_member_list[ group['NickName'] ] = group['MemberList']
+        qun_name_count[ group['NickName'] ] = group['MemberCount']
+
+
+    if msg['Text']=='我要加群':
+        itchat.send('你好，有以下群聊：\n{}'.format( qun_name ) , toUserName=msg['FromUserName'])
+        itchat.send('请回复你要加入的群名称[爱心]' , toUserName=msg['FromUserName'])
+#https://github.com/jinfagang/blogo.git 写博客神器，人工智能自动生成博客，go语言实现，求star
+
+
+    #回复指定的群名称进群
+    #在qun_name中查找，看看是不是有该群
+    # print( len(qun_name ))
+    for i in range(0,len(qun_name)):
+        if msg['Text']==qun_name[i]:
+            #根据群名称获取对应的群所有成员信息
+            menber_list = qun_member_list.get( msg['Text'] )
+            for m in menber_list:
+                # 判断发消息的人的username是否在该群里面
+                 if m['UserName'] == msg['FromUserName']:
+                     itchat.send('你已加入该群聊，请勿重复增加！', toUserName=msg['FromUserName'])
+                     return
+            #获取群名称对应的username
+            chatroomUserName = qun_username.get( msg['Text'] )
+            friend = msg['User']
+            #发送群邀请
+            itchat.add_member_into_chatroom(chatroomUserName, [friend], useInvitation=True)
+
+
+if __name__ == '__main__':
+    itchat.auto_login(hotReload=True)
+    # 获取自己的UserName
+    myUserName = itchat.get_friends(update=True)[0]["UserName"]
+    # 显示所有的群聊，包括未保存在通讯录中的，如果去掉则只是显示在通讯录中保存的
+    itchat.dump_login_status()
+    itchat.run()
+
+
+```
 [larave session问题，为什么每次session_id都要变](https://segmentfault.com/q/1010000009694886)
 [github怎么提交回退旧版本代码并更改后的文件到主分支上](https://segmentfault.com/q/1010000009800764)
 [让git命令行保存github的登录状态](https://segmentfault.com/q/1010000009785643)
