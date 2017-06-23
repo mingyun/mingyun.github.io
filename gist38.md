@@ -4,7 +4,15 @@
 127.0.0.1:6379> config set stop-writes-on-bgsave-error no
 set stop-writes-on-bgsave-error yes
 [php在线库](http://www.ctolib.com/article/wiki/11055)
+[支付宝即时到账 SDK 简化版](https://github.com/mytharcher/alipay-php-sdk)
+[支付宝](https://github.com/lokielse/omnipay-alipay-example/issues/6)
+[手机网站支付快速接入](https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.DGFUxo&treeId=193&articleId=105285&docType=1)
+手机网站支付老版本请求支付宝的网关地址为：https://mapi.alipay.com/gateway.do；
 
+手机网站支付新版本请求支付宝的网关地址为：https://openapi.alipay.com/gateway.do；
+如果使用 md5 不需要秘钥 新接口需要创建应用
+[Payment是一个php版本的支付聚合第三方sdk，集成了微信支付、支付宝支付](https://github.com/helei112g/payment)
+[支付宝SDK在Laravel5的封装。](https://github.com/latrell/Alipay)
 [微信自动加群](pan.baidu.com/s/1nuU3dl3)
 密码79yd http://mp.weixin.qq.com/s/Q5IfQvxD7sTueGjtRfq9Kg
 ```js
