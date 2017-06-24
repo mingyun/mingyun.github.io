@@ -1,3 +1,120 @@
+[这几个软件你可能没听过，但真的好用到爆！](https://zhuanlan.zhihu.com/p/27479267)
+第一款神器叫Listary，这是一款文件搜索的工具。第二款神器叫图片助手，这是一款图片下载的工具。 第五个神器叫Listen1 ，这是知友stormzhang推荐的神器
+文字云的工具，以前讲过叫tagul，现在改名叫WordArt，是一个在线文字云的生成网站第七个神器是http://UZER.ME，这是一个云端的应用网站
+[想导出微信的朋友圈怎么办？](https://www.zhihu.com/question/25026007/answer/183261557)
+
+
+[PHP 下载 url 远程图片](https://zhuanlan.zhihu.com/p/27484500)
+```js
+function download($url, $path = 'images/') {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    $file = curl_exec($ch);
+    curl_close($ch);
+    $filename = pathinfo($url, PATHINFO_BASENAME);
+    $resource = fopen($path . $filename, 'a');
+    fwrite($resource, $file);
+    fclose($resource);
+}
+
+作者：Jelly Bool
+链接：https://zhuanlan.zhihu.com/p/27484500
+来源：知乎
+著作权归作者所有，转载请联系作者获得授权。
+```
+[PHP能做什么好玩的事？](https://www.zhihu.com/question/36157365/answer/187230179)
+```js
+基于Swoole,寥寥几行PHP代码就能轻松实现一个基于WebSocket(全双工通信)的聊天室.
+
+server.php:
+<?php
+$ws = new swoole_websocket_server('0.0.0.0', 8080);
+$ws->on('message', function($ws, $frame) {
+	// 消息建议用JSON格式,这里为了方便示例,用普通字符串
+	$msg = '<p>From ' . $frame->fd. ':<br><b>' . $frame->data . '</b><br>时间: ' . date('Y年m月d日 H:i:s') . '</p>';
+	// 广播: 发送消息给所有客户端
+	foreach($ws->connections as $fd) { $ws->push($fd, $msg); }
+});
+$ws->start();
+?>
+
+index.php:
+<script>
+var ws = new WebSocket("ws://0.0.0.0:8080");
+ws.onmessage = function(e) {
+	$("#content").prepend(e.data);
+}
+$(document).on("click", "#send", function() {
+	ws.send($("#msg").val());
+});
+</script>
+```
+
+
+
+
+[mysql查询所有曾经降过薪的员工 emp_no 以及降薪幅度](https://www.v2ex.com/t/370157)
+select a.emp_no,b.salary-a.salary, a.to_date 
+from salaries a join salaries b 
+on a.emp_no=b.emp_no and a.to_date>b.to_date and a.salary<b.salary and a.from_date=b.to_date;
+[PHP 中'false'等于 true '0'==false](https://www.v2ex.com/t/369755)
+```js
+当字符串和布尔值进行比较时，会先将字符串转换成布尔值。
+
+而字符串中除了'0'等于false之外，其他字符串都等于true。
+
+即便是'0.0'、'-0'也都等于true。
+$a= 0; 
+var_dump($a == "imageUrl");//输出 bool(true)
+$falseArr = [
+    '',
+    '0',
+    0,
+    false,
+    [],
+    null
+];
+
+
+$trueArr = [
+    ' ',
+    'false',
+    '123',
+    'abc',
+    1,
+    true,
+    ['val'],
+    new stdClass,
+    function(){}
+];
+$print = function ($arr) {
+    foreach ($arr as $v) {
+        var_dump($v==false);
+    }
+};
+
+$print($falseArr);
+echo "\n";
+$print($trueArr);
+bool(true)
+bool(true)
+bool(true)
+bool(true)
+bool(true)
+bool(true)
+
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+bool(false)
+```
 [喜马拉雅在线json](http://www.ximalaya.com/tracks/1099713.json)
 [解决Redis之MISCONF Redis is configured to save RDB snapshots](http://www.jianshu.com/p/3aaf21dd34d6)
 强制关闭Redis快照导致不能持久化。
