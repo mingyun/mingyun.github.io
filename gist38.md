@@ -1,3 +1,164 @@
+[不超时的后台进程or守护进程or在若干小时后执行的cron进程](https://segmentfault.com/q/1010000009855040)
+如果你的系统使用systemd，可以利用它的计时器systemd.timer来完成你的需求 文章里的at的at now + n units是一个很好的选择
+[openssl linux 和 windows 下 密钥签名结果不一致](https://segmentfault.com/q/1010000009846914)
+```js
+echo aaaaa | openssl rsautl -sign -inkey xxxx.pem | openssl enc -base64
+"echo aaaaa"输出的结果带回车，即“aaaaa\n”，要输出纯字符串“aaaaa”的话需要使用"echo -n aaaaa"，不确定是不是这个原因，仅供参考
+在linux和windows输出时字符时的问题,在Linux上会追加\n,而在Windows上会追加\r\n。对于这种情况,可以使用python来进行兼容:
+
+import base64
+data = 'aaaaa'
+base64.b64encode(data)
+>>> 'YWFhYWE='
+```
+[foreach既然是操作原数组的副本，为什么这样写还能改变原数组呢](https://segmentfault.com/q/1010000009881240)
+你加了&符号后不是使用的是原数组的拷贝。不加&符号确实是原数组的拷贝。加&符号相当于一个指针，把名字赋给它而已。所以你改变你新的数组，原来的数组也会改变。自 php 5 起，可以很容易地通过在 $value 之前加上 & 来修改数组的单元。此方法将以引用赋值而不是拷贝一个值。
+
+<?php
+$arr = array(1, 2, 3, 4);
+foreach ($arr as &$value) {
+    $value = $value * 2;
+}
+// $arr is now array(2, 4, 6, 8)
+mysql可以承受下的確可以用全文索引。但個人建議假如這樣的搜索訪問量大的話還是使用sphinx比較好'
+SELECT * from expert where(expert_name like '%迷糊%' and status= 1 ) OR FIND_IN_SET(40,keywords)
+update user u,single s set u.user = '值', s.user = '值' where u.user = u.user and u.id = '条件'
+[mysql查询](https://segmentfault.com/q/1010000009870691)
+select name, sum(case when Course='Chinese' then Score end) as Chinese,
+sum(case when type='Math' then Score end) as Math,
+sum(case when type='English' then Score end) as English
+from table1
+group by name
+[MySQL混合utf8 utf8mb4是否比纯utf8mb4更具优势？](https://segmentfault.com/q/1010000009853687)
+```js
+没有太多优势
+因为utf8mb4仅在emoji等特殊字符的时候用到了4个字节存储
+其余时候表现和mysql的utf8字符集是一样的, 存储汉字仍然是3个字节
+
+(因为mysql的utf8字符集的单个字符的最大长度方面的实现是错误的, 所以才冒出个utf8mb4字符集出来, 实际上这个utf8mb4就是标准的utf8)
+
+当然, 需要避免使用char, 改用varchar, 因为mysql的char列类型在utf8mb4下, 为了保证所有的数据都存的下, char将会占用字符数*4的字节数 (mysql的char列类型utf8将占用字符数*3的字节数), 以保证空间分配足够. 所以建议用可变长度varchar, 以节省空间. 可变长度消耗的存储空间为: 实际存储需要的字节数+1或2个字节表达的长度.
+
+另外对于纯英文字符的列, 你可以另外考虑varbinary(可变长度binary)和binary列(适用于固定长度的英文字符, 例如密码哈希)类型, 性能比varchar略好, 因为这个存储二进制数据
+```
+[mysql主从，从库锁表会导致复制阻塞](https://segmentfault.com/q/1010000009875708)
+主从同步是通过binlog进行的，从库有两个线程，一个负责接受binlog日志，一个负责解析日志将数据写入库中。所以主从同步一般是有一定的延时的。
+至于读写锁的问题，写锁是排他的，读锁可以多次获得。在Innodb中，锁分为表锁、行锁和间隙锁，具体看你的操作，如果一个插入操作需要锁表，而这时有查询锁住了该表中的一行，自然是需要等待的。
+[Python 怎么操作windows系统服务](https://segmentfault.com/q/1010000009881227)
+```js
+def listservices():
+    import wmi
+    c = wmi.WMI()
+    for service in c.Win32_Service():
+        #print(service.Caption,service.StartMode,service.State)
+        print(service.Caption)     #名称
+        print(service.StartMode)   #启动类型
+        print(service.State)       #状态
+if __name__=='__main__':
+    listservices()
+    
+    import wmi
+c = wmi.WMI()
+for service in c.Win32_Service(Name="seclogon"):
+  result, = service.StopService()
+  if result == 0:
+    print "Service", service.Name, "stopped"
+  else:
+    print "Some problem"
+  break
+else:
+  print "Service not found"
+```
+[如何正则字符串中的所有汉字](https://segmentfault.com/q/1010000009861809)
+pattern = re.compile(ur"[\u4e00-\u9fa5]")
+print pattern.findall(s.decode('utf8'))
+这里的decode('utf8')是怕s的值为类似\x66\x77\x88这样的Unicode散列。另外，需要注意compile()中ur修饰符，u为Unicode修饰符。
+
+[python正则怎么提取域名](https://segmentfault.com/q/1010000009847289)
+```js
+正则表达式如何匹配重复出现的字符串https://segmentfault.com/q/1010000009828634
+var s = 'aaabccc11fdsa';
+var re = /(.)\1+/g;
+
+console.log(s.match(re));
+其中，正则表达式中.表示任意字符，\1表示第一个被匹配到的分组，+表示匹配前一个字符一次或一次以上
+preg_match_all(
+    '/(\w)\1+/i',
+    'aaabccc11fdsa',
+    $matches,
+    PREG_PATTERN_ORDER
+);
+print_r($matches[0]);
+(\w)匹配字母数字下划线即[a-zA-Z0-9_]
+((\w)\2)匹配重复的字符，其中\2匹配分组number是2的分组，因为最外层有圆括号，所以number是2的分组就是前面\w匹配的字符
+((\w)\2+)匹配重复出现2次或以上的字符
+>>> import re
+>>> str = 'aaabccc11fdsa'
+>>> re.findall(r'((\w)\2+)', str)
+[('aaa', 'a'), ('ccc', 'c'), ('11', '1')]
+>>> [match[0] for match in re.findall(r'((\w)\2+)', str)]
+['aaa', 'ccc', '11']
+
+第一是用sys.path.append()方法，将当前目录添加到模块搜索的目录列表中，如sys.path.append(dir_path)
+第二是将当前目录的路径添加到系统的PYTHONPATH环境变量里去
+
+import json
+
+str = '''
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": "SaleEvent",
+    "name": "10% Off First Orders",
+    "url": "https://www.myvouchercodes.co.uk/coggles",
+    "image": "https://mvp.tribesgds.com/dyn/oh/Ow/ohOwXIWglMg/_/mQR5xLX5go8/m0Ys/coggles-logo.png",
+    "startDate": "2017-02-17",
+    "endDate": "2017-12-31",
+    "location": {
+        "@type": "Place",
+        "name": "Coggles",
+        "url": "coggles.co.uk",
+        "address": "Coggles"
+    },
+    "description": "Get the top branded fashion items from Coggles at discounted prices. Apply this code and enjoy savings on your purchase.",
+    "eventStatus": "EventScheduled"
+}</script>
+'''
+
+d = json.loads(re.search('({[\s\S]*})', str).group(1))
+print d['location']['url']
+```
+[Python如何统计某一文件夹下文件数量](https://segmentfault.com/q/1010000009917433)
+```js
+tite = '......' #网页title中包含换行
+print(re.findall('(?<=\<title\>).+?(?=\<)', title, re.S))
+
+就是让你配置好环境变量而已. 如果你有一个项目叫做pythonCodes, 然后你要在系统属性->环境变量->path, 将你这个pythonCodes绝对路径加进去, 这样的话, 你在pythonCodes里面写python脚本, 例如command.py, 就能够直接通过win+R,然后通过输入command.py直接运行..
+Python默认查找包的地方有以下几个：
+
+Python安装目录下的site-packages目录
+环境变量PYTHONPATH的目录
+当前目录
+sys.path.append(...)添加的目录（这个是临时的）
+然而如果你只把包放在了C盘下面，那么它不属于任何一种情况，Python当然就找不到包了。除了sys.path.append()方法，上面方法中还有将C:\加到PYTHONPATH环境变量也是可以的。
+XPath中变量用$somevariable语法即$符号加变量名，然后在xpath方法调用时传参变量值。
+xpath中如何使用变量
+>>> # `$val` used in the expression, a `val` argument needs to be passed
+>>> response.xpath('//div[@id=$val]/a/text()', val='images').extract_first()
+u'Name: My image 1 '
+>>> import os
+>>> DIR = '/tmp'
+>>> print len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+http不只有get方法（请求头部+正文），还有head方法，只请求头部。
+import re, requests
+
+r = requests.get("http://...页面地址..")
+p = re.compile(r'相应的正则表达式匹配')
+image = p.findall(r.text)[0]  # 通过正则获取所有图片的url
+ir = requests.get(image)      # 访问图片的地址
+sz = open('logo.jpg', 'wb').write(ir.content)  # 将其内容写入本地
+print('logo.jpg', sz,'bytes')
+```
+[]()
 [这几个软件你可能没听过，但真的好用到爆！](https://zhuanlan.zhihu.com/p/27479267)
 第一款神器叫Listary，这是一款文件搜索的工具。第二款神器叫图片助手，这是一款图片下载的工具。 第五个神器叫Listen1 ，这是知友stormzhang推荐的神器
 文字云的工具，以前讲过叫tagul，现在改名叫WordArt，是一个在线文字云的生成网站第七个神器是 http://UZER.ME 这是一个云端的应用网站
