@@ -1,3 +1,96 @@
+[&符号引用传递会对运算结果有什么影响？](https://segmentfault.com/q/1010000009859640)
+```js
+$b = &$a;
+这个操作，可以认为，$a和$b都指向原本$a变量所在的那块内存（为了方便后面解释，称为内存X），也就是说，后面任何对于$a或者$b的操作，都是在直接对这块内存里的值进行修改。
+
+所以加上这一行之后的运行流程：
+
+前面步骤省略，初始a为1
+$c = (++$a) + (++$a)的两次++$a都是在操作内存X，也就是把内存X里的值自增了两次，所以，在运算$c的值的时候，取的是这个内存里数的值，也就是自增了两次之后的内存X里的值。所以，是3 + 3 = 6（运算$c时候，内存X里存的值是3）。
+这个跟PHP的底层实现有关，说起来很长，推荐看一下github上同样问题的解析
+一个PHP bug引发的探索
+https://github.com/xurenlu/phplearn/blob/master/%E4%B8%80%E4%B8%AAPHP%20bug%E5%BC%95%E5%8F%91%E7%9A%84%E6%8E%A2%E7%B4%A2.md
+
+权限管理，通常使用 RBAC (Role-Based Access Control) 模式。https://segmentfault.com/q/1010000009856212
+R : role 代表角色，主要给各个权限分组，例如管理员，编辑，审核员等等。
+具体思路：
+给程序的每个模块，可以考虑是每个 Controller 甚至细化到每个控制器的function。给这些模块取一个名字，记到数据库里，同时在程序里标识上。
+然后把这个模块和角色（role）关联起来，记到一张表里，比如说编辑，可能操作的模块是写文章，编辑文章等等。
+最后把 user 和 角色关联起来。
+这样，当某个用户要执行某个操作（访问某个action的时候），可以把当前用户处在哪个角色读出来。然后根据角色信息去角色模块对应表里找，是否有当前操作模块的记录，有的话说明有授权。
+以上是基本思路，不仅是CI，其它的框架也能用
+```
+[php 把字符串打散成字符数组](https://segmentfault.com/q/1010000009853345)
+```js
+function mb_str_split($str)
+{
+    return preg_split('/(?<!^)(?!$)/u' , $str);
+}$string = '中国共产党万岁！aaaaa';
+var_dump(preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY));
+preg_split('//', $str, -1, PREG_SPLIT_NO_EMPTY);
+bash变量赋值时等号两边不能有空格，应写成：
+
+dir=/webserver/test/
+写明文档类型为 XML
+
+header("Content-Type:text/xml; charset=UTF-8");
+```
+[微信重定向至服务器会发送两次请求?](https://segmentfault.com/q/1010000009846666)
+[php 数组改造](https://segmentfault.com/q/1010000009852041)
+```js
+$str = '[["10","荔枝好吃"],["11","葡萄好吃"],["18","菠萝好吃"]]';// 字符串
+$arr = array_reduce(json_decode($str,true),function($c,$v){$c[$v[0]]=$v[1];return $c;},[]);
+var_dump($arr); // 对应数组
+/*
+array(3) {
+  [10]=>
+  string(12) "荔枝好吃"
+  [11]=>
+  string(12) "葡萄好吃"
+  [18]=>
+  string(12) "菠萝好吃"
+}
+*/$arr = [["10","荔枝好吃"],["11","葡萄好吃"],["18","菠萝好吃"]];
+echo "<pre>";
+print_r(array_column($arr, 1, 0));
+var_dump(json_decode('[["10","荔枝好吃"],["11","葡萄好吃"],["18","菠萝好吃"]]'));
+PHP 如何判断数组里的键值是否使用相同键名，并输出当前相同键名的键值？https://segmentfault.com/q/1010000009909093
+$target = [50, 59, 65];
+foreach($arr as $index => $value) { // 遍历整个$arr
+    $keys = array_keys($value); // 获取对应项的键值
+
+    $check = true; // 默认为真，如果下面遍历中出现一个假值则为假，否则真值表示所有的目标键名都在此项中
+
+    foreach($target as $target_key) { // 遍历所有的目标键名
+        if(!in_array($target_key, $keys)) { // 如果发现目标键名不在当前项键名$keys中，则设置$check为假值，并直接跳出
+            $check = false;
+            break;
+        }
+    }
+
+    if($check) { // 通过了键名检测，那么这就是要找的项，输出
+        print_r($index);
+        print_r($value);
+    }
+}
+Redis下批量删除特定pattern的keyshttp://www.revotu.com/redis-delete-multiple-keys-by-pattern.html
+redis-cli -h [host] -p [port] -n [db] KEYS "pattern" | xargs redis-cli -h [host] -p [port] -n [db] DEL
+有用的在线工具http://www.revotu.com/useful-online-tools.html  PDF转换(Image、Word、Excel等)工具https://www.freepdfconvert.com/
+在线正则表达式测试http://www.rubular.com/  在线文件对比 https://www.diffchecker.com/ 各种编程语言在线编译：ideone
+```
+
+[可视化理解SQL的JOIN用法](http://www.revotu.com/a-visual-explanation-of-sql-joins.html)
+
+[PHP如何实现内容实时输出？](https://segmentfault.com/q/1010000009799179)
+```js
+for($n = 1; $n < 100; $n++) {
+    echo chr(3); // 输出文本结束控制字符，这样可以清除之前输出的文本内容
+    echo chr(8); // 将前一个控制字符删掉，避免在控制台留下控制字符的标记
+    echo "inserting row $n\r";
+    sleep(1); // 延时一秒是为了看清楚文字变化
+}
+```
+
 [phpunit单元测试问题](https://segmentfault.com/q/1010000009911902)
 [php 的 opcache 和最近的 php jit 有什么区别](https://segmentfault.com/q/1010000009911944)
 Windows上如果PHP连接MySQL的host使用了localhost,改成127.0.0.1试试.因为Win7上my.ini里配置了bind-address=127.0.0.1,PHP用localhost连接会被卡1秒.
