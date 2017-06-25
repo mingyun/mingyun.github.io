@@ -1,3 +1,98 @@
+[phpunit单元测试问题](https://segmentfault.com/q/1010000009911902)
+[php 的 opcache 和最近的 php jit 有什么区别](https://segmentfault.com/q/1010000009911944)
+Windows上如果PHP连接MySQL的host使用了localhost,改成127.0.0.1试试.因为Win7上my.ini里配置了bind-address=127.0.0.1,PHP用localhost连接会被卡1秒.
+源代码(人认识)->字节码(解释器认识)->机器码(硬件认识)
+来看下PHP的执行流程，假设有个a.php文件，不启用opacache的流程如下：
+a.php->经过zend编译->opcode->PHP解释器->机器码
+启用opacache的流程如下
+a.php->查找opacache缓存，如果没有则进行zend编译为opcode并缓存->opacode->PHP解释器->机器码
+启用jit的流程如下
+a.php->编译->机器码
+以后都只执行机器码，不编译，效率上高了很多
+[php 记住密码登陆如何做安全](https://segmentfault.com/q/1010000009891388)
+首先，登录成功了之后，随机生成一个MD5的hash值token（32位或者64位）；
+然后，把这个token存入当前用户的表，然后给这个用户增加一个token字段和last_login_time字段；
+把这个token返回让浏览器的cookie存储，设置一个最长时常，比如30天；
+这三个过程的主要作用就是，last_login_time可以检查过期时间，过期时间到了之后，就更新这个token，另外，只要用户通过这个token登录成功就进行更新token，这样就能尽可能的保证安全。
+
+每次用户访问网站的时候，检查cookie里是否有token，如果有token就去数据库查询数据，如果查到就直接登录成功了，也就省去了用户名和密码验证登录的阶段。
+
+整套思想是这样，你也可以让前端把token存入localstorage
+[504 Gateway Time-out之后，代码还会继续执行吗？](https://segmentfault.com/q/1010000009893442)
+nginx 504 之后，php 还有可能会执行一段时间。具体看 nginx 的超时设置 和 php 的超时设置。
+代码不会继续执行了，就是因为代码得不到请求，所以才会出现504Gateway Time-out
+[PHP的链式调用](https://segmentfault.com/q/1010000009821945)
+```js
+class Api
+{
+    public function auth(){
+        //quiet a few
+        var_dump(222);
+    }
+    public function render(){
+        //quiet a few
+    }
+}
+
+class Site{
+    static private $_api;
+
+    public function api(){
+        if(self::$_api != NULL) {
+            var_dump(1);
+            return self::$_api;
+        }else {
+            var_dump(2);
+            self::$_api = new Api();
+            return self::$_api;
+        }
+        
+    }
+}
+说明第一次调用auth()进了api()的else执行语句，第二次调用render()进入if语句，说明返回的是同一个实例。
+
+不管你调用多少次，返回的都是一个实例，这就是单例模式
+$site = new Site();
+echo $site->api()->auth();
+echo $site->api()->render();
+php如何返回值为000001而不是1 str_pad($number, 6, '0', STR_PAD_LEFT);
+sprintf("%06d", $num);
+过大浮点型数据比较大小https://segmentfault.com/q/1010000009860352
+if(bcsub($a,$b,1)==0){
+    echo '相等';
+}
+$a = 12345678912345678.8;
+    $b = 12345678912345678.9;
+    if (strval($a) == strval($b)) {
+        echo '相等';
+    }
+```
+[什么样的架构能防止表结构变动后程序运行错误？](https://segmentfault.com/q/1010000009855063)
+
+
+[去除多维数组的最外层key 保留值](https://segmentfault.com/q/1010000009893220)
+[接口 sign 被破解的可能性猜想](https://segmentfault.com/q/1010000009897364)
+```js
+//保密token串
+$token = '249238jdush24hgdddf/sds_assd_&ssa23_sd';
+//业务参数对开公开
+$str = 'name=zhangsan&id=23';
+//保密的签名算法
+$sign = md5($str.$token);
+只要你的token不被泄露，此方法不会有问题。
+更加保密一点的方案是加上timestamp，比如大于600秒之外的请求全部无效。
+$md51 = md5('QNKCDZO');
+$a = @$_GET['a'];
+$md52 = @md5($a);
+if(isset($a)){
+if ($a != 'QNKCDZO' && $md51 == $md52) {
+    echo "nctf{*****************}";
+} else {
+    echo "false!!!";
+}}
+else{echo "please input a";}
+```
+[]()
 [不超时的后台进程or守护进程or在若干小时后执行的cron进程](https://segmentfault.com/q/1010000009855040)
 如果你的系统使用systemd，可以利用它的计时器systemd.timer来完成你的需求 文章里的at的at now + n units是一个很好的选择
 [openssl linux 和 windows 下 密钥签名结果不一致](https://segmentfault.com/q/1010000009846914)
