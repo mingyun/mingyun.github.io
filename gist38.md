@@ -1,8 +1,55 @@
 [这几个软件你可能没听过，但真的好用到爆！](https://zhuanlan.zhihu.com/p/27479267)
 第一款神器叫Listary，这是一款文件搜索的工具。第二款神器叫图片助手，这是一款图片下载的工具。 第五个神器叫Listen1 ，这是知友stormzhang推荐的神器
-文字云的工具，以前讲过叫tagul，现在改名叫WordArt，是一个在线文字云的生成网站第七个神器是http://UZER.ME，这是一个云端的应用网站
-[想导出微信的朋友圈怎么办？](https://www.zhihu.com/question/25026007/answer/183261557)
+文字云的工具，以前讲过叫tagul，现在改名叫WordArt，是一个在线文字云的生成网站第七个神器是 http://UZER.ME 这是一个云端的应用网站
+[Python Selenium WebDriver简明指南](http://www.revotu.com/python-selenium-webdriver-concise-guide.html)
+```js
+等待元素动态加载完成
+driver = webdriver.Firefox()
+driver.implicitly_wait(10) # seconds
+driver.get("http://somedomain/url_that_delays_loading")
+myDynamicElement = driver.find_element_by_id("myDynamicElement")
+```
+[Python获取当前时间](http://www.revotu.com/how-to-get-current-time-in-python.html)
+```js
+import time
+## 24 hour format
+time.strftime("%H:%M:%S") # 输出 18:58:17
+## 12 hour format
+time.strftime("%I:%M:%S") # 输出 06:58:17
+time.strftime("%Y-%m-%d") # 输出 2017-06-23
+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") # 输出 2017-06-23 18:58:17
+now = datetime.datetime.now() # 当前datetime，输出 datetime.datetime(2017, 6, 23, 19, 13, 43, 555000)
+now.year                      # 年
+now.month                     # 月
+now.day                       # 日
+now.hour                      # 时
+now.minute                    # 分
+now.second                    # 秒
+now.isoformat() # Date and time in ISO format，输出 2017-06-23T19:16:21.835000
+```
+[把自己fork别人的仓库中的代码更新至最新版本？](https://segmentfault.com/q/1010000009818126)
+```js
+git remote add upstream 原作者仓库地址
+此时再用 git remote -v 就可以看到一个origin是你的，另外一个upstream是原作者的。
 
+其次 更新代码
+
+使用git fetch upstream 拉去原作者的仓库更新。
+
+使用git checkout master 切换到自己的master
+
+使用 git merge upstream/master, merge或者rebase到你的master
+```
+[想导出微信的朋友圈怎么办？](https://www.zhihu.com/question/25026007/answer/183261557)
+[shell脚本中怎么判断发行版](https://segmentfault.com/q/1010000009829086)
+uname -a 会给出 Linux/Unix, 32/64 位等信息
+lsb_release -a cat /proc/version cat /etc/*-release
+[如何对api接口进行限流](https://segmentfault.com/q/1010000009874889)
+既然问题的标签里有 laravel，那么现成的解决方案，我推荐，https://github.com/dingo/api，这个包有个特性 Rate Limiting，应该就是你要找的。
+
+如果你要自己实现也简单的，根据 【user_id + 设备唯一码】做主键，访问次数存 redis，记录访问的次数，然后具体频率，次数，都看你实现策略了
+http://blog.41ms.com/post/61.html
+Nginx 模块limit_req_zone $binary_remote_addr zone=one:10m rate=1r/s;
 
 [PHP 下载 url 远程图片](https://zhuanlan.zhihu.com/p/27484500)
 ```js
