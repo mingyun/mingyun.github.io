@@ -1,3 +1,7 @@
+
+
+
+
 数据导出分页
 ```js
 function getWebinarShare($id)
@@ -106,6 +110,337 @@ echo 'Hello World';
 ```
 [TCP的构成与调优_《Web性能权威指南》读书笔记](http://www.powerxing.com/reading-high-performance-browser-networking-ch2/)
 [php 易错知识盘点](http://phpbestpractices.justjavac.com/)
+```js
+ /* 定义变量区分大小写*/
+    $abc=100;
+    $Abc=200;
+
+    echo $abc.'|'.$Abc; //输出100|200
+
+    /*定义函数不区分大小写 下面写法系统会报错:Fatal error: Cannot redeclare Abc() */
+    function abc(){
+        echo 'abc';
+    }
+
+    function Abc(){
+        echo "Abc";
+    }
+https://zhuanlan.zhihu.com/p/25088168
+
+ $arr = [1,2,3];
+    foreach($arr as &$v) {
+        //nothing todo.
+    }
+    foreach($arr as $v) {
+        //nothing todo.
+    }
+    var_export($arr);
+    //output:array(0=>1,1=>2,2=>2)，你的答案对了吗？为什么
+    //第一个foreach用引用赋值的方式将数组的值依次赋给了$v。 
+$arr = array('a', 'b', 'c'); 
+foreach($arr as &$v) {} 
+var_dump($v); 
+//此时的$v的值为c，是引用赋值，$v指向了字符串c的地址空间。 
+
+//第二个foreach是以拷贝赋值的方式将数组的值依次赋值给了$v。 
+//由于目前$v指向了c的地址空间，那么改变$v的值即改变了c所占地址空间的值。 
+$arr = array('a', 'b', 'c'); 
+foreach($arr as &$v) {} 
+foreach($arr as $v) { 
+var_dump($arr); break; 
+} 
+//第一次赋值将a赋值到了$v，原有c所占的地址空间的值变为了a，此时数组就是array('a', 'b', 'a')。 
+//以此类推第一次赋值c->a，第二次赋值即a->b，第三次赋值即b->b， 
+//所以最终结果为array('a', 'b', 'b')。
+https://segmentfault.com/a/1190000004340634
+// $a = "hello";
+// $b = &$a;
+// unset($b);
+// echo $a;
+//输出 hello
+// var_dump(empty(false));
+输出 true
+final class demo
+{
+public static $count = 0;
+
+
+function __construct()
+{
+self::$count++;
+}
+}
+
+
+$a = new demo();
+$b = new demo();
+$c = new demo();
+echo demo::$count;
+输入 3
+static属性常驻内存，不会被立刻回收
+class A{
+public $num = 100;
+}
+$a = new A();
+$b = $a;
+$b->num = 200;
+echo $a->num;
+输出：200
+在php5，一个对象变量已经不再保存整个对象的值。只是保存一个标识符来访问真正的对象内容。 当对象作为参数传递，作为结果返回，或者赋值给另外一个变量，另外一个变量跟原来的不是引用的关系，只是他们都保存着同一个标识符的拷贝，这个标识符指向同一个对象的真正内容。
+对象的复制是通过引用来实现的，$a=new A();$b=$a;相当于$a=new A();$b=＆$a;
+在一个对象的方法中，$this 永远是调用它的对象的引用。
+当用 global $var 声明一个变量时实际上建立了一个到全局变量的引用。也就是说下面两者是相同的：
+// 两种定义是等价的
+global $var;
+$val =& GLOBALS['var'];
+unset($var) 不会 unset 全局变量。
+当 unset 一个引用，只是断开了变量名和变量内容之间的绑定。这并不意味着变量内容被销毁了
+$a = 1;
+$b =& $a;
+unset($a);
+echo $b;    // 1
+返回新对象时，默认是返回引用，因此可以达到链式操作的效果
+class Foo {
+    public function sayHi() {
+        echo 'Hi, ';
+        return $this;
+    }
+    public function sayHello() {
+        echo 'Hello';
+        return $this;
+    }
+ 
+}
+ 
+function test() {
+    return new Foo();
+}
+ 
+test()->sayHi()->sayHello();
+可以将一个变量通过引用传递给函数，这样该函数就可以修改其参数的值。注意在函数调用时没有引用符号——只有函数定义中有。
+function foo(&$var)
+{
+    $var++;
+}
+ 如果传递一个对象，函数内修改也会修改该对象 
+$a=5;
+foo($a);
+$a = 1;
+$c = 2;
+$b =& $a;   // $b points to 1
+$a =& $c;   // $a points now to 2, but $b still to 1;
+echo $a, " ", $b;   // Output: 2 1
+$a = 0123; // 八进制数 (等于十进制 83)
+$a = 0x1A; // 十六进制数 (等于十进制 26)
+当从浮点数转换成整数时，将向下取整（去掉小数位）-> 决不要将未知的分数强制转换为 integer!
+echo (int) ( (0.1+0.7) * 10 ); // 显示 7!
+$i = 6887129852;
+echo "i=$i\n";
+echo "i%36=".($i%36)."\n";  // -24, wrong
+echo "alternative i%36=".($i-floor($i/36)*36)."\n"; // 20, right
+永远不要相信浮点数结果精确到了最后一位，也永远不要直接比较两个浮点数是否相等
+要测试浮点数是否相等，要使用一个仅比该数值大一丁点的最小误差值。该值也被称为机器极小值（epsilon）或最小单元取整数，是计算中所能接受的最小的差别值$a = 1.23456789;
+$b = 1.23456780;
+$epsilon = 0.00001; # 可以比较小数点后五位的浮点数
+ 
+if(abs($a-$b) < $epsilon) {
+    echo "true";
+}
+    $name = 'Star';
+    $str = <<<EOD
+        My name is $name,
+        spanning multiple lines using heredoc syntax.
+EOD;
+    echo $str;
+ 
+    // 注意作为参数传递时，结束标识符后不能有任何内容，包括分号。
+    foo(<<<END
+        abcd
+END
+);
+ // 有效的表示
+echo "This is $great";
+echo "This is {$great}";
+echo "This is ${great}";
+ 
+// 需注意的是数组，只能用 花括号 才能正确解析带引号的键名。
+echo "resut: $arr[0]";              // 有效
+echo "result: $array['result']";    // 出错
+echo "result: {$array['result']}";  // 有效
+echo "result: ".$arr['result'];     // 有效
+
+function getArray() {
+    return array(1, 2, 3);
+}
+ 
+// on PHP 5.4
+$secondElement = getArray()[1];
+ 
+// previously
+$tmp = getArray();
+$secondElement = $tmp[1];
+ 
+// or
+list(, $secondElement) = getArray();
+
+$a = 1.23456789;
+$b = 1.23456780;
+$epsilon = 0.00001; # 可以比较小数点后五位的浮点数
+ 
+if(abs($a-$b) < $epsilon) {
+    echo "true";
+}
+    $name = 'Star';
+    $str = <<<EOD
+        My name is $name,
+        spanning multiple lines using heredoc syntax.
+EOD;
+    echo $str;
+ 
+    // 注意作为参数传递时，结束标识符后不能有任何内容，包括分号。
+    foo(<<<END
+        abcd
+END
+);
+ // 有效的表示
+echo "This is $great";
+echo "This is {$great}";
+echo "This is ${great}";
+ 
+// 需注意的是数组，只能用 花括号 才能正确解析带引号的键名。
+echo "resut: $arr[0]";              // 有效
+echo "result: $array['result']";    // 出错
+echo "result: {$array['result']}";  // 有效
+echo "result: ".$arr['result'];     // 有效
+
+function getArray() {
+    return array(1, 2, 3);
+}
+ 
+// on PHP 5.4
+$secondElement = getArray()[1];
+ 
+// previously
+$tmp = getArray();
+$secondElement = $tmp[1];
+ 
+// or
+list(, $secondElement) = getArray();
+class MyClass { 
+    public $property = 'Hello World!'; 
+
+    public function MyMethod() 
+    {
+        call_user_func(array($this, 'myCallbackMethod'));
+    }
+
+    public function MyCallbackMethod()
+    {
+        echo $this->property; 
+    }
+}
+// 回调函数
+function my_callback_function() {
+    echo 'hello world!';
+}
+ 
+// 回调方法
+class MyClass {
+    static function myCallbackMethod() {
+        echo 'Hello World!';
+    }
+}
+ 
+// Type 1: 简单的回调
+call_user_func('my_callback_function'); 
+ 
+// Type 2: 静态回调方法
+call_user_func(array('MyClass', 'myCallbackMethod')); 
+ 
+// Type 3: 对象回调方法
+$obj = new MyClass();
+call_user_func(array($obj, 'myCallbackMethod'));
+ 
+// Type 4: 静态回调方法 (As of PHP 5.2.3)
+call_user_func('MyClass::myCallbackMethod');
+$a = array();
+ 
+$a == null  <== return true
+$a === null <== return false
+is_null($a) <== return false
+$obj = (object) 'ciao';
+echo $obj->scalar;      // outputs 'ciao'
+ 
+$arrObj = (object) array('a' => 'aa', 'b'=> 'bb');
+echo $arrObj->a;        // outpus 'aa'
+echo $arrObj->{'a'}     // outpus 'aa'
+$arrObj = (object) array('aa', 'bb');
+var_dump($arrObj); // object(stdClass)#1 (2) { [0]=> string(2) "aa" [1]=> string(2) "bb" }
+echo $arrObj->{0}; // Notice: Undefined property: stdClass::$0 in... 将数组转换为Object，务必指定键名，且不能使用数字型，否则无法获取（即使能正确转换）。注意语法为 $arrObj->{‘key’} 
+若将NULL值转换为数组，则会返回空数组，这点特性可以用在一些地方。例如需要合并两个数组，但其中一个数组可能为NULL
+// $values可能为NULL.
+$combined = array_merge((array)$values, $other);
+如果在$_POST数组(从form中传递过来)中使用字符串作为键名，键名中的小数点、空格会转换为下划线。程序中操作$_POST数组，则不会有这个情况defined('CONSTANT') or define('CONSTANT', 'SomeDefaultValue');
+
+define('MAX_VALUE', 1);
+echo MAX_VALUE;                 // 输出 1
+echo constant('MAX_VALUE');     // 也可通过函数获取
+静态变量仅在局部函数域中存在，但当程序执行离开此作用域时，其值并不丢失。
+
+/* 多次执行 test()， $a 可以累加 */
+function test()
+{
+    static $a = 0;
+    echo $a;
+    $a++;
+}
+静态变量复制时不能使用表达式。如 static $int = 1+2; 是错误的。
+$a = 1; 
+ 
+function Test()
+{
+    global $a;
+    echo $a; 
+}
+ 
+Test();
+$a = 1; 
+ 
+function Test()
+{
+    echo $GLOBALS['a']; 
+}
+ 使用 $GLOBALS 数组，$GLOBALS 是超全局变量，即在一个脚本中的全部作用域中都可用，而无需执行 global $variable，如 $_SERVER 变量。
+Test();
+逻辑运算符总是返回布尔值
+$a = 0 || 'avacado';
+print "A: $a\n"; // 输出 1（布尔值true）
+and 和 or 的优先级比较低，低于 &&、||、=
+$e = false || true; // 判断 (false || true) 是否成立
+$f = false or true; // 先执行赋值 $f = false ，再判断 $f or true 是否成立
+var_dump($e, $f);   // true, false
+ 
+$g = true && false;  // 判断 (true && false) 是否成立
+$h = true and false; // 先执行赋值 $f = false ，再判断 $f and true 是否成立
+var_dump($g, $h);    // false, true
+($a = $_GET['var']) || ($a = 'a default');
+
+defined('VALUE') or define('VALUE', 'v');
+$i = 0;
+while (++$i) {
+    switch ($i) {
+    case 5:
+        echo "At 5<br />\n";
+        break 1;  /* 只退出 switch. */
+    case 10:
+        echo "At 10; quitting<br />\n";
+        break 2;  /* 退出 switch 和 while 循环 */
+    default:
+        break;
+    }
+}
+注意生成对象是自动传递引用，所以如果匿名函数传递的是对象，要特别注意，应传递引用：
+```
 [Hadoop安装配置简略教程](http://www.powerxing.com/install-hadoop-simplify/)
 [&符号引用传递会对运算结果有什么影响？](https://segmentfault.com/q/1010000009859640)
 ```js
