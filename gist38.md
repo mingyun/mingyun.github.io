@@ -1,3 +1,112 @@
+数据导出分页
+```js
+function getWebinarShare($id)
+    {
+        $str  = "用户ID,游客ID,参会ID,用户昵称,有效分享总数,微信分享总数,微博分享总数,QQ分享总数\n";
+        $filename = 'webinar_share_stat'.$id.'_'.date('YmdHis').'.csv'; //设置文件名
+        header("Content-type:text/csv");   
+        header("Content-Disposition:attachment;filename=".$filename);   
+        header('Cache-Control:must-revalidate,post-check=0,pre-check=0');   
+        header('Expires:0');   
+        header('Pragma:public');
+
+        $count = WebinarShareStat::where('webinar_id', $id)->count();
+
+        if($count <= 0){
+            $str =  iconv('utf-8','GBK//IGNORE',$str);
+            echo $str;
+            exit;
+        }
+
+        $take = 1000;
+        $s    = floor($count/$take);
+        for ($i=0; $i<=$s; $i++) {
+            if($i>0) $str = '';
+            $skip   = $take * $i;
+            $webinarShareStatObj = WebinarShareStat::where('webinar_id', $id)->skip($skip)->take($take)->get();
+            foreach ($webinarShareStatObj as $list) {
+                    $data['user_id'] = $userIsJoin->user_id;
+                    $data['visit_id'] = $userIsJoin->visit_id;
+                    $data['join_id'] = $userIsJoin->id;
+                    $data['nick_name'] = $userIsJoin->name;
+                    $data['total'] = $list['num'];
+                    $data['weixin_total'] = $list['weixin'];
+                    $data['weibo_total'] = $list['weibo'];
+                    $data['qq_total'] = $list['qq'];
+
+                    $str .= implode(',', $data)."\n";;
+                }
+            }
+            //删除临时变量
+            $str =  iconv('utf-8','GBK//IGNORE',$str);
+            echo $str;
+            unset($str);
+            ob_flush();
+            flush();
+            sleep(1);
+        }
+    }
+    $this->execute("UPDATE {table} SET `duration` = TIMESTAMPDIFF(MINUTE,`t_start`,'{$data['t_end']}') WHERE `id` = '{$data['id']}'");
+```
+phpquery querycc.list pyquery
+[利用Content-disposition实现无刷新下载图片文件](http://www.powerxing.com/download-picture-without-refresh/)
+```js
+无刷新下载 rar 之类的文件很好实现：
+
+通过 meta 标签: <meta http-equiv="refresh" content="url=http://down.load/file.rar">；
+通过 Javascript 重定向: window.location.assign("http://down.load/file.rar")；
+通过 Javascript 构建隐藏的 iframe 并设置 src $(body).append('<iframe style="display:none;" src="http://down.load/file.rar"')。
+header('Content-Disposition: attachment; filename=girl.png');
+// 禁止浏览器缓存，否则IE下可能会失效
+header("Pragma: No-cache");
+header("Cache-Control: No-cache");
+header("Expires: 0");
+ 
+// 简单的返回文件
+echo file_get_contents('http://localhost/girl.png');
+```
+[SQL的JOIN语法解析(inner join, left join, right join, full outer join的区别)](http://www.powerxing.com/sql-join/)
+```js
+如果要找出在AA(左边的表)中有，而在BB(右边的表)中没有的数据项，可以使用如下的SQL语句
+SELECT * FROM A LEFT OUTER JOIN B ON AA = BB WHERE BB is NULL
+如果想要取得所有的元素项，则可以使用FULL JOIN:
+SELECT * FROM A FULL JOIN B ON AA = BB
+ 
+ AA         BB
+--------   --------
+ Item 1            <-----+
+ Item 2                  |
+ Item 3     Item 3       |
+ Item 4     Item 4       |
+            Item 5       +--- empty holes are NULL's
+            Item 6       |
+   ^                     |
+   |                     |
+   +---------------------+INNER JOIN将只会返回相匹配的元素项，即不会返回结果为NULL的数据项。
+```
+[重温PHP手册 – 引用](http://www.powerxing.com/php-review-reference/)
+[重温PHP手册 – 异常](http://www.powerxing.com/php-review-exception/)
+```js
+function inverse($x) {
+    if (!$x) {
+        throw new Exception('Division by zero.');
+    }
+    else return 1/$x;
+}
+ 
+try {
+    echo inverse(5);        // 0.2
+    echo inverse(0);        // Caught exception: Division by zero.
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+ 
+// Continue execution
+echo 'Hello World';
+```
+[TCP的构成与调优_《Web性能权威指南》读书笔记](http://www.powerxing.com/reading-high-performance-browser-networking-ch2/)
+[php 易错知识盘点](http://phpbestpractices.justjavac.com/)
+[Hadoop安装配置简略教程](http://www.powerxing.com/install-hadoop-simplify/)
 [&符号引用传递会对运算结果有什么影响？](https://segmentfault.com/q/1010000009859640)
 ```js
 $b = &$a;
