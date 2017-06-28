@@ -1,7 +1,58 @@
 
+[安全课程](http://www.shiyanbar.com/courses)
+[ctf安全工具](https://www.ctftools.com/down/)
+[重温PHP手册 – 生成器](http://www.powerxing.com/php-review-generator/)
+```js
+function xrange($start, $limit, $step = 1) {
+    if ($start < $limit) {
+        if ($step <= 0) {
+            throw new LogicException('Step must be +ve');
+        }
+ 
+        for ($i = $start; $i <= $limit; $i += $step) {
+            yield $i;
+        }
+    } else {
+        if ($step >= 0) {
+            throw new LogicException('Step must be -ve');
+        }
+ 
+        for ($i = $start; $i >= $limit; $i += $step) {
+            yield $i;
+        }
+    }
+}
+将 range() 实现为生成器，主要是使用 yield 替代 return （并且一个生成器也不能 return，这会造成编译错误 如果 yield 后未跟变量，则返回 NULL 值
+function getLines($file) {
+    $f = fopen($file, 'r');
+    try {
+        while ($line = fgets($f)) {
+            yield $line;
+        }
+    } finally {
+        fclose($f);     // 结束时关闭资源
+    }
+}
+ 
+foreach (getLines("file.txt") as $n => $line) {
+    if ($n > 5) break;
+    echo $line;
+}
 
+非限定名称: 例如 $a = new foo();，如果当前命名空间是 currentnamespace，foo 将被解析为 currentnamespace\foo。如果使用 foo 的代码是全局的，不包含在任何命名空间中的代码，则 foo 会被解析为foo。
+限定名称: 例如 $a = new subnamespace\foo();，如果当前的命名空间是 currentnamespace，则 foo 会被解析为 currentnamespace\subnamespace\foo。如果使用 foo 的代码是全局的，不包含在任何命名空间中的代码，foo 会被解析为subnamespace\foo。
+完全限定名称: 例如$a = new \currentnamespace\foo();，则总是被解析为代码中的文字名(literal name)currentnamespace\foo。
 
-
+namespace NS;
+ 
+define(__NAMESPACE__ .'\foo','111');
+define('foo','222');
+ 
+echo foo;   // 111.
+echo \foo;  // 222.
+echo \NS\foo  // 111.
+echo NS\foo   // fatal error. assumes \NS\NS\foo.
+```
 数据导出分页
 ```js
 function getWebinarShare($id)
