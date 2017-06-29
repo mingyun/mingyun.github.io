@@ -1,6 +1,15 @@
 
+[无封号风险破解百度网盘下载限速、大文件下载限制等问题（值得收藏）](http://www.gioov.com/index.php/884)
+[百度网盘直接下载助手：](https://greasyfork.org/zh-CN/scripts/17800-%E8%A7%A3%E5%86%B3%E7%99%BE%E5%BA%A6%E4%BA%91%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%99%90%E5%88%B6)
+Regex Tester:http://www.regexpal.com/（英文工具站点）
+RegexPal:http://regexpal.isbadguy.com/（汉化版RegexPal，推荐） https://regex101.com/
+分享一段代码，却是网页前端设计必备小技巧 *{outline: 1px solid red;}
+[MEGA一家拥护人权宣言的国外良心网盘](https://mega.nz/)
+[一个设置，教你远离百度搜索引擎广告](http://www.gioov.com/index.php/629)
 [安全课程](http://www.shiyanbar.com/courses)
 [ctf安全工具](https://www.ctftools.com/down/)
+[使用ZeroNet搭建P2P全球网站](http://www.gioov.com/index.php/355)
+项目地址：https://github.com/hellozeronet/zeronet
 [重温PHP手册 – 生成器](http://www.powerxing.com/php-review-generator/)
 ```js
 function xrange($start, $limit, $step = 1) {
