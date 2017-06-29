@@ -52,6 +52,24 @@ echo foo;   // 111.
 echo \foo;  // 222.
 echo \NS\foo  // 111.
 echo NS\foo   // fatal error. assumes \NS\NS\foo.
+
+在已有的word文档，或者模板中，插入一个表格
+$table = $section->addTable();
+
+
+$cellStyle = array( 'bgColor' => 'ffffff','borderColor' => '000000','cellMargin' => 50,'borderSize' => 6);
+
+
+//$table = $section->addTable();
+$table->addRow(300);
+// Add cells
+$table->addCell(2000,$cellStyle)->addText('Col 1');
+$table->addCell(2000,$cellStyle)->addText('Col 2');
+$table->addCell(2000,$cellStyle)->addText('Col 3');
+
+$objWriter = PHPWord_IOFactory::createWriter($PHPWord, 'Word2007');
+$sTableText = $objWriter->getWriterPart('document')->getObjectAsText($table);
+
 ```
 数据导出分页
 ```js
