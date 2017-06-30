@@ -1,5 +1,26 @@
 
-[无封号风险破解百度网盘下载限速、大文件下载限制等问题（值得收藏）](http://www.gioov.com/index.php/884)
+[H5唤起支付宝钱包支付](https://docs.open.alipay.com/60/104788/)
+即时到账接口支持DSA、RSA、MD5三种签名方式，请根据实际业务需求选择合适的签名方式
+其中 md5 只需要一个秘钥 key 不需要上传公钥什么的
+[app_pay=Y：尝试唤起支付宝客户端进行支付，若用户未安装支付宝，则继续使用wap收银台进行支付](https://docs.open.alipay.com/60/104790/) 
+```js
+http://wappaygw.alipay.com/service/rest.htm?_input_charset=utf-8&format=xml&partner=2088011508184288&req_data=%3Cauth_and_execute_req%3E%3Crequest_token%3E20170630f05785795d5aac3fb37346d09254a27a%3C%2Frequest_token%3E%3C%2Fauth_and_execute_req%3E&sec_id=MD5&service=alipay.wap.auth.authAndExecute&v=2.0&sign=315e981743e013fc74a146ebacac8888&app_pay=Y
+wap 支付取消跳转到支付宝  APP 支付，点继续支付的时候提示 交易订单处理失败,请稍后再试(ALI64)
+ali64的含义是签名错误，请检查 
+1. 公私钥正确性 
+2.检查自己的公钥是否正确上传； 
+3. 编码格式问题 
+4. sign有没有做encode或者多做了一次encode 
+更多产品及接口相关内容请移步 APP支付产品及接口文档  
+同时可以参考支付宝的 签名专区，进一步了解支付宝加签验签规则及方法。
+这个老版本接口现在已经下架了  因为这个接口之前签约有权限的还能继续使用，但是支付宝这边不对接口进行维护更新了
+手机网站支付接口 http://aopsdkdownload.cn-hangzhou.alipay-pub.aliyun-inc.com/demo/alipaywapdirect.zip
+
+```
+
+
+
+无封号风险破解百度网盘下载限速、大文件下载限制等问题（值得收藏）](http://www.gioov.com/index.php/884)
 [百度网盘直接下载助手：](https://greasyfork.org/zh-CN/scripts/17800-%E8%A7%A3%E5%86%B3%E7%99%BE%E5%BA%A6%E4%BA%91%E5%A4%A7%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%99%90%E5%88%B6)
 Regex Tester:http://www.regexpal.com/（英文工具站点）
 RegexPal:http://regexpal.isbadguy.com/（汉化版RegexPal，推荐） https://regex101.com/
