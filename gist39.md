@@ -1,4 +1,44 @@
+[《windows下php开发环境搭建》 zeronet](https://github.com/chenjia404/how-to-self-programming/blob/master/php/windows%E4%B8%8B%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md)
+https://blog.chenjia.info/ 
+[一个牛逼的交互式脑图](https://learn-anything.xyz/design/graphic-design/photoshop)
+[如何免费建立一个永远在线博客](https://blog.chenjia.info/2017/06/online-blog.html)
+官网:https://zeronet.io/
+[ShutIt：一个基于Python的shell自动化框架](http://geek.csdn.net/news/detail/202105)
 [您的用户遇到BUG了吗](https://fundebug.com/dashboard/594ccc061e2fb100144b983e/errors/inbox?filters=%7B%7D)
+[喜欢用 Git 做的一些小事](https://segmentfault.com/a/1190000009753465)
+```js
+但如果你对团队成员在项目中的提交数量感兴趣，使用 shortlog 就可以找到答案：
+
+$ git shortlog -sn
+    80  Harry Roberts
+    34  Samantha Peters
+     3  Tom Smith
+     
+$ git shortlog -sn --since='10 weeks' --until='2 weeks'
+    59  Harry Roberts
+    24  Samantha Peters
+    
+ 通过一种比较轻松的游戏的方式来一探全貌https://github.com/Gazler/githug   
+  $ git blame -L5,10 _components.buttons.scss
+  仅显示单词的变化而不是整行git diff --word-diff
+ git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)" 查看最近工作的分支 
+  去除这种空白提示非常容易，在 git diff 和 git show 使用 -w 选项就可以轻松搞定
+  http://159.226.40.104:18080/dev/  看到每个人都在做什么
+  git log --all --oneline --no-merges
+  git config --global alias.overview "log --all --since='2 weeks' --oneline --no-merges"
+  
+   Chrome 扩展插件「档案娘助手」，一键删除所有微博、删除所有转发微博、删除所有包含某些关键词的微博、删除某些日期的微博
+  
+```
+[在简书发一片文章，自动同步到知乎、公众号、微博。这个应该就可以做到](https://sspai.com/post/38989)
+[中科院计算所开源了Easy Machine Learning系统，其通过交互式图形化界面让机器学习应用开发变得简单快捷](https://github.com/ICT-BDA/EasyML)
+http://159.226.40.104:18080/dev/
+
+
+[微博关系图功能正式上线了](http://weibo.wbdacdn.com/weibo/friends/3217179555/)
+
+
+
 []()
 ```js
 Math.min() < Math.max() // false 因为Math.min() 返回 Infinity, 而 Math.max()返回 -Infinity。
