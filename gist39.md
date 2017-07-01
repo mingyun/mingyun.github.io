@@ -1,7 +1,16 @@
+[使用Python替换shell脚本](http://amoffat.github.io/sh/index.html)
+from sh import ifconfig
+print(ifconfig("wlan0"))
+sh.ls("-l", "/tmp", color="never")
+[8种常被忽视的SQL错误用法](https://mp.weixin.qq.com/s/1WpspGr7R-EjXfhWzlsZvQ)
+[微博终结者爬虫重启版本](https://github.com/jinfagang/weibo_terminator_workflow)
 [两个抓娃娃大神，将无数娃娃机清柜](http://weibo.com/1895964183/F7cANFr4h)
 http://weibo.com/5888006271/EhYp50FGO http://weibo.com/6077588122/F7cuwf55k 
 [Laravel 大将之 Redis 模块](https://segmentfault.com/a/1190000009695841)
 ```js
+《Python Cookbook》https://github.com/yidao620c/python3-cookbook
+Nginx配置静态分析器https://github.com/yandex/gixy gixy /etc/nginx/nginx.conf
+有哪些科普类的歌词？比如一年有三百六十五个日出 ​​​​http://weibo.com/2530813523/F2vrfrb1e
 $redis = app('redis.connection');
 $redis->set('library', 'predis'); // 存储 key 为 library， 值为 predis 的记录；
 app('redis')->connection('mydefine')可以获取该连接对象
