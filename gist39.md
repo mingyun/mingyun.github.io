@@ -1,3 +1,99 @@
+[两个抓娃娃大神，将无数娃娃机清柜](http://weibo.com/1895964183/F7cANFr4h)
+http://weibo.com/5888006271/EhYp50FGO http://weibo.com/6077588122/F7cuwf55k 
+[Laravel 大将之 Redis 模块](https://segmentfault.com/a/1190000009695841)
+```js
+$redis = app('redis.connection');
+$redis->set('library', 'predis'); // 存储 key 为 library， 值为 predis 的记录；
+app('redis')->connection('mydefine')可以获取该连接对象
+$redis->keys('foo*');   // 返回 foo1 和 foo2 的 array
+$redis->keys('f?o?');   // 同上
+$redis->randomkey() ; // 可能是返回 'foo1' 或者是 'foo2' 及其它任何已存在的 key
+$redis->expire('foo', 10);  // 设置有效期为 10 秒
+$redis->ttl('foo');  // 返回剩余有效期值 10 秒
+$redis->persist ('foo');  // 取消 expire 行为
+dbsize 返回redis当前数据库的记录总数
+$redis->info();
+$redis->dbsize() ;
+
+https://blog.ihoey.com/posts/Node/2017-05-10-npm.html
+$ npm list
+# 加上 global 参数，会列出全局安装的模块
+$ npm list -global
+# npm list 命令也可以列出单个模块
+$ npm install git://github.com/package/path.git
+$ npm install git://github.com/package/path.git#0.1.0
+$ npm list underscore
+```
+[最常用的PHP正则表达式收集整理](https://segmentfault.com/p/1210000009589919/read#top)
+[JavaScript正则进阶之路——活学妙用奇淫正则表达式](https://segmentfault.com/a/1190000009590458)
+1234567890 --> 1,234,567,890 let format = test1.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+function isPrime(num) {
+return !/^1?$|^(11+?)\1+$/.test(Array(num+1).join('1'))
+}
+[超详细的Python实现百度云盘模拟登陆(模拟登陆进阶)](https://segmentfault.com/a/1190000009411578)
+
+[打包带走！史上最全的大数据分析和制作工具](https://mp.weixin.qq.com/s/Vg-Z6IfT530lJbkAa4M4ag)
+console.log(isPrime(19)) // true
+[JavaScript深入系列15篇正式完结](https://segmentfault.com/a/1190000009562674)
+[git干货系列：（一）我是小白，我想要搭建git仓库](https://segmentfault.com/p/1210000009571646/read#top)
+[127.0.0.1:6379[20]>info memory  info stats 关于redis性能问题分析和优化](https://segmentfault.com/p/1210000009545925/read#top)
+[ 一个在线的 web 代码生成小工具](https://webcode.tools/)
+[PHP那些琐碎的知识点](https://segmentfault.com/p/1210000009496954/read)
+[给PHP做的分布式跟踪系统，可以方便的查看线上调用关系，性能，回放请求过程，具体参数，系统异常统计等信息 Github](https://github.com/weiboad/fiery)
+[Redis性能问题排查解决手册](https://segmentfault.com/p/1210000009478608/read)
+[公众号排名](https://sdk.cn/subscriptions)
+[超级易懂爬虫系列之爬虫简单的架构](http://www.huqi.tk/index.php/2017/05/08/python_spider_simple_architecture/)
+[密码存储中MD5的安全问题与替代方案](https://segmentfault.com/p/1210000009609778/read#top)
+```js
+class User extends BaseModel
+{
+ const PASSWORD_COST = 11; // 这里配置bcrypt算法的代价，根据需要来随时升级
+ const PASSWORD_ALGO = PASSWORD_BCRYPT; // 默认使用（现在也只能用）bcrypt
+
+ /**
+ * 验证密码是否正确
+ *
+ * @param string $plainPassword 用户密码的明文
+ * @param bool $autoRehash 是否自动重新计算下密码的hash值（如果有必要的话）
+ * @return bool
+ */
+ public function verifyPassword($plainPassword, $autoRehash = true)
+ {
+ if (password_verify($plainPassword, $this->password)) {
+ if ($autoRehash && password_needs_rehash($this->password, self::PASSWORD_ALGO, ['cost' => self::PASSWORD_COST])) {
+ $this->updatePassword($plainPassword);
+ }
+
+ return true;
+ }
+
+ return false;
+ }
+
+ /**
+ * 更新密码
+ *
+ * @param string $newPlainPassword
+ */
+ public function updatePassword($newPlainPassword)
+ {
+ $this->password = password_hash($newPlainPassword, self::PASSWORD_ALGO, ['cost' => self::PASSWORD_COST]);
+ $this->save();
+ }
+}
+
+```
+
+[如何一键删除所有微博，一键将所有微博转为自己可见http://weibo.com/ttarticle/p/show?id=2309404112304810625896]()
+[@请问金钟仁今天分手了吗](http://weibo.com/5638148926/F5N7rjYnC)
+[Python入门之生成海贼王云图](https://mp.weixin.qq.com/s/r-7Z_d0REuEjFd8LDh0aiw)
+[开源的跨平台代码片段管理工具](http://hackjutsu.com/Lepton/)
+[现代JavaScript教程](http://t.cn/a3ib7X)
+[PHP7内核剖析](https://github.com/pangudashu/php7-internal)
+[用PYTHON玩微信（非常详细）](https://segmentfault.com/p/1210000009659125/read#top)
+[记一次境外站渗透过程](http://ecma.io/)
+http://link.zhihu.com/?target=https%3A//github.com/wzyonggege/python-wechat-itchat
+[]()
 [《windows下php开发环境搭建》 zeronet](https://github.com/chenjia404/how-to-self-programming/blob/master/php/windows%E4%B8%8B%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md)
 https://blog.chenjia.info/ 
 [一个牛逼的交互式脑图](https://learn-anything.xyz/design/graphic-design/photoshop)
