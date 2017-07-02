@@ -1,3 +1,185 @@
+[优化 Laravel 网站打开速度](https://laravel-china.org/articles/5088/optimize-laravel-site-to-open-speed)
+apt-get install php70-php-opcache.x86_64 service php70-php-fpm restart
+Content-Encoding字段是gzip，表示该网页是经过gzip压缩的。
+gzip            on;
+gzip_min_length 1000;
+gzip_proxied    expired no-cache no-store private auth;
+gzip_types      text/plain application/xml;
+php artisan optimize
+数字转成简 / 繁体汉字的助手函数https://laravel-china.org/articles/5097/write-an-assistant-function-that-turns-a-number-into-a-simplified-traditional-chinese-character
+一个基于 Laravel5.4+Vue+Redis 实时聊天的小 demohttps://laravel-china.org/articles/5121/a-small-demo-based-on-laravelvueredis-real-time-chat
+python 的requests问题https://segmentfault.com/q/1010000009058023  
+```js
+UnicodeDecodeError是字符解码失败的原因
+py2的用引号声明的字串类型都是str，字串前加一个u声明的才是unicode。网络IO，文件读写中传输的字符都是编码成bytes，即str类型。载入到计算机执行计算，一般都要解码成unicode。py2的str方法实际上是''.encode('ascii'), unicode方法是''.decode('ascii')
+
+In [1]: s = u'你好'
+
+In [2]: str(s)
+---------------------------------------------------------------------------
+UnicodeEncodeError                        Traceback (most recent call last)
+<ipython-input-2-d22ffcdd2ee9> in <module>()
+----> 1 str(s)
+
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+
+In [3]: s.decode('ascii')
+---------------------------------------------------------------------------
+UnicodeEncodeError                        Traceback (most recent call last)
+<ipython-input-3-735804de5fd4> in <module>()
+----> 1 s.decode('ascii')
+
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+
+In [4]: ss = '你好'
+
+In [5]: unicode(ss)
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-5-6325006f91c2> in <module>()
+----> 1 unicode(ss)
+
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
+
+In [6]: ss.decode('ascii')
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-6-b5dcf2f3b46d> in <module>()
+----> 1 ss.decode('ascii')
+
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
+
+In [7]: ss.decode('utf-8')
+Out[7]: u'\u4f60\u597d'
+
+In [8]: ss.decode('gbk')
+Out[8]: u'\u6d63\u72b2\u30bd'
+因为ss = '你好'是非ascii字符，因此以ascii方式解码失败，当解码成utf-8和gbk就成功了。同理s=u'你好'也不能编码成ascii的方式。
+
+你上面的问题，应该是非ascii字符，decode成ascii字符的时候抛错。result_path + p_path 即这两个变量中，有一个变量是包含非ascii字符的str类型：
+
+In [1]: 'hello' + u'world'
+Out[1]: u'helloworld'
+
+In [2]: 'hello' + u'世界'
+Out[2]: u'hello\u4e16\u754c'
+
+In [3]: '你好' + u'世界'
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-3-8c1827afc847> in <modul
+In [1]: 'hello' + u'world'
+Out[1]: u'helloworld'
+
+In [2]: 'hello' + u'世界'
+Out[2]: u'hello\u4e16\u754c'
+
+In [3]: '你好' + u'世界'
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-3-8c1827afc847> in <module>()
+----> 1 '你好' + u'世界'
+
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
+
+In [4]: '你好' + '世界'
+Out[4]: '\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
+
+In [5]: '你好' + '世界 world'
+Out[5]: '\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c world'
+
+In [6]: '你好' + u'世界 world'
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-6-dcdf837ec675> in <module>()
+----> 1 '你好' + u'世界 world'
+
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
+
+In [9]: '你好' + u'world'
+---------------------------------------------------------------------------
+UnicodeDecodeError                        Traceback (most recent call last)
+<ipython-input-9-1be7bc8e74d5> in <module>()
+----> 1 '你好' + u'world'
+
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe4 in position 0: ordinal not in range(128)
+'你好'中的中文不是ascii字符，和unicode字符拼接的时候，会解码成unicode再拼接，对于最后的例子，'你好' + u'world'，其实执行的是 '你好'.decode('ascii') + u'world'，所以就报错。
+
+校正的方式很简单，统一字符编码就好。linux的py默认编码是utf-8，win貌似是gbk。不管怎么样，总之都用utf-8吧。
+
+In [10]: '你好'.decode('utf-8') + u'world'
+Out[10]: u'\u4f60\u597dworld'
+py3中，所有引号声明的字串都是unicode。也就不存在str和unicode这两种类型。其中str编码成bytes类型，bytes解码成字串类型。两种的相互转换的时候，还是会有 UnicodeDecodeError 问题，不要以为用了py3就能万事大吉，解决的问题关键是知道如何编码解码，就能一劳永逸。
+
+>>> s = '中文'
+>>> s.encode('utf-8')
+b'\xe4\xb8\xad\xe6\x96\x87'
+>>> s.encode('ascii')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordinal not in range(128)
+>>> print(type(s.encode('utf-8')))
+<class 'bytes'>
+>>> print(type(s))
+<class 'str'>
+```
+MYSQL里类似20-35这种格式的年龄段字段 select * from tbl where left(age,2)<=34 and right(age,2)>=25; 30-55符合25-34的话，可以这样
+去重时忽略ID但又必须输出ID如何做? SELECT * FROM TB t1
+WHERE t1.ID IN (
+    SELECT MAX(t1.id) FROM TB t2 GROUP BY t2.column1, t2.column2
+)https://segmentfault.com/q/1010000009007357 SSH端passwd命令改强密码，结束进程，删掉这些文件，重启机器  utf8mb4 的集合大于 utf8的集合
+
+utf8mb4兼容utf8，且比utf8能表示更多的字符。
+
+你从一个小的子集扩展到更大的集合，对原始数据是没有影响的 设置datetime类型的格式，而你的后面估计还有毫秒
+show variables like 'datetime_format'; datetime_format=%Y-%m-%d %H:%i:%s
+mysql事务，锁和交易问题？https://segmentfault.com/q/1010000009908336
+mysql一对多结果归类https://segmentfault.com/q/1010000009967381
+mysql建表分组索引问题https://segmentfault.com/q/1010000009940129
+mysql连表统计查询https://segmentfault.com/q/1010000009907738
+如果是sql报错，这属于应用错误了，一定要捕获异常，将异常记录在日志里
+
+sql的相关操作一定要用try{}catch(){} 千万不能把异常流到上游，并且上游没有做对异常处理的相关操作
+
+批量操作一定要做好事务求时间段之间的交集的最优解https://segmentfault.com/q/1010000009983477
+NumPy数组操作的问题https://segmentfault.com/q/1010000009961268
+>>> import numpy as np
+>>> a = np.array(['000001_2017-03-17.csv', '000001_2017-03-20.csv',
+ '000002_2017-03-21.csv', '000002_2017-03-22.csv',
+ '000003_2017-03-23.csv', '000004_2017-03-24.csv'])
+
+>>> b = np.unique(np.fromiter(map(lambda x:x.split('_')[0],a),'|S6'))
+>>> b
+array([b'000001', b'000002', b'000003', b'000004'], 
+      dtype='|S6')
+还可以这样写：np.frompyfunc
+'|S6'是以6个字节存储字符串
+ip_regx = re.compile(r'(?:[\d]+\.)+1$') 对于ip的合法性没有做匹配, 仅仅匹配符合x.x.x.1
+推荐你一个网站 https://app.stoplight.io/ 你可以直接在这个网站上编辑swagger文件
+JSON数据格式化以后，数据顺序发生了改变https://segmentfault.com/q/1010000009998567
+你这是一个对象，对象里都是键值对，顺序是随机的。具体的顺序如何是浏览器自己决定的。如果想要有序，建议将此类对象变为如下格式数组：
+
+[
+    { .... },
+    { .... },
+    { .... },
+    { .... }
+]js操作新开页面会被拦截，如何解决？https://segmentfault.com/q/1010000009975806
+递归获取文章所有的评论？？？https://segmentfault.com/q/1010000009987905
+https://segmentfault.com/q/1010000009976976 https://segmentfault.com/q/1010000009966175 无限分级函数么？ preg_match('/(.)\1{3,}/u', $str); // 1 = 同一个字4次或以上
+使用命名空间,以变量为类名实例化的时候,需要包含完整的命名空间,在实例化的地方直接加命名空间https://segmentfault.com/q/1010000009968340 
+use cache\Redis;
+$class = Redis::class;//需要完整的命名空间
+$instance = new $class($options);
+$cls_name = 'Redis';
+$class = "\cache\Redis\\".$cls_name;
+$instance = new $class($options);
+php数组对比unset问题https://segmentfault.com/q/1010000009960818 
+两个数组组合https://segmentfault.com/q/1010000009963786
+php关于引用计数的疑问？https://segmentfault.com/q/1010000009931445
+https://segmentfault.com/q/1010000009920992
+
+
 [你可能用得上的 PHP 代码段](https://laravel-china.org/articles/4196/talk-about-the-anti-replay-mechanism-of-api)
 ```js
 下面这个请求：
