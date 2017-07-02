@@ -1,3 +1,115 @@
+[字符串中反斜杠的替换](https://segmentfault.com/q/1010000008830727)
+```js
+{"jsonstr":
+"{\"pageindex\":1,\"start\":\"2017-03-01\",\"end\":\"2017-03-25\"}"
+}
+In [10]: import json
+
+In [11]: json.dumps(s)
+Out[11]: '{"end": "2017-03-25", "pageindex": 1, "start": "2017-03-01"}'
+```
+[python怎么使用matplotlib画出下面这样的图？](https://segmentfault.com/q/1010000008826803)
+```js
+# coding: utf-8
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.random.randint(0, 10, size=10)
+y = np.random.randint(100, 1000, size=10)
+
+plt.bar(x, y)
+plt.show()
+```
+[PHP中一些通用和易混淆技术点的最佳编程实践](http://www.oschina.net/translate/php-best-practices?lang=chs&page=2#)
+[php命令行下执行内存溢出的问题](https://segmentfault.com/q/1010000008453264)
+```js
+  //写法1，这里内存不会溢出
+    while(true) {
+        $i++;
+        var_dump($i);
+        $i = new Test();    
+    }
+    
+    //写法2，这里内存不会溢出
+    while(true) {
+        new Test();
+    }
+    
+    //写法3，这里内存会溢出
+    while(true) {
+       $i[] = new Test();  
+    }
+    这是因为前两个循环中创建的对象在循环完成一次后就没有用了，可以被垃圾回收机制回收内存，因此不会出现溢出。而第三种因为每次循环结束都会设置一下$i这个数组，数组$i的生命周期没有结束，持有对每一个Test对象的引用，造成创建的Test对象无法被垃圾回收机制回收，创建的太多了，内存占用就会越来越大，最终就内存溢出了。http://php.net/manual/zh/features.gc.php
+```
+[mysql，同一个表根据其中的两个字段修改这两个中的一个字段](https://segmentfault.com/q/1010000009294529)
+```js
+select * 
+  from student 
+  where id not in(select min(id) from student group by parent_id,name)t
+
+修改打算根据createDate排序，然后name后面加上排序后的序号
+
+update student t1 inner join 
+    (select idx,id 
+     from
+         (select if(@m_last_parent_id=parent_id and @m_last_name=name,@m_i:=@m_i+1,@m_i:=0) idx,
+             @m_last_parent_id:=parent_id,@m_last_name:=name,id,parent_id,name,createDate 
+          from student
+          order by parent_id,name,createDate
+         )m 
+     where idx>0
+    )t2 on t1.id=t2.id 
+set t1.name=concat(t1.name,t2.idx);
+```
+
+[支付开发填坑记之微信支付](https://segmentfault.com/a/1190000009346755)
+```js
+
+function arrayToXml(array $data)
+{
+    $xml = "<xml>";
+    foreach ($data as $k => $v) {
+        if (is_numeric($v)) {
+            $xml .= "<{$k}>{$v}</{$k}>";
+        } else {
+            $xml .= "<{$k}><![CDATA[{$v}]]></{$k}>";
+        }
+    }
+    $xml .= "</xml>";
+    return $xml;
+}
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+curl_setopt($ch, CURLOPT_HEADER, FALSE);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_POST, TRUE);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+$response = curl_exec($ch);
+if (!$response) {
+    throw new Exception('CURL Error: ' . curl_errno($ch));
+}
+curl_close($ch);
+function xmlToArray($xml){
+    return json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+}
+$d = $this->xmlToArray(file_get_contents('php://input'));
+if (empty($d)) {
+    throw new Exception(__METHOD__);
+}
+if ($d['return_code'] != 'SUCCESS') {
+    throw new Exception($d['return_msg']);
+}
+if ($d['result_code'] != 'SUCCESS') {
+    throw new Exception("[{$d['err_code']}]{$d['err_code_des']}");
+}
+我也准备在这缴，51 社保 末代皇帝http://www.bilibili.com/video/av9760951/
+https://xiaoluoboding.github.io/repository-tree/  https://github.com/xiaoluoboding/repository-tree 展示 Github 项目的目录树并拷贝到剪切板
+批量保存微信图片的脚本https://www.v2ex.com/t/372122
+```
 [使用Python替换shell脚本](http://amoffat.github.io/sh/index.html)
 from sh import ifconfig
 print(ifconfig("wlan0"))
