@@ -1,3 +1,81 @@
+[你可能用得上的 PHP 代码段](https://laravel-china.org/articles/4196/talk-about-the-anti-replay-mechanism-of-api)
+```js
+下面这个请求：
+
+http://a.com?uid=123&timestamp=1480556543&nonce=43f34f33&sign=80b886d71449cb33355d017893720666
+
+这个请求中国的uid是我们真正需要传递的有意义的参数
+
+timestamp，nonce，sign都是为了签名和防重放使用。
+
+timestamp是发送接口的时间，nonce是随机串，sign是对uid，timestamp,nonce(对于一些rest风格的api，我建议也把url放入sign签名)。签名的方法可以是md5({秘要}key1=val1&key2=val2&key3=val3...)
+nonce是由客户端根据足够随机的情况生成的，比如 md5(timestamp+rand(0, 1000)); 它就有一个要求，正常情况下，在短时间内（比如60s）连续生成两个相同nonce的情况几乎为0
+服务端接到这个请求：
+1 先验证sign签名是否合理，证明请求参数没有被中途篡改
+2 再验证timestamp是否过期，证明请求是在最近60s被发出的
+3 最后验证nonce是否已经有了，证明这个请求不是60s内的重放请求
+https://github.com/LingxiTeam/api-authentication
+```
+[从零开始微信机器人（一）：wxpy简介（登录、消息发送、注册回复）](https://zhuanlan.zhihu.com/p/27566793)
+```js
+pip install -U wxpy -i "https://pypi.doubanio.com/simple/"
+from wxpy import *
+import requests
+# 回复 my_friend 发送的消息
+@bot.register(my_friend)
+def reply_my_friend(msg):
+    return 'received: {} ({})'.format(msg.text, msg.type)
+
+# 回复发送给自己的消息，可以使用这个方法来进行测试机器人而不影响到他人
+@bot.register(bot.self, except_self=False)
+def reply_self(msg):
+    return 'received: {} ({})'.format(msg.text, msg.type)
+
+# 打印出所有群聊中@自己的文本消息，并自动回复相同内容
+# 这条注册消息是我们构建群聊机器人的基础
+@bot.register(Group, TEXT)
+def print_group_msg(msg):
+    if msg.is_at:
+        print(msg)
+        msg.reply(meg.text)
+TULING_TOKEN = 'Your API Key'
+bot = Bot()
+
+@bot.register(Group, TEXT) # 这里注册了群聊中的文字消息，测试时可以设置为自己(上篇中提到过)
+def group_msg(msg):
+    if msg.is_at:
+        url_api = 'http://www.tuling123.com/openapi/api'
+        data = {
+            'key'    : TULING_TOKEN,
+            'info'   : msg.text, # 收到消息的文字内容
+        }
+
+        s = requests.post(url_api, data=data).json()
+        print s # 打印所获得的json查看如何使用
+
+        if s['code'] == 100000:
+            print s['text'] # 查看回复消息的内容，可省略
+            msg.reply(s['text']) # 回复消息
+        
+embed()
+from tempfile import NamedTemporaryFile
+通过request获取图片信息，然后写入到一个临时文件中。
+
+res = requests.get(url, allow_redirects=False)
+tmp = NamedTemporaryFile()
+tmp.write(res.content)
+tmp.flush()
+media_id = bot.upload_file(tmp.name)
+tmp.close()
+msg.reply_image('.gif', media_id=media_id) 上传图片并作为表情发送
+echo_supervisord_conf > supervisord.conf
+supervisorctl start bot # 开始程序，bot 是刚刚填写的程序名
+supervisorctl restart bot # 重启程序
+supervisorctl stop bot # 停止程序
+```
+[numpy和pandas入门](https://zhuanlan.zhihu.com/p/27624814)
+[支付宝 电脑网站支付方式 最新的 SDK](https://laravel-china.org/articles/5107/alipay-computer-website-payment-of-the-latest-sdk-finishing-package-need-friends-away)
+https://github.com/echobool/alipay-laravel5 
 [解锁 Redis 锁的正确姿势](https://laravel-china.org/articles/4211/unlock-the-correct-position-of-the-redis-lock)
 ```js
 if (Redis::setnx("my:lock", 1)) {
