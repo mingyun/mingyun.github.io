@@ -14,7 +14,395 @@ function autoload($class){
     spl_autoload_register('autoload');
     $obj = new test_class;//这个类已经存在同级目录中,我的情况
     $obj->go();
+copy($x('//a').map(function(i){return i.href;}).join('\n'))
+https://helei112g.github.io/2017/03/12/Payment%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%E6%89%8B%E6%9C%BA%E7%BD%91%E7%AB%99%E6%94%AF%E4%BB%98%E6%95%99%E7%A8%8B/
+http://www.tenyearsme.cn/blog/laravel-kongzhi-fanzhuan-he-menmian-moshi-gainian
+http://www.cnblogs.com/phpper/p/6801678.html
+http://larabase.com/collection/5/post/154
+http://php.swoole.com/wiki/%E9%A6%96%E9%A1%B5
+http://www.tuicool.com/articles/yMvyIrz
+http://www.lijiejie.com/
+http://2014.54chen.com/blog/archives/
+https://github.com/pengzhile/purl
+http://www.cnblogs.com/loveyoume/p/6261941.html
+https://scriptoj.com/problems/54
+https://v.sijiaomao.com/ability?3njfchm5
+https://github.com/jaywcjlove/mysql-tutorial
+http://gad.qq.com/weekly/detail/115?sessionUserType=BFT.PARAMS.218046.TASKID&ADUIN=2864727074&ADSESSION=1493004690&ADTAG=CLIENT.QQ.5497_.0&ADPUBNO=26621
+http://www.cnblogs.com/phpper/default.html?page=2
+http://www.cnblogs.com/z1298703836/p/5346728.html
+http://laravelacademy.org/post/6587.html
+https://aabvip.com/#blog
+http://www.tenyearsme.cn/blog/da-jian-bo-ke-bi-bei-wen-ben-kuang-tuo-dong-shang-chuan-tu-pian
+https://www.insp.top/article/learn-laravel-container
+http://blog.csdn.net/column/details/payment.html
+http://www.cnblogs.com/wish123/p/4756669.html
+http://blog.csdn.net/gaoxuaiguoyi/article/details/51684743
+http://blog.csdn.net/gaoxuaiguoyi/article/details/48739263
+https://foofish.net/python-int-mystery.html
+http://bayescafe.com/tools/use-postman-to-test-api-automatically.html
+http://www.cnblogs.com/yjf512/p/6571941.html
+https://lufficc.com/blog/the-core-conception-of-laravel
+https://github.com/goosman-lei/ice/blob/master/src/Util/Time.php
+http://manjusaka.itscoder.com/2016/11/18/Someone-tell-me-that-you-think-Python-is-simple/?utm_source=tool.lu
+http://cuiqingcai.com/3179.html
+https://github.com/NyanCat12/CrossinWeekly/blob/master/NovelWordCount.py
+https://github.com/twy93007/adult_novel_fenxi/blob/master/get_novel.py
+https://github.com/takashiki/cdo/blob/master/src/Cdo.php
+http://www.phppan.com/2014/02/php-var-compare/?utm_source=tool.lu
+http://www.cnblogs.com/beer/p/5672678.html?utm_source=tool.lu
+https://foofish.net/python-heart.html
+https://github.com/TIGERB/easy-tips/blob/master/redis/pessmistic-lock.php
+https://helei112g.github.io/2016/08/10/%E5%BE%AE%E4%BF%A1%E7%9A%84%E4%B8%89%E7%A7%8D%E6%94%AF%E4%BB%98%E6%96%B9%E5%BC%8F%E6%8E%A5%E5%85%A5%EF%BC%9AAPP%E6%94%AF%E4%BB%98%E3%80%81%E5%85%AC%E4%BC%97%E5%8F%B7%E6%94%AF%E4%BB%98%E3%80%81%E6%89%AB%E7%A0%81%E6%94%AF%E4%BB%98/
+https://www.waitalone.cn/upload-forms-threat.html
+http://www.lai18.com/cate/117.html
+https://github.com/lzjun567/crawler_html2pdf/blob/master/heart/heart.py
+https://github.com/zx576/Crossin-practices/blob/master/weibo/ehcarts_js/addr_heatmap.js
+http://lanbing510.info/2016/12/07/ProGit.html
+http://blog.csdn.net/smstong/article/details/43561607
+https://www.waitalone.cn/science-csrf-protection-methods.html
+https://github.com/dosgo/ngrok-php/blob/master/natapp.php#L34
+http://blog.coderzh.com/2015/09/28/go-tips/
+http://www.haomou.net/2014/08/13/2014_web_token/
+https://github.com/keepfool/vue-tutorials
+http://www.cnblogs.com/luozhihao/p/6014098.html
+https://github.com/bhnddowinf/vuejs-learn/blob/master/01.md
+http://elickzhao.github.io/2016/10/vue.js%20%E4%B8%AD%E5%9B%BD%E5%A5%BD%E6%95%99%E7%A8%8B/
+http://www.cnblogs.com/wzben/p/5930538.html
+http://www.godeye.org/course/2
+https://weny.name/2017/01/15/teach-zjzs-coding-4/
+http://www.bo56.com/%e7%ba%bf%e4%b8%8aphp%e9%97%ae%e9%a2%98%e6%8e%92%e6%9f%a5%e6%80%9d%e8%b7%af%e4%b8%8e%e5%ae%9e%e8%b7%b5/
+http://www.bo56.com/%e5%9c%a82016%e7%9a%84phpcon%e5%a4%a7%e4%bc%9a%e4%b8%8a%e7%9a%84%e5%88%86%e4%ba%abppt%e4%b8%8b%e8%bd%bd/
+http://www.jianshu.com/p/cc1cb9a5650c#
+http://linkagesel.xiaozhong.biz/
+http://selfboot.cn/2016/12/28/py_encode_decode/
+http://www.w3cvip.com/160.html
+http://www.cnblogs.com/wish123/p/5540210.html
+https://www.waitalone.cn/security-scripts-game.html
+https://www.kancloud.cn/wizardforcel/dive-into-python/128820
+https://laravel-china.org/topics/3331
+http://river0314.lofter.com/view
+http://www.okrd.cn/posts/a-nice-php-deploy-tool-magallanes
+http://www.xiaoleilu.com/python-notes-oop
+http://www.kancloud.cn/luofei614/programmer_talk_life/107486
+http://www.cnblogs.com/keepfool/p/5619070.html
+http://es.xiaoleilu.com/010_Intro/10_Installing_ES.html
+https://laravel-china.org/topics/2092
+http://www.cnblogs.com/Vito2008/p/5018525.html
+https://github.com/lovecn/PHPConChina/blob/master/PHPCON2016/PHP%E7%B3%BB%E7%BB%9F%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E5%AE%9E%E8%B7%B5--%E4%BF%A1%E6%B5%B7%E9%BE%99%40PHPCon2016.pdf
+https://mengkang.net/678.html
+https://www.villainhr.com/page/2016/05/18/python%20beginner
+http://www.hoohack.me/2015/09/30/php-spider-millons-of-zhihu-user-analyze
+https://segmentfault.com/a/1190000004162880
+https://github.com/monitor1379/hamaa
+https://laravel-china.org/topics/3086
+https://github.com/lovecn/StackOverFlowCn/blob/master/302.md
+https://segmentfault.com/q/1010000007344409
+https://github.com/Unknwon/the-way-to-go_ZH_CN/blob/master/eBook/04.2.md
+http://www.jq22.com/jquery-info588
+http://www.cnblogs.com/tudou1223/p/4530280.html
+https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/01.2.md
+http://pagespeed.v2ex.com/t/283114
+http://www.w00yun.top/
+http://phpshiti.com/paper/1
+https://github.com/lovecn/notes-python/blob/master/11.%20useful%20tools/11.03%20json.ipynb
+http://www.zhihu.com/question/21395276/answer/20955095
+https://github.com/SmoothPhp/CQRS-ES-Framework-Laravel
+http://justcode.ikeepstudying.com/page/2/
+http://www.codesec.net/view/456710.html
+http://v2ex.com/t/295004
+http://v2ex.com/t/299183#reply14
+http://git.oschina.net/xuxu.gao/Yii-backadmin
+https://segmentfault.com/a/1190000005779677
+https://phphub.org/topics/23
+http://ninghao.net/blog/3502
+http://yangguoqi.me/2016/07/23/centos%E4%B8%8B%E6%90%AD%E5%BB%BAlaravel%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83/
+http://www.w3ctech.com/topic/854
+https://github.com/6ag/jiansan-laravel
+http://hanc.cc/index.php/archives/141/
+https://phphub.org/topics/2300
+http://mingkuu.com/2016/05/10/jquery%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%8F%92%E4%BB%B6jquery-upload-file-%E6%9C%89%E4%B8%8A%E4%BC%A0%E8%BF%9B%E5%BA%A6%E6%9D%A1/
+https://segmentfault.com/a/1190000004973921#articleHeader0
+https://phphub.org/topics/2274
+https://segmentfault.com/a/1190000005783857
+https://phphub.org/topics/1954
+http://www.cnblogs.com/siqi/archive/2012/11/17/2774982.html
+https://segmentfault.com/a/1190000002921506
+https://segmentfault.com/a/1190000005125725
+https://segmentfault.com/a/1190000005055899
+https://segmentfault.com/a/1190000004997982#articleHeader9
+http://bbs.ichunqiu.com/thread-4887-1-1.html
+http://www.cnblogs.com/Vito2008/p/5044251.html
+http://www.hackos.cn/t/171
+http://www.ituring.com.cn/article/211367
+http://www.cnblogs.com/eczhou/archive/2012/03/08/2385142.html
+https://www.zhihu.com/question/20893119
+https://segmentfault.com/a/1190000003488038?_ea=3
+https://segmentfault.com/a/1190000005778518
+https://phphub.org/topics/2093
+http://www.cnblogs.com/wangleiblog/p/5936238.html
+http://wiki.hostker.com/page/websocket/
+http://coolaf.com/article/81.html
+http://onwise.xyz/2016/01/15/%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e4%b9%8b%e5%9b%9b%e7%a7%8d%e5%9f%ba%e6%9c%ac%e6%8e%92%e5%ba%8f/
+http://blog.csdn.net/gaoxuaiguoyi/article/details/47304615
+http://www.cnblogs.com/rollenholt/p/5442825.html
+https://github.com/helei112g/laravel-swagger/blob/master/README.md
+http://www.anigm.com/archives
+http://type.so/php/gif-add-watermark-with-imagick.html
 ```
+[重温PHP手册 – 类与对象](http://www.powerxing.com/php-review-oop/)
+```js
+class A
+{
+    static $str = 'A';
+    function foo()
+    {
+        if (isset($this)) {
+            echo self::$str;    // 静态变量需用 self:: 获取
+            echo get_class($this);
+        }
+    }
+}
+ 
+class B
+{
+    static $str = 'B';
+    function bar()
+    {
+        A::foo();
+    }
+}
+ 
+$a = new A();
+$a->foo();      // 输出 AA
+ 
+$b = new B();
+$b->bar();      // 输出 AB $this 指向当前的 object, self 指向当前的 class
+//创建 stdClass 实例
+$x = new stdClass;
+$y = (object) null;        // same as above
+$z = (object) 'a';         // creates property 'scalar' = 'a'
+$a = (object) array('property1' => 1, 'property2' => 'b');
+
+Class Object{
+   public $foo="bar";
+};
+ 
+$objectVar = new Object();
+$reference =& $objectVar;
+$assignment = $objectVar;
+ 
+// $assignment复制了一份$objectVar，但$assignment 的 handle还是指向同一对象，所以下面更改 $objectVar 的值，$assignment表现得与引用相像。
+ 
+$objectVar->foo = "qux";
+print_r( $objectVar );  // qux
+print_r( $reference );  // qux
+print_r( $assignment ); // qux
+ 
+// 如果把$objectVar赋值为NULL，只是将$objectVar的 handle 的数据片段置为NULL，并不影响$assignment。
+$objectVar = NULL;
+print_r( $objectVar );  // NULL
+print_r( $reference );  // NULL
+print_r( $assignment ); // qux
+namespace SomeNamespace;
+ 
+class SomeClass {
+    function SomeFunction() {
+        try {
+            throw new Exception('Some Error Message');
+        } catch (\Exception $e) {//在命令空间中捕获异常时，需指向全局空间：
+            var_dump($e->getMessage());
+        }
+    }
+}
+
+echo sprintf("%.1f",substr(sprintf("%.4f", 1.1634), 0, -3)); //不四舍五入保留一位小数
+在子类中覆盖父类的 const ，可通过静态方法和 get_called_class() 来正确的访问其值。或者通过 static::constant 也可以达到同样的效果。
+class dbObject
+{    
+    const TABLE_NAME='undefined';
+ 
+    public static function GetAll()
+    {
+        $c = get_called_class();
+        return "SELECT * FROM `".$c::TABLE_NAME."`";
+        // return "SELECT * FROM `".static::TABLE_NAME."`"; /* 与上面等价 */
+    }    
+}
+ 
+class dbPerson extends dbObject
+{
+    const TABLE_NAME='persons';
+}
+ 
+echo dbObject::GetAll();    // SELECT * FROM `undefined`
+echo dbPerson::GetAll();    // SELECT * FROM `persons`
+如果没有提供任何参数，spl_autoload_register() 将自动注册autoload的默认实现函数spl_autoload()。
+
+void sql_autoload($class_name [, file_extensions]): 默认会将类名转化为小写，再加上.php/.inc，在所有的包含路径中检查是否存在该文件。
+
+所以都无需定义 autoloader，可以直接这样：
+
+spl_autoload_extensions(".php"); // comma-separated list
+    spl_autoload_register();
+ 如果子类中定义了构造函数则不会隐式调用其父类的构造函数。要执行父类的构造函数，需要在子类的构造函数中调用 parent::__construct()   
+    定义为 private 的方法只有定义该方法的类能够访问，因此无法在子类中进行重载。 这种情况下应该定义为 protected ：
+    
+class OtherClass extends MyClass
+{
+    public static $my_static = 'static var';
+ 
+    public static function doubleColon() {
+        echo parent::CONST_VALUE . "\n";
+        echo self::$my_static . "\n";
+    }
+}    
+   class A { 
+    const C = 'constA'; 
+    public function m() { 
+        echo $this::C;  // 输出 constB
+        echo static::C; // 与上面等价
+        echo self::C;   // 输出 constA
+    } 
+} 
+ 
+class B extends A { 
+    const C = 'constB'; 
+} 
+ 
+$b = new B(); 
+$b->m();  
+    检查一个函数是否被静态地调用
+    function foo () {
+    $isStatic = !(isset($this) && get_class($this) == __CLASS__);
+}
+
+优先顺序是当前类中的方法会覆盖 trait 方法，而 trait 方法又覆盖了基类中的方法： 当前类 > trait > 基类。
+PHP所提供的”重载”（overloading）是指动态地”创建”类属性和方法。我们是通过魔术方法（magic methods）来实现的。
+class MethodTest 
+{
+    public function __call($name, $arguments) 
+    {
+        // 注意: $name 的值区分大小写
+        echo "Calling object method '$name' "
+             . implode(', ', $arguments). "\n";
+    }
+ 
+    /**  PHP 5.3.0之后版本  */
+    public static function __callStatic($name, $arguments) 
+    {
+        // 注意: $name 的值区分大小写
+        echo "Calling static method '$name' "
+             . implode(', ', $arguments). "\n";
+    }
+}
+ 
+$obj = new MethodTest;
+$obj->runTest('in object context'); // Calling object method 'runTest' in object context
+ 
+// PHP 5.3.0之后版本
+MethodTest::runTest('in static context'); // Calling static method 'runTest' in static context
+“后期绑定”的意思是说，static:: 不再被解析为定义当前方法所在的类，而是在实际运行时计算的。也可以称之为“静态绑定”，因为它可以用于（但不限于）静态方法的调用。
+class Model 
+{
+    protected static $name = 'Model'; 
+    public static function find() 
+    {
+        echo static::$name; 
+    }
+} 
+ 
+class Product extends Model 
+{ 
+    protected static $name = 'Product'; 
+}
+ 
+Product::find();      // Product
+$b = new Product();   
+$b->find();           // 等价于 Product::find();
+一个对象变量已经不再保存整个对象的值。只是保存一个标识符来访问真正的对象内容。 当对象作为参数传递，作为结果返回，或者赋值给另外一个变量，另外一个变量跟原来的不是引用的关系，只是他们都保存着同一个标识符的拷贝，这个标识符指向同一个对象的真正内容。
+class A {
+    public $foo = 1;
+}  
+ 
+$a = new A;
+$b = $a;     // $a ,$b都是同一个标识符的拷贝
+             // ($a) = ($b) = <id>
+$b->foo = 2;
+echo $a->foo;   // 2
+echo $b->foo;   // 2
+ 
+ 
+$c = new A;
+$d = &$c;    // $c ,$d是引用
+             // ($c,$d) = <id>
+$d->foo = 3;
+echo $c->foo;   // 2
+echo $d->foo;   // 2
+ 
+ 
+$e = new A;
+ 
+function foo($obj) {
+    // ($obj) = ($e) = <id>
+    $obj->foo = 4;
+}
+ 函数传参默认传递的是值，也就是复制了一个副本，但对象传递的是引用。 & 将另一变量指向同一内容地址。可以使用 unset() 分离。
+ 
+foo($e);
+echo $e->foo;   // 4
+$a = "Clark Kent"; // a == Clark Kent
+$b = &$a;          // The two will now share the same fate.
+$b = "Superman";   // $a == "Superman" too.
+ 
+unset($b);         // $b divorced from $a
+$b="Bizarro";      // $a == "Superman" still.
+// classa.inc:
+ 
+  class A {
+      public $one = 1;
+ 
+      public function show_one() {
+          echo $this->one;
+      }
+  }
+ 
+// page1.php:
+ 
+  include("classa.inc");
+ 
+  $a = new A;
+  $s = serialize($a);
+  // 把变量$s保存起来以便文件page2.php能够读到
+  file_put_contents('store', $s);
+ 
+// page2.php:
+ 
+  // 要正确了解序列化，必须包含下面一个文件，即类的定义
+  include("classa.inc");
+ 
+  $s = file_get_contents('store');
+  $a = unserialize($s);
+ 
+  // 现在就可以使用对象$a里面的函数 show_one()
+  $a->show_one();
+  class A {
+    public $foo = 1;
+}  
+ 
+$a = new A;
+$b = $a;        // 复制了一个标识符，指向同一内容。
+$a->foo = 2;
+$a = NULL;
+echo $b->foo;   // 2
+ 
+$c = new A;
+$d = &$c;
+$c->foo = 2;
+$c = NULL;    
+echo $d->foo;   // Notice:  Trying to get property of non-object...
+```
+
 [FRP内网穿透工具](https://www.diannaobos.com/frp/)
 [优化 Laravel 网站打开速度](https://laravel-china.org/articles/5088/optimize-laravel-site-to-open-speed)
 apt-get install php70-php-opcache.x86_64 service php70-php-fpm restart
