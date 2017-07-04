@@ -1,3 +1,21 @@
+[PHP 系统架构师成长之路](https://laravel-china.org/articles/4496/the-growth-path-of-php-system-architect)
+查看 npm 全局包 ls `npm root -g`
+```js
+function autoload($class){
+        //参数$class，不用管它，它自己会以``类的名称``作为参数
+        //类文件的地址，类文件的格式是$class.class.php
+        $classPath = str_replace('\\','/',__DIR__).'/'.$class.'.php';
+        //var_dump($classPath);
+        if(file_exists($classPath)){
+            include_once $classPath;
+        }
+    }
+    //注册自动加载函数，此时autoload这个函数就相当于php的自动寻找类函数__autoload()
+    spl_autoload_register('autoload');
+    $obj = new test_class;//这个类已经存在同级目录中,我的情况
+    $obj->go();
+```
+[FRP内网穿透工具](https://www.diannaobos.com/frp/)
 [优化 Laravel 网站打开速度](https://laravel-china.org/articles/5088/optimize-laravel-site-to-open-speed)
 apt-get install php70-php-opcache.x86_64 service php70-php-fpm restart
 Content-Encoding字段是gzip，表示该网页是经过gzip压缩的。
