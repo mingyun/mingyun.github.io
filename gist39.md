@@ -1,3 +1,10 @@
+[翻墙蓝灯](https://www.isharebest.com/lantern.htm)
+[你见过的最想笑的，最奇葩的，最逗逼的代码是什么](https://www.zhihu.com/question/35113215)
+[按键精灵怎么用？怎么用按键精灵做脚本](https://jingyan.baidu.com/album/ea24bc39b976dfda62b33107.html)
+[SHADOWSOCKS VIP帐号](http://trial.ssbit.win/?from=ruanyifeng)
+http://www.gioov.com/index.php/355
+[ZeroNet](https://github.com/HelloZeroNet/ZeroNet/blob/master/README-zh-cn.md)
+[使用 ZeroNet 搭建 P2P 全球网站](https://www.v2ex.com/t/271868)
 [PHP 系统架构师成长之路](https://laravel-china.org/articles/4496/the-growth-path-of-php-system-architect)
 查看 npm 全局包 ls `npm root -g`
 ```js
