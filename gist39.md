@@ -1,3 +1,21 @@
+[30分钟掌握ES6/ES2015核心内容（上）](https://segmentfault.com/a/1190000004365693)
+```js
+ says(say){
+       var self = this;
+       setTimeout(function(){
+           console.log(self.type + ' says ' + say)
+       }, 1000)
+        says(say){
+       setTimeout(function(){
+           console.log(this.type + ' says ' + say)
+       }.bind(this), 1000)
+       says(say){
+        setTimeout( () => {
+            console.log(this.type + ' says ' + say)
+        }, 1000)
+    }
+    
+```
 [翻墙蓝灯](https://www.isharebest.com/lantern.htm)
 [你见过的最想笑的，最奇葩的，最逗逼的代码是什么](https://www.zhihu.com/question/35113215)
 [按键精灵怎么用？怎么用按键精灵做脚本](https://jingyan.baidu.com/album/ea24bc39b976dfda62b33107.html)
@@ -8,6 +26,33 @@ http://www.gioov.com/index.php/355
 [PHP 系统架构师成长之路](https://laravel-china.org/articles/4496/the-growth-path-of-php-system-architect)
 查看 npm 全局包 ls `npm root -g`
 ```js
+第一步：如果ZeroNet在运行，先将其关掉。（Linux下为ctrl+c）
+
+第二步：执行命令zeronet.py siteCreate。我在执行这一步时提示没有gevent，下载安装后可以顺利执行。（pip install gevent）
+
+第三步：出现Have you secured your private key?后，保存好前两行中的私钥和网址，然后选择yes
+
+至此，第一个网站就建好了
+
+http://127.0.0.1:43110/1ML1BufvU2A1KPeg57LPgXSbX7j9gTUEuC/
+
+欢迎大家访问我的主页：
+
+http://127.0.0.1:43110/1HDJPnnKR47JLM2nTXREeDhAbLVeCmHqF1
+http://www.cnblogs.com/Wayou/p/es6_new_features.html
+
+如果想要修改自己的网页，就需要在data目录下找到与自己网址一致的文件夹并对里面的内容做相应修改
+
+最后将自己所作更新进行一下推送
+
+zeronet.py siteSign 1HDJPnnKR47JLM2nTXREeDhAbLVeCmHqF1
+
+然后根据提示输入私钥即可
+var a = document.createElement('a');
+ a.href = 'http://www.cnblogs.com/wayou/p/';
+ console.log(a.host);
+document.body.contentEditable='true';
+data:text/html, <html contenteditable> 
 function autoload($class){
         //参数$class，不用管它，它自己会以``类的名称``作为参数
         //类文件的地址，类文件的格式是$class.class.php
@@ -22,6 +67,8 @@ function autoload($class){
     $obj = new test_class;//这个类已经存在同级目录中,我的情况
     $obj->go();
 copy($x('//a').map(function(i){return i.href;}).join('\n'))
+$x('//a').map(i=> `${i.href}`).join('\n')
+$x('//a').map((i)=>{return i.href;}).join('\n')
 https://helei112g.github.io/2017/03/12/Payment%EF%BC%9A%E6%94%AF%E4%BB%98%E5%AE%9D%E6%89%8B%E6%9C%BA%E7%BD%91%E7%AB%99%E6%94%AF%E4%BB%98%E6%95%99%E7%A8%8B/
 http://www.tenyearsme.cn/blog/laravel-kongzhi-fanzhuan-he-menmian-moshi-gainian
 http://www.cnblogs.com/phpper/p/6801678.html
