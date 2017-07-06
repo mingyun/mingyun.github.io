@@ -1,3 +1,79 @@
+[支付宝移动接口服务端生成签名串代码 ](http://www.cnblogs.com/xiaojingjing/p/3791616.html?utm_source=tuicool)
+```js
+/**
+     * @param $prestr
+     * @return mixed
+     * 生成支付宝签名
+     */
+    public static function createRsaSign($prestr)
+    {
+        // 私钥密码
+        $passphrase = '';
+
+        //私钥
+        $privateKey = config('services.alipay.private_key');
+
+        $privateKey = "-----BEGIN RSA PRIVATE KEY-----\n" . $privateKey ;
+        $privateKey = $privateKey ."\n-----END RSA PRIVATE KEY-----";
+
+        //私钥 转换为openssl密钥，必须是没有经过pkcs8转换的私钥
+        $private_id = openssl_pkey_get_private( $privateKey , $passphrase);
+
+        // 签名 调用openssl内置签名方法，生成签名$sign
+        $signature = '';
+        openssl_sign($prestr, $signature, $private_id, OPENSSL_ALGO_SHA1 );
+        //释放资源
+        openssl_free_key( $private_id );
+
+        //加密后的内容通常含有特殊字符，需要编码转换下
+        $signature = base64_encode($signature);
+
+        return urlencode( $signature );
+    }
+
+    /**
+     * @param $query
+     * @param bool $sort
+     * @return mixed
+     * 以key value 按 & 的形式连接字串
+     */
+    public static function createKeyValue($query,$sort = false)
+    {
+        if ($sort) {
+            ksort( $query );
+        }
+
+        //重新组装参数
+        $params = array();
+        foreach($query as $key => $value){
+            $params[] = $key .'='. $value;
+        }
+        $data = implode('&', $params);
+
+        return $data;
+    }
+    
+    $returnData = [
+                        'partner' => config('services.alipay.id'),
+                        'seller_id' => config('services.alipay.email'),
+                        'out_trade_no' => $orderId,
+                        'subject' => $subject,
+                        'body' => $subject,
+                        'total_fee' => $data['bean'] / UserIncome::BEAN_RMB_RATE,
+                        'notify_url' => 'http:'.env('WEB_DOMAIN').'/pay/app',
+                        'service' => "mobile.securitypay.pay",
+                        'payment_type' => "1",
+                        '_input_charset' => "utf-8",
+                        'it_b_pay' => "30m",
+                        'show_url' => "m.alipay.com",
+                    ];
+                    $signStr = CommonApi::createKeyValue($returnData, true);
+                    $returnData['sign'] = CommonApi::createRsaSign($signStr);
+                    $returnData['sign_type'] = 'RSA';
+                    $url = '//chongzhi://' . CommonApi::createKeyValue($returnData);
+```
+
+
 [30分钟掌握ES6/ES2015核心内容（上）](https://segmentfault.com/a/1190000004365693)
 ```js
  says(say){
