@@ -14,8 +14,30 @@
             console.log(this.type + ' says ' + say)
         }, 1000)
     }
-    
+   
+   第二次foreach的第一次循环时，$v被赋值为$arr[0]，也就是a
+而在第一次foreach结束时，$v最终指向了$arr[2]，他们指向同一个地址空间
+所以第二次foreach的第一次循环时，$v的值成了a，$arr[2]也就变成了a
+第二次foreach的第二次循环时，$v的值成了b，$arr[2]也就变成了b
+所以，数组$arr的值就成了a b b
+所以第三次循环时，$v的值就成了b
+三种解决方案：
+① 第二次foreach循环，别用$v了
+② 第二次foreach循环之前，unset($v)
+$v的引用在 foreach 循环之后仍会保留。建议使用unset()将其销毁
+③ 第二次循环也用&
+
+function factorial($n, $total) {
+  if ($n === 1) return $total;
+  return factorial($n - 1, $n * $total);
+}
+如果我们按goods_id分组，shop_price降序排列，不会出现所谓诡异的情况，因为此时分组的列（goods_id）和shop_price是一一对应的
+select goods_id,goods_name,shop_price from goods group by goods_id order by shop_price desc;
+https://segmentfault.com/a/1190000004879597
+
+如果group by之后还要使用order by，那么order by的字段最好是select返回的字段，避免所谓诡异的情况
 ```
+![php foreach](https://segmentfault.com/img/bVsnma)
 [翻墙蓝灯](https://www.isharebest.com/lantern.htm)
 [你见过的最想笑的，最奇葩的，最逗逼的代码是什么](https://www.zhihu.com/question/35113215)
 [按键精灵怎么用？怎么用按键精灵做脚本](https://jingyan.baidu.com/album/ea24bc39b976dfda62b33107.html)
