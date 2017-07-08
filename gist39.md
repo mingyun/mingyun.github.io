@@ -1,3 +1,43 @@
+[Lumen/Laravel 使用 alipay 最简单的方法](https://github.com/shaowangzhen/alipay)
+[Laravel 5.4 如何向 IoC 容器中添加自己定义的类](https://laravel-china.org/articles/5182/how-does-laravel-54-add-its-own-class-definition-to-the-ioc-container)
+```js
+app/Trade/Sale.php
+<?php
+namespace App\Trade;
+class Sale
+{
+public function exchange()
+{
+    dd('交易成功啦!');
+}
+}
+在Providers目录下创建一个服务提供者 TradeServiceProvider
+php artisan make:provider TradeServiceProvider
+然后在 TradeServiceProvider.php 的register方法中将我们的类进行绑定
+/**
+ * Register the application services.
+ *
+ * @return void
+ */
+public function register()
+{
+    //
+    $this->app->bind('trade',function(){
+        return new Sale();
+    });
+}
+接下来要去 config/app.php 下的providers数组中增加一行，
+App\Providers\TradeServiceProvider::class,
+然后在我们的路由中写一个测试
+Route::get('/',function (){
+$trade = app('trade');
+dd($trade->exchange());
+}
+输出结果：交易成功啦!
+```
+[Laravel & Lumen Eloquent 模型去掉 created_at 和 updated_at 其中一个](https://laravel-china.org/topics/5199/the-laravel-lumen-eloquent-model-removes-one-of-the-created-at-and-updated-at)
+在Model中设置 const UPDATED_AT = null
+
 [支付宝移动接口服务端生成签名串代码 ](http://www.cnblogs.com/xiaojingjing/p/3791616.html?utm_source=tuicool)
 ```js
 /**
