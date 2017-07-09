@@ -1,6 +1,149 @@
+[正则表达式101](http://regex.zjmainstay.cn/r/7yHAms/1)
+
+```js
+.(dot) 是以你当前运行文件路径为当前路径
+发布后被其他用户引用, 在你Python安装目录下有一个Lib目录, 直接像import os这样的是引用该目录下全局的模块
+import os
+os.path...
+可以运行是因为os是一个模块, 也是一个可运行的python文件
+
+客户端请求服务端的时候请求头会带上本地的cookie, request headers里面有 Cookie: xxxx
+
+所以服务器就能看到客户端的cookie,如果服务端要给客户端设置cookie,就会在response里面添加一个set-cookie: xxxx; 客户端接受到就会写在本地,下次请求的时候再把本地cookie带上去https://segmentfault.com/q/1010000010070806
+
+composer不知什么原因，遇到https，就会报SSL: Handshake timed out，Google也没结果
+打开php.ini, 将default_socket_timeout值调大。如：default_socket_timeout=360(默认为-1或60)
+$count = 0;
+$str   = '12#{店铺dagf称}gds#{奋斗区}sffd#{店盖饭}fdf#{奋斗}fsa';
+$str   = preg_replace_callback('/#\{[^}]*\}/', function() use (&$count) {
+    return '{$var' . ++$count . '}';
+}, $str);
+print_r($str);
+运行结果：
+
+12{$var1}gds{$var2}sffd{$var3}fdf{$var4}fsa
+求重组数组 有点递归https://segmentfault.com/q/1010000010067017
+$arr = [ ... ];
+$result = [];
+
+$arr = array_column($arr, NULL, 'id');
+
+foreach($arr as $item) {
+    if(empty($arr[$item['pid']])) {
+        $result[] = &$arr[$item['id']];
+    } else {
+        if(empty($arr[$item['pid']]['content']))
+            $arr[$item['pid']]['content'] = [];
+        $arr[$item['pid']]['content'][] = &$arr[$item['id']];
+    }
+}
+
+var_export($result);
+call_user_func([$this->hello, $name]);
+PHP7 sql_regcase 的替代函数https://segmentfault.com/q/1010000010085188
+$string = preg_replace_callback( '/[a-zA-Z]/', function($matches){
+        return "[".strtoupper($matches[0]).strtolower($matches[0])."]";
+    } , 'hello-. world-.');
+    var_dump($string);
+结果:
+
+string(45) "[Hh][Ee][Ll][Ll][Oo]-. [Ww][Oo][Rr][Ll][Dd]-."
+https://glot.io/snippets/erfs6n65cp 
+1、富文本编辑器可以用百度的UEditor
+2、正如楼上所说，你可以用ajax来提交，但是这个有一点不好，如果有一百个输入框，难道提交一百个键值对？
+3、所以你可以用js的formData对象，图片也可以发送过去，代码如下
+    $("#submit").click(function() {
+        var x = new FormData(document.getElementById("frm"));//构造方法里面必须是dom对象
+        x.append('abc', 123);//追加你的数据
+        $.ajax({
+            url: '1.php',
+            type: 'POST',
+            data: x,
+            processData: false,  // 告诉jQuery不要去处理发送的数据
+            contentType: false   // 告诉jQuery不要去设置Content-Type请求头
+        })
+        .success(function(data) {
+            //代码
+        });
+    });
+4、也可以用serializeArray函数模拟上面的formData对象，代码如下
+    var allDatas = $("form").serializeArray();
+    allDatas.push({name:'data',value: JSON.stringify(你的数据对象)});//追加的格式必须是name，value形式，打印allDatas的格式就知道了！！！
+    $.post(url,allDatas,function(json){//代码
+    });
+测试环境被百度快照抓了
+先找百度提交删除申请
+
+然后测试环境记得加 robots.txt 不给抓取，或者在 nginx 上 直接拒绝 来自蜘蛛的请求.
+$oldArr = [
+    ['a', 1],
+    ['', 2],
+    ['', 3],
+    ['b', 4],
+    ['', 5],
+    ['c',6],
+    ['',7]
+];
+
+$newArray = [];
+
+$temp = '';
+foreach ($oldArr as $item) {
+    if ($item[0]) {
+        $temp = $item[0];
+        $newArray[$temp] = $item[1];
+        continue;
+    }
+    $newArray[$temp] .= ','.$item[1];
+}
+php与nginx和apache的通信过程分别是什么样的？https://segmentfault.com/q/1010000010075777
+CGI全名common gateway interface,只是一种协议
+fcgi是fastcgi，可以看作cgi的升级版。他有一个常驻的进程池管理，而这点是cgi没有的。
+php-fpm是对fastcgi的php实现，是php的进程池管理。
+
+总的来说，cgi和fastcgi是协议，php-fpm是fastcgi的php实现。
+nginx与php-fpm通过socket通信,通信方式分两种:
+
+[1]unix socket 可进行同一台服务器上的多个进程进行数据通信
+[2]tcp socket 可跨服务器通信,效率略低于unix socket
+nginx与fpm通信过程
+
+UNIX Domain Socket:
+Nginx <=> socket <=> PHP-FPM
+
+TCP Socket(本地回环):
+Nginx <=> socket <=> TCP/IP <=> socket <=> PHP-FPM
+
+TCP Socket(Nginx和PHP-FPM位于不同服务器):
+php foreach 引用的问题https://segmentfault.com/q/1010000010039585
+
+php怎么把jpg转换成webp格式
+php-imagick
 
 
+$im = new Imagick('your-file-path');
+$im->setFormat('webp');
+$im->writeImage('webp-file.webp');
 
+如果二维数组中的，$oldArr[i][0] 的值为空，就以上一个不为空的值填充
+$oldArray = [
+    ['A0060750', 9787560618852],
+    ['', 9787560618855],
+    ['', 9787560618856],
+    ['A00607507', 9787560618857],
+    ['', 9787560618857]
+];
+
+$lastId = '';
+foreach ($oldArray as &$item) {
+    if ($item[0]) {
+        $lastId = $item[0];
+        continue;
+    }
+    $item[0] = $lastId;
+}
+怎么解决for循环调用递归函数时，数据包含上一条数据记录https://segmentfault.com/q/1010000010032189
+```
 
 [快捷打印 Laravel 中的数据库查询（SQL）语句](https://laravel-china.org/articles/5166/quick-print-laravel-database-query-sql-statement)
 ```js
