@@ -1,3 +1,7 @@
+
+
+
+
 [快捷打印 Laravel 中的数据库查询（SQL）语句](https://laravel-china.org/articles/5166/quick-print-laravel-database-query-sql-statement)
 ```js
 当你的 APP_ENV 设置为 local、请求 URL 后面紧跟 ?sql-debug=1 时，就会打印出请求处理逻辑中涉及到的所有数据库查询语句。
@@ -24,6 +28,295 @@ if ( env('APP_ENV') === 'local' ) {
     });
 }
 ```
+[Chrome插件：更好的GitHub代码搜索和浏览](https://about.sourcegraph.com/blog/faster-smoother-github-code-browsing/)
+[微信开发之微信登录](https://segmentfault.com/p/1210000010009577/read#top)
+[高效使用 Python 可视化工具 Matplotlib](http://python.jobbole.com/87831/)
+```js
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+ 
+df = pd.read_excel("https://github.com/chris1610/pbpython/blob/master/data/sample-salesv3.xlsx?raw=true")
+df.head()
+```
+[如何用Python做舆情时间序列可视化？](http://www.jianshu.com/p/4ea083874df4)
+```js
+pip install snownlp
+pip install ggplot
+import pandas as pd
+df = pd.read_excel("https://github.com/wshuyi/workshop-NKU-mlis-20170702/raw/master/restaurant-comments.xlsx")
+def get_sentiment_cn(text):
+    s = SnowNLP(text)
+    return s.sentiments
+text = df.comments.iloc[0]
+s = SnowNLP(text)
+s.sentiments
+df["sentiment"] = df.comments.apply(get_sentiment_cn)
+df.head()
+df.sentiment.mean()#我们来把所有的情感分析结果数值做一下平均。使用mean()函数即可。
+from ggplot import *
+ggplot(aes(x="date", y="sentiment"), data=df) + geom_point() + geom_line(color = 'blue') + scale_x_date(labels = date_format("%Y-%m-%d"))
+df.sort(['sentiment'])[:1]
+print(df.sort(['sentiment']).iloc[0].comments)#所有评论里情感分析数值最低的那条 欢迎关注我的公众号“玉树芝兰”。
+```
+[看例子，学 Python（一）](https://segmentfault.com/a/1190000009903115)
+```js
+打印 100 以内的数列：
+
+>>> a, b = 0, 1
+>>> while a < 100:
+...     print(a, end='')
+...     a, b = b, a+b
+...
+0 1 1 2 3 5 8 13 21 34 55 89 >>>
+
+def fac(n):
+    """C-style implementation"""
+    result = 1
+    while n > 1:
+        result = result * n
+        n -= 1
+    return result
+    def fac(n):
+    result = 1
+    for i in range(2, n+1):
+        result *= i
+    return result
+def fib(n):
+    result = []
+    a, b = 0, 1
+    while a < n:
+        result.append(a)
+        a, b = b, a+b
+    return result
+    
+    
+    
+    def char_counter(chars):
+    counter = {}
+    for c in chars:
+        counter[c] = counter.get(c, 0) + 1
+    return counter
+```
+[SQL两个字段不区分顺序去重](https://segmentfault.com/q/1010000010089529)
+```js
+select aa,bb from (select case when a<=b then a else b end aa,case when a<=b then b else a end bb from tbl) tt group by aa,bb;
+数据库如何判断一条数据是否被修改?https://segmentfault.com/q/1010000010059342
+乐观锁用的是版本号字段实现的，每次更新成功后时候版本号字段的值加1在更新前，先检查数据库中的版本号和页面中保存的版本号是否相同，如果版本号变大，提示用户在编辑期间已有其他用户修改了数据。
+
+当然也可以用悲观锁，进入页面的时候使用的select ... for update锁定记录，这时候其他用户就不能同时编辑锁定的记录了。
+加个字段，edit_num，每改一次+1，B要改的时候比对一下。
+脚本中可能有特殊字符，使用cat -A test.sh看一下
+要让这个提醒消失也很简单，就是指定输出流向，例如：
+nohup ls / >/dev/null 2>&1 &
+在文件中固定以这样的字符串出现: "count:XX"
+举个例子：
+A/1A/data/20170630/asd.txt
+A/1A/data/20170630/zxc.txt
+A/2B/data/20170630/dfg.txt
+A/2B/data/20170630/dnv.txt
+我需要获取到这些txt文件中count后的数值。
+grep -rPo '(?<=count:)\S+' *  https://segmentfault.com/q/1010000010024582
+前端ajax：
+
+data = {};
+$.ajax({
+    type: "post",
+    url: "url",
+    dataType: "json",
+    data: JSON.stringify(data),
+    success: function(result) {
+    }
+});
+后端取值：
+
+import json
+data = json.loads(request.body)
+print data['key']
+不小心强制提交了git push origin master -f
+
+执行 git reset 之后，在 .git/objects 文件夹里面的内容并没有相应的删除。
+
+运行 git reflog 可以找到之前的提交 ID（commit_id)
+
+然后再 git reset --hard commit_id
+Git线上存在一个文件，本地修改文件，如何让这个文件不被提交
+$ git update-index --assume-unchanged /path/to/file #忽略跟踪
+
+$ git update-index --no-assume-unchanged /path/to/file #恢复跟踪
+https://segmentfault.com/q/1010000010079121 
+ps: .gitignore 只会对未加入版本控制的文件有效,如果你已经加入过了,那这个文件就帮不了你了
+1、看看有没有隐藏的大文件
+
+du -sh .*
+2、看看有没有程序运行过程删除的文件，虽然文件删了，但占的空间并没有释放：
+如果有输出的话，说明有删除过正在运行的程序产生的文件
+lsof |grep delete
+怎么用一行shell语句统计这两个文件行数之和
+wc -l f1 | awk '{print $1}'
+wc -l f1 f2|awk 'END{print $1}'
+或者：
+
+awk 'END{print NR}' f1 f2
+$read  =  ture;
+$limit =  0;
+while($read)
+{    
+
+    $sql = "select id,name from table limit {$limit},5";
+    $data = $db->select($sql); 
+    //todo 你的业务逻辑
+    
+    if(!data)
+    {    
+        $read = false;
+        break;数据为空,直接停止了循环
+    }
+   
+    $limit += 5;每次获取后面5条,直至数据查询为空.
+
+}
+有一个ajax请求，当用户登录的时候可以返回数据，当session过期了，就跳转到登录页，怎么做呢？
+过期了，会返回 401 状态码
+
+默认情况下，axios 会将 401 丢给 error ，你在 catch 里处理到401状态码 跳转到登录页面即可。
+php 静态调用非静态方法是如何做到的归根结底是通过 魔术方法 __callStatic 实现的
+Illuminate\Support\Facades\Facade 代码最下方
+
+
+
+
+```
+[php一个算法问题](https://segmentfault.com/q/1010000010104906)
+```js
+这个二进制设计就不太对，二进制可以只用3个位来标记对应的优惠。
+
+// 以下为二进制
+000 // 表示无优惠，十进制0
+001 // 表示会员折扣，十进制1
+010 // 表示满减
+100 // 表示优惠券
+会员和满减谁优先，其实并不用标记。因为这个是产品折扣本身的信息，不需要基于用户选定的值。（永远不要相信用户输入）
+所以，最后用户可能选的值就是从000到111的值，也就是十进制0到7。
+然后，这样就很容易分离出每一个折扣来了：
+
+$is_vip = $value & 1;
+$is_amount_cut = ($value & 2) >> 1;
+$is_discount = ($value & 4) >> 2;
+拆完之后，下面的逻辑判断其实就非常容易了，先判断只能一种的情况
+
+elseif($is_vip + $is_amount_cut + $is_discount > 1)
+# 上面用了位移而没有直接使用布尔值，就是为了这边可以使每一个为真的优惠标记权值为1
+# 权值加起来如果大于1，表示用了一种以上的优惠了
+然后判断两个的情况
+
+if($is_vip + $is_amount_cut + $is_discount == 2) {
+    if(!$is_vip)
+        ...
+    elseif(!$is_amount_cut)
+        ...
+    else
+        ...
+}
+# 由于每个权值都是1，所以加起来等于2时候只可能有一个为假值（0）
+# 所以只需要判断哪个标记为假，就可以判断出用了哪两种优惠
+下面是三种优惠
+
+elseif($is_vip + $is_amount_cut + $is_discount >= 3)
+或者
+
+elseif($is_vip && $is_amount_cut && $is_discount)
+对于list的+=,它要求右边对象是iterable的,也就是说,能够用于迭代的, 例如元组,列表甚至是字典这些, 而append则没这个要求, 因为它直接将右边的对象,当成一个整体, 追加到列表末尾! 可以通过下面的例子帮助理解
+
+# += 演示
+>>> a = []
+>>> a+= (1,2)
+>>> a
+[1, 2]
+>>> a+= [1,2]
+>>> a
+[1, 2, 1, 2]
+>>> a+= {'a':123, 'b':333}
+>>> a
+[1, 2, 1, 2, 'a', 'b']
+
+# append 演示
+>>> a.append({'a':123, 'b': 333})
+>>> a
+[1, 2, 1, 2, 'a', 'b', {'a': 123, 'b': 333}]
+>>> a.append((1,2))
+>>> a
+[1, 2, 1, 2, 'a', 'b', {'a': 123, 'b': 333}, (1, 2)]
+
+boss第一天给你一元钱，后面每一天给你的是前一天的一倍。 也就是说1，2，4，8.... 。现问到了30天后，你一共拿了多少钱https://segmentfault.com/q/1010000010053216
+/*
+·递归
+  1. salarySum(n) = salarySum(n-1) + salary(n)
+  2. salary(n) = 2 ^ (n-1)
+
+·非递归
+  循环
+*/
+
+function salary(nthDay){
+  return Math.pow(2, nthDay-1)
+}
+
+// 递归
+function salarySum(nthDay) {
+  if (nthDay > 1) {
+    return salarySum(nthDay - 1) + salary(nthDay)
+  } else {
+    return 1
+  }
+}
+
+// 非递归
+function salarySum(nthDay) {
+  let day = 1
+  let sum = 0
+  while (day <= nthDay) {
+    sum += salary(day)
+    day++
+  }
+  return sum
+}
+function recursion($day){
+    if($day == 1){
+        return 1;
+    }else{
+        return recursion($day - 1) + pow(2,$day - 1);
+    }
+}
+echo recursion(30);
+正则匹配连续5个1212121212或者2121212121，可以重复利用数字https://segmentfault.com/q/1010000010042330
+使用环视提取子分组：(?=.*?((12|21)\2{4}))
+>>> import re
+>>> ss='1212121212121212121212'
+>>> re.findall(r'(?=((12|21)\2{4}))',ss)
+[('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12'), ('2121212121', '21'), ('1212121212', '12')]
+
+```
+[前端职业规划 live 中的彩蛋到底怎么解](https://www.zhihu.com/question/62071167/answer/194308872)
+```js
+作者：匿名用户
+链接：https://www.zhihu.com/question/62071167/answer/194308872
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+对下面的那串数字解析下: 100,119,122,46,99,110,47,54,57,76,82,104,117 
+最开始用ASCII码试了下,好像能对上,对着码表翻了下100: d
+119:  w
+嗯,短连接-> dwz.cn/69LRhu然后有人提到 Unicode,嗯,也是对的上的. 这个故事告诉我们 Unicode 兼容ASCII 码(废话)短连接的跳转的url是https://www.zhihu.com/people/xiao-jue-83/activities?code=aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNzUwNzg2NV1BRVNVMkZzZEdWa1gxL1ZGblN4V3UxTUNySVJGVHZHMnRsTjduTzFrb0FzcmkxWVRrWE0yRk80RktRVm5id1Y3NytpCjZVTjRKazJkODVJUU1Lcmt6eUhPeWc9PQ==
+小爝的专栏,URL后面跟了一个可疑的code ='aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNzUwNzg2NV1BRVNVMkZzZEdWa1gxL1ZGblN4V3UxTUNySVJGVHZHMnRsTjduTzFrb0FzcmkxWVRrWE0yRk80RktRVm5id1Y3NytpCjZVTjRKazJkODVJUU1Lcmt6eUhPeWc9PQ=='
+然后看着==结尾,嗯,base64吧, 然后试着用atob(code);
+结果是https://zhuanlan.zhihu.com/p/27507865]AESU2FsdGVkX1/VFnSxWu1MCrIRFTvG2tlN7nO1koAsri1YTkXM2FO4FKQVnbwV77+i
+6UN4Jk2d85IQMKrkzyHOyg=
+从最开始有意义的字符猜测,这个解码是正确的. 有意义的字符后面从] 开始的乱码 嗯...是以AES开头的. AES嗯,接下来就是找密匙的过程. 尝试了几百次之后,以我天才的智商, 我去问了下 @Jasin Yip 同学. 套出了密匙:  小爝      (Notes:此处可见这俩应该是真爱).在http://tool.oschina.net/encrypt . 输入密匙和加密码.真相就在眼前.https://www.zhihu.com/lives/861180779319934976
+```
+
+
+
 [字符编码发展史和密码算法那些事儿](http://www.freebuf.com/articles/others-articles/136742.html)
 [【吐槽】PHP编程中遇到令人抓狂的“bug”](http://bbs.51cto.com/thread-1506888-1.html)
 [写个隐藏链接指过去。人是不会点的，爬虫一进去就挂掉了](https://blog.haschek.at/2017/how-to-defend-your-website-with-zip-bombs.html)
@@ -51,6 +344,19 @@ function sendBomb(){
 function startsWith($a, $b) { 
     return strpos($a, $b) === 0;
 }
+DNS 子域名遍历工具 dnssearchhttps://github.com/evilsocket/dnssearch
+想知道男朋友去哪了，iPhone定位查询http://weibo.com/2824626113/FaEFldqS6
+Temper Chrome：好用到飞起的 HTTP 请求修改插件https://zhuanlan.zhihu.com/p/27657281?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
+微博码农圈观察 http://ic.civiw.com/cd/0946C8379B8042576FBE669A5F101A46 http://weibo.com/2194035935/FaGI8s6ZA
+一个chrome插件 —— CatGate，可以抓取网页信息http://weibo.com/1071036042/FaH5Dxbh7 https://github.com/easychen/catgate
+全部删除、转发微博、原微博已删除http://chrome.weibodangan.com/ http://www.jijidown.com/
+
+火车票查询工具 iquery https://zeronet.io/ 开放，自由，去中心化的网络，
+使用 Bitcoin 加密和 BitTorrent 网络
+写过一个很小的程序，就是把文字倒过来。心情不好的时候，我的微博都是倒着的http://old.haorenao.cn/reverse/
+看例子，学 Python（一）https://segmentfault.com/a/1190000009903115
+如何用一行代码表达程序员的自黑http://weibo.com/ttarticle/p/show?id=2309404120294456460748  使用OAuth 2.0进行GitHub API验证
+XSS'OR 开源，Hack with JavaScript https://github.com/evilcos/xssor2
 ```
 [玩转算法面试 leetcode题库分门别类详细解析](http://coding.imooc.com/class/82.html?mc_marking=f3bfe42ef90a9df5a2ab48e6a80a35ab&mc_channel=weibo&mc_billing=%E5%85%8D%E8%B4%B9%E8%B5%A0%E9%80%81&mc_keywords=&mc_position=&mc_business=)
 [MySQL日志审计 帮你揪出内个干坏事儿的小子](http://suifu.blog.51cto.com/9167728/1881116)
