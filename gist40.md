@@ -1,5 +1,10 @@
+[已经编译好的 ngrok服务端和客户端，服务端支持Linux、Mac、Windows，有自己服务器有需要的朋友可以自己搭建
+](http://www.sunnyos.com/article-show-74.html )
+ [(招募截止)『Python爬虫小分队』学习群第三期招募](http://www.jianshu.com/p/f00d19916b53)
+[PHP基础知识系统复习](http://blog.csdn.net/qq_34625397/article/details/51785421)
+[百度网盘](http://www.baiduyunpan.net/)
 [正则表达式101](http://regex.zjmainstay.cn/r/7yHAms/1)
-
+[ nginx配置文件nginx.conf conf.d](http://blog.csdn.net/qq_34625397/article/details/51460209)
 ```js
 .(dot) 是以你当前运行文件路径为当前路径
 发布后被其他用户引用, 在你Python安装目录下有一个Lib目录, 直接像import os这样的是引用该目录下全局的模块
