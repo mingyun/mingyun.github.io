@@ -1,3 +1,50 @@
+[Laravel5中Cookie的使用](http://www.cnblogs.com/phpper/p/6801678.html)
+```js
+$foreverCookie = Cookie::forever('forever', 'Success');
+    $tempCookie = Cookie::make('temporary', 'My name is fantasy', 5);//参数格式：$name, $value, $minutes
+    return Response::make()->withCookie($foreverCookie)->withCookie($tempCookie);
+    public function index(Request $request)
+{
+    $cookie = $request->cookie('test');
+    dump($cookie);
+}当我们需要在客户端使用的时候，获取Cookie的值就不是这样了。首先，我们通过响应withCookie($cookie)传输到客户端的数据并不是一个字符串，而是一个cookie对象
+<div>{{ $cookie->getValue() }}</div>
+$cookie = Cookie::forget('test');
+//return Redirect::route('index')->withCookie($cookie);
+```
+[关于laravel5 消息订阅/发布的理解初](http://www.cnblogs.com/phpper/p/6867786.html)
+```js
+ public function handle()
+    {
+        \Redis::psubscribe(['user-channel'], function($message) {
+            echo $message;
+        });
+    }
+    现在控制台中输入:php artisan redis:subscribe 启动服务进程
+    
+    Route::get('test', function () {
+    // 路由逻辑...
+　　\Redis::publish('user-channel', json_encode(['username' => 'mary','message'=>'i miss you']));
+ });
+ Route::get('/get', function () {
+    $exitCode = \Artisan::call('redis:subscribe');//这里应该是代码启动进程监听的命令了
+});
+if(count($array) == count($array, 1)){
+　　echo '一维数组';
+}else{
+　　echo '多维数组';
+}
+MYSQL表记录字段换行符回车符处理
+
+UPDATE 表名 SET  字段= REPLACE(REPLACE(字段, CHAR(10), ''), CHAR(13), ''); 
+```
+[多个php版本的composer使用](http://www.cnblogs.com/phpper/p/6795711.html)
+```js
+1：下载composer.phar，官网有直接下载的链接，https://getcomposer.org/download/<br>
+2：composer.phar 复制到项目根目录，比如我的是:/home/www/web<br>
+3:执行 /usr/local/php7/bin/php composer.phar update （这里我的安装路径是/usr/local/php7/bin/php,不一定适合你额，请对号入座即可吧）<br>
+4：安装依赖包：/usr/local/php7/bin/php composer.phar require laravel/scout
+```
 [已经编译好的 ngrok服务端和客户端，服务端支持Linux、Mac、Windows，有自己服务器有需要的朋友可以自己搭建
 ](http://www.sunnyos.com/article-show-74.html )
  [(招募截止)『Python爬虫小分队』学习群第三期招募](http://www.jianshu.com/p/f00d19916b53)
