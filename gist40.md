@@ -2,7 +2,78 @@
 [shadowsocks Python 一键安装](https://github.com/iMeiji/shadowsocks_install/wiki/shadowsocks-Python-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85)
 [在线执行代码](https://glot.io/snippets/ern6rrksm5)
 http://sandbox.onlinephpfunctions.com/ http://www.duoluosb.com/coderunner 
+微信支付付款
+```js
+// 微信付款 type=1 app付款 type=2网页付款 pay.weixin.qq.com 
+    public function wechatpay($order_id,$openid,$amount,$desc,$type=1){
+        if ($type == 1) {
+            $appid = config('services.appwxpay.appid');
+            $mchid = config('services.appwxpay.mchid');
+            $appkey = config('services.appwxpay.key');
+            $cert_path = config('services.wxtransfer.appsslcert_path');
+            $key_path = config('services.wxtransfer.appsslkey_path');
+        } else if ($type == 2) {
+            $appid = config('services.wxpay.appid');
+            $mchid = config('services.wxpay.mchid');
+            $appkey = config('services.wxpay.key');
+            $cert_path = config('services.wxtransfer.wapsslcert_path');
+            $key_path = config('services.wxtransfer.wapsslkey_path');
+        }
+        $arr = [
+            'mch_appid'=>$appid,
+            'mchid'=>$mchid,
+            'nonce_str'=>str_random(32),
+            'partner_trade_no'=>$order_id,
+            'openid'=>$openid,
+            'check_name'=>'NO_CHECK',
+            'amount'=>$amount*100,
+            'desc'=>$desc,
+            'spbill_create_ip'=>\Request::getClientIp(),
+            'sign'=>'',
+        ];
+        ksort($arr);
+        $sign="";
+        foreach ($arr as $key => $value) {
+            if($value && $key!="sign" && $key!="key"){
+                $sign.=$key."=".$value."&";
+            }
+        }
+        $sign.="key=".$appkey;
+        $arr['sign'] = strtoupper(md5($sign));
+        $xml = "<xml>";
+        foreach ($arr as $key=>$val)
+        {
+                if (is_numeric($val))
+             {
+                $xml.="<".$key.">".$val."</".$key.">"; 
 
+             }
+             else
+                $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";  
+        }
+        $xml.="</xml>";
+       
+        $ch = curl_init();
+        //超时时间
+        curl_setopt($ch,CURLOPT_TIMEOUT,60);
+        curl_setopt($ch,CURLOPT_URL,'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers');
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,false);
+        //默认格式为PEM
+        curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
+        curl_setopt($ch,CURLOPT_SSLCERT,$cert_path);
+        curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
+        curl_setopt($ch,CURLOPT_SSLKEY,$key_path);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+        curl_setopt($ch,CURLOPT_POST, 1);
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$xml);
+        $data = curl_exec($ch);
+        $data = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        curl_close($ch);
+        return $data;
+    }
+```
 [Laravel5中Cookie的使用](http://www.cnblogs.com/phpper/p/6801678.html)
 ```js
 $foreverCookie = Cookie::forever('forever', 'Success');
