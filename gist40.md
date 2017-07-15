@@ -1,5 +1,80 @@
 [前端原型工具](https://app.zeplin.io/project/595079b21963884d60a9b903/screen/5966de88343f499f1d40f308)
+[JavaScript专题之深浅拷贝](https://juejin.im/post/59658504f265da6c415f3324)
+```js
+var arr = ['old', 1, true, null, undefined];
+var new_arr = JSON.parse( JSON.stringify(arr) );
+var new_arr = arr.concat();
+var new_arr = arr.slice();
+new_arr[0] = 'new';
 
+console.log(arr) // ["old", 1, true, null, undefined]
+console.log(new_arr) // ["new", 1, true, null, undefined]
+var shallowCopy = function(obj) {
+    // 只拷贝对象
+    if (typeof obj !== 'object') return;
+    // 根据obj的类型判断是新建一个数组还是对象
+    var newObj = obj instanceof Array ? [] : {};
+    // 遍历obj，并且判断是obj的属性才拷贝
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] = obj[key];
+        }
+    }
+    return newObj;
+}
+var deepCopy = function(obj) {
+    if (typeof obj !== 'object') return;
+    var newObj = obj instanceof Array ? [] : {};
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            newObj[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
+        }
+    }
+    return newObj;
+}
+火车票查询工具 iquery https://zeronet.io/ 开放，自由，去中心化的网络，
+使用 Bitcoin 加密和 BitTorrent 网络
+写过一个很小的程序，就是把文字倒过来。心情不好的时候，我的微博都是倒着的http://old.haorenao.cn/reverse/
+看例子，学 Python（一）https://segmentfault.com/a/1190000009903115
+如何用一行代码表达程序员的自黑http://weibo.com/ttarticle/p/show?id=2309404120294456460748  使用OAuth 2.0进行GitHub API验证
+XSS'OR 开源，Hack with JavaScript https://github.com/evilcos/xssor2
+itchat+pillow实现微信好友头像爬取和拼接https://github.com/15331094/wxImage  欢迎关注我的公众号“玉树芝兰”。
+https://www.tshe.com/c/1155795c 一个实现创想的定制平台 http://doge.tv/
+https://github.com/jkchao/books  https://github.com/yuanliangding/books 
+Go 交互式REPLhttps://github.com/d4l3k/go-pry
+https://lmgtfy.com/  let me google that for you 的中文版 http://zh.lmgtfy.com/?q=PHP
+ni.buhuigoogle.me  http://buhuibaidu.me/?s=%E4%BD%A0%E4%B8%8D%E4%BC%9A%E8%87%AA%E5%B7%B1%E7%99%BE%E5%BA%A6%E4%B9%88%EF%BC%9F%EF%BC%9F
+Quilt：一个数据包管理器，像管理代码那样管理数据。采用Python编写。 ​​​​https://quiltdata.com/ pip install quilt PHP自动话工具 Robohttp://robo.li/ http://weibo.com/1088413295/FctnK3GKV
+netdata 。一款强大的附带UI的跨平台机器监视工具https://github.com/firehol/netdata/wiki/Installation
+awesome-guidelines: 高质量的编码风格约定和标准资源大全https://github.com/Kristories/awesome-guidelines 真正的利器叫做markdown-here https://github.com/adam-p/markdown-here sukhoi：python实现的灵活可扩展的Web爬虫。 ​​​​
+世界上最好的语言可以在浏览器里运行了https://gitlab.com/kornelski/babel-preset-php#php7-to-es7-syntax-translator  推荐一个牛X大数据买房微信公众号：撸房价（或搜索lulufangjia）
+git config --global alias.undo 'reset --soft HEAD ^'  Git 全局配置。它是你 home 目录中的 .gitconfig 文件 https://segmentfault.com/p/1210000010168660/read
+$ git config --global alias.glog "log --graph --pretty=format:'%Cred%h%Creset -
+%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset'"
+请搜索emule、bt sync、zeronet，不谢  发现一个网站https://www.relive.cc/view/1078895740，可以将你的路线（跑步、骑车、健行等等）转换成小视频
+JavaScript深入系列https://github.com/mqyqingfeng/Blog  很好玩的软件BitTorrent-Sync(bt sync)
+https://pan.baidu.com/s/1c2uwEGC#list/path=%2F%E8%BD%AF%E4%BB%B6%E5%88%86%E4%BA%AB&parentPath=%2F 自己两个电脑异地同步
+基于Node 的一个网络爬虫 API接口https://ecitlm.github.io/SpliderApi
+开启TCP BBR拥塞控制算法https://github.com/iMeiji/shadowsocks_install/wiki/%E5%BC%80%E5%90%AFTCP-BBR%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95  devdocs.io
+```
+[PHP OCR实战：用Tesseract从图像中读取文字](http://www.codeceo.com/article/php-ocr-tesseract-get-text.html)
+[Using Tesseract OCR with Python](http://www.pyimagesearch.com/2017/07/10/using-tesseract-ocr-python/)
+[js 变量作用域](https://www.v2ex.com/t/375425)
+```js
+var getPrecent = function(){ 
+	$.getJSON(Url, requestData, function (rv) { 
+		var response = rv.Value; 
+		ret = response.Process; 
+		if (ret == 100) { 
+			console.log("Done!，已完成100%"); 
+		}else{ 
+			console.log("已完成"+ret+"%");
+			setTimeout(getPrecent,200); 
+		} 
+	}); 
+}; 
+getPrecent();
+```
 [端口扫描 视频vip解析](http://www.liuwx.cn/nmap/scanPort.php)
 [shadowsocks Python 一键安装](https://github.com/iMeiji/shadowsocks_install/wiki/shadowsocks-Python-%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85)
 [在线执行代码](https://glot.io/snippets/ern6rrksm5)
