@@ -1,3 +1,72 @@
+[Redis的并发控制](http://blog.liuhongnan.com/2017/07/03/Redis%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
+```js
+update act set num=#{numNew} where actId=#{actId} and num=#{numOld}
+即只有当查询出来的数据与当前数据库的数据一致时，才可以进行赋值操作，否则失败
+```
+[微信OAuth2.0网页授权流程总结](http://blog.liuhongnan.com/2017/03/23/%E5%BE%AE%E4%BF%A1OAuth2.0%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93/)
+```js
+总结起来主要分为四步
+
+用户同意授权，获取code
+
+通过code换取网页授权access_token
+
+刷新access_token（如果需要）
+
+拉取用户信息(需scope为 snsapi_userinfo)
+```
+
+![imag](http://ojtlrnjhy.bkt.clouddn.com/2017-03-24-082728.jpg)
+
+[迭代一个4GB大小的文件中功能中，迭代器大展身手](https://laravel-china.org/articles/5283/namespaces-traits-and-generators-for-php-new-features)
+```js
+function getRows($file) {
+    $handle = fopen($file, 'rb');
+    if ($handle === false) {
+        throw new Exception();
+    }
+    //feof()函数检测是否到达文件末尾
+    while (feof($handle) === false) {
+        //fgetcsv()一次读取csv文件的一行
+        yield fgetcsv($handle);
+    }
+    fclose($handle)
+}
+
+foreach (getRows('data.csv') as $row) {
+    print_r($row);
+}
+超能力和超人不再是强依赖关系。超能力是由外部给予超人的，超人和超能力有依赖，但是这个依赖是外部给予，因此我们可以说超能力是由外部注入给他的，所以这就叫 依赖注入。
+
+而反过来说，超人具有何种超能力不是他内部自身控制的，而是由外部控制的，相当于将超能力具有何种功效交给了外部，外部来决定超人该有的超能力，所以超能力的控制权被由自身控制反转为外部控制，这被称为 控制反转。
+$user = User::find(1); 
+$user->update([ 
+'votes' => \DB::raw( 'votes + 1' ), 
+'click' => \DB::raw( 'click + 1' ), 
+]); 
+https://github.com/XhstormR/GetBilibili http://www.jijidown.com/ http://kanbilibili.com/
+这个我在用，可以下载 b 站视频，年头久远的视频也能 down 下来。 
+https://weibomiaopai.com/ https://www.biliget.com/
+HTML To Excelhttps://github.com/hejiheji001/tableExport.jquery.plugin
+哔哩哔哩视频高能预警分析http://blbl.yidianit.com/
+VIP视频在线观看http://www.maxiaohao.com/video/
+帮你百度莆田系  
+https://imjad.cn/baidu/?q=%E4%BB%80%E4%B9%88%E6%98%AF%E8%8E%86%E7%94%B0%E7%B3%BB http://buhuibaidu.me/?s=%E4%BB%80%E4%B9%88%E6%98%AF%E8%8E%86%E7%94%B0%E7%B3%BB http://www.baidu-x.com/?q=%E4%BB%80%E4%B9%88%E6%98%AF%E8%8E%86%E7%94%B0%E7%B3%BB http://ni.buhuigoogle.me/ http://zh.lmgtfy.com/ 《滚蛋吧，莆田系》 https://putianxi.github.io/
+修改 
+￼from PIL import Image 
+if __name__ == "__main__": 
+im = Image.open("mr.zhang.jpg") 
+x, y = im.size 
+for i in range(x): 
+for j in range(y): 
+r, g, b = im.getpixel((i,j)) 
+if (20< r < 180) and (80< g < 250) and (180< b< 265): 
+r, g, b = 255, 255, 255 
+im.putpixel((i, j), (r, g, b)) 
+im.show()
+
+
+```
 [前端原型工具](https://app.zeplin.io/project/595079b21963884d60a9b903/screen/5966de88343f499f1d40f308)
 [JavaScript专题之深浅拷贝](https://juejin.im/post/59658504f265da6c415f3324)
 ```js
