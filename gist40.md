@@ -1,3 +1,173 @@
+app 一个账号不能在多个手机上同时登录https://segmentfault.com/q/1010000010183345
+后端有一个记录登录状态的表：user，session，expire_time。
+一个设备登录账号，状态表里检查该账号是否有相应记录，且session一致：
+如果没有，说明还没有登录，则正常登录；如果已有（且没过期），则询问是否“强行”登录（把之前别的设备登录记录清除），并更新session、expire_time信息。
+关于PHP 变量或非变量 及5和7版本之间 运算符https://segmentfault.com/q/1010000010094671
+$a=10;
+echo ++$a+$a++;
+正则表达式负向前查找（?!）https://segmentfault.com/q/1010000010140547
+支付成功，服务器出现当机情况。https://segmentfault.com/q/1010000010121419
+可以避免, 做个定时任务, 拿订单号主动查询订单状态, 遗漏的再次更新.
+
+一般是回调通知更新一次, 定时查询再做一次查询, 防止你说的这类情况.
+可以避免, 做个定时任务, 拿订单号主动查询订单状态, 遗漏的再次更新.
+
+一般是回调通知更新一次, 定时查询再做一次查询, 防止你说的这类情况.https://segmentfault.com/q/1010000010135018
+在body 标签里 添加 style="background：write"试试
+用 PHP 进行 HTTP 认证
+
+<?php
+  if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    header('WWW-Authenticate: Basic realm="My Realm"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'Text to send if user hits Cancel button';
+    exit;
+  } else {
+    echo "<p>Hello {$_SERVER['PHP_AUTH_USER']}.</p>";
+    echo "<p>You entered {$_SERVER['PHP_AUTH_PW']} as your password.</p>";
+  }php 进制转换出现问题https://segmentfault.com/q/1010000010120709
+  ```js
+ function hex_dec($str)
+{
+    list($int,$hex)=explode('.',$str);
+    $temp=0;
+    for($i=0;$i < strlen($hex); $i++)
+    {
+        $digit=hexdec(substr($hex,$i,1))/16;
+        $temp += $digit/pow(16,$i);
+    }
+    return hexdec($int)+$temp;
+}
+
+function dec_hex($str)
+{
+    $int = intval($str);
+    $hex = $str - $int;
+    $float = '';
+    while($hex!=0){
+        $temp = $hex*16;
+        $float .= dechex(intval($temp));
+        $hex = $temp - intval($temp);
+    }
+    $float = !empty($float)?'.'.$float:'';
+    return dechex($int).$float;
+}
+
+echo dec_hex("58.11");
+echo '<br/>';
+echo hex_dec("3a.1c28f5c28f5c"); 
+function parseDegree($s) {
+    $s = str_replace(['˚', '´'], ['D', ''], $s);
+    if (preg_match('/^(\d+)D(\d+(?:\.\d+))$/', $s, $m)){
+        return $m[1] + $m[2] / 60.0;
+    }
+    
+    return false;
+}
+使用这个函数就可以将题主的数据转换成百度地图API所需要的格式了，如：
+
+>>> parseDegree('112˚49.0382´')
+=> 112.81730333333
+>>> parseDegree('23˚59.3728´')
+=> 23.989546666667  https://segmentfault.com/q/1010000010117480
+
+
+  ```
+  
+请问php然后把树形数组回溯成一维数组https://segmentfault.com/q/1010000010123947
+```js
+   $arr = array(
+    1 => array('id' => '1', 'parentid' => 0),
+    2 => array('id' => '2', 'parentid' => 0),
+    3 => array('id' => '3', 'parentid' => 1),
+    4 => array('id' => '4', 'parentid' => 1),
+    5 => array('id' => '5', 'parentid' => 2),
+    6 => array('id' => '6', 'parentid' => 3),
+    7 => array('id' => '7', 'parentid' => 3)
+);
+
+$result = tree($arr);
+var_dump($result);
+
+function tree($array, $parentid = 0)
+{
+    $result = array();
+    foreach ($array as $val) {
+        if ($val["parentid"] == $parentid) {
+            $indata = array("id" => $val["id"]);
+
+            $chidrendata = tree($array, $val["id"]);
+            if ($chidrendata) {
+                $indata["children"] = $chidrendata;
+            }
+            $result[] = $indata;
+        }
+    }
+    return $result;
+}
+
+$list = setlist($result);
+var_dump($list);
+
+function setlist($arr, $parentid = 0)
+{
+    $array = array();
+    foreach ($arr as $val) {
+        $indata = array("id" => $val["id"], "parentid" => $parentid);
+        $array[] = $indata;
+        if (isset($val["children"])) {
+            $children = setlist($val["children"], $val["id"]);
+            if ($children) {
+                $array = array_merge($array, $children);
+            }
+        }
+    }
+    return $array;
+}
+
+<?php
+
+
+    $a = '12341234';
+    $b = '139';
+
+
+    // 取出数组重复的项目
+    $a_arr = array_unique(str_split($a));
+    $b_arr = array_unique(str_split($b));
+
+    // 取数组的交集
+    $ident = array_intersect($a_arr, $b_arr);
+
+
+    // 大于等于， 重复的话会大于
+    if (count($ident) >= count($b_arr))
+    {
+        echo "{$b} 全在 {$a} 中";
+    }
+    else
+    {
+        echo "不匹配";
+    }
+MySQL DELETE JOIN DELETE T1, T2
+FROM T1
+INNER JOIN T2 ON T1.key = T2.key
+WHERE condition;http://www.mysqltutorial.org/mysql-delete-join/
+我用chrome抓包的时候，有个选项是preserve log，勾了之后302之前的请求不会被清掉
+用ajax提交的话，要禁用掉form表单的默认提交event.preventDefault()
+在你本地挂一个网站，绑一个域名www.test.com
+你同事电脑改hosts，添加www.test.com 你的IP
+同事访问www.test.com就会访问你
+123.345.0.0/16 禁止123.345.xxx.xxx
+123.0.0.0/8 禁止123.xxx.xxx.xxx
+ [子类就会继承父类所有公有的和受保护的方法], 也就是说, 当方法为 public 的时候, 子类覆盖了父类的 say, 当方法为 private 时, 子类不会覆盖父类的方法
+```
+  php字符串不连续包含，如何高效率实现https://segmentfault.com/q/1010000010206557
+  mysql如何查询存储两种格式的字段并添加过滤条件?https://segmentfault.com/q/1010000010165865
+  php 经纬度坐标转化https://segmentfault.com/q/1010000010117480
+  中文分词的开源插件https://segmentfault.com/q/1010000010119003
+  https://github.com/jonnywang/phpjieba  结巴中文分词之php扩展
+  https://segmentfault.com/a/1190000007352990  Apache设置反向代理解决js跨域问题
 [常用的 PHP 搜索排序算算法](https://laravel-china.org/articles/5301/commonly-used-php-search-sorting-algorithm)
 [利用不可见Unicode控制字符(恰好是一对，类比于0/1](https://mntn-dev.github.io/z.js/)
 https://www.zhihu.com/question/62370074
