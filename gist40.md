@@ -1,3 +1,181 @@
+[常用的 PHP 搜索排序算算法](https://laravel-china.org/articles/5301/commonly-used-php-search-sorting-algorithm)
+[利用不可见Unicode控制字符(恰好是一对，类比于0/1](https://mntn-dev.github.io/z.js/)
+https://www.zhihu.com/question/62370074
+[“走马灯数” 142857 与 初等数论入门](https://zhuanlan.zhihu.com/p/27853213)
+https://www.zhihu.com/question/19761522/answer/197503061
+[Python新手需要掌握的知识点](https://zhuanlan.zhihu.com/p/27831349)
+https://github.com/shengxinjing/my_blog https://me.bdp.cn/share/index.html?shareId=sdo_d248dca663aa413ac87a6d2d4b591945
+[Python数据分析学习大纲](https://zhuanlan.zhihu.com/p/27838262)
+[用Python模拟登陆微博](https://github.com/Wooden-Robot/pop)
+http://woodenrobot.me/2016/03/22/%E7%94%A8Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E5%BE%AE%E5%8D%9A/ 
+[SQL如何统计group by后共有几行？](https://segmentfault.com/q/1010000010140760)
+SELECT count(*) FROM (
+    SELECT count(user_order_id),user_order_id FROM `item_order` WHERE seller_id=24 GROUP BY             
+    user_order_id ORDER BY user_order_id DESC LIMIT 30 OFFSET 0
+);
+[mysql：如果一个结果集里包含另一个结果集，就显示1 否则显示0](https://segmentfault.com/q/1010000010150767)
+```js
+select 
+  t.name,
+  if((select count(*) from l where l.name = t.name)> 0, 1, 0)
+from t
+表关联的方式，在大数据的时候效率会更高一些
+
+select 
+  t.name,
+  IFNULL(t2.cnt, 0)
+from t left join (
+  select name, 1 as cnt
+  from l
+  group by name
+) t2 on t.name = t2.name
+git diff --numstat，前面的两个数字分别代表增加和删除的行
+```
+[git如何下载指定分支上的项目代](https://segmentfault.com/q/1010000010080086)
+如果还没有 clone，那么就指定分支 clone：
+
+git clone -b xxxx URL
+如果已经 clone 了，使用 git checkout 来切换分支。
+
+如果你的仓库提供方支持，也可以直接下载对应分支的 tar 包。比如 GitHub，你先切换到你要的分支，然后点右边绿色的下载按钮选择下载即可。
+git checkout -b zy origin/zy // 从远端抓取 zy 分支到本地并切换
+git clone  // 项目地址
+git checkout zy 
+git pull origin zy
+Git本地回滚重新修改代码再push到远程问题https://segmentfault.com/q/1010000010193596
+如果你希望远程是 A - B - E，那就不要 pull，直接 git push -f
+[git有没有办法提取出commit修改的文件](https://segmentfault.com/q/1010000010103446)
+git archive commit_hash | gzip > package.tar.gz
+[一次插入几万条数据应该怎么做优化](https://segmentfault.com/q/1010000010173985)
+1、insert批量执行，禁止单条insert value（注意单条sql长度限制，可临时调整max_allowed_packet）
+2、开启事务处理，批量提交。原理类似上1(条件允许可适当增大innodb_log_buffer_size，增加单事务提交日志量，该参数read only)
+3、主键顺序插入，效率更高
+4、业务允许，暂时disable keys
+mysql 如何根据时间统计每隔5分钟内的纪录数量?https://segmentfault.com/q/1010000010111880
+SELECT concat( date_format( time, '%Y-%m-%d %H:' ) , floor( date_format( time, '%i' ) /5 ) ) AS c, count( id )
+FROM table
+GROUP BY c
+
+mysql主表关联多个子表问题https://segmentfault.com/q/1010000010152376
+select t1.*,t2.text,null as images
+  from meta t1 
+    left join text t2 on t1.id=t2.id and t1.type=1
+union all 
+select t1.*,t2.text,t2.images
+  from meta t1 
+    left join text t2 on t1.id=t2.id and t1.type=2
+如何寻找父分类pid为0?https://segmentfault.com/q/1010000010134133    
+    $cid = 4;
+while ($cid = M('category')->where(array('id' => $cid))->getField('pid'))
+{
+    dump($cid);
+}
+   delete from 和 left Join连在一起怎么用https://segmentfault.com/q/1010000010136154 http://www.mysqltutorial.org/mysql-delete-join/
+   DELETE
+    a
+FROM
+    task_news a
+LEFT JOIN
+    temp_new b
+ON
+    a.ID = b.ID
+WHERE
+    b.UserID > 0
+ mysql随机获取一条或者多条数据SQL分析https://segmentfault.com/q/1010000010167137
+关于laravel数据库查询返回的问题https://segmentfault.com/q/1010000010155371 
+ DB::setFetchMode(\PDO::FETCH_ASSOC);
+$userInfo = DB::table('admin_user')
+            ->select('id', 'password', 'rand_salt', 'state')
+            ->where('admin_name', $adminName)
+            ->get();
+DB::setFetchMode(\PDO::FETCH_CLASS);
+ python正则表达式https://segmentfault.com/q/1010000010163724
+ print(re.sub(r'^{-\d+}|[!\\@]', '', str))
+ from selenium import webdriver
+
+driver = webdriver.Chrome()
+driver.get("http://wenshu.court.gov.cn/User/RegisterAndLogin?Operate=1")
+
+driver.find_element_by_id('login_Name').send_keys("398915607@qq.com")
+driver.execute_script('$("#login_Pwd").removeClass("display_none")')
+driver.find_element_by_id('login_Pwd').send_keys("wstktb")
+driver.find_element_by_id('btnLogin').click()
+ 遇到一种不可见字符，不能用strip处理https://segmentfault.com/q/1010000010129081
+ Python中Numpy库中的np.sum(array,axis=0,1,2...)https://segmentfault.com/q/1010000010111006
+ 怎么用pyquery把一些蹩脚的HTML代码中的信息提出来https://segmentfault.com/q/1010000010141428
+ info = pq(content.decode('utf8'))   # 避免乱码
+for i in info('.infotable td'):     # 获取类名infotable范围内所有的单元格
+    
+    # 跨列或者空的单元格去掉
+    if info(i).attr('colspan') or not info(i).text():
+        continue
+    
+    print info(i).text()
+
+使用 Python 如何爬取这样的数据 BeautifulSouphttps://segmentfault.com/q/1010000010145936
+```js
+code = '....' # HTML代码
+soup = BeautifulSoup(code, ...) # 创建soup对象
+json = soup.find(id = 'currentScript'); # 此处，等价于获取con初始值
+
+# 替换div
+json = json.replace('<div>', '')
+json = json.replace('</div>', '')
+
+# $.trim等价
+json = json.strip()
+
+# 找到[和]中间的数据，拆成JSON
+# cut_start和cut_end只是用于标记起始位置，类似上面的con.indexOf("[")和con.indexOf("]")
+# 为了方便理解，单独写了
+cut_start = json.find('[')
+cut_end = json.find(']')
+
+json = json[cut_start:cut_end + 1]
+from pyquery import PyQuery as Q
+import requests
+import json
+
+r = requests.get('http://www.zhcw.com/ssq/kjgg/10006509.shtml')
+str = Q(r.content)('#currentScript').html()
+info = json.loads(str)[0]
+print info
+proxies在你访问http时用http的设置，访问https时用https的设置所以你的proxy需要同时包含http及https的配置，这样才能生效
+
+proxy = {
+    'http': 'http://117.85.105.170:808',
+    'https': 'https://117.85.105.170:808'
+}
+```
+[猴子都能学会的20行代码登录微博](https://zhuanlan.zhihu.com/p/27897140)
+```js
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+driver = webdriver.PhantomJS()
+driver.get('https://passport.weibo.cn/signin/login')
+WebDriverWait(driver, 20).until(
+    EC.presence_of_element_located((By.ID, 'loginName')))
+time.sleep(1)
+
+name_field = driver.find_element_by_id('loginName')
+name_field.clear()
+name_field.send_keys('你的账号')
+password_field = driver.find_element_by_id('loginPassword')
+password_field.clear()
+password_field.send_keys('你的密码')
+submit_button = driver.find_element_by_id('loginAction')
+submit_button.click()
+
+print(driver.get_cookies())
+for cookie in driver.get_cookies():
+    another_driver.add_cookie(cookie)
+    
+```
+
 [Python标准库之functools/itertools](https://www.ziwenxie.site/2017/01/15/python-functools-itertools-operator/)
 ```js
 >>> student_tuples = [
