@@ -1,3 +1,126 @@
+[Python标准库之functools/itertools](https://www.ziwenxie.site/2017/01/15/python-functools-itertools-operator/)
+```js
+>>> student_tuples = [
+...     ('john', 'A', 15),
+...     ('jane', 'B', 12),
+...     ('dave', 'B', 10),
+... ]
+>>> sorted(student_tuples, key=lambda student: student[2])   # 传统的lambda做法
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+>>> from operator import attrgetter
+>>> sorted(student_tuples, key=itemgetter(2))
+[('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# 但是如果像下面这样接受双重比较，Python脆弱的lambda就不适用了
+>>> sorted(student_tuples, key=itemgetter(1,2))
+[('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+>>> list(combinations('abcd', r=2)) 中所有元素可能组合的r元组。每个元组中的元素保持与iterable返回的顺序相同 a总是在bcd之前，b总是在cd之前，c总是在d之前。
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
+>>> list(permutations('abcd', r=2))
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', '
+a'), ('c', 'b'), ('c', 'd'), ('d', 'a'), ('d', 'b'), ('d', 'c')]
+>>> list(product(range(3), repeat=2))
+[(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+>>> import itertools
+>>> for key, group in itertools.groupby('AAAABBBCCDAABBB'):
+...     print(key, list(group))
+...
+A ['A', 'A', 'A', 'A']
+B ['B', 'B', 'B']
+C ['C', 'C']
+D ['D']
+A ['A', 'A']
+B ['B', 'B', 'B']
+>>> from itertools import chain
+>>> list(chain.from_iterable(['ABC', 'DEF']))
+['A', 'B', 'C', 'D', 'E', 'F']
+>>> list(chain([1, 2, 3], ['a', 'b', 'c']))
+[1, 2, 3, 'a', 'b', 'c']
+>>> from itertools import accumulate
+>>> import operator
+>>> list(accumulate([1, 2, 3, 4, 5], operator.add))
+[1, 3, 6, 10, 15]
+>>> list(accumulate([1, 2, 3, 4, 5], operator.mul))
+[1, 2, 6, 24, 120]
+
+>>> # regular unsorted dictionary
+>>> d = {'banana': 3, 'apple': 4, 'pear': 1, 'orange': 2}
+>>> # dictionary sorted by key
+>>> OrderedDict(sorted(d.items(), key=lambda t: t[0]))
+OrderedDict([('apple', 4), ('banana', 3), ('orange', 2), ('pear', 1)])
+>>> # dictionary sorted by value
+>>> OrderedDict(sorted(d.items(), key=lambda t: t[1]))
+OrderedDict([('pear', 1), ('orange', 2), ('banana', 3), ('apple', 4)])
+>>> # dictionary sorted by length of the key string
+>>> OrderedDict(sorted(d.items(), key=lambda t: len(t[0])))
+
+```
+[Laravel学习笔记—数据库操作的三种方式](https://www.cxiansheng.cn/server/205)
+```js
+$num = Student::destroy([11,12]);
+$num = Student::where('id','>', 7)->delete([11,12]);
+// firstOrCreate 以属性查找并返回数据实例 若没有插入并返回实例
+$user = Student::firstOrCreate(
+    ['name' => 'xiaochen2']
+);// firstOrNew 以属性查找用户 如没有则新建实例 若需要保存自己调用save
+$user = Student::firstOrNew(
+    ['name' => 'xiaochen23']
+); 
+$user->save();
+// whereRaw 根据多条件查询数据
+$users = DB::table('user')
+    ->whereRaw('id <= ? and name = ?', [6, 'chen'])
+    ->get();
+    // 返回更新行数
+$boolUpt = DB::update('update user set name = ? where age = ?', ['immocv', 18]);
+
+```
+[微信开发之微信登录](https://www.cxiansheng.cn/server/217)
+```js
+// 如果当前登录断为微信端  并且用户ID为空则跳转至微信登录验证
+if(($this->weixin) && empty($user_id)) {
+    $url_encode = urlencode("https://xxx.com/index.php");
+
+    // scope为snsapi_base 仅获取用户openid
+    $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa318c6979e231ffa&redirect_uri=".$url_encode."&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+
+    // snsapi_userinfo 仅获取用户基本信息
+    $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa318c6979e231ffa&redirect_uri=".$url_encode."&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+    // 重定向
+    header("Location:".$url); 
+}
+//获取code 拼接成url
+$token_url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $_appid . '&secret=' . $_secret . '&code=' . $code . '&grant_type=authorization_code';
+//curl方法获取数据返回数组
+$oneArr       = json_decode(file_get_contents($token_url), TRUE);
+$access_token = $oneArr['access_token'];
+$openid       = $oneArr['openid'];
+// 获取微信用户信息
+$get_user_info_url = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $access_token . '&openid=' . $openid . '&lang=zh_CN';
+$user_data = json_decode(file_get_contents($get_user_info_url), TRUE);
+def fib(n):
+    "Print a Fibonacci series up to n."
+    
+    a, b = 0, 1
+    while a < n:
+        print(a, end='')
+        a, b = b, a+b
+def fib(n):
+    result = []
+    a, b = 0, 1
+    while a < n:
+        result.append(a)
+        a, b = b, a+b
+    return result
+def fib(n):
+    if n <= 0:
+        return 0
+    if n == 1:
+        return 1
+    return fib(n-1) + fib(n-2)    
+    sorted(counter.items(), key=itemgetter(1), reverse=True)
+    sorted(counter.items(), key=lambda (k,v): (v,k))
+```
+
 [Redis的并发控制](http://blog.liuhongnan.com/2017/07/03/Redis%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io)
 ```js
 update act set num=#{numNew} where actId=#{actId} and num=#{numOld}
