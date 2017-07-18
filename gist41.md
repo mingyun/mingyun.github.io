@@ -38,9 +38,15 @@ while (1){
 ```
 [线上PHP问题排查思路与实践](http://www.bo56.com/%E7%BA%BF%E4%B8%8Aphp%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%80%9D%E8%B7%AF%E4%B8%8E%E5%AE%9E%E8%B7%B5/)
 [工具（草稿）](https://ninghao.net/blog/3502)
-
-
-
-
-
-
+https://git.ninghao.net/commit.html 
+[API 开发者福利--API 在线管理](https://laravel-china.org/topics/3086/api-developer-welfare-api-online-management-simulation-request-test-the-documentation-tool-apizza)
+http://apizza.cc/?f=lv 
+[【php爬虫】百万级别知乎用户数据爬取与分析](http://www.hoohack.me/2015/09/30/php-spider-millons-of-zhihu-user-analyze)
+[Laravel的核心概念](https://lufficc.com/blog/the-core-conception-of-laravel)
+[Redis持久化-RDB](https://wenchao.ren/archives/165)
+手动触发RBD主要使用save和bgsave命令 redis配置文件中使用了save m n （表示m秒内进行了n次数据修改）
+从节点执行全量复制操作的时候，主节点会自动触发bgsave命令生存rdb文件并发送给从节点
+ RDB文件是一个压缩过的二进制文件 没办法做到实时/准实时的持久化 非常适合备份，全量复制等场景
+ 背包问题，背包总容量 80 ，每次放东西的权重 a1*b1 ，求解正好放满背包的方案
+ http://ss.ishadowx.com/ 
+ 
