@@ -1,4 +1,22 @@
-[PHPCoverage是一款基于xdebug实现的PHP代码覆盖率统计工具](https://packagist.org/packages/woojean/php-coverage)
+[gitbook](https://www.gitbook.com/@ninghao)
+如何查看 Linux是32位还是64位http://justcode.ikeepstudying.com/2015/06/%e5%a6%82%e4%bd%95%e6%9f%a5%e7%9c%8b-linux%e6%98%af32%e4%bd%8d%e8%bf%98%e6%98%af64%e4%bd%8d%ef%bc%9f/
+执行命令 file /sbin/init 即是32位的 Linux, 若是64位的, 显示的是 64-bit
+uname -a
+如何直接在github上预览html网页效果 http://justcode.ikeepstudying.com/2016/08/%e5%a6%82%e4%bd%95%e7%9b%b4%e6%8e%a5%e5%9c%a8github%e4%b8%8a%e9%a2%84%e8%a7%88html%e7%bd%91%e9%a1%b5%e6%95%88%e6%9e%9c/
+http://htmlpreview.github.com/?https://github.com/aisinvon/VerticalMiddleForUnknownHeightDiv/blob/master/Set-Unknown-Height-Div-to-Vertical-Middle.html
+Linux umask限制导致php的mkdir 0777无效http://justcode.ikeepstudying.com/2015/04/linux-umask%e9%99%90%e5%88%b6%e5%af%bc%e8%87%b4php%e7%9a%84mkdir-0777%e6%97%a0%e6%95%88/
+这两天在写一个缓存模块，需要把生成的缓存目录和文件设置成777权限，好让ftp用户可以直接登录删除缓存，蛋疼的事也就这么发生了，明明用了mkdir($path, 0777);用ftp用户登录却删除不了，为什么呢？
+
+ 
+
+查看了一下建立的目录的权限，发现mkdir建立的目录权限都是755的，我明明用的是777，立马google了一下，才知道原来是受Linux 系统的 umask限制了，Linux的umask默认值是0022，所以php 的 mkdir 函数只能建立出755权限的文件夹出来。
+
+小Tips：查看Linux的umask值直接在终端输入命令umask就可以看到
+$oldmask = umask(0);
+mkdir("test", 0777);
+umask($oldmask);
+
+PHPCoverage是一款基于xdebug实现的PHP代码覆盖率统计工具](https://packagist.org/packages/woojean/php-coverage)
 composer require woojean/php-coverage 安装失败 把 "lokielse/omnipay-alipay": "1.0.1", 改为 1.0.4 版本就好了
 [Linux/Ubuntu: 使用 trash-cli 防止 rm 命令误删除重要文件](http://justcode.ikeepstudying.com/2015/11/ubuntu-%e4%bd%bf%e7%94%a8-trash-cli-%e9%98%b2%e6%ad%a2-rm-%e5%91%bd%e4%bb%a4%e8%af%af%e5%88%a0%e9%99%a4%e9%87%8d%e8%a6%81%e6%96%87%e4%bb%b6/)
 pip install trash-cli
