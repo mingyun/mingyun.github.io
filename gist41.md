@@ -1,3 +1,120 @@
+[ ROT13 密码算法](https://mp.weixin.qq.com/s?__biz=MjM5MzgyODQxMQ==&mid=2650367149&idx=1&sn=5b9bc4a8029e7eb9b8a4b71d06524da9&chksm=be9cdff989eb56ef143d5b03fab7e825f08ea6a96d041aa1da50e78e765a75e60d49b42d9bf6&mpshare=1&scene=1&srcid=0721yrbY93iVEEROCSr1bWdN&pass_ticket=nibRL4OOwqqlqGUBQ8mnsaXsv6niSYSnG%2BPhy3uP%2BvD3386ssTy5UjDfLlo6aNGq#rd)
+```js
+d = {}
+for c in (65, 97):
+    for i in range(26):
+        d[chr(i+c)] = chr((i+13) % 26 + c)
+
+print("".join([d.get(c, c) for c in s]))
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+                | |
+NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm
+它是凯撒加密的一种变体。一段文字按照字母顺序只需把当前字母用13位之后的对应字母进行替代，超过第13位的字母（从N开始）则重新绕回到字母表的开头即可。而对于非字母字符还是保持原样不变。
+正向代理的过程，它隐藏了真实的请求客户端，服务端不知道真实的客户端是谁，客户端请求的服务都被代理服务器代替来请求，科学上网工具 Shadowsocks 扮演的就是典型的正向代理角色。在天朝访问 www.google.com 时会被无情的墙掉，要想翻越这堵墙，你可以在国外用 Shadowsocks 来搭建一台代理服务器，代理帮我们请求 www.google.com，代理再把请求响应结果再返回给我 「正向代理」代理的对象是客户端，「反向代理」代理的对象是服务端https://mp.weixin.qq.com/s?__biz=MjM5MzgyODQxMQ==&mid=2650366790&idx=1&sn=3b5d390d07445745e067334365873a18&chksm=be9cd81289eb510499dd029f91a302a2e08f0c4bbed13c7a47d33d2f1b6a91eebc6199b141b9&scene=21#wechat_redirect 
+bytes 类型提供的操作和 str 一样，支持分片、索引、基本数值运算等操作。但是 str 与 bytes 类型的数据不能执行 + 操作
+encode 负责字符到字节的编码转换。默认使用 UTF-8 编码准换。
+>>> c = b'a'
+>>> s = "Python之禅"
+>>> s.encode()
+b'Python\xe4\xb9\x8b\xe7\xa6\x85'
+>>> s.encode("gbk")
+b'Python\xd6\xae\xec\xf8'
+>>> b'Python\xe4\xb9\x8b\xe7\xa6\x85'.decode()
+'Python之禅'
+>>> b'Python\xd6\xae\xec\xf8'.decode("gbk")
+'Python之禅'  print(keyword.kwlist)
+if 18 < age < 60:
+    print("yong man")
+    >>> payload = {'key1': 'value1', 'key2': 'value2'}
+>>> r = requests.post("http://httpbin.org/post", json=payload)
+>>> r.json() 作为 json 格式的字符串格式传输给服务器
+{'url': 'http://httpbin.org/post', 'files': {}, 'data': '{"key2": "value2", "key
+1": "value1"}', 'args': {}, 'form': {}, 'headers': {'Host': 'httpbin.org', 'Cont
+ent-Type': 'application/json', 'User-Agent': 'python-requests/2.13.0', 'Accept':
+ '*/*', 'Connection': 'close', 'Content-Length': '36', 'Accept-Encoding': 'gzip,
+ deflate'}, 'json': {'key2': 'value2', 'key1': 'value1'}, 'origin': '36.102.227.
+115'}
+content 是 byte 类型，适合直接将内容保存到文件系统或者传输到网络中
+```
+[Mysql 数据类型隐式转换规则](http://blog.githuber.cn/posts/2893)
+mysql> explain select * from convert_test where areacode=0001 and period>='20170511' and period<='20170511';
+[关于JavaScript调试的十来个小Tips](https://www.shiyanlou.com/questions/4275)
+你可以在JavaScript代码中加入一句debugger;来手工造成一个断点效果
+console.trace就要起作用咯，它可以帮你进行函数调用的追踪
+mointor(func)在Chrome中可以监测指定函数的调用情况以及参数
+
+在console中使用debug(funcName)然后脚本会在指定到对应函数的地方自动停止
+[python模拟http请求遇到的一个坑 ](https://www.testwo.com/article/1002)
+使用python做接口测试同学如果在遇到参数中是json那就绕行requests模块，有时候看似好模块库反而容易出问题
+透传的ctx参数是一个json格式  通过curl 请求就是正常的，经过一番折腾原来requests模块自动给url 做了encode编码才造成如此现象，解码后恢复正常json串，要不后台改要不我找其他解决办法,后台不能改，所以只能找其他办法更换python请求的api 更换urllib2，urllib2不会主动对url进行编码，如果你想给url编码自己调用：urllib.encode（）方法
+>>> r = requests.get("http://httpbin.org/get", params='{"a":2}')
+>>> r.url
+'http://httpbin.org/get?%7B%22a%22:2%7D'
+[PHP红包算法](https://segmentfault.com/a/1190000010210451)
+```js
+/*
+ * 获取随机红包
+ * min<k<max
+ * min(n-1) <= money - k <= (n-1)max
+ * k <= money-(n-1)min
+ * k >= money-(n-1)max
+ */
+function getRedPackage($money, $num, $min, $max)
+{
+    $data = array();
+    if ($min * $num > $money) {
+        return array();
+    }
+    if($max*$num < $money){
+        return array();
+    }
+    while ($num >= 1) {
+        $num--;
+        $kmix = max($min, $money - $num * $max);
+        $kmax = min($max, $money - $num * $min);
+        $kAvg = $money / ($num + 1);
+        //获取最大值和最小值的距离之间的最小值
+        $kDis = min($kAvg - $kmix, $kmax - $kAvg);
+        //获取0到1之间的随机数与距离最小值相乘得出浮动区间，这使得浮动区间不会超出范围
+        $r = ((float)(rand(1, 10000) / 10000) - 0.5) * $kDis * 2;
+        $k = round($kAvg + $r);
+        $money -= $k;
+        $data[] = $k;
+    }
+    return $data;
+}
+一行代码，炫酷效果：
+
+<pre id=p>n=setInterval("for(n+=7,i=k,P='p.\\n';i-=1/k;P+=P[i%2?(i%2*j-j+n/k^j)&1:2])j=k/i;p.innerHTML=P",k=64) ​​​​
+```
+[这十二行代码是如何让浏览器爆炸的？](http://www.0xroot.cn/demo.html)
+http://www.codeceo.com/article/12-line-code-browser-die.html
+```js
+<html>
+<body>
+<script>
+var total="";
+for (var i=0;i<1000000;i++)
+{
+    total= total+i.toString ();
+    history.pushState (0,0,total);
+}
+</script>
+</body>
+</html>
+```
+[用Python&Tesseract识别图片文字](https://mp.weixin.qq.com/s?__biz=MjM5MzgyODQxMQ==&mid=2650367001&idx=1&sn=dc8ea91ba4a83e23b5524a37aab5db73&chksm=be9cdf4d89eb565b1179c9d89030c512afa691dcf9480a0f604ebc658ddea2434658c8c184ef&scene=21#wechat_redirect)
+```js
+# pip install pytesseract 先安装依赖包
+try:
+    import Image
+except ImportError:
+    from PIL import Image
+import pytesseract
+# lang 指定中文简体
+text = pytesseract.image_to_string(Image.open('dufu-denggao1.jpeg'), lang='chi_sim')
+print(text)
+```
 [PHP开发接口如何将null值转字符串的空?](https://segmentfault.com/q/1010000010171343)
 ```js
 // 注意&引用赋值
