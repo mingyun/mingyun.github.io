@@ -1,3 +1,67 @@
+[使用PHP_XLSXWriter代替PHPExcel](https://segmentfault.com/a/1190000010178094)
+```js
+https://github.com/mk-j/PHP_XLSXWriter
+```
+[PHP 最佳实践之数据库](https://laravel-china.org/articles/5330/php-database-of-best-practices)
+```js
+//把预处理语句获得的结果当成关联数组处理
+$sql = 'SELECT id, email FROM users WHERE email = :email';
+$statement = $pdo->prepare($sql);
+$email = filter_input(INPUT_GET, 'email');
+$statement->bindValue(':email', $email);
+$statement->execute();
+//迭代结果
+while(($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+echo $result['email'];
+}
+cat .git/config 查看是否已经设置忽略文件权限跟踪，filemode=true 的时候即跟踪修改权限的文件 。 git config core.filemode false
+在 启动队列时，最好是指定 tries 的值，同时 在 定义job 中 添加 failed 方法来 处理 队列失败时 的操作
+
+php artisan queue:work redis --tries=3
+ public function failed(Exception $exception)
+    {
+        // 给用户发送失败通知，等等...
+    }
+    优雅地在 Mac+Valet 环境下本地部署 PHPHubhttps://laravel-china.org/articles/5316/gracefully-deploying-phphub-locally-in-a-macvalet-environment
+     windows下听说有一个Laragon和Mac下的Valet差不多
+    Chrome 修改 user agent 简单模拟微信内置浏览器https://laravel-china.org/articles/5319/chrome-modify-user-agent-simple-simulation-of-wechats-built-in-browser
+    快马加鞭使用 certbot 为你的网站免费上 https https://laravel-china.org/articles/5266/the-use-of-certbot-at-top-speed-for-your-website-for-free-on-https
+ wget https://dl.eff.org/certbot-auto
+chmod a+x certbot-auto
+service nginx stop
+./certbot-auto certonly --standalone --email `你的邮箱地址` -d `你的域名地址`
+
+tree /etc/letsencrypt/live/
+ # TLS 基本设置
+ssl_certificate /etc/letsencrypt/live/www.just4fun.site/fullchain.pem;#证书位置
+ssl_certificate_key /etc/letsencrypt/live/www.just4fun.site/privkey.pem;# 证书位置
+service nginx start
+ ss免费账号https://github.com/Alvin9999/new-pac/wiki/ss%E5%85%8D%E8%B4%B9%E8%B4%A6%E5%8F%B7
+ 最好的GitHub代码浏览插件https://juejin.im/entry/597025d9518825419f7b65ba
+chrom商店里 搜索 就可以了 php offline manual
+http://cn.office-converter.com/  https://smallpdf.com/ http://www.ilovepdf.com/ PDF、WORD、PPT、TXT转换方法 强大的OCR和PDF处理软件：ABBYY FineReader，可识别图片上的文字 http://ocr.abbyy.cn/  https://uzer.me/ 直接在线使用包括office、PS、SPSS、CAD等等各种大型软件
+一个自动更新chrome的小工具 http://chrome.wbdacdn.com/
+为预防「重大突发事件」下断网的情况，给大家推荐一款 app 吧：FireChat
+http://zh.wikihow.com/%E9%A6%96%E9%A1%B5  安利一个超级强大的干货搜索引擎
+这是一条知乎优秀回帖大集合，赞同数在1000以上的问答。http://weibo.com/5823997358/Fd5Z54Op4
+https://www.apowersoft.cn/video-download-capture 视频下载王 https://www.apowersoft.cn/online-video-downloader
+http://127.0.0.1:43110/1FRQLoQqnAziCyhmAp8Ev3sVNNkcS1hXYT/
+免费全平台的文件分享利器：SendAnywhere  https://sspai.com/post/40047
+https://gitlab.com/kornelski/babel-preset-php.git  PHP语法转JS
+PHP 命令行工具框架 Laravel Zerohttps://github.com/nunomaduro/laravel-zero/blob/stable/readme.md 推荐一个有效存储和展示自己 PGP
+永远都不要看轻自己，马云、李嘉诚、王健林、马化腾，还有你，你们5个人的资产加起来，足以撼动整个亚洲甚至全世界的经济体系。 ​​​​在电脑之间传文件的命令行工具，支持主流操作系统 https://github.com/warner/magic-wormhole/blob/master/README.md
+微信号「一分钟的编程知识」
+http://www.bilibili.com/video/av3504428/index_1.html#page=1 神速学会视频剪辑，up主必备Premiere技能 doyoudo.com  科普一下短信报警，编辑信息发送到12110即可http://weibo.com/1756672641/Fcu3Shhui
+《Go入门指南》https://github.com/Unknwon/the-way-to-go_ZH_CN  非常强大的应用：Office Lens Modern task runner for PHPhttp://robo.li/
+set names utf8b4 程序员应该掌握的10个搜索技巧http://www.codeceo.com/article/10-search-tips-for-programmer.html 《nginx从入门到精通PDF》http://pan.baidu.com/s/1o6KCn7W?
+0xbug写的一个GitHub 泄露监控系统 https://github.com/0xbug/Hawkeye
+微信公众号----软件编程之路 random_int() 在php用这个函数 windows下听说有一个Laragon和Mac下的Valet差不多 微信公众号：Jimmy的技术乐园
+```
+[PHP系列总结](https://github.com/xx19941215/webBlog)
+[swoole 服务端120行代码构建一个websocket 聊天室](https://segmentfault.com/a/1190000010247505)
+https://github.com/buffge/buffchat http://www.bilibili.com/video/av12418026/ 
+[我是怎么做App token认证的](http://blog.githuber.cn/posts/3018)
+基于 ItChat 开发的机器人https://github.com/PY-Learning/wbot
 [ ROT13 密码算法](https://mp.weixin.qq.com/s?__biz=MjM5MzgyODQxMQ==&mid=2650367149&idx=1&sn=5b9bc4a8029e7eb9b8a4b71d06524da9&chksm=be9cdff989eb56ef143d5b03fab7e825f08ea6a96d041aa1da50e78e765a75e60d49b42d9bf6&mpshare=1&scene=1&srcid=0721yrbY93iVEEROCSr1bWdN&pass_ticket=nibRL4OOwqqlqGUBQ8mnsaXsv6niSYSnG%2BPhy3uP%2BvD3386ssTy5UjDfLlo6aNGq#rd)
 ```js
 d = {}
