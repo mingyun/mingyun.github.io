@@ -1,3 +1,85 @@
+[PHP开发接口如何将null值转字符串的空?](https://segmentfault.com/q/1010000010171343)
+```js
+// 注意&引用赋值
+array_walk_recursive($array, function (& $val, $key ) {
+    if ($val === null) {
+        $val = '';
+    }    
+
+});
+function ttt($val) {
+    return is_null($val) ? '' : $val;
+}
+$tt = array(1, 2, 3, null, 4, null, 5);
+var_dump(array_map('ttt', $tt));
+/**
+ * 将数组中的null转为字符串''
+ * @param $arr
+ */
+function nulltostr($arr)
+{
+
+    foreach ($arr as $k=>$v){
+        if(is_null($v)) {
+            $arr [$k] = '';
+        }
+        if(is_array($v)) {
+            $arr [$k] = nulltostr($v);
+        }
+    }
+    return $arr;
+}
+array_filter是只能去除掉一维的数组的null
+print_r(nulltostr([1,null,[3,4,null]]));
+function null_filter($arr)
+{
+    foreach($arr as $key=>&$val) {
+        if(is_array($val)) {
+            $val = null_filter($val);
+        } else {
+            if($val === null){
+                unset($arr[$key]);// 不能unset($val)
+              }
+        }
+    }
+    return $arr;
+}
+```
+[163 邮箱钓鱼网站](https://www.v2ex.com/t/376725)
+```js
+#!/bin/bash 
+# filename: test.sh 
+
+while true 
+do 
+curl -X POST 'http://flumw.nxusepd.pw/laqhmu/a.asp' --data $'qqid=test&qqpwd=123&face=163\u90ae\u7bb1'
+done 
+
+
+
+seq 1 20 | xargs -n 1 -P 20 sh test.sh
+https://whois.aliyun.com/whois/domain/nxusepd.pw?spm=5176.8076989.763973.115.665faf4b4Qcyvk&file=nxusepd.pw 
+
+详细英文信息里 的手机和邮箱
+```
+[ping google, 但是不能 ping youtube](https://www.v2ex.com/t/374188)
+```js
+Terminal 一般不使用系统代理，所以你需要找一下 Terminal 使用代理的方法。 
+
+可以 Ping Google 并不代表翻出去了，一种可能就是 DNS 污染  ping 用的是 ICMP，而 ss 只能代理 TCP 和 UDP，所以用 ping 来测试能否代理是不可行的。要让终端走 ss-local 代理的话可以先执行 export ALL_PROXY=socks5://127.0.0.1:1080。这个命令在 macOS 下亲测有效，如果所用的系统不支持的话恐怕得先转换成 http 代理。这样的话终端应该就可以通过代理连接了，不过该 ping 不通的依然不行。（实在想 ping 的话可以考虑一下走 TCP 的 httping / psping ）
+proxychain 之类的工具让命令行应用也能走 ss 代理
+使用 privoxy 将代理转成 HTTP，然后在命令行输入 export http_proxy=http://127.0.0.1:端口号 。 
+之后输入命令，都是使用代理连接网络  
+shadowsocks实质上也是一种socks5代理服务，类似于ssh代理。与vpn的全局代理不同，shadowsocks仅针对浏览器代理，不能代理应用软件，比如youtube、twitter客户端软件。如果把vpn比喻为一把屠龙刀，那么shadowsocks就是一把瑞士军刀，轻巧方便，功能却非常强大https://segmentfault.com/a/1190000004607285 
+brew install proxychains-ng
+socks5 127.0.0.1 1080
+proxychains4 curl google.com 
+
+```
+
+
+
+
 [gitbook](https://www.gitbook.com/@ninghao)
 如何查看 Linux是32位还是64位http://justcode.ikeepstudying.com/2015/06/%e5%a6%82%e4%bd%95%e6%9f%a5%e7%9c%8b-linux%e6%98%af32%e4%bd%8d%e8%bf%98%e6%98%af64%e4%bd%8d%ef%bc%9f/
 执行命令 file /sbin/init 即是32位的 Linux, 若是64位的, 显示的是 64-bit
