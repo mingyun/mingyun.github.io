@@ -1,3 +1,252 @@
+[如何实现PHP版本共存](https://segmentfault.com/q/1010000010252140)
+```js
+配置下让Nginx监听不同的端口或文件就可以实现了。大体思路如下：因为Nginx是通过PHP-FastCGI与PHP交互的，然后，PHP-FastCGI运行后会通过文件、或本地端口两种方式进行监听，在Nginx中配置相应的FastCGI监听端口或文件即实现Nginx请求对PHP的解释。因此，Nginx中根据需求配置调用不同的PHP-FastCGI端口或文件，便实现不同版本PHP共存了。
+
+修改php-fpm.conf，监听端口：
+
+<value name="listen_address">127.0.0.1:8001</value>
+或者
+
+<value name="listen_address">/path/to/unix/socket</value>
+修改好后，配置好php.ini相关的参数后重启一下然后，再修改Nginx
+
+location ~ .*.(php|php5)?$
+    {
+      fastcgi_pass 127.0.0.1:8001;
+      fastcgi_index index.php;
+      include fcgi.conf;
+    }
+就可以通过监听不同端口来实现，不同版本的php-fpm调用了
+mysql：如果一个结果集里包含另一个结果集，就显示1 否则显示0https://segmentfault.com/q/1010000010150767
+select 
+  t.name,
+  if((select count(*) from l where l.name = t.name)> 0, 1, 0)
+from t
+表关联的方式，在大数据的时候效率会更高一些
+
+select 
+  t.name,
+  IFNULL(t2.cnt, 0)
+from t left join (
+  select name, 1 as cnt
+  from l
+  group by name
+) t2 on t.name = t2.name
+Python中如何禁止导入某个模块https://segmentfault.com/q/1010000010221186
+import sys
+blacklist = ['os','datetime']
+for mod in blacklist:
+    i = __import__(mod)
+    sys.modules[mod] = None
+   
+# 尝试导入模块
+import os
+import datetime
+把博客托管在 github 无法访问https://segmentfault.com/q/1010000010264567
+
+GitHub Pages有两种用法：
+如果你的仓库名为用户名.github.io的话，会自动开启GitHub Pages功能，且所有提交到master分支的代码，会当做网站内容被挂载起来，且网站访问地址为http://用户名.github.io
+另外一种方法参见：https://help.github.com/artic...
+第二种用法，可以手动指定一个仓库的master分支，或者master分支下的/docs目录，或者gh-pages分支为网站的根目录，其下的内容为网站内容，此方法需要在仓库设置里手动开启GitHub Pages功能，并指定网站挂载方式
+用第二种方法的话，挂载之后的服务器地址，在设置之后会显示在后台，具体操作步骤可以参见：https://segmentfault.com/q/1010000009847036/a-1020000009849681
+然而，根据你现在的这个情况，并不属于上面任何一种情况，你创建的是你用户名下的名为github.io的仓库，并非用户名下名为用户名.github.io的仓库，所以不会自动开启GitHub Pages；而且在这情况下，你也没有在后台手动开启GitHub Pages，因此线上的GitHub Pages站点是无法访问的
+crontab 每 16 分钟运行一次 的执行计划https://segmentfault.com/q/1010000010290756
+ crontab */16 * * * * 是从加入执行计划时间开始，每16分钟运行一次
+
+实际执行计划其实是每小时的 0分，16分，32分，48分执行的。。。
+用15条crontab做到: 16分和60分的最小公倍数是240
+于是我特意在http://tool.lu/crontab/测试了一下
+$template='您好，欢迎注册[ce2]，您的验证[fong1]码为{value}，重复一次，验证码为{value}，谢谢。';
+$template='册[ce2]';
+$template=preg_replace_callback('/([\x{4e00}-\x{9fa5}]\[(.*)\])/u',function ($match) use ($template){
+var_dump($match);
+},$template);
+
+php --ini
+
+查看cli的配置文件位置
+
+Loaded Configuration File:         /etc/php.ini
+
+进入页面phpinfo();
+
+Loaded Configuration File    /etc/php.ini
+
+看下web的php的配置文件位置
+
+这个原因可能是cli模式和web模式使用的php.ini配置文件不是同一个引起的
+端口在系统中是唯一的 http://IP:端口 IP就如同大楼 端口如果门牌号
+
+所以可以肯定问题的答案: 同一台主机上不能配置多个80端口的服务, 一个端口只能对应一系统上的一个服务.
+
+如果你是想运行多个WEB项目的话，可以通过虚拟主机来解决
+
+A项目 => a.xxx.com
+
+B项目 => b.xxx.com
+redis库存控制问题https://segmentfault.com/q/1010000010217722
+两种方案：
+1、redis中的库存在网站上线前初始化到redis中，保证缓存不过期。
+2、当redis中的缓存过期了，用行锁的方式读取数据库中的库存并写入到redis中。
+
+第一种是比较好的解决方案。第二种因为用到了数据库行锁，所以效率比较差。
+
+最优方案是，前端减库存以队列方式发到队列中，后端再依次处理队列中的请求实际减库存。
+分布式锁 如：redis锁 set('key', 'value', ['nx', 'ex'=>10])
+
+PHP是不需要redis扩展的，在laravel下安装predis/predis就足够了 只不过predis是用PHP写的扩展
+
+PHP 使用的socket与redis通讯 所以无需扩展
+laravel默认使用的是predis，也是可以使用phpredis[是用C写的扩展][https://github.com/phpredis/phpredis]，可以通过修改配置。记得laravel 文档中说：如果对速度有要求，用phpredis性能会提升很多
+https://segmentfault.com/q/1010000010234381    mysql如何分组取top10？
+select 起始时间,线路,进站总人数 
+from (
+select @gn:=case when @起始时间=起始时间 then @gn+1 else 1 end gn,@起始时间:=起始时间 起始时间,线路,进站总人数 from (
+select 起始时间,线路,sum(进站人数) 进站总人数
+from roadnet_monitor_flowdata2
+group by 起始时间,线路) aa,(select @gn:=1) bb
+order by 起始时间,进站总人数 desc) aaa
+where gn<=10;
+
+只展示具有相同typenum的这些标题内容的话，就用下面的
+
+select a.title,a.content from lv_content a join (select typenum,count(1) cc from lv_content group by typenum having cc>1) b on a.typenum=b.typenum;
+怎么连表查订单列表和其操作记录https://segmentfault.com/q/1010000010206579
+
+select o.*, ol.id log_id, ol.message, ol.time log_time  from 
+`order` o left join `order_log`  ol on ol.`orderId` = (
+select MAX(ol.id) from `order_log` ol where ol.orderId = o.id
+);
+https://segmentfault.com/q/1010000010209593 
+laravel driver 应该是pdo或者mysql吧，pdo_mysql不支持这样写吧
+Laravel中使用ajax方式登录如何实现登录成功跳转页面？
+$.post(_url, _data, function(res){
+    
+    // 成功
+    if (res.errno == 0)
+    {
+        location.href = res.url;
+    }
+    else
+    {
+        // 提示错误消息
+        console.log(res.errmsg);
+    }
+// 路由
+route::any('input', 'YourController@input')
+
+// 测试方法
+public function input(Request $request)
+{
+    // get方法
+    echo $request->get('id');
+    // get方法
+    echo $request->query('id');
+    // get方法
+    echo $request->query->get('id');
+    // 有post会覆盖get improve by amu(题主)
+    echo $request->id;
+    // 有post会覆盖get
+    echo $request->input('id');
+}一般情况下，如果post／get键名一样，post过来的数据，$request->xxx和$request->input('xxx')会覆盖掉get的取值。https://segmentfault.com/q/1010000010235547
+按照指定区间进行分组https://segmentfault.com/q/1010000010262775
+from itertools import groupby
+
+data = [10,11,23,14,45,23,4,5,20,34,29,42,52,7,57]
+data.sort()
+
+for k, g in groupby(data, key=lambda x: (x - 1) / 11):
+    print '{}-{}'.format(k * 11, (k + 1) * 11), list(g)
+    
+#得出的结果应该是：
+0-11  [4, 5, 7, 10, 11]
+11-22 [14, 20]
+22-33 [23, 23, 29]
+33-44 [34, 42]
+44-55 [45, 52]
+55-66 [57]
+Python 发送邮件模块的封装https://github.com/hezhiming/hezhiming.github.io/issues/24
+from __future__ import absolute_import, unicode_literals
+from envelopes import Envelope, SMTP
+
+# 这一组常量, 可以单独用 enum 管理
+FROM_ADDR = ""
+FROM_ADDR_PASSWORD = ""
+SMTP_SERVER = ""
+SMTP_PORT = ""
+
+class MailUtils(object):
+    @classmethod
+    def send_mail(cls, mail_body, subject, from_addr, to_addrs, cc_addrs, attachments, headers=None):  #这里的参数组织顺序, 看个人喜好
+        """发送邮件
+
+        :param mail_body: 邮件mail body(默认html格式)
+        :param subject: 主题
+        :param from_addr: 发件人( 最好的格式: ("xxx@xx.com", "nick name")  )
+        :param to_addrs: 收件人列表
+        :param cc_addrs: 抄送人列表
+        :param attachments: 附件列表, 基本是文件路径名
+        :param headers: 额外的邮件头
+        :return:
+        """
+        
+        envelope = Envelope(
+            from_addr=from_addr,
+            to_addr=to_addrs,
+            subject=subject,
+            html_body=mail_body,
+            cc_addr=cc_addrs or None
+        )
+
+        if headers is not None:
+            for header_key, header_value in headers:
+                envelope.add_header(header_key, header_value)
+
+        for attachment in attachments:
+            envelope.add_attachment(attachment)
+
+        server = SMTP(
+            host=SMTP_SERVER,
+            port=SMTP_PORT,
+            login=FROM_ADDR,
+            password=FROM_ADDR_PASSWORD,
+
+            tls=True,
+            timeout=10
+        )
+
+        server.send(envelope)
+import pandas as pd
+
+df = pd.DataFrame(in_cnt)
+df.to_csv('a.txt')  如果觉得Anaconda太大, 安装很多不必要的包, 那么你可以选择miniconda/
+https://segmentfault.com/a/1190000006053618
+https://github.com/shangheguang/alipay_php  https://github.com/shangheguang/weixinpay APP支付宝
+https://segmentfault.com/q/1010000010261608
+有没有PHP zip压缩的类支持 zip 加密的类https://segmentfault.com/q/1010000010279519
+
+$cmd = "cd /home/wwwroot/test; zip -q -r -P 123456 sss.zip aaa.txt";
+$a = exec($cmd); https://github.com/Ne-Lexa/php-zip
+用phpmailer类开发邮件发送https://segmentfault.com/q/1010000010285504
+get_defined_vars() 可以获得当前上下文中所有定义的变量，转换成一个和符号表差不多的数组，把这个数据传到函数里就行。稍加处理再配上extract()，简直是完美的解决方法  https://segmentfault.com/q/1010000010279775 
+PHP接口大总结
+php写android和ios的接口https://segmentfault.com/q/1010000010267846
+多个数组处理 当date和customer的值一样 求和https://segmentfault.com/q/1010000010266486
+https://segmentfault.com/q/1010000010266651
+https://segmentfault.com/q/1010000010264534 
+正则匹配日期https://segmentfault.com/q/1010000010226432
+PHP如何动态传入参数https://segmentfault.com/q/1010000010264534
+移动app与服务器端进行身份认证https://segmentfault.com/q/1010000010242689
+https://segmentfault.com/q/1010000010223638  php 使用use 和直接传参的区别
+实现同一个账户只能在一个地方登录？如果已经在其他地方登录，将其踢出登录。https://github.com/zhangrenjie/single_account_only_login  https://segmentfault.com/q/1010000010215796   https://segmentfault.com/q/1010000010032189
+三元运算符结合方向的问题： 
+java 从右向左。等效于3<8?(9<6?7:5):(2>0?4:1)
+php 从做向右。等效于(3<8?(9<6?7:5):2)>0?4:1
+```
+
+
+
+
 [使用PHP_XLSXWriter代替PHPExcel](https://segmentfault.com/a/1190000010178094)
 ```js
 https://github.com/mk-j/PHP_XLSXWriter  http://www.mysqltutorial.org/mysql-delete-join/ 火车票 https://github.com/protream/tickets  https://github.com/jkchao/books  https://github.com/yuanliangding/books  getproxy 是一个抓取发放代理网站pip install getproxy
