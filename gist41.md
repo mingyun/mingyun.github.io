@@ -1,12 +1,92 @@
 [使用PHP_XLSXWriter代替PHPExcel](https://segmentfault.com/a/1190000010178094)
 ```js
-https://github.com/mk-j/PHP_XLSXWriter  http://www.mysqltutorial.org/mysql-delete-join/ 火车票 https://github.com/protream/tickets  https://github.com/jkchao/books  https://github.com/yuanliangding/books
+https://github.com/mk-j/PHP_XLSXWriter  http://www.mysqltutorial.org/mysql-delete-join/ 火车票 https://github.com/protream/tickets  https://github.com/jkchao/books  https://github.com/yuanliangding/books  getproxy 是一个抓取发放代理网站pip install getproxy
 ```
+[PHP 该多维数组如何递归循环](https://segmentfault.com/q/1010000010304022)
+```js
+<?php
+
+
+$arr = [
+    [
+        'id' => 1,
+        'children' => [
+            'id' => 2,
+            'children' => [
+                'id' => 3,
+                'children' => [
+                    'id' => 4
+                ]
+            ]
+        ]
+    ],
+    [
+        'id' => 5,
+        'children' => [
+            'id' => 6,
+        ]
+    ],
+    [
+        'id' => 7
+    ]
+];
+
+function pushChild($children, &$container) 
+{
+    $container[] = $children['id'];
+    if (! isset($children['children'])) {
+        return;
+    }
+    pushChild($children['children'], $container);
+}
+
+$arr2 = [];
+
+foreach ($arr as $item) {
+    $result = [];
+    pushChild($item, $result);
+    $arr2[] = $result;
+}
+
+var_dump($arr2); 
+$arr2 = [
+    [1,2,3,4],
+    [5,6],
+    [7]
+];
+```
+[优雅的重试功能。](https://www.zhihu.com/question/24590883/answer/201698987)
+```js
+from tenacity import retry, stop_after_attempt@retry(stop=stop_after_attempt(3))def extract(url):    info_json = requests.get(url).content.decode()    info_dict = json.loads(info_json)    data = info_dict['data']    save(data)
+
+
+ 
+```
+
+
 [numpy和pandas入门](https://zhuanlan.zhihu.com/p/27624814)
  [A chatbot in wxpy for wechat group chats](https://github.com/locoda/connector-wechat-bot.git)
+[微信的语音聊天记录可以从手机提取出来保存到PC](https://www.zhihu.com/question/19909162/answer/80640430)
+https://link.zhihu.com/?target=https%3A//github.com/alexyangfox/wechat_silk/tree/master  http://mindstore.io/mind/13191/
+[从零开始写Python爬虫 --- 爬虫应用： 12306火车票信息查询](https://zhuanlan.zhihu.com/p/27969976)
+```js
+'''
+获取12306城市名和城市代码的数据 在终端输入： python3 parse_stations.py >> stations.py
+文件名： parse_station.py
+'''
+import requests
+import re
 
-
-
+#关闭https证书验证警告
+requests.packages.urllib3.disable_warnings()
+# 12306的城市名和城市代码js文件url
+url = 'https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9018'
+r = requests.get(url,verify=False)
+pattern = u'([\u4e00-\u9fa5]+)\|([A-Z]+)'
+result = re.findall(pattern,r.text)
+station = dict(result)
+print(station)
+```
 [70个Python练手项目列表](https://zhuanlan.zhihu.com/p/27931879)
 [Python中list()方法的疑问](https://segmentfault.com/q/1010000010305364)
 list()构造函数通过可以传递iterable对象. 而string就是 iterable.  至于reverse()对列表操作, 本身返回值是 none. 因为 list 是 mutable 对象(可变对象), 对可变对象进行操作, Python 中大多数会对其本身进行操作, 返回值为 none
