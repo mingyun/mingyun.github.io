@@ -1,7 +1,15 @@
 [使用PHP_XLSXWriter代替PHPExcel](https://segmentfault.com/a/1190000010178094)
 ```js
-https://github.com/mk-j/PHP_XLSXWriter
+https://github.com/mk-j/PHP_XLSXWriter  http://www.mysqltutorial.org/mysql-delete-join/ 火车票 https://github.com/protream/tickets  https://github.com/jkchao/books  https://github.com/yuanliangding/books
 ```
+[numpy和pandas入门](https://zhuanlan.zhihu.com/p/27624814)
+ [A chatbot in wxpy for wechat group chats](https://github.com/locoda/connector-wechat-bot.git)
+
+
+
+[70个Python练手项目列表](https://zhuanlan.zhihu.com/p/27931879)
+[Python中list()方法的疑问](https://segmentfault.com/q/1010000010305364)
+list()构造函数通过可以传递iterable对象. 而string就是 iterable.  至于reverse()对列表操作, 本身返回值是 none. 因为 list 是 mutable 对象(可变对象), 对可变对象进行操作, Python 中大多数会对其本身进行操作, 返回值为 none
 [PHP 最佳实践之数据库](https://laravel-china.org/articles/5330/php-database-of-best-practices)
 ```js
 //把预处理语句获得的结果当成关联数组处理
