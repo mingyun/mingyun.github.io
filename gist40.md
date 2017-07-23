@@ -1,4 +1,5 @@
 app 一个账号不能在多个手机上同时登录https://segmentfault.com/q/1010000010183345
+```js
 后端有一个记录登录状态的表：user，session，expire_time。
 一个设备登录账号，状态表里检查该账号是否有相应记录，且session一致：
 如果没有，说明还没有登录，则正常登录；如果已有（且没过期），则询问是否“强行”登录（把之前别的设备登录记录清除），并更新session、expire_time信息。
@@ -25,8 +26,10 @@ echo ++$a+$a++;
   } else {
     echo "<p>Hello {$_SERVER['PHP_AUTH_USER']}.</p>";
     echo "<p>You entered {$_SERVER['PHP_AUTH_PW']} as your password.</p>";
-  }php 进制转换出现问题https://segmentfault.com/q/1010000010120709
-  ```js
+  }
+```
+  php 进制转换出现问题https://segmentfault.com/q/1010000010120709
+```js
  function hex_dec($str)
 {
     list($int,$hex)=explode('.',$str);
@@ -125,7 +128,7 @@ function setlist($arr, $parentid = 0)
     return $array;
 }
 
-<?php
+ 
 
 
     $a = '12341234';
@@ -179,10 +182,12 @@ https://github.com/shengxinjing/my_blog https://me.bdp.cn/share/index.html?share
 [用Python模拟登陆微博](https://github.com/Wooden-Robot/pop)
 http://woodenrobot.me/2016/03/22/%E7%94%A8Python%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E5%BE%AE%E5%8D%9A/ 
 [SQL如何统计group by后共有几行？](https://segmentfault.com/q/1010000010140760)
+```js
 SELECT count(*) FROM (
     SELECT count(user_order_id),user_order_id FROM `item_order` WHERE seller_id=24 GROUP BY             
     user_order_id ORDER BY user_order_id DESC LIMIT 30 OFFSET 0
 );
+```
 [mysql：如果一个结果集里包含另一个结果集，就显示1 否则显示0](https://segmentfault.com/q/1010000010150767)
 ```js
 select 
@@ -688,7 +693,7 @@ http://sandbox.onlinephpfunctions.com/ http://www.duoluosb.com/coderunner
         $data = curl_exec($ch);
         $data = json_decode(json_encode(simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
         curl_close($ch);
-        return $data;
+        return $data;//
     }
 ```
 [Laravel5中Cookie的使用](http://www.cnblogs.com/phpper/p/6801678.html)
@@ -738,8 +743,7 @@ UPDATE 表名 SET  字段= REPLACE(REPLACE(字段, CHAR(10), ''), CHAR(13), '');
 3:执行 /usr/local/php7/bin/php composer.phar update （这里我的安装路径是/usr/local/php7/bin/php,不一定适合你额，请对号入座即可吧）<br>
 4：安装依赖包：/usr/local/php7/bin/php composer.phar require laravel/scout
 ```
-[已经编译好的 ngrok服务端和客户端，服务端支持Linux、Mac、Windows，有自己服务器有需要的朋友可以自己搭建
-](http://www.sunnyos.com/article-show-74.html )
+[已经编译好的 ngrok服务端和客户端，服务端支持Linux、Mac、Windows，有自己服务器有需要的朋友可以自己搭建](http://www.sunnyos.com/article-show-74.html )
  [(招募截止)『Python爬虫小分队』学习群第三期招募](http://www.jianshu.com/p/f00d19916b53)
 [PHP基础知识系统复习](http://blog.csdn.net/qq_34625397/article/details/51785421)
 [百度网盘](http://www.baiduyunpan.net/)
@@ -1189,8 +1193,6 @@ echo recursion(30);
 ```js
 作者：匿名用户
 链接：https://www.zhihu.com/question/62071167/answer/194308872
-来源：知乎
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 对下面的那串数字解析下: 100,119,122,46,99,110,47,54,57,76,82,104,117 
 最开始用ASCII码试了下,好像能对上,对着码表翻了下100: d
@@ -1328,7 +1330,6 @@ VM205:1 function add called with arguments: 1, 2
 还有一个经典的争论是否需要一个orm工具？双方都有理由，我认为要不要orm既取决于产品也取决于是否有可选的数据库访问工具。例如jdbc就是个反面范例。好的数据库访问工具应该支持命名参数、和安全的sql调用，SQL表达式DSL，关系-模型的友好封装等等，这里且不关心会话等资源管理。我遇到一些同行认为要通过手写sql保证查询质量。然而好的orm应该足够我们做简单对象的curd，人工在这一层做也大多是重复劳动，意义不大。但是工具支持直接写“安全”的sql很重要，可以帮助我们在处理高难度的复杂查询和减少简单curd的工作量这个两难中做到兼顾。所以要不要orm？通常我认为是值得用orm的，只要有好的orm可以用。如果一定要排序，我认为数据库访问工具首先要允许用户安全的编写参数化的查询，仔就是要能有效提高工作效率，以及对各种数据库特定功能的支持，既然对SQL的支持够好，也就不是那么重要了——其实项目做大以后可能仍然是需要支持的。以写SQL的能力来说，我自信还是可以吹牛的。正因为如此我建议大家不必纠结绕过数据库访问工具自己写所有的sql，手写curd查询不会有效提高工程质量，还可能引入不必要的麻烦，例如当年12306被注入的事件。另一方面说好的数据库访问工具应该允许我们不失安全性的前提下手写各种sql，这对于处理复杂问题非常重要。
 以上几个问题的共同点是，如果不了解问题和解决问题的工具，就不容易做出正确的选择。例如我们到底需要一个带统计分组的连接查询？还是一个展开详细信息的分组统计？有些问题，可能一开始就问错了。找到正确的问题，就会发现不同的工具真的可以给出不一样的解决方案。重要的是思想，想得清楚，用得上的那种才叫思想。看别人说好就跟风，落实到自己身上就永远是一个自增id带各种var char的不叫思想。当然没必要每个人都陷在技术问题里，岗位有分工，工程师下班也要有自己的生活。但是这并不是把行业整个拉低到自己熟悉的水平以避免思考的理由http://weibo.com/1729408273/FaolmbpQl
 使用PyTorch深度学习：60分钟闪电教程。 ​​​​http://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html#deep-learning-with-pytorch-a-60-minute-blitz
-
 
 
 ```
