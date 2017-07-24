@@ -1,9 +1,150 @@
+[shadowsocks](https://github.com/breakwa11/shadowsocks-rss)
+[Shadowsocks各平台客户端使用方法](http://muye.me/archives/101.html)
+[php中浮点数位数截取性能大比拼](https://helei112g.github.io/2017/02/16/PHP%E4%B8%AD%E6%B5%AE%E7%82%B9%E6%95%B0%E4%BD%8D%E6%95%B0%E6%88%AA%E5%8F%96%E6%80%A7%E8%83%BD%E5%A4%A7%E6%AF%94%E6%8B%BC/)
+```js
+如果用户的订单价格是：6.666元，那么在向支付宝或者微信发起支付时，第三方只会保留两位数，也就是用户实际付款：6.66元。
+
+那么问题来了，支付成功第三方回调系统接口，在接口中的逻辑需要比对支付的金额，会发现 6.666≠6.66，然后后面的逻辑无法运行，处理失败
+number_format — 以千位分隔符方式格式化一个数字
+round — 对浮点数进行四舍五入 (通过传入第三个参数，可以控制舍、入的方式)
+sprintf — Return a formatted string
+bcadd — 2个任意精度数字的加法计算
+    number_format(10000, 2, '.', '');sprintf('%.2f',$num)
+所以通过对比，推荐使用 sprintf 来处理浮点数位数的问题。
+同步通知不做服务端的更新，可用于客户端的显示，异步收到通知时才做相关的更新处理。原因有三：
+
+并不是所有的支付模块都有同步通知这个概念；
+同步通知的参数在url中，就算采用https协议，也存在更大被篡改的风险；
+异步通知提供完整的失败重发机制，更值得信耐。
+```
+[PHP设计模式：模板方法真的很有用](https://helei112g.github.io/2016/09/09/PHP%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%9A%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95%E7%9C%9F%E7%9A%84%E5%BE%88%E6%9C%89%E7%94%A8/)
+```js
+将具体的一些实现延迟到子类，可以减少父类初始化的压力
+父类只定义调用步骤，具体每一步的实现由子类自己决定
+这样的结构利用了一种反射的思路，由父类来调用子类的具体实现方法
+很好的进行了代码的复用
+abstract class AbstractClass {
+ 
+    /**
+     * 顶层组织逻辑的方法
+     */
+    public function method() {
+        $this->primitiveOperation1();
+        $this->primitiveOperation2();
+    }
+ 
+    /**
+     * 基本方法1
+     */
+    abstract protected function primitiveOperation1();
+ 
+     /**
+     * 基本方法2
+     */
+    abstract protected function primitiveOperation2();
+}
+
+
+class ConcreteClass extends AbstractClass{
+    /**
+     * 基本方法1
+     */
+    protected function primitiveOperation1() {
+        echo 'primitiveOperation1<br />';
+    }
+ 
+     /**
+     * 基本方法2
+     */
+    protected function primitiveOperation2(){
+        echo 'primitiveOperation2<br />';
+    }
+}
+(new ConcreteClass)->method();
+if(count($array) == count($array, 1)){
+　　echo '一维数组';
+}else{
+　　echo '多维数组';
+}
+模拟来源
+
+curl_setopt($ch, CURLOPT_REFERER, '来源');
+
+模拟ip
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('CLIENT-IP: 模拟ip','X-FORWARDED-FOR: 模拟ip'));
+```
+[谈谈php依赖注入和控制反转](http://www.cnblogs.com/phpper/p/6716375.html)
+```js
+class Ioc {
+/**
+* @var 注册的依赖数组
+*/
+  
+  protected static $registry = array();
+  
+  /**
+  * 添加一个resolve到registry数组中
+  * @param string $name 依赖标识
+  * @param object $resolve 一个匿名函数用来创建实例
+  * @return void
+  */
+  public static function register($name, Closure $resolve)
+  {
+   static::$registry[$name] = $resolve;
+  }
+  
+  /**
+   * 返回一个实例
+   * @param string $name 依赖的标识
+   * @return mixed
+   */
+  public static function resolve($name)
+  {
+    if ( static::registered($name) )
+    {
+     $name = static::$registry[$name];
+     return $name();
+    }
+    throw new Exception('Nothing registered with that name, fool.');
+  }
+  /**
+  * 查询某个依赖实例是否存在
+  * @param string $name id
+  * @return bool 
+  */
+  public static function registered($name)
+  {
+   return array_key_exists($name, static::$registry);
+  }
+}
+class Book {
+  private $db_conn;
+  
+  public function setdb($db_conn) {
+    echo $db_conn;
+  }
+}
+$book = Ioc::register('book', function(){
+$book = new Book;
+$book->setdb('mysql');
+ 
+return $book;
+});
+  
+//注入依赖
+$book = Ioc::resolve('book');
+```
+
+[优化php性能的一点总结](http://www.cnblogs.com/phpper/p/6613863.html)
+[xhprof安装&&使用](http://www.cnblogs.com/bluefrog/archive/2012/03/01/2374922.html)
+[Swoole入门指南：PHP7安装Swoole详细教程（一）](https://helei112g.github.io/2017/02/08/Swoole%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97%EF%BC%9APHP7%E5%AE%89%E8%A3%85Swoole%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/)
 [如何实现PHP版本共存](https://segmentfault.com/q/1010000010252140)
 ```js
 配置下让Nginx监听不同的端口或文件就可以实现了。大体思路如下：因为Nginx是通过PHP-FastCGI与PHP交互的，然后，PHP-FastCGI运行后会通过文件、或本地端口两种方式进行监听，在Nginx中配置相应的FastCGI监听端口或文件即实现Nginx请求对PHP的解释。因此，Nginx中根据需求配置调用不同的PHP-FastCGI端口或文件，便实现不同版本PHP共存了。
 
 修改php-fpm.conf，监听端口：
-
+http://elk.vhallops.com/app/kibana
 <value name="listen_address">127.0.0.1:8001</value>
 或者
 
