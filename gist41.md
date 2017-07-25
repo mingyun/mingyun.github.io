@@ -1,3 +1,7 @@
+[Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf)
+
+
+[php ngrok natapp.cn 内网穿透服务 PHP 版](https://github.com/dosgo/ngrok-php/blob/master/natapp.php#L34)
 [shadowsocks](https://github.com/breakwa11/shadowsocks-rss)
 [Shadowsocks各平台客户端使用方法](http://muye.me/archives/101.html)
 [php中浮点数位数截取性能大比拼](https://helei112g.github.io/2017/02/16/PHP%E4%B8%AD%E6%B5%AE%E7%82%B9%E6%95%B0%E4%BD%8D%E6%95%B0%E6%88%AA%E5%8F%96%E6%80%A7%E8%83%BD%E5%A4%A7%E6%AF%94%E6%8B%BC/)
