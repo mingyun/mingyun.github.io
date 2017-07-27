@@ -1,4 +1,278 @@
 [Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf)
+[为什么选择本书学习PHP](http://phpbook.phpxy.com/33183)
+[vpn 翻  墙](http://www.fkwall.com/)
+[PHP代码规范与质量检查工具PHPCS,PHPMD的安装与配置](https://www.phpxy.com/article/3.html)
+```js
+composer global require phpmd/phpmd composer global require "squizlabs/php_codesniffer=*"
+$  phpcs --report=summary downloadexcel.php
+
+PHP CODE SNIFFER REPORT SUMMARY
+--------------------------------------------------------------------------------
+
+FILE                                                            ERRORS  WARNINGS
+
+--------------------------------------------------------------------------------
+
+D:\soft\wamp\www\downloadexcel.php                              51      5
+--------------------------------------------------------------------------------
+
+A TOTAL OF 51 ERROR(S) AND 5 WARNING(S) WERE FOUND IN 1 FILE(S)
+--------------------------------------------------------------------------------
+
+
+Time: 1 second, Memory: 2.50Mb
+
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www
+$ phpcs downloadexcel.php --standard=PSR2
+ERROR: the "PSR2" coding standard is not installed. The installed coding standar
+ds are MySource, PEAR, PHPCS, Squiz and Zend
+
+vhalllsp@VHALLLSP-PC /d/soft/wamp/www
+$ phpcs downloadexcel.php
+
+FILE: D:\soft\wamp\www\downloadexcel.php
+--------------------------------------------------------------------------------
+
+FOUND 51 ERROR(S) AND 5 WARNING(S) AFFECTING 40 LINE(S)
+--------------------------------------------------------------------------------
+
+   1 | ERROR   | End of line character is invalid; expected "\n" but found
+     |         | "\r\n"
+   1 | ERROR   | Missing file doc comment
+   3 | WARNING | Line exceeds 85 characters; contains 153 characters
+ 178 | WARNING | Line exceeds 85 characters; contains 115 characters
+ 179 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual variable
+     |         | name &$data at position 1
+ 179 | ERROR   | Missing parameter name at position 1
+ 179 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 1
+ 179 | ERROR   | There must be exactly one blank line before the tags in
+     |         | function comment
+ 180 | ERROR   | Last parameter comment requires a blank newline after it
+ 180 | ERROR   | The variable names for parameters UNKNOWN (1) and [ UNKNOWN ]
+     |         | (2) do not align
+ 180 | ERROR   | Doc comment for var [ UNKNOWN ] does not match actual variable
+     |         | name $fields at position 2
+ 180 | ERROR   | Missing parameter name at position 2
+ 180 | ERROR   | Missing comment for param "[ UNKNOWN ]" at position 2
+ 183 | ERROR   | Opening brace should be on a new line
+ 186 | WARNING | Line exceeds 85 characters; contains 142 characters
+ 187 | ERROR   | Opening parenthesis of a multi-line function call must be the
+     |         | last content on the line
+ 190 | ERROR   | Expected "if (...) {\n"; found "if(...){\n"
+ 190 | ERROR   | There must be a single space between the closing parenthesis
+     |         | and the opening brace of a multi-line IF statement; found 0
+     |         | spaces
+ 192 | ERROR   | Expected "} else {\n"; found "}else{\n"
+ 207 | ERROR   | Closing parenthesis of a multi-line function call must be on a
+     |         | line by itself
+ 210 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 210 | ERROR   | Doc comment for "$filename" missing
+ 212 | ERROR   | Missing @return tag in function comment
+ 213 | ERROR   | Function name "export_csv" is prefixed with a package name but
+     |         | does not begin with a capital letter
+ 213 | ERROR   | Line indented incorrectly; expected 0 spaces, found 4
+ 225 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 226 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 226 | ERROR   | Line indented incorrectly; expected 0 spaces, found 2
+ 227 | ERROR   | Spaces must be used to indent lines; tabs are not allowed
+ 228 | ERROR   | Closing brace indented incorrectly; expected 2 spaces, found 8
+ 229 | ERROR   | Line indented incorrectly; expected 0 spaces, found 8
+ 232 | ERROR   | Line indented incorrectly; expected 4 spaces, found 12
+ 233 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 234 | WARNING | Line exceeds 85 characters; contains 148 characters
+ 237 | ERROR   | Line indented incorrectly; expected 4 spaces, found 12
+ 243 | ERROR   | Line indented incorrectly; expected 0 spaces, found 8
+ 247 | ERROR   | Line indented incorrectly; expected 0 spaces, found 8
+ 248 | ERROR   | Line indented incorrectly; expected 4 spaces, found 12
+ 250 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 252 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 258 | ERROR   | Line indented incorrectly; expected 0 spaces, found 8
+ 265 | ERROR   | Line indented incorrectly; expected 0 spaces, found 8
+ 266 | ERROR   | Expected "if (...) {\n"; found "if(...){\n"
+ 266 | ERROR   | Line indented incorrectly; expected 4 spaces, found 12
+ 266 | ERROR   | There must be a single space between the closing parenthesis
+     |         | and the opening brace of a multi-line IF statement; found 0
+     |         | spaces
+ 269 | WARNING | Line exceeds 85 characters; contains 94 characters
+ 270 | ERROR   | Line indented incorrectly; expected 4 spaces, found 12
+ 271 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 272 | ERROR   | Line indented incorrectly; expected 12 spaces, found 20
+ 274 | ERROR   | Expected "} elseif (...) {\n"; found "} elseif(...) {\n"
+ 274 | ERROR   | Line indented incorrectly; expected 12 spaces, found 20
+ 277 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 279 | ERROR   | No space found after comma in function call
+ 281 | ERROR   | Line indented incorrectly; expected 8 spaces, found 16
+ 285 | ERROR   | No space found after comma in function call
+ 285 | ERROR   | No space found after comma in function call
+--------------------------------------------------------------------------------
+
+
+Time: 1 second, Memory: 2.50Mb
+
+$ phpcbf downloadexcel.php  --suffix=.fixed
+
+PHPCBF RESULT SUMMARY
+----------------------------------------------------------------------
+FILE                                                  FIXED  REMAINING
+----------------------------------------------------------------------
+D:\soft\wamp\www\downloadexcel.php                    57     16
+----------------------------------------------------------------------
+A TOTAL OF 57 ERRORS WERE FIXED IN 1 FILE
+----------------------------------------------------------------------
+
+Time: 5.36 secs; Memory: 5Mb https://github.com/overtrue/phpmd-rulesets
+```
+自定义server
+```js
+ app\Providers\ResponseMacroServiceProvider.php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Response;
+
+class ResponseMacroServiceProvider extends ServiceProvider
+{
+    /** 
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {   
+        Response::macro('jsonOutput', function ($data, $code = 200, $msg = 'success') {
+            return Response::json(['code' => $code, 'msg' => $msg, 'data' => $data]);
+        });
+        Response::macro('jsonError', function ($code = 400, $msg = 'error', $data = []) {
+            return Response::json(['code' => $code, 'msg' => $msg, 'data' => $data]);
+        });
+    }   
+
+    /** 
+     * Register the application services.
+     */
+    public function register()
+    {   
+        //
+    }   
+}
+
+config/app.php
+
+'providers'=>['App\Providers\ResponseMacroServiceProvider',]
+
+return response()->jsonOutput($chartData);
+```
+[自定义md5加密](https://laravel-china.org/topics/3415/laravel-control-inversion-and-facade-mode-concept)
+```js
+>>> \App::make('hash')->make('123456')
+=> "e10adc3949ba59abbe56e057f20f883e"
+>>> \Hash::make('123456')
+=> "e10adc3949ba59abbe56e057f20f883e"
+>>> md5('123456')
+=> "e10adc3949ba59abbe56e057f20f883e"
+<?php
+
+namespace Illuminate\Support\Facades;
+
+/**
+ * @see \Illuminate\Hashing\BcryptHasher
+ */
+class Hash extends Facade
+{
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'hash';
+    }
+}
+
+<?php
+
+namespace App\Providers\Hashing;
+
+use Illuminate\Support\ServiceProvider;
+
+class Md5ServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
+        //
+    }
+
+    /**
+     * Register the application services.
+     */
+    public function register()
+    {
+        $this->app->singleton('hash', function () { return new Md5Hasher(); });
+    }
+}
+<?php
+
+namespace App\Providers\Hashing;
+
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+
+class Md5Hasher implements HasherContract
+{
+    /**
+     * Hash the given value.
+     *
+     * @param string $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     * @throws \RuntimeException
+     */
+    public function make($value, array $options = array())
+    {
+        $md5 = md5($value);
+
+        return $md5;
+    }
+
+    /**
+     * Check the given plain value against a hash.
+     *
+     * @param string $value
+     * @param string $hashedValue
+     * @param array  $options
+     *
+     * @return bool
+     */
+    public function check($value, $hashedValue, array $options = array())
+    {
+        return md5($value) === $hashedValue ? true : false;
+    }
+
+    /**
+     * Check if the given hash has been hashed using the given options.
+     *
+     * @param string $hashedValue
+     * @param array  $options
+     *
+     * @return bool
+     */
+    public function needsRehash($hashedValue, array $options = array())
+    {
+        return false;
+    }
+}
+
+config/app.php
+'providers'=>['App\Providers\Hashing\Md5ServiceProvider',]
+'Hash'      =>[ 'Illuminate\Support\Facades\Hash'],
+
+```
 
 
 [php ngrok natapp.cn 内网穿透服务 PHP 版](https://github.com/dosgo/ngrok-php/blob/master/natapp.php#L34)
