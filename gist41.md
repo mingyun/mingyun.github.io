@@ -1,4 +1,245 @@
 [Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf)
+[ip](https://github.com/nelsonking/ip_location/tree/master/src)
+https://github.com/maxmind/GeoIP2-php 
+[阿里鉴黄](https://github.com/vhall/check_picture/tree/master/src)
+```js
+        $lastId = 4085069;
+        $take   = 1000;
+        $true   = true;
+        $i      = 0;
+        while($true){
+            $i++;
+            $list = VodTable::selectRaw('ID,src_ip,aid')->whereRaw('ID >'.$lastId)->orderBy('ID','asc')->take($take)->get()->toArray();
+            if(!empty($list) && is_array($list)){
+                echo "lastId|".$lastId."|".$i."\n";
+                foreach ($list as $row){
+                    if(!empty($row['src_ip'])){
+                        $ipData = self::geoIp($row['src_ip']);
+                        $hostId = $this->_getHostId($row['aid']);
+                        $sql = "UPDATE vodtable set host_user_id = ".$hostId.",country='".$ipData['country']."',region='".$ipData['region']."',city='".$ipData['city']."' WHERE ID='".$row['ID']."';\n";
+                        file_put_contents($this->file,$sql,FILE_APPEND);
+                    }
+                    $lastId = $row['ID'];
+                }
+            }else{
+                $true = false;
+            }
+        }
+    /**
+     * 同步用户信息
+     * 
+     */
+    protected function actionSync()
+    {
+        if ($this->option('target') != 'redis') {
+            $this->error('Undefined target.');
+            return;
+        }
+
+        $redis = RedisFacade::connection();
+
+        $usleep = $this->option('usleep');
+        $limit = $this->option('size');
+        $minId = 0;
+        while (true) {
+            $userInfos = UserModel::where('id', '>', $minId)
+                ->select('id', 'nick_name', 'avatar')
+                ->orderBy('id')
+                ->take($limit)
+                ->get();
+
+            $selectCount = count($userInfos);
+            if (!$selectCount) {
+                break;
+            }
+
+            $redis->pipeline(function($pipe) use($userInfos) {
+                foreach ($userInfos as $userInfo) {
+                    $pipe->hmset('com:user:info:basic:' . $userInfo['id'], [
+                        'uid' => (string)$userInfo['id'],
+                        'nick_name' => $userInfo['nick_name'],
+                        'avatar' => $userInfo['avatar'],
+                    ]);
+                }
+            });
+
+            if ($selectCount < $limit) {
+                break;
+            }
+
+            $minId = $userInfos->last()->id;
+            unset($userInfos);
+
+            if ($usleep > 0) {
+                usleep($usleep);
+            }
+        }
+
+        $this->info('Done.');
+    }
+
+echo  mb_strimwidth ( "Hello World" ,  0 ,  10 ,  "..." );// 输出 Hello W...
+    echo  mb_strimwidth ( "中文截取字符串" ,  0 ,  7 ,  "..." );//输出中文...
+    // return debug_backtrace();
+http://mockbin.com/bin/bbe7f656-12d6-4877-9fa8-5cd61f9522a9/view
+$url = 'http://101.201.236.181:8081/ip?ip='.$ip;
+        $ret =  Common::curlGetRequest($url);
+        if(!empty($ret)){
+            $resData = json_decode($ret,true);
+            if(!empty($resData) && $resData['ret'] == 'ok'){
+                $ipData['country']  = $resData['data'][0];
+                $ipData['area']     = $resData['data'][1];
+                $ipData['region']   = $resData['data'][1];
+                $ipData['city']     = $resData['data'][2];
+                $ipData['isp']      = $resData['data'][4];
+            }
+        }
+$database = new Medoo([
+        'database_type' => 'mysql',
+        'database_name' => 'test',
+        'server' => 'localhost',
+        'username' => 'root',
+        'password' => null,
+        'charset' => 'utf8'
+    ]);
+    // http://lonewolf.oschina.io/medoo/api/where.html
+    /*$database->insert('t1', [
+        'c1' => '88',
+        'c2' => 'foo@bar.com',
+    ]);*/
+    $res=$database->select("t1", "*", [
+        "c1" => "2"
+    ]);
+    $res=$database->select("t1", "*", [
+    "c1[><]" => [100, 500]
+    ]);
+    // 你不仅可以用于单个的字符串或数值，也可用于数组
+$database->select("t1", "*", [
+    "OR" => [ 
+        "c1" => [2, 123, 234, 54],
+        "c2" => ["foo@bar.com", "cat@dog.com", "admin@medoo.in"]
+    ]
+
+$reader = new Reader('GeoIP2-City.mmdb');
+
+// Replace "city" with the appropriate method for your database, e.g.,
+$record = $reader->city('180.149.132.47');//百度 ip
+print_r($record);
+
+City {#1899 ▼
+  #city: City {#1908 ▶}
+  #location: Location {#1909 ▶}
+  #postal: Postal {#1910 ▶}
+  #subdivisions: array:1 [▶]
+  #continent: Continent {#1902 ▶}
+  #country: Country {#1903 ▶}
+  #locales: array:1 [▶]
+  #maxmind: MaxMind {#1904 ▶}
+  #registeredCountry: Country {#1905 ▶}
+  #representedCountry: RepresentedCountry {#1906 ▶}
+  #traits: Traits {#1907 ▶}
+  #raw: array:7 [▼
+    "city" => array:2 [▼
+      "geoname_id" => 1816670
+      "names" => array:8 [▼
+        "de" => "Peking"
+        "en" => "Beijing"
+        "es" => "Pekín"
+        "fr" => "Pékin"
+        "ja" => "北京市"
+        "pt-BR" => "Pequim"
+        "ru" => "Пекин"
+        "zh-CN" => "北京"
+      ]
+    ]
+    "continent" => array:3 [▼
+      "code" => "AS"
+      "geoname_id" => 6255147
+      "names" => array:8 [▼
+        "de" => "Asien"
+        "en" => "Asia"
+        "es" => "Asia"
+        "fr" => "Asie"
+        "ja" => "アジア"
+        "pt-BR" => "Ásia"
+        "ru" => "Азия"
+        "zh-CN" => "亚洲"
+      ]
+    ]
+    "country" => array:3 [▼
+      "geoname_id" => 1814991
+      "iso_code" => "CN"
+      "names" => array:8 [▼
+        "de" => "China"
+        "en" => "China"
+        "es" => "China"
+        "fr" => "Chine"
+        "ja" => "中国"
+        "pt-BR" => "China"
+        "ru" => "Китай"
+        "zh-CN" => "中国"
+      ]
+    ]
+    "location" => array:4 [▼
+      "accuracy_radius" => 50
+      "latitude" => 39.9289
+      "longitude" => 116.3883
+      "time_zone" => "Asia/Shanghai"
+    ]
+    "registered_country" => array:3 [▼
+      "geoname_id" => 1814991
+      "iso_code" => "CN"
+      "names" => array:8 [▼
+        "de" => "China"
+        "en" => "China"
+        "es" => "China"
+        "fr" => "Chine"
+        "ja" => "中国"
+        "pt-BR" => "China"
+        "ru" => "Китай"
+        "zh-CN" => "中国"
+      ]
+    ]
+    "subdivisions" => array:1 [▼
+      0 => array:3 [▼
+        "geoname_id" => 2038349
+        "iso_code" => "11"
+        "names" => array:3 [▼
+          "en" => "Beijing"
+          "fr" => "Municipalité de Pékin"
+          "zh-CN" => "北京市"
+        ]
+      ]
+    ]
+    "traits" => array:1 [▼
+      "ip_address" => "180.149.132.47"
+    ]
+  ]
+}
+CN China 中国 Beijing 11 Beijing 39.9289
+"116.3883\n"
+composer require 		"vhall/check_picture": "dev-master",
+$checkObj = new CheckPicture('7JKcOIySkNC95NEu','s1x47CPbi18yuWF7gt82ysO4prA2gT');
+			$result = $checkObj->check($imageUrl);//https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=476277235,3481968713&fm=116&gp=0.jpg
+			$result['url'] = $imageUrl;
+
+			if($result && isset($result['rate']) && isset($result['label'])) {
+				$webinarExist = WebinarGreenCheck::where('webinar_id',$webinarId)->first();
+
+				if (!empty($webinarExist)) {
+					// 只记录最坏情况
+					if ($webinarExist['rate'] < $result['rate']) {
+						$webinarExist->update($result);
+					}
+				} else {
+					$result['webinar_id'] = $webinarId;
+					WebinarGreenCheck::create($result);
+				}
+
+				if ($result['label'] == 1) {
+					$content = '发现黄色视频，活动ID为'.$webinarId.' 图片地址为'.$imageUrl;
+
+```
 [为什么选择本书学习PHP](http://phpbook.phpxy.com/33183)
 [vpn 翻  墙](http://www.fkwall.com/)
 [PHP代码规范与质量检查工具PHPCS,PHPMD的安装与配置](https://www.phpxy.com/article/3.html)
