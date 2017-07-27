@@ -3,6 +3,155 @@
 https://github.com/maxmind/GeoIP2-php 
 [阿里鉴黄](https://github.com/vhall/check_picture/tree/master/src)
 ```js
+跨库查询
+class UserOnline extends Model {
+    protected $table = 'user_onlines';
+
+    protected $guarded = ['id'];
+
+    public function __construct(array $attributes = array()) {
+        $this->setConnection('webinar');
+        parent::__construct($attributes);
+    }
+
+}
+config/database.php
+/* 活动主从库 */
+        'webinar' => [
+            'driver'    => env('DB_MYSQL_DRIVER', 'mysql'),
+            'read'      => [
+                'host'  => env('DB_WEBINAR_SLAVE_HOST','localhost'),
+            ],
+            'write'     => [
+                'host'  => env('DB_WEBINAR_HOST', 'localhost'),
+            ],
+            'database'  => env('DB_WEBINAR_DATABASE', 'forge'),
+            'username'  => env('DB_WEBINAR_USERNAME', 'forge'),
+            'password'  => env('DB_WEBINAR_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ] ,
+	                        $sql = "UPDATE `webinar_tracks` SET `t_end` = '".$this->t_end."',`duration` = TIMESTAMPDIFF(MINUTE,`t_start`,`t_end`) WHERE `id` IN('".$ids."')";
+                        \DB::connection('webinar')->update($sql);
+config/filesystem.php
+        'local_static' => [
+			'driver' => 'aliyunoss',
+            'key'    => env('OSS_ACCESSKEYID'),
+            'secret' => env('OSS_ACCESSKEYSECRET'),
+            'endpoint' => env('OSS_ENDPOINT'),
+            'bucket' => env('OSS_BUCKET'),
+			'root'   => 'upload',
+		],
+namespace App\Providers;
+use Storage;
+use League\Flysystem\Filesystem;
+use OSS\OssClient;
+use App\Core\Aliyun\OssAdapter ;
+use Illuminate\Support\ServiceProvider;
+
+class AliyunOssFilesystemServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot()
+    {
+        Storage::extend('aliyunoss', function($app, $config)
+        {
+            $client = new OssClient($config['key'], $config['secret'], $config['endpoint']);
+
+            return new Filesystem(new OssAdapter($client, $config['bucket'], $config['root']));
+        });
+    }
+}
+        Storage::disk('local_static')->put($filename, $file);
+
+
+DB::table('user_onlines')->  \DB::connection('webinar')->table('user_onlines');  UserOnline->where
+           $ios_msg = \App\Services\Upload::getUploadFileAddress(\Request::file('ios'),'app_launch','image');
+关于这个上传文件的写法
+ $file=Input::file("pic");
+
+         $cont=new MenuCont;
+
+         $entension = $file -> getClientOriginalExtension();
+
+         $clientName = $file -> getClientOriginalName();
+
+         $name = md5(date('ymdhis').$clientName).".".$entension;
+
+         $file->move("uploads",$name);
+
+         $cont->fill(Input::all());
+
+         $cont->pic=$name;
+
+         $cont->save();
+
+        return back();
+ id 不连续分批处理
+ 		$webinarMinId = WebinarModel::min('id');
+		$webinarMaxId = WebinarModel::max('id');
+
+		while($webinarMinId <= $webinarMaxId){
+			$webinserObj = WebinarModel::select($listField)->where('id','>=',$webinarMinId)->take($takeNum)->orderBy('id')->get();
+			foreach ($webinserObj as $key => $value) {
+				if ($value->type == 3 && $value->auto_record != '1') {
+					continue;
+				}
+
+				$time = $value['start_time'] == '0000-00-00 00:00:00' ? 1388505601 : strtotime($value['start_time']);
+				$sortTime = $value['type'] == 2 ? log($time) / 1000 : 1 - log($time) /1000;
+				$sort = $value['type'] + $sortTime;
+			}
+
+			$addNum = $webinarMinId + $takeNum;
+
+			$webinarMinId = isset($value->id) ? ($addNum > $value->id ? $addNum : $value->id) : $addNum;
+
+			if (empty($tmpArray)) {
+				continue;
+			}
+
+			usleep(100000);
+		}
+	public function fire()
+	{
+        // 处理拥有者主持人为空的情况
+        $dealFile = '';
+        $fileName = '/tmp/update_webinar_user_reg.sql';
+
+        $result = \DB::select("SELECT
+	`webinars`.user_id, `webinar_user_regs`.`id` AS `reg_id`, webinars.id
+FROM
+	`webinars`
+LEFT JOIN `webinar_user_regs` ON `webinar_user_regs`.`webinar_id` = `webinars`.`id` and role_name = 'host'
+WHERE
+webinars.id not in (
+    select webinar_id from webinar_user_regs where role_name = 'host'
+)
+AND `webinars`.`deleted_at` IS NULL
+AND `webinar_user_regs`.`id` IS NULL");
+
+
+        foreach($result as $key => $webinarObj) {
+            $userRegExist = WebinarUserReg::where('webinar_id', $webinarObj->id)->where('user_id',$webinarObj->user_id)->first();
+            if (!empty($userRegExist)) {
+                $dealFile .= "update webinar_user_regs set role_name = 'host' where id = ".$userRegExist->id.";\n";
+            }
+
+            if ($key%1000 == 0 ){
+                file_put_contents($fileName, $dealFile, FILE_APPEND);
+                $dealFile = '';
+            }
+            echo $key ."\n";
+        }
+
+        file_put_contents($fileName, $dealFile, FILE_APPEND);
+	}
+
         $lastId = 4085069;
         $take   = 1000;
         $true   = true;
