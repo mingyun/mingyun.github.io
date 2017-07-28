@@ -1,3 +1,103 @@
+[在MySQL中阻止UPDATE语句没有添加WHERE条件的发生](http://www.cnblogs.com/wjoyxt/p/5620827.html)
+```js
+# sql_safe_updates=1,即开启
+root@127.0.0.1 : test 08:00:00> set sql_safe_updates=1;
+Query OK, 0 rows affected (0.00 sec)
+
+root@127.0.0.1 : test 08:00:11> show variables like 'sql_safe_updates';
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| sql_safe_updates | ON    |
++------------------+-------+
+1 row in set (0.00 sec)
+
+root@127.0.0.1 : test 08:00:16> select * from t;
++-------+
+| pd    |
++-------+
+| hello |
+| mysql |
++-------+
+2 rows in set (0.00 sec)
+
+root@127.0.0.1 : test 08:00:25> begin;
+Query OK, 0 rows affected (0.00 sec)
+
+root@127.0.0.1 : test 08:00:27> update t set pd='MySQL';
+ERROR 1175 (HY000): You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column
+如上属的例子所示，当参数sql_safe_updates开启的时候，UPDATE语句不携带WHERE条件将会爆出一个错误。。所以小心使用UPDATE语句是真的很重要哇。。。
+
+ 
+```
+[Mysql 一条SQL语句实现批量更新数据，update结合case、when和then的使用案例](http://blog.csdn.net/xiaoxiaodongxie/article/details/51773219)
+```js
+UPDATE categories SET 
+display_order = CASE id 
+        WHEN 1 THEN 3 
+        WHEN 2 THEN 4 
+        WHEN 3 THEN 5 
+END, 
+title = CASE id 
+        WHEN 1 THEN 'New Title 1'
+        WHEN 2 THEN 'New Title 2'
+        WHEN 3 THEN 'New Title 3'
+END
+WHERE id IN (1,2,3);
+$display_order = array( 
+    1 => 4, 
+    2 => 1, 
+    3 => 2, 
+    4 => 3, 
+    5 => 9, 
+    6 => 5, 
+    7 => 8, 
+    8 => 9 
+); 
+
+$ids = implode(',', array_keys($display_order)); 
+$sql = "UPDATE categories SET display_order = CASE id "; 
+foreach ($display_order as $id => $ordinal) { 
+    $sql .= sprintf("WHEN %d THEN %d ", $id, $ordinal); 
+} 
+$sql .= "END WHERE id IN ($ids)"; 
+echo $sql;
+基于角色的访问控制RBAC的mysql表设计 http://blog.csdn.net/xiaoxiaodongxie/article/details/52400488 
+```
+[警惕 MySql 更新 sql 的 WHERE 从句中的 IN() 子查询时出现的陷阱](http://blog.csdn.net/defonds/article/details/46745143)
+```js
+update mer_stage set editable = 1 where stage_id in(
+	select associated_id from proc where proc_id in(6446 , 6447 , 6450));
+select associated_id from proc where proc_id in(6446 , 6447 , 6450) and associated_id = '外查询结果.stage_id';  
+
+update mer_stage m join proc p on m.stage_id = p.associated_id set m.editable = 1  
+        where p.proc_id =6446 or p.proc_id =6447 or p.proc_id =6450;  
+
+```
+[Mysql中exists子查询语句的使用，取出每组中最高的前n名的信息](http://blog.csdn.net/xiaoxiaodongxie/article/details/52606915)
+```js
+create table cat(  
+    id int not null auto_increment primary key,  
+    cat_id int,  
+    value int,  
+    name varchar(30)  
+);  
+insert into cat (cat_id,name,value) values ('1','name1', '2');  
+insert into cat (cat_id,name,value) values ('1','name2', '21');  
+insert into cat (cat_id,name,value) values ('1','name3', '1');  
+insert into cat (cat_id,name,value) values ('1','name4', '3');  
+insert into cat (cat_id,name,value) values ('2','name5', '54');  
+insert into cat (cat_id,name,value) values ('2','name6', '4');  
+insert into cat (cat_id,name,value) values ('2','name7', '24');   
+insert into cat (cat_id,name,value) values ('2','name8', '23');  
+insert into cat (cat_id,name,value) values ('3','name9', '57');  
+insert into cat (cat_id,name,value) values ('3','name10','45');  
+insert into cat (cat_id,name,value) values ('3','name11','12');  
+insert into cat (cat_id,name,value) values ('3','name12','23');  
+
+select a.* from cat a where exists (select count(*) from cat where cat_id = a.cat_id and value > a.value having Count(*) < 3) order by a.cat_id,a.value desc;
+
+```
 [Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf)
 [ip](https://github.com/nelsonking/ip_location/tree/master/src)
 https://github.com/maxmind/GeoIP2-php 
