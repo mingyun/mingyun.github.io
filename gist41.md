@@ -94,9 +94,69 @@ insert into cat (cat_id,name,value) values ('3','name9', '57');
 insert into cat (cat_id,name,value) values ('3','name10','45');  
 insert into cat (cat_id,name,value) values ('3','name11','12');  
 insert into cat (cat_id,name,value) values ('3','name12','23');  
+现在，我拿到外层查询的第一行，也就是上图的第一行。此时子查询中取出当前表cat中cat_id=1并且values值大于2的，毫无疑问，有2条记录，满足条件小于3(用到了having语句，对中间结果进行过滤等等处理)，此时exists满足条件，返回true。外层查询第一条记录被保存。到最后cat_id为1，value为1的，count(*)为3，子查询返回的是false。所以上图中的第3条记录不会被保存。
 
 select a.* from cat a where exists (select count(*) from cat where cat_id = a.cat_id and value > a.value having Count(*) < 3) order by a.cat_id,a.value desc;
++----+--------+--------+-------+  
+| id | cat_id | name   | value |  
++----+--------+--------+-------+  
+|  2 |      1 | name2  |    21 |  
+|  4 |      1 | name4  |     3 |  
+|  1 |      1 | name1  |     2 |  
+|  5 |      2 | name5  |    54 |  
+|  7 |      2 | name7  |    24 |  
+|  8 |      2 | name8  |    23 |  
+|  9 |      3 | name9  |    57 |  
+| 10 |      3 | name10 |    45 |  
+| 12 |      3 | name12 |    23 |  
++----+--------+--------+-------+  
+mysql> select *from cat a where (select count(*) from cat b where a.cat_id=b.cat_id and b.value>a.value) < 3 order by a.cat_id,a.value desc;
+mysql> select *from (select *from cat order by value desc) a group by cat_id;
++----+--------+-------+-------+
+| id | cat_id | value | name  |
++----+--------+-------+-------+
+|  2 |      1 |    21 | name2 |
+|  5 |      2 |    54 | name5 |
+|  9 |      3 |    57 | name9 |
++----+--------+-------+-------+
+http://huanghualiang.blog.51cto.com/6782683/1252630/
+1.用子查询：
+SELECT * FROM right2 a  WHERE 2>
+(SELECT COUNT(*) FROM right2 b WHERE b.id=a.id AND b.account>a.account)
+ORDER BY a.id,a.account DESC
+2.用exists半连接：
+SELECT * FROM right2 a  WHERE EXISTS
+(SELECT COUNT(*) FROM right2 b WHERE b.id=a.id AND a.account<b.account HAVING COUNT(*)<2)
+ORDER BY a.id,a.account DESC
+同理可以取组内最小的N条记录：
+SELECT * FROM right2 a  WHERE 2>
+(SELECT COUNT(*) FROM right2 b WHERE b.id=a.id AND b.account<a.account)
+ORDER BY a.id,a.account DESC
+用exists：
+SELECT * FROM right2 a  WHERE EXISTS
+(SELECT COUNT(*) FROM right2 b WHERE b.id=a.id AND a.account>b.account HAVING COUNT(*)<2)
+ORDER BY a.id,a.account DESC
+SQLServer支持top-N：
+select a.* from tb a where val = (select top 3 val from tb where name = a.name) order by a.name
+如果取每组的最大(小)一条记录我常用：
+http://www.cnblogs.com/netserver/p/4518995.html  一、按name分组取val最大的值所在行的数据。
+--方法1：select a.* from tb a where val = (select max(val) from tb where name = a.name) order by a.name 
+--方法2： 
+select a.* from tb a where not exists(select 1 from tb where name = a.name and val > a.val) 
+--方法3： 
+select a.* from tb a,(select name,max(val) val from tb group by name) b where a.name = b.name and a.val = b.val order by a.name 
+--方法4： 
+select a.* from tb a inner join (select name , max(val) val from tb group by name) b on a.name = b.name and a.val = b.val order by a.name 
+--方法5 
+select a.* from tb a where 1 > (select count(*) from tb where name = a.name and val > a.val ) order by a.name 
+/* 
+name val memo 
+---------- ----------- -------------------- 
+a 3 a3:a的第三个值 
+b 5 b5b5b5b5b5 
 
+*/
+select id,val from t b inner join(select * from t a where  order by val desc) a  on a.id=b.id group by a.id order  by id;
 ```
 [Python 爬虫：把廖雪峰的教程转换成 PDF 电子书](https://github.com/lzjun567/crawler_html2pdf)
 [ip](https://github.com/nelsonking/ip_location/tree/master/src)
