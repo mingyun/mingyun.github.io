@@ -20,6 +20,64 @@ for filename in multiple_file_types("*.txt", "*.py"): # add as many filetype arg
 # C:\xxx\pyfunc\g.py
 # C:\xxx\pyfunc\shut.py
 # C:\xxx\pyfunc\test.py
+《中学生编程》http://red-lang.qiniudn.com/doc/v063/%E4%B8%AD%E5%AD%A6%E7%94%9F%E7%BC%96%E7%A8%8B.pdf 
+安利一个Gif在线制作工具http://www.soogif.com/crop https://github.com/red/red
+ 一个docker的图形化管理界面 各类Json格式的免费api收集https://github.com/toddmotto/public-apis
+intitle: php 程序员的算法趣题http://www.ituring.com.cn/book/tupubarticle/16800
+Vue.js小书http://www.ituring.com.cn/book/tupubarticle/12949
+Learn regex the easy wayhttps://github.com/zeeshanu/learn-regex
+vim /etc/ssh/sshd_config Port 2222
+PHP程序员也能参与的MySQL中间件项目https://github.com/swoole/mysql-proxy
+《网络安全从入门到入狱》https://pan.baidu.com/share/init?shareid=1149290362&uk=2634506822 fvgm  01编程
+收集了近500个互联网上公开的数据集https://github.com/caesar0301/awesome-public-datasets
+正则表达式系列总结https://zhuanlan.zhihu.com/p/27653434
+对一行神奇js代码的解析http://geek.csdn.net/news/detail/218601
+ZeroNet：一个基于区块链的深网https://zhuanlan.zhihu.com/p/28026567
+收集了各类编程语言中git需要忽略的那些文件https://github.com/github/gitignore https://www.gitignore.io/ 根据github账号来自动生成一份简历https://resume.github.io/
+《机器学习基石》https://www.bilibili.com/video/av12469267/
+https://github.com/RedisLabsModules/RediSearch
+https://github.com/ksky521/nodeppt alter table t1 convert to character set utf8mb4;
+看图识动漫https://whatanime.ga/# 
+
+百度云资源搜索  biliworld
+win: type a.avi b.avi c.avi>d.avi 
+linux: cat a.avi b.avi c.avi>d.avi ffmpeg 几行代码就可以了吧http://www.cnblogs.com/jameszh/p/5547525.html
+$b = str_replace(['.','-'], ['%2E','%2D'], $b); <img src="" onerror="alert(/Hello from v2ex/)">admin 
+说 python 比 php 性能差的可以参考下 
+https://www.techempower.com/benchmarks/ 
+这里的各种 benchmark 英语学习 https://github.com/byoungd/english-level-up-tips-for-Chinese
+有时候磁盘空间还有剩余，却不能新建文件时，请检查 inode 是否耗尽
+print(sum(range(101))) 
+from functools import reduce 
+sum = reduce(lambda a,b: a + b, range(100))
+javascript:void(function(){if(location.hostname.indexOf("google")){var keyword = document.getElementsByName("q")[0].value;if(location.href.indexOf("zh-CN")<0){location.href = "https://www.google.com/?&q=#q=" + keyword + "&lr=lang_zh-CN%7Clang_zh-TW";}else{location.href = "https://www.google.com/?&q=#q=" + keyword}}})()
+在 if 前面 var_dump(floatval()) 看看这两个变量对比的时候是多少 比较的时候乘 100 按整数比吧 什么情况下 5.590 小于 5.59 floor(8.29 * 100 * 100 / 100) 
+js 的话用 https://prettier.github.io/prettier/ 
+自动帮你格式化源码，大家按自己的习惯写，git commit 的时候通过 hook 用 prettier 转换一下
+PHP 来说，有 php-cs-fixer 这类的命令行工具，无论用什么 Editor 或 IDE 都行。
+https://laravel-china.org/topics/547/use-php-cs-fixer-to-automatically-standardize-your-php-code  偶然发现一个网站介绍了所有的 unicode 码，里面非常多好玩的符号 
+http://graphemica.com/unicode/characters/page/13  https://github.com/thefantasystudio/easypay https://www.zybuluo.com/mdeditor
+校内网 www.xiaonei.com  要满足加薪，需要两个条件 
+1： 你是否值得 
+2： 公司是否有钱  https://zhuangbi.me/ http://www.jianshu.com/p/ed3fe9f5badd
+https://github.com/nowgoo/dict 一个简单快速的词库 
+从微信采集的文章https://www.worthfo.com/w/8936/ 被公司辞退了，能拿多少钱https://zhuanlan.zhihu.com/p/28039132 
+https://geek.getrelink.com/ 微信公众号文章收集
+https://github.com/youngwind/blog 免费SHADOWSOCKS http://trial.ssbit.win/?from=ruanyifeng
+学堂在线的，http://www.xuetangx.com/courses/course-v1:ustcX+USTC001+2017_T2/about
+http://0.30000000000000004.com/
+html5+PHP 手机端上传头像图片剪切源码 演示下载地址： http://www.sucaihuo.com/php/2228.html
+微信号「一分钟的编程知识」http://tool.lu/crontab/   wordpress 导入公众号文章的插件 beepress
+https://avgle.github.io/doc/ av视频接口
+机器学习 
+有现成的 API 接口，做个客户端收费功能 Swoole Compiler 已就绪，最佳 PHP 代码编译加密解决方案
+渗透测试人员的Python工具箱https://www.ctolib.com/cheatsheets-python_sectool.html
+https://github.com/NARKOZ/hacker-scripts  一个集在线录屏、剪辑视（音）频、转换视（音）频格式于一身的网站https://www.apowersoft.cn/free-online-screen-recorder
+https://github.com/anujshah1003/own_data_cnn_implementation_keras 教你怎么换自己的数据训练  Keras 的中文手册https://keras-cn.readthedocs.io/en/latest/ https://www.bilibili.com/video/av12347418/
+先去github issue上面搜，没有的话再去stackoverflow上搜，还是没有的话就回去提issue了
+phpwebshell https://github.com/dotcppfile/DAws
+机器学习相关教程 https://morvanzhou.github.io/tutorials
+微信公众号 北哥兄弟连。http://nai8.me/
 
 ```
 [一个获取百度网盘直接下载链接的小工具](https://github.com/Kyle-Kyle/baidudl)
