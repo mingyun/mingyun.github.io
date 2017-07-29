@@ -163,7 +163,7 @@ select id,val from t b inner join(select * from t a where  order by val desc) a 
 https://github.com/maxmind/GeoIP2-php 
 [阿里鉴黄](https://github.com/vhall/check_picture/tree/master/src)
 ```js
-跨库查询
+跨库查询 https://help.aliyun.com/document_detail/53417.html?spm=5176.doc28427.2.1.mrSiJn
 class UserOnline extends Model {
     protected $table = 'user_onlines';
 
