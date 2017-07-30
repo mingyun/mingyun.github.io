@@ -1,7 +1,113 @@
 [基于laravel5+swagger-php的api接口自动生成系统](http://t.cn/R9bSoWX)
 [查询全球所有城市的 API](http://www.bugcode.cn/cities.html)
+[【思维导图】Python 编程：核心知识体系](https://zhuanlan.zhihu.com/p/27409997)
+https://github.com/woaielf/MindMap_ZY 
+[给定 key，能“长期”保存一段字符串](https://www.v2ex.com/t/377521)
+比如保存到 notepad.pw 上： https://notepad.pw/n1y638kw https://archive.org/
+[递归计算笛卡尔积的方法](https://laravel-china.org/topics/5482/share-a-recursive-calculation-of-cartesian-product)
+```js
+namespace CarteSian;
+
+class CarteSian
+{
+
+    /**
+     * Store results
+     *
+     * @var array
+     */
+    public $products = [];
+
+    /**
+     * Calculate the Cartesian product
+     *
+     * @param array $params
+     * @param array $temporary
+     */
+    public function carteSian(array $params, array $temporary = [])
+    {
+        foreach (
+            array_shift($params) as $param
+        ) {
+            array_push($temporary, $param);
+            $params ? $this->carteSian(
+                $params, $temporary
+            ) : array_push(
+                $this->products, $temporary
+            );
+            array_pop($temporary);
+        }
+    }
+}
+ 
+
+$cartSian = new CarteSian();
+
+$params = [
+   'Girls' => [
+       '雾岛董香',
+       '艾米莉娅',
+       '结城明日奈',
+   ],
+   'Boys' => [
+       '金木研',
+       '菜月昴',
+       '桐谷和人',
+   ],
+   'Hentais' => [
+       '华城绫女',
+       '培提尔其乌斯·罗马尼空提',
+       '月山习',
+   ]
+];
+
+$cartSian->carteSian($params);
+
+print_r($cartSian->products);
+```
+[curl 和 for 循环怎么更好的使用？curl 是同步执行？](https://laravel-china.org/topics/5297/how-can-the-curl-and-for-loops-be-used-better-curl-is-synchronous-execution)
+```js
+//如果不设置sleep(1)就会返回$res为null
+for ($i=1; $i<=200; $i++) {
+         $getAddr = User::findOrFail($i)->getAddresses()->where('type', 'b')->first()->address;
+         $res = json_decode($curl->get($api. $getAddr)->response);
+         var_dump($res);
+ }
+```
+[生成随机序列的算法[(https://laravel-china.org/articles/5453/share-an-algorithm-for-generating-random-sequences)
+```js
+function getRandomList(arr) {
+    let maxWeight = 10 * arr.length; //减小重复概率 给数组里面每个元素加上随机的权重，然后根据权重排序。
+    let list = [];
+    for(let i in arr) {
+        list.push({
+            weight: Math.ceil(maxWeight * Math.random()),
+            value: arr[i]
+        });
+    }
+    list.sort(function(a, b) {
+        return a.weight > b.weight;
+    });
+
+    let ans = [];
+    for(let i in list) {
+        ans.push(list[i].value);
+    }
+    return ans;
+}
+```
 [ Python 功能和特点](https://www.itcodemonkey.com/article/403.html)
 ```js
+Python 计算阶乘
+from functools import * 
+fac = lambda n:reduce(lambda x,y:x*y,range(1,n+1))  
+from operator import mul 
+
+fac = lambda x: reduce(mul, range(1, x + 1))
+import math 
+math.factorial(x)//120
+
+
 files = glob.glob('*.py')
 result = uuid.uuid1()
 import itertools as it, glob, os
