@@ -42,7 +42,233 @@ plt.axis("off")
 plt.show()
 
 my_wordcloud.to_file("cloud.jpg")
+
+我刚找到一个 QQ 音乐到网易云音乐的转换网站： http://144.48.7.239:5000/convert.html （ https://github.com/comwrg/xMusicWeb ）  同步网易云音乐歌单到 qq 音乐 https://github.com/Denon/syncPlaylist  
+[给定 key，能“长期”保存一段字符串](https://www.v2ex.com/t/377521)
+比如保存到 notepad.pw 上： https://notepad.pw/n1y638kw https://archive.org/
+
+那天在扫地，男孩子把我的扫帚夺去，看着我笑，然后问：“我孰与城北徐公美？”
+那一瞬间我就呆了……
+觉得自己都面红耳赤了回了一句“美你妹”，转过身就走了。
+补充说明《邹忌讽齐王纳谏》中，邹忌问客人的时候是“吾与徐公孰美”，问妾是“吾孰与徐公美”。只有问妻子的时候是“我孰与城北徐公美”……没错成功撩到我了
+玩完游戏就删除  有新的想法立马记下来 选择固定的时间运动和看书 打电话之前打好腹稿  每个月固定基金定投 重要的事情别微信，直接打电话 逢年过节发短信 确认内容  记账 备忘本 学会一些基本的绅士风度 1.上车帮女生开门，进出任何室内场所都帮女生开门2.过马路时走车来的一边，也就是说，一开始站在女生的左边，过了中线后站在女生右边3.看到女生手上拿着包包，习惯性的询问要不要帮她拿4.不在女生面前抽烟5.晚归时一定要送女生回家6.开车去接送女生时，记得把车停好，自己走下来在门口等她7.遇到什么突发情况习惯性的站在女生前面8.下雨时，如果只有一把伞，记得拿伞并将伞倾向于对方那一边9.电动车也好，汽车也罢，载着她的话不要开太快，尽量匀速。10.最后，女朋友说的话都是对的，这是重点
+ 最年轻省纪委书记手把手教你起草领导讲话https://zhuanlan.zhihu.com/p/27642987
+pyecharts + Jupyter Notebook 数据可视化，还要啥 PPThttps://zhuanlan.zhihu.com/p/28157126
+通关这12个游戏，你就是编程大神，我不是开玩笑！https://zhuanlan.zhihu.com/p/28144861
+https://zhuanlan.zhihu.com/p/28124472 12个Python项目教程，给缺乏项目实战经验的人
+git clone https://github.com/git-game/git-game.git 
+查询自己qq的注册时间 https://zhuanlan.zhihu.com/p/28151872 http://im.qq.com/
+$.ajax({url : 'https://ti.qq.com/mqqbase/cgi/medalwall/medalguide',dataType: 'json',type : 'POST',xhrFields: {withCredentials: true}, crossDomain: true,contentType: "application/json",success:function(data){if(data.errCode!=0){alert("你没登录?");return;}var d=new Date();d.setTime(data.data.registDate);alert("注册时间:"+d.toLocaleString()+" 第一个添加的好友:"+data.data.firstFriend)}});
+同名知乎专栏：说一说公务员的那点事 https://zhuanlan.zhihu.com/p/28130533 常见排序算法之JavaScript实现 看图学数学，公众号：matongxue314
+https://zhuanlan.zhihu.com/p/28127291 教你如何优雅地3天背完8000个单词
+https://www.zhihu.com/question/40801731/answer/203894909 马哥Python助理研发人，IT全栈市场狗，微信：itxiujiang  https://zhuanlan.zhihu.com/p/28126863  https://www.zhihu.com/question/20534668/answer/15407109 https://www.zhihu.com/question/62634555 我要做什么让妹子知道我是认真的，比如生活中的哪一些小事做起
+如果你在 HTML 里写<script>let x = x</script> <!-- 后面的 x 可以换成任意一个不存在的变量 -->
+那么，其他 script 都无法在全局作用域下使用 x 变量了，无论是对 x 进行赋值、取值，还是声明，都不行。也就是说现在 x 处于一种「既被定义了，又没被定义」的中间状态。
+
+假如没有这6点，我英语一定还很差吧https://zhuanlan.zhihu.com/p/28138089 @恶膜的奶爸 的书《把你的英语用起来》 公众号「孤读者说」，一个关于英语、阅读、成长的公众号
+链接：https://zhuanlan.zhihu.com/p/28117094
+https://www.zhihu.com/question/36546814/answer/139721284  
+用python爬取qq好友十万条说说并简单进行数据分析https://zhuanlan.zhihu.com/p/27604277  github.com/doctorwho77/qq_mood.git 天地可鉴 童叟无欺 我中意你 「史蒂芬的专栏」（ID：stehouse），聊点职场和英语
+知乎TOP 1000 赞的回答 微信公众号：wnsouba https://zhuanlan.zhihu.com/p/28185173?group_id=874627072310530048 关注后回复【我爱星爷】电影公众号：猛兽笔记 少儿编程《轻松玩转Scratch编程》 用的小程序—群功能！尊重,信任,慎独,是男人应该具备的三种重要素养.
+对香蕉不感兴趣，为什么不一开始就告诉我？ 对你的付出不置可否 永远觉得“男人对女人好，是理所应当的” 她只让你打怪，却很少给你升级 看不到进度条的游戏，最好还是掂量一下要不要再进行下去。
+http://link.zhihu.com/?target=https%3A//zh.piixemto.com/ 星座，情感，运势等各种测试 年代感图片素材库http://link.zhihu.com/?target=https%3A//chineseposters.net/
+男生的思维是”解决问题，达到目标“
+
+女生的思维是”注重感受，活在当下“
+
+所以女生特别反感一上来就直奔目标的男生
+
+”你好，我觉得你很漂亮，我想认识你“
+
+”你好，可以把你电话/微信给我么“我看你刚才从这边走过去，觉得如果不跟你打个招呼认识下，晚上一定会后悔的我看你刚从这边走过去，觉得你今天的裙子超级漂亮，所以脑子一热就过来跟你打招呼了 你好，我对你闺蜜印象很好，可以跟她说几句话么 你跟妹子共用一把伞，所以你们的距离也自然拉近，这时候要个微信自然不成问题啦 告诉你如何正确搭讪https://zhuanlan.zhihu.com/p/28117419?group_id=873629906041475072 高效文本记忆软件——背个X啊
+ github.com/HcySunYang/knowledge  个人公众号：GY的小屋 高分50  简化版的vConsole /github.com/xiaojue/console  微信公众号：跑得开心最重要 柔而不弱，强而不悍。 女生有哪些加分项
+公众号：撩妹论剑  debugtalk 
+张表中某几个字段相同的记录排列到一起，并且排到表最前面https://segmentfault.com/q/1010000010360145
+select
+    a.*
+from 表 a
+left join (
+    select
+        字段A, 字段B, 字段C, count(1) as total
+    from 表
+    group by 字段A,字段B，字段C
+) b on a.字段A=b.字段A
+    and a.字段B=b.字段B
+    and a.字段C=b.字段C
+order by b.total desc
+redis重启后数据怎么还在？不是会消失的吗？数据库也变成了3个，默认不是16个的吗？https://segmentfault.com/q/1010000010367185
+1、重启后数据还在，是因为有持久化策略。redis默认开启rdb持久化策略，会产一个rdb.dump文件，重启时会从该文件导入数据。如果是配置了AOF持久化策略，也会产一个相应的文件，redis重启时会优先从这个文件导入数据。
+2、你现在从客户端看到db0，db1，db2这3个库，说明你现在只在这3个库存了数据，其它库未使用。通过命令行连接redis操作你会看到。
+predis是用PHP写的扩展，不需要编译而已。   predis的时候使用用的package，PhpRedis的时候用的extension
+PHP是不需要redis扩展的，在laravel下安装predis/predis就足够了
+
+PHP 使用的socket与redis通讯 所以无需扩展 redis本身就可以使用PHP自带的socket通讯就可以完成数据的交换，并且效率上面也不会有太明显的问题，毕竟redis的协议不复杂，用户数据的交换也不复杂。https://segmentfault.com/q/1010000010292328
+
+
+
+mysql分页查询很慢，从第1000000条记录开始查10条https://segmentfault.com/q/1010000010410092
+直接SELECT * FROM ... LIMIT m, n会把m+n行 整行 都取出来，所以应该先取n个id，再根据这n个id把整行取出来。
+SELECT * FROM table WHERE id >= (SELECT id FROM table LIMIT 1000000, 1) LIMIT 10; （耗时0.3秒）
+快了几十倍····· SELECT * FROM table WHERE id IN (SELECT id FROM table ORDER BY id LIMIT 1000000, 10)
+
+count(1)的语句，如果在加索引后，查看执行计划确实使用了索引，因数据量小，出现不如全表扫描慢的情况是合理的。
+
+建议把加索引前后的执行计划进行对比，确认查询方式的变化。
+查询语句使用悲观锁策略，事务中的读语句改为select * ... for updatehttps://segmentfault.com/q/1010000010353164
+mysql --help会告诉你的配置文件读取顺序：
+Default options are read from the following files in the given order:
+/etc/my.cnf /etc/mysql/my.cnf /app/mysql/etc/my.cnf ~/.my.cnf
+
+配置防火墙端口访问
+vi /etc/sysconfig/iptables
+-A INPUT -m state –state NEW -m tcp -p tcp –dport 3306 -j ACCEPT
+重启
+特别提示：添加到默认的22端口规则后面
+ $data[] = (function(){ 
+         $item->tags = ['foo','bar']; return $item; 
+         })($v); 
+github上有wxbot项目，用python封装了微信的web api，其中，就可以回去到各种消息，你只需要调用相应的接口，接收公众号或者订阅号消息，就行了。附上项目链接https://github.com/liuwons/wxBot
+import re
+
+str = u'陈奕迅演唱(十年)、(浮夸)、(不要说话)'
+print re.findall('\((.*?)\)', str) 正则表达式提取所有小括号里的字符串
+	 
+	pip和pip3都在Python36\Scripts\目录下
+
+如果同时装有python2 和 python3
+
+pip 默认给 python2 用。
+
+pip3 指定给 python3 用。
+
+如果只装有 python3，则pip和pip3是等价的
+>>> import pandas as pd
+>>> data = [
+    {'A': 'A1','B': 'B2','C': 'C3','D': 'D4'},
+    {'A': 'AA1','C': 'CC3','D': 'DD4','E': 'EE5'},
+    {'A': 'AAA1','B': 'BBB2','C': 'CCC3','D': 'DDD4','E': 'EEE5'}
+]
+>>> df=pd.DataFrame(data).fillna('null')
+>>> ls=df.values.tolist()
+>>> ls.insert(0,df.columns.tolist())
+>>> ls
+[['A', 'B', 'C', 'D', 'E'], ['A1', 'B2', 'C3', 'D4', 'null'], ['AA1', 'null', 'CC3', 'DD4', 'EE5'], ['AAA1', 'BBB2', 'CCC3', 'DDD4', 'EEE5']]
+>>>  https://segmentfault.com/q/1010000010362346
+
+python+openpyxl操作excel？
+#coding:utf-8
+from openpyxl import load_workbook
+wb = load_workbook('sample.xlsx')
+sheetnames=wb.get_sheet_names()
+ws = wb.get_sheet_by_name(sheetnames[0])
+data=['姓名','杰克','里斯','安妮']
+for i in range(len(data)):
+    ws['B%d'%(i+1)]=data[i]
+wb.save('sample.xlsx')https://segmentfault.com/q/1010000010342008
+import pandas as pd
+df=pd.read_excel('sample.xlsx')
+print df
+df['姓名']=['杰克','里斯','安妮']
+#或者执行插入df.insert(1,'姓名',['杰克','里斯','安妮'])  1就是列的序号
+df.to_excel('sample.xlsx')
+
+crontab会产生日志一般不会造成数据太多。Linux 可以使用 logrotate 压缩 var/log/ 下的部分 log文件，定期归档。 在 /var/log/cron.log 或者是 /var/log/syslog 也可能是 /var/log/cron
+log 还是不禁止的好，方便出问题，排查原因。
+
+实在不想要，可以这样设置，命令后加 >/dev/null 2>&1,例如：
+
+0 */3 * * * /usr/local/apache2/apachectl restart >/dev/null 2>&1
+/dev/null 2>&1 表示先将标准输出重定向到 /dev/null，然后将标准错误重定向到标准输出，由于标准输出已经重定向到了 /dev/null，因此标准错误也会重定向到 /dev/null，这样日志输出问题就解决了。 https://segmentfault.com/q/1010000010409743 
+秒级计划任务如何做
+$i++;
+while($i<60){
+    $i++;
+    //your code
+    sleep(1);
+}
+这个递归算法哪里写错了https://segmentfault.com/q/1010000010390981
+
+实现字符串 'AdminProTable' 到 'admin_pro_table' 的转换https://segmentfault.com/q/1010000010401215
+s = 'AdminProTable'
+print ''.join(['_{}'.format(_.lower()) if _.isupper() and i > 0 else _.lower() for i, _ in enumerate(s)])
+$old = 'AdminProTable';
+$str = '';
+for ($i = 0; $i < strlen($old);  $i++) {
+    $str .= preg_match('/^[A-Z]+$/', $old[$i]) ? '_' . strtolower($old[$i]) : $old[$i];
+}
+$str = $str[0] === '_' ? substr($str, 1) : $str;
+var_dump($str);
+PHP把对象转换为数组的问题https://segmentfault.com/q/1010000010367142
+namespace Qiniu\Http;
+class Error{
+    private $url = 'http://rs.qbox.me/buckets';
+    public $status = 200;
+}
+$obj = new Error();
+$arr = (array)$obj;
+var_export($arr);
+var_dump($arr["\0Qiniu\\Http\\Error\0url"], $arr['status']);  原来var_dump的时候也得用拼接， var_dump($array['' . "0" . 'Qiniu\Http\Error' . "0" . 'url']);
+
+引用传递和值参递的主要区别也体现在对值的修改。https://segmentfault.com/q/1010000010320088
+
+function handle(&$item) {
+    $item['msg'] = 'wtf!';
+}
+
+
+handle($item);
+
+var_dump($item);
+$arr = [1,2,3,4,5,6];
+
+// 我要将整个数组按照node进行
+array_walk($arr, function(&$v, $k){
+    $v = strval($v);
+});
+
+unset($v);
+https://segmentfault.com/q/1010000010316820
+PHP 7 版本可以捕获到Error的错误
+
+PHP 5 可以用register_shutdown_function来处理错误https://segmentfault.com/q/1010000010361037
+try
+{
+   // Code that may throw an Exception or Error.
+}
+catch (Throwable $t)
+{
+   // Executed only in PHP 7, will not match in PHP 5
+}
+catch (Exception $e)
+{
+   // Executed only in PHP 5, will not be reached in PHP 7
+}
+dechex()函数，所能转换的最大数值为十进制的4294967295，其结果为 "ffffffff"
+所以结果应该就截取了。 https://segmentfault.com/q/1010000000595871
+$a = pow(10,16); //结果是 1.0E+16
+ //转化成 16 进制
+ echo dechex($a);
+ 
+ 结果是 6fc10000，
+ 正确的转换应该是 2386f26fc10000  https://segmentfault.com/q/1010000010328335
+ 新建第三方库流程具体该怎么操作放composer.json 的 autoload 块里，然后 composer dump   
+ https://segmentfault.com/q/1010000010333845
+ 大写金额转换成阿拉伯数字金额(PHP)https://segmentfault.com/q/1010000010367675
+ 要动态改变 Eloquent Model 的表名可以使用 setTable 方法：
+
+$model = new MyLog();
+$model->setTable('log_20170123');
+echo $model->getTable(); // my_log
+但是在 setTable 之后使用 create 插入数据，使用的还是原来的表：
+
+$model = new MyLog();
+$model->setTable('log_20170123');
+echo $model->create($data); // insert into `my_log`... https://segmentfault.com/q/1010000010149118
+$model->save();
 ```
+[仅78行代码实现微信撤回消息查看~](https://segmentfault.com/p/1210000009173139/read)
+
+
 [从零开始写Python爬虫 --- 爬虫应用： 利用斗鱼Api抓取弹幕](https://zhuanlan.zhihu.com/p/28164017)
 ```js
 import multiprocessing
