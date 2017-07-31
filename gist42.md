@@ -1,3 +1,81 @@
+[Nginx 中 502 和 504 错误详解](https://segmentfault.com/a/1190000002686153)
+```js
+502错误一般都是PHP段挂掉导致的
+比如 PHP-fpm运行占用内存过高，超出限制
+在 php.ini 和 php-fpm.conf 中分别有这样两个配置项：max_execution_time 和 request_terminate_timeout。
+
+这两项都是用来配置一个 PHP 脚本的最大执行时间的。当超过这个时间时，PHP-FPM不只会终止脚本的执行，还会终止执行脚本的Worker进程。所以Nginx会发现与自己通信的连接断掉了，就会返回给客户端502错误。
+
+所以只需将这两项的值调大一些就可以让PHP脚本不会因为执行时间长而被终止了。request_terminate_timeout 可以覆盖 max_execution_time，所以如果不想改全局的php.ini，那只改PHP-FPM的配置就可以了。
+
+要注意的是 factcgi_connect/read/send_timeout 是对 FastCGI 生效的，而 proxy_connect/read/send_timeout 是对 proxy_pass 生效的。
+
+配置举例：
+
+location ~ \.php$ {
+                root                    /home/cdai/test.com;
+                include                 fastcgi_params;
+                fastcgi_connect_timeout      180;
+                fastcgi_read_timeout            600;
+                fastcgi_send_timeout            600;
+                fastcgi_pass            unix:/dev/shm/php-fcgi.sock;
+                fastcgi_index           index.php;
+                fastcgi_param          SCRIPT_FILENAME         /home/cdai/test.com$fastcgi_script_name;
+     }
+
+```
+[python实现web服务器](https://segmentfault.com/a/1190000004406048)
+[mysql索引需要了解的几个注意](https://segmentfault.com/a/1190000004022595)
+```js
+有，想象一下，你面前有本词典，数据就是书的正文内容，你就是那个cpu，而索引，则是书的目录
+索引越多越好？
+大多数情况下索引能大幅度提高查询效率，但
+
+数据的变更（增删改）都需要维护索引，因此更多的索引意味着更多的维护成本
+更多的索引意味着也需要更多的空间 （一本100页的书，却有50页目录？）
+过小的表，建索引可能会更慢哦 ：） （读个2页的宣传手册，你还先去找目录？）
+索引的字段类型问题
+text类型，也可建索引（需指定长度）
+myisam存储引擎索引键长度综合不能超过1000字节
+用来筛选的值尽量保持和索引列同样的数据类型
+like 不能用索引？
+尽量减少like，但不是绝对不可用，”xxxx%” 是可以用到索引的，
+想象一下，你在看一本成语词典，目录是按成语拼音顺序建立，查询需求是，你想找以 “一”字开头的成语（”一%“），和你想找包含一字的成语（“%一%”）
+除了like，以下操作符也可用到索引：
+ <，<=，=，>，>=，BETWEEN，IN
+ <>，not in ，！=则不行
+什么样的字段不适合建索引？
+一般来说，列的值唯一性太小（如性别，类型什么的），不适合建索引（怎样叫太小？一半说来，同值的数据超过表的百分之15，那就没必要建索引了）
+太长的列，可以选择只建立部分索引，（如：只取前十位做索引）
+更新非常频繁的数据不适宜建索引（怎样叫非常？意会）
+一次查询能用多个索引吗?
+不能
+
+多列查询该如何建索引?
+一次查询只能用到一个索引，所以 首先枪毙 a，b各建索引方案
+a还是b？ 谁的区分度更高（同值的最少），建谁！
+当然，联合索引也是个不错的方案，ab，还是ba，则同上，区分度高者，在前
+
+联合索引的问题?
+where a = “xxx” 可以使用 AB 联合索引
+where b = “xxx” 则不可 （再想象一下，这是书的目录？）
+
+所以，大多数情况下，有AB索引了，就可以不用在去建一个A索引了
+
+哪些常见情况不能用索引?
+like “%xxx”
+not in ， ！=
+对列进行函数运算的情况（如 where md5(password) = “xxxx”）
+WHERE index=1 OR A=10
+存了数值的字符串类型字段（如手机号），查询时记得不要丢掉值的引号，否则无法用到该字段相关索引，反之则没关系 也即
+select * from test where mobile = 13711112222;
+   
+可是无法用到mobile字段的索引的哦（如果mobile是char 或 varchar类型的话）
+   
+btw，千万不要尝试用int来存手机号（为什么？自己想！要不自己试试）
+
+```
+
 [用python爬取qq好友十万条说说并简单进行数据分析](https://zhuanlan.zhihu.com/p/27604277 )
 ```js
 https://github.com/doctorwho77/qq_mood/blob/master/wordcloud/qq_mood.py
