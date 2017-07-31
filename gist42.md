@@ -24,6 +24,92 @@ location ~ \.php$ {
      }
 
 ```
+[1.APP后端开发系列：登陆系统设计中的注意问题](https://helei112g.github.io/2016/07/12/1-APP%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E7%B3%BB%E5%88%97%EF%BC%9A%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E9%97%AE%E9%A2%98/)
+```js
+第三种设计方案，这是我原先干过的一件事，是这三种方案中最垃圾的设计。得出的教训就是：绝不能把任何加密的事情交给客户端。这样子灵活性大打折扣。举例：还是升级接口了，现在本来token生成只是服务端的事情，服务端随时可动态改变规则，现在由于客户端也参与进来了，这事儿就麻烦了，你一改，客户端也要跟着改。没有任何灵活性可言。切记：客户端就接收，然后转发回服务端就好了。别再客户端进行加密！！！
+
+if ($redis->get($key)) {
+    // 无法访问，还未到时间
+    
+    return ;
+}
+
+// 设置频率控制key
+$redis->setex($key, $expires, $value);
+
+// 访问接口
+```
+[MySQL隐式转化整理](http://www.cnblogs.com/rollenholt/p/5442825.html)
+```js
+mysql> select * from test where name = 'test1' and password = 0;
+SELECT * FROM users WHERE username = '$_POST["username"]' AND password = '$_POST["password"]'
+如果username输入的是a' OR 1='1，那么password随便输入，这样就生成了下面的查询：
+
+SELECT * FROM users WHERE username = 'a' OR 1='1' AND password = 'anyvalue'
+mysql> select * from test;
++----+-------+-----------+
+| id | name  | password  |
++----+-------+-----------+
+|  1 | test1 | password1 |
+|  2 | test2 | password2 |
+|  3 | aaa   | aaaa      |
+|  4 | 55aaa | 55aaaa    |
++----+-------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from test where name = 'a' + '55';
++----+-------+----------+
+| id | name  | password |
++----+-------+----------+
+|  4 | 55aaa | 55aaaa   |
+
+mysql> show warnings;
+
+如果字符串的第一个字符就是非数字的字符，那么转换为数字就是0
+如果字符串以数字开头
+如果字符串中都是数字，那么转换为数字就是整个字符串对应的数字
+如果字符串中存在非数字，那么转换为的数字就是开头的那些数字对应的值
+如果你
+```
+[ mysql处理高并发数据,防止数据超读](http://blog.csdn.net/gaoxuaiguoyi/article/details/47304615)
+```js
+beginTranse(开启事务)  
+try{  
+   //第一次进行查询，返回数量     
+    $result = $dbca->query('select amount from s_store where postID = 12345');  
+  // 3个请求进入,使用了之前的，查询结果，造成了数据脏读，都去更新了库存，造成库存超读  
+    if(result->amount > 0){  
+        //quantity为请求减掉的库存数量  
+        $dbca->query('update s_store set amount = amount - quantity where postID = 12345');  
+    }  
+}catch($e Exception){  
+    rollBack(回滚)  
+}  
+commit(提交事务);  
+  beginTranse(开启事务)  
+try{  
+    //quantity为请求减掉的库存数量  
+    $dbca->query('update s_store set amount = amount - quantity where postID = 12345');  
+    //更新之后再进行数量判断，如果为负就回滚，不会造成库存超读  
+    $result = $dbca->query('select amount from s_store where postID = 12345');  
+    if(result->amount < 0){  
+       throw new Exception('库存不足');  
+    }  
+}catch($e Exception){  
+    rollBack(回滚);  
+}  
+commit(提交事务);  
+beginTranse(开启事务)  
+try{  
+    //quantity为请求减掉的库存数量  
+    $dbca->query('update s_store set amount = amount - quantity where amount>=quantity and postID = 12345');  
+}catch($e Exception){  
+    rollBack(回滚)  
+}  
+commit(提交事务)  
+
+```
+
 [python实现web服务器](https://segmentfault.com/a/1190000004406048)
 [mysql索引需要了解的几个注意](https://segmentfault.com/a/1190000004022595)
 ```js
