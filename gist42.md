@@ -24,6 +24,43 @@ location ~ \.php$ {
      }
 
 ```
+[ Redis的PHP操作手册（纯手稿版）](https://segmentfault.com/a/1190000004973921#articleHeader0)
+```js
+string是redis最基本的类型，而且string类型是二进制安全的。意思是redis的string可以包含任何数据。比如jpg图片或者序列化的对象
+
+function f($redis, $chan, $msg) {  //频道订阅
+    switch($chan) {
+        case 'chan-1':
+            echo $msg;
+            break;
+
+        case 'chan-2':
+            echo $msg;
+            break;
+
+        case 'chan-2':
+            echo $msg;
+            break;
+    }
+}
+
+$redis->subscribe(array('chan-1', 'chan-2', 'chan-3'), 'f'); // subscribe to 3 chans
+
+$redis->publish('chan-1', 'hello, world!'); // send message. 
+
+```
+
+
+[Laravel 学习笔记](https://laravel-china.org/topics/3331/laravel-learning-notes#reply5)
+[valgrind 检测 php-fpm 内存泄漏](https://mengkang.net/873.html)
+[浅谈 Laravel 设计模式](https://laravel-china.org/topics/1954/on-laravel-design-pattern)
+[微信控制台](https://github.com/WechatFE/vConsole )
+[python周刊](https://github.com/NyanCat12/CrossinWeekly)
+https://github.com/NyanCat12/CrossinWeekly/blob/master/20170303/NovelWordCount.py
+[Python解惑：整数比较](https://foofish.net/python-int-mystery.html)
+Python把这些可能频繁使用的整数对象规定在范围[-5, 256]之间的小对象
+小整数对象[-5,256]是全局解释器范围内被重复使用，永远不会被GC回收。2、同一个代码块中的不可变对象，只要值是相等的就不会重复创建新的对象。
+[Someline Starter 基于 Laravel, RESTful API and Vue.JS，适用于开发 app 或者 Web 端，现在开源](https://laravel-china.org/topics/2300/someline-starter-based-on-laravel-restful-and-vuejs-suitable-for-the-development-of-app-or-web-side-and-now-open-source-api)
 [1.APP后端开发系列：登陆系统设计中的注意问题](https://helei112g.github.io/2016/07/12/1-APP%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91%E7%B3%BB%E5%88%97%EF%BC%9A%E7%99%BB%E9%99%86%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E4%B8%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E9%97%AE%E9%A2%98/)
 ```js
 第三种设计方案，这是我原先干过的一件事，是这三种方案中最垃圾的设计。得出的教训就是：绝不能把任何加密的事情交给客户端。这样子灵活性大打折扣。举例：还是升级接口了，现在本来token生成只是服务端的事情，服务端随时可动态改变规则，现在由于客户端也参与进来了，这事儿就麻烦了，你一改，客户端也要跟着改。没有任何灵活性可言。切记：客户端就接收，然后转发回服务端就好了。别再客户端进行加密！！！
