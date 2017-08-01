@@ -24,6 +24,30 @@ location ~ \.php$ {
      }
 
 ```
+[关于php 高并发解决的一点思路](http://www.cnblogs.com/phpper/p/6716248.html)
+```js
+悲观锁的特点是先获取锁，再进行业务操作，即“悲观”的认为获取锁是非常有可能失败的，因此要先确保获取锁成功再进行业务操作。通常所说的“一锁二查三更新”即指的是使用悲观锁。通常来讲在数据库上的悲观锁需要数据库本身提供支持，即通过常用的select … for update操作来实现悲观锁。当数据库执行select for update时会获取被select中的数据行的行锁，因此其他并发执行的select for update如果试图选中同一行则会发生排斥（需要等待行锁被释放），因此达到锁的效果。select for update获取的行锁会在当前事务结束时自动释放，因此必须在事务中使用。
+乐观锁的特点先进行业务操作，不到万不得已不去拿锁。即“乐观”的认为拿锁多半是会成功的，因此在进行完业务操作需要实际更新数据的最后一步再去拿一下锁就好。
+
+1. SELECT data AS old_data, version AS old_version FROM …;
+2. 根据获取的数据进行业务操作，得到new_data和new_version
+3. UPDATE SET data = new_data, version = new_version WHERE version = old_version
+if (updated row > 0) {
+    // 乐观锁获取成功，操作完成
+} else {
+    // 乐观锁获取失败，回滚并重试
+}
+<?php
+$fp = fopen("lock.txt", "w+");
+if(flock($fp,LOCK_EX))   //锁定当前指针，，，
+{
+  //..处理订单
+  flock($fp,LOCK_UN);
+}
+fclose($fp);
+?>
+
+```
 [ Redis的PHP操作手册（纯手稿版）](https://segmentfault.com/a/1190000004973921#articleHeader0)
 ```js
 string是redis最基本的类型，而且string类型是二进制安全的。意思是redis的string可以包含任何数据。比如jpg图片或者序列化的对象
