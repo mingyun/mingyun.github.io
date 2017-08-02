@@ -13,7 +13,11 @@ https://segmentfault.com/a/1190000005117381  alter table teacher partition 
 [Sentry 自动化异常提醒](https://aabvip.com/archives/63)
 ```js
 
-$ php artisan vendor:publish --provider="Sentry\SentryLaravel\SentryLaravelServiceProvider"mysql[SQL] select * from `users` in 1 s      bindinds: []Copied File [\vendor\sentry\sentry-laravel\src\Sentry\SentryLaravel\config.php]To [\config\sentry.php]Publishing Complete!
+$ php artisan vendor:publish --provider="Sentry\SentryLaravel\SentryLaravelServiceProvider"
+mysql[SQL] select * from `users` in 1 s      
+bindinds: []Copied File [\vendor\sentry\sentry-laravel\src\Sentry\SentryLaravel\config.php]
+To [\config\sentry.php]
+Publishing Complete!
 
 ```
 []()
