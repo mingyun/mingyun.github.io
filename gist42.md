@@ -1,3 +1,16 @@
+[ Redis在Php项目中的实际应用场景](https://segmentfault.com/a/1190000005145274)
+```js
+$redis->zAdd('user:1000:follow', 1463557212, '1001'); 
+                                #uid为1000用户关注uid为1001 , score值设定时间戳1463557212
+$redis->zAdd('user:1000:follow', 1463557333, '1002'); 
+$redis->zAdd('user:2000:follow', 1463577568, '1001'); 
+$redis->zAdd('user:2000:follow', 1463896964, '1003');                                 #uid为2000用户关注1001和1003用户 , score值设定时间戳
+$redis->zInter('com_fllow:1000:2000', array('user:1000:follow', 'user:2000:follow')); 
+        #对集合'user:1000:follow'和'user:2000:follow'取交集'com_fllow:1000:2000'        #获得共同关注的uid 
+$redis->zRange('com_fllow:1000:2000',0,-1); // 获取全部集合元素        #array('10001','10002')
+https://segmentfault.com/a/1190000005117381  alter table teacher partition by key(id) partitions 4;
+```
+
 [Nginx 中 502 和 504 错误详解](https://segmentfault.com/a/1190000002686153)
 ```js
 502错误一般都是PHP段挂掉导致的
