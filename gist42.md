@@ -10,6 +10,14 @@ $redis->zInter('com_fllow:1000:2000', array('user:1000:follow', 'user:2000:follo
 $redis->zRange('com_fllow:1000:2000',0,-1); // 获取全部集合元素        #array('10001','10002')
 https://segmentfault.com/a/1190000005117381  alter table teacher partition by key(id) partitions 4;
 ```
+[Sentry 自动化异常提醒](https://aabvip.com/archives/63)
+```js
+
+$ php artisan vendor:publish --provider="Sentry\SentryLaravel\SentryLaravelServiceProvider"mysql[SQL] select * from `users` in 1 s      bindinds: []Copied File [\vendor\sentry\sentry-laravel\src\Sentry\SentryLaravel\config.php]To [\config\sentry.php]Publishing Complete!
+
+```
+[]()
+
 
 [Nginx 中 502 和 504 错误详解](https://segmentfault.com/a/1190000002686153)
 ```js
