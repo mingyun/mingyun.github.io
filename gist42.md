@@ -79,6 +79,76 @@ print_r($res);
  var_dump(in_array(null, $a)); // false
  var_dump(in_array(25,$a,true));//false
  var_dump(in_array('19fdf',[19]));
+//echo getPeopleMonth(strtotime('-7 day'));
+ function getPeopleMonth($time)
+    {
+        $validTime = date('Y-m-d', strtotime('+1 day'));
+        if ($validTime>$time) {
+            return 0;
+        }
+        $carbonDate = new \Carbon($validTime);
+        $diffDate = $carbonDate->diff(new \Carbon($time), true);
+        $month = $diffDate->y * 12 + $diffDate->m;
+        if ($month>0 && $diffDate->d == 0) {
+            $month = $month-1;
+        }
+        return $month;
+    }
+    print_r(array_sum_with_key(['07-01'=>10,'07-02'=>20,'07-12'=>12],['07-10'=>10,'07-12'=>12]));
+ function array_sum_with_key(array $arr1, array $arr2, array $_ = null)
+{
+    $args = array_slice(func_get_args(), 1);
+
+    foreach ($args as $arr) {
+        foreach ($arr as $k => $v) {
+            if (isset($arr1[$k])) {
+                $arr1[$k] += $v;
+            } else {
+                $arr1[$k] = $v;
+            }
+        }
+    }
+
+    return $arr1;
+}
+print_r( weekday(2017,30));
+Array
+(
+    [07-01] => 10
+    [07-02] => 20
+    [07-12] => 24
+    [07-10] => 10
+)
+Array
+(
+    [start] => 2017-07-24
+    [end] => 2017-07-30
+}
+
+function weekday($year, $week = 1){
+    $year_start = mktime(0,0,0,1,1,$year);
+    $year_end = mktime(0,0,0,12,31,$year);
+
+    if (intval(date('w',$year_start)) === 1){
+        $start = $year_start;
+    }else{
+        $start = strtotime('+1 monday',$year_start);
+    }
+
+    if ($week === 1){
+        $weekday['start'] = $start;
+    }else{
+        $weekday['start'] = strtotime('+'.($week-0).' monday',$start);
+    }
+
+    $weekday['end'] = strtotime('+1 sunday',$weekday['start']);
+    if (date('Y',$weekday['end'])!=$year){
+        $weekday['end'] = $year_end;//跳过今年
+    }
+    return array_map(function($i){
+        return date('Y-m-d',$i);
+    },$weekday);
+}
 
 ```
 
