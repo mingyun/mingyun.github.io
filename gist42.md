@@ -9,6 +9,108 @@ $redis->zInter('com_fllow:1000:2000', array('user:1000:follow', 'user:2000:follo
         #对集合'user:1000:follow'和'user:2000:follow'取交集'com_fllow:1000:2000'        #获得共同关注的uid 
 $redis->zRange('com_fllow:1000:2000',0,-1); // 获取全部集合元素        #array('10001','10002')
 https://segmentfault.com/a/1190000005117381  alter table teacher partition by key(id) partitions 4;
+
+<?php
+namespace App\Services;
+class RedisCache{
+
+    protected $_redis;
+    protected $_config;
+    protected $_retry = 3;
+    protected $_retrySleep = 200000;
+    protected static $_instance;
+
+    public function __construct() {
+        $this->_redis = new \Redis();
+        $this->connect();
+        $password = env('REDIS_PASSWORD','');
+        if($password) {
+            $this->_redis->auth($password);
+        }
+        //$this->_redis->select(env('REDIS_DATABASE', 0));
+    }
+
+    private function connect($retry = 0){
+        try{
+            $this->_redis->pconnect(env('REDIS_HOST','test-r-qy-bj3.vhouhn.com'), env('REDIS_PORT','23244'), 3);
+            $this->_redis->ping();
+        }catch (\Exception $e){
+            if($retry < $this->_retry){
+                usleep($this->_retrySleep);
+                $retry = $retry + 1;
+                $this->connect($retry);
+            }else{
+                \Log::error($e->getMessage(), ['class'=>__CLASS__]);
+            }
+        }
+    }
+
+    private function ping(){
+        try{
+            $this->_redis->ping();
+        }catch (\Exception $e){
+            $this->connect();
+        }
+    }
+
+    public static function getInstance() {
+        if (!static::$_instance instanceof static) {
+            static::$_instance = new static();
+        }
+        return static::$_instance;
+    }
+
+    public function get($key, $serialize = true) {
+        $this->ping();
+        $data = $this->_redis->get($key);
+        if($data!==FALSE){
+            return ($serialize && !is_numeric($data)) ? unserialize($data) : $data;
+        }else{
+            return FALSE;
+        }
+    }
+
+    public function set($key, $value, $expire = 1800, $serialize = true) {
+        if($serialize && !is_numeric($value)){
+            $value = serialize($value);
+        }
+        $this->ping();
+        return $this->_redis->setex($key, $expire, $value);
+    }
+
+    public function inc($key, $value = 1) {
+        $this->ping();
+        return $this->_redis->incrBy($key, $value);
+    }
+
+    public function des($key, $value = 1) {
+        $this->ping();
+        return $this->_redis->decrBy($key, $value);
+    }
+
+    public function del($key) {
+        $this->ping();
+        return $this->_redis->delete($key);
+    }
+
+    public function clear() {
+        $this->ping();
+        return $this->_redis->flushDB();
+    }
+
+    public function getRedis(){
+        return $this->_redis;
+    }
+
+    public function __call($method, $args) {
+        $this->ping();
+        return call_user_func_array(array($this->_redis, $method), $args);
+    }
+
+    public function __destruct() {
+        $this->_redis->close();
+    }
+}
 ```
 [Sentry 自动化异常提醒](https://aabvip.com/archives/63)
 ```js
